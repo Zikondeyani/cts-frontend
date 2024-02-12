@@ -60,7 +60,7 @@ const optionGroups = ref([
     options: [
       { label: 'Organisations', icon: OfficeBuildingIcon, path: '/organisations' },
       { label: 'User Roles', icon: UserGroupIcon, path: '/roles' },
-      { label: 'Users', icon: UserIcon, path: '/users' },
+      { label: 'Users', icon: UserIcon, path: '/admin/users' },
     ],
   },
   {

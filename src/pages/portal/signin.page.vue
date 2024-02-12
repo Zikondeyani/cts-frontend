@@ -61,7 +61,7 @@
                   Password
                 </label>
                 <div class="mt-1">
-                  <input id="password" name="password" :type="isPwd ? 'password' : 'text'" autocomplete="current-password"
+                  <input id="password" name="password" :type="isPwd ? 'text'  : 'password' " autocomplete="current-password"
                     v-model="password"
                     class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
                   <p class="text-red-500 text-xs italic pt-1">
@@ -74,8 +74,8 @@
                 <div class="flex items-center">
                   <input id="hide-password" name="hide-password" v-model="isPwd" type="checkbox" style="color: #096eb4"
                     class="h-4 w-4 focus:ring-blue-400 border-gray-300 rounded" />
-                  <label for="hide-password" class="ml-2 block text-sm text-gray-900">
-                    hide password
+                  <label for="show-password" class="ml-2 block text-sm text-gray-900">
+                    Show password
                   </label>
                 </div>
 
@@ -132,7 +132,7 @@ const moment = inject('moment');
 const Swal = inject('Swal');
 //VARIABLES
 const sessionStore = useSessionStore();
-const isPwd = ref(true);
+const isPwd = ref(false);
 const isLoading = ref(false);
 //FORM
 ///SCHEMA

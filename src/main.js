@@ -14,11 +14,7 @@ import "leaflet/dist/leaflet.css";
 import 'tw-elements';
 import VuePdf from 'vue3-pdfjs'
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faUserSecret);
 /***/
 const app = createApp(App);
 
@@ -26,17 +22,11 @@ import Vue from 'vue';
 import mitt from 'mitt';
 const emitter = mitt()
 
-app.component('font-awesome-icon', FontAwesomeIcon);
 //plugin//providers
 app.provide('emitter', emitter);
 app.provide("Swal", Swal);
-
-
-
 moment.locale('en-nz'); // 'en'
 app.provide("moment", moment);
-
-
 app.use(VuePdf);
 app.use(createPinia());
 app.use(VueGoodTablePlugin);

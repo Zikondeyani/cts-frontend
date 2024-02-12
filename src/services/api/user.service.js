@@ -5,7 +5,7 @@ export default class UserService {
   get(id) {
     if (id == null) {
       return axios
-        .get(resource + `?filter={"include": ["role", "file", "bookings", "providertypes", "listings"]}`, {
+        .get(resource + `?filter={"include": ["role", "file"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -23,7 +23,7 @@ export default class UserService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": ["role", "file", "bookings", "providertypes", "listings"]}`, {
+        .get(resource + `/` + id + `?filter={"include": ["role", "file"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -45,7 +45,7 @@ export default class UserService {
   getProviders(id) {
     if (id == null) {
       return axios
-        .get(resource + "/providers" + `?filter={"include": ["role", "file", "bookings", "providertypes", "listings"]}`, {
+        .get(resource + "/providers" + `?filter={"include": ["role", "file"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",

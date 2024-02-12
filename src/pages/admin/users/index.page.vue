@@ -55,7 +55,15 @@
         <vue-good-table :columns="columns" :rows="users" :search-options="{ enabled: true }"
           style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
           styleClass="vgt-table striped" compactMode>
-          <!-- ... -->
+          <template #table-actions> </template>
+       
+          <template #table-row="props">
+            <span v-if="props.column.label == 'Options'">
+              <router-link :to="{ path: '/admin/users/manage/' + props.row.id }">
+                <a href="#" class="text-blue-400 text-sm hover:text-green-900">Manage </a>
+              </router-link>
+            </span>
+          </template>
         </vue-good-table>
       </div>
     </div>
@@ -100,27 +108,14 @@ const columns = ref([
     tdClass: "capitalize"
   },
   {
-    label: "First Name",
-    field: row => row.firstName,
+    label: "Username",
+    field: row => row.username,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
-  {
-    label: "Last Name",
-    field: row => row.lastName,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
+ 
 
-  {
-    label: "Business Name",
-    field: row => row.nameOfOrg,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
   {
     label: "Email",
     field: row => row.email,
