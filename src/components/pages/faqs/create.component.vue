@@ -1,7 +1,7 @@
 <template>
   <div>
     <button type="button"
-      class="inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-100 ease-in-out capitalize"
+      class="inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
       @click="open = true">
       new FAQ
     </button>
@@ -38,7 +38,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="name" class="block text-sm font-medium text-gray-700">Question</label>
                       <input type="text" name="response" id="name" v-model="question" autocomplete="question-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -50,7 +50,7 @@
                       <label for="response" class="block text-sm font-medium text-gray-700">
                         Response</label>
                       <input type="text" name="response" id="response" v-model="response" autocomplete="response"
-                        class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
 

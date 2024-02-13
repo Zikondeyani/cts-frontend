@@ -17,7 +17,7 @@
 
 
           <!-- Admin Text in the Middle (if needed) -->
-          <span class="font-bold text-white mx-4">DODMA CTS | Admin</span>
+          <span class="font-bold text-white mx-4">DODMA CTS | Dispatcher</span>
 
 
         </div>
@@ -85,20 +85,14 @@
                 </MenuItem>
 
                 <MenuItem v-slot="{ active }">
-                <a href="#" @click="gotoSystemsettings" :class="[
-                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                  'block px-4 py-2 text-sm',
-                ]">
+                <button @click="gotoSystemsettings" :class="menuItemClasses(active, true)">
                   System
-                </a>
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <a href="#" @click="onSignout" :class="[
-                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                  'block px-4 py-2 text-sm',
-                ]">
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
-                </a>
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -204,7 +198,7 @@ function signOut() {
 
 
 function gotoSystemsettings (){
-  $router.push({ path: '/admin/system'});
+  $router.push({ path: '/dispatcher/system'});
      
 }
 
@@ -213,13 +207,15 @@ onMounted(() => { });
 //WAT
 function navigation() {
   let navList = [
-    { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
-    { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
-    { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
-    { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
+    { name: "Home", href: "/dispatcher/dashboard", icon: HomeIcon, current: false },
+    { name: "Dispatch", href: "/dispatcher/dispatch-management", icon: LocationMarkerIcon, current: false },
+  //  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
+  { name: "Reports", href: "/dispatcher/report-management", icon: DocumentDuplicateIcon, current: false },
+ 
+   /*   { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
     { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
     { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
-   
+    */
   ];
 
   for (let nav of navList)

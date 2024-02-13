@@ -22,7 +22,7 @@
               <h2 class="sr-only" id="profile-overview-title">
                 Profile Overview
               </h2>
-              <div class="bg-white p-6">
+              <div class="bg-white p-6  shadow-2xl">
                 <div class="sm:flex sm:items-center sm:justify-between">
                   <div class="sm:flex sm:space-x-5">
                     <div class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
@@ -46,13 +46,15 @@
                 </div>
               </div>
               <div
-                class="bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6  divide-x divide-y border border-gray-200">
-                <div v-for="stat in stats" :key="stat.label" class="flex flex-col shadow-xl rounded-xl mx-3 my-3 items-center py-4">
+                class="bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6   divide-x divide-y border border-gray-200">
+                <div v-for="stat in stats" :key="stat.label"
+                  class="flex flex-col shadow-2xl rounded-xl mx-4 my-4 items-center py-4">
                   <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
                   <span class="mt-1 text-sm text-gray-600">{{ stat.label }}</span>
-                  <span :class="`text-${stat.color}-500 mt-2`">
 
-                    <component :is="stat.icon" class="h-6 w-6" aria-hidden="true" />
+                  <span class="mt-2">
+
+                    <component :is="stat.icon" :class="`h-6 w-6`" :style="`color: ${stat.color}`" aria-hidden="true" />
 
                   </span>
                 </div>
@@ -61,7 +63,7 @@
           </section>
 
           <!-- Actions panel -->
-          <section aria-labelledby="quick-links-title" class=" bg-white rounded-table">
+          <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
             <p class="text-center text-gray-600 mt-4 font-bold"> Recent dispatches</p>
 
             <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
@@ -113,7 +115,7 @@ import {
   BadgeCheckIcon,
   BellIcon,
   CashIcon,
-  CheckCircleIcon ,
+  CheckCircleIcon,
   LocationMarkerIcon,
   ClockIcon,
   MenuIcon,
@@ -122,10 +124,10 @@ import {
   XIcon,
   TruckIcon,
   DocumentDuplicateIcon,
-  ClipboardListIcon ,
+  ClipboardListIcon,
   CollectionIcon,
   IdentificationIcon,
-  DocumentTextIcon ,
+  DocumentTextIcon,
   OfficeBuildingIcon,
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
@@ -359,13 +361,12 @@ const formatDate = (date) => {
 };
 
 let stats = [
-  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'green' },
+  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'teal' },
   { label: "Dispatch Status", value: catalogueCount, icon: LocationMarkerIcon, color: 'blue' },
-  { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: 'indigo' },
-
-  { label: "Dispatches done", value: userCount, icon: CheckCircleIcon , color: 'violet' },
-  { label: "Receipts done", value: catalogueCount, icon: DocumentTextIcon , color: 'yellow' },
-  { label: "Requisitions", value: bookingCount, icon: ClipboardListIcon , color: 'purple' },
+  { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: '#008000' },
+  { label: "Dispatches done", value: userCount, icon: CheckCircleIcon, color: 'indigo' },
+  { label: "Receipts done", value: catalogueCount, icon: DocumentTextIcon, color: '#086db3' },
+  { label: "Requisitions", value: bookingCount, icon: ClipboardListIcon, color: 'red' },
 ];
 const actions = [
   {

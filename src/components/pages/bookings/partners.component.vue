@@ -114,7 +114,7 @@
                             name="partnerType"
                             v-model="partnerTypeId"
                             autocomplete="partner-type-name"
-                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           >
                             <option
                               v-for="type in partnersTypes"
@@ -143,7 +143,7 @@
                             rows="3"
                             v-model="partnerId"
                             autocomplete="partners-name"
-                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           >
                             <option
                               v-for="partner in filteredPartners"

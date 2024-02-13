@@ -17,7 +17,7 @@
 
 
           <!-- Admin Text in the Middle (if needed) -->
-          <span class="font-bold text-white mx-4">DODMA CTS | Admin</span>
+          <span class="font-bold text-white mx-4">DODMA CTS | Planner </span>
 
 
         </div>
@@ -25,36 +25,39 @@
 
 
         <div class="flex space-x-4">
-    <!-- Display the first five items -->
-    <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href">
-      <a :class="[
-          item.current
-            ? 'bg-white text-black'
-            : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
-          'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-        ]" :aria-current="item.current ? 'page' : undefined">
-        <component :is="item.icon" :class="[
+          <!-- Display the first five items -->
+          <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href">
+            <a :class="[
+              item.current
+                ? 'bg-white text-black'
+                : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
+              'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+            ]" :aria-current="item.current ? 'page' : undefined">
+              <component :is="item.icon" :class="[
                 item.current
                   ? 'text-gray-500'
                   : 'text-white group-hover:text-white',
                 'mr-1 flex-shrink-0 h-6 w-6',
               ]" aria-hidden="true" />
-        {{ item.name }}
-      </a>
-    </router-link>
+              {{ item.name }}
+            </a>
+          </router-link>
 
-    <!-- Dropdown for the rest of the items -->
-    <div v-if="remainingItems.length > 0" class="relative">
-      <button @click="toggleDropdown" @mouseenter="toggleDropdown" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
-        More...
-      </button>
-      <div v-if="isDropdownOpen" @mouseleave="closeDropdown"  class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
-        <router-link v-for="item in remainingItems" :key="item.name" :to="item.href" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-          {{ item.name }}
-        </router-link>
-      </div>
-    </div>
-  </div>
+          <!-- Dropdown for the rest of the items -->
+          <div v-if="remainingItems.length > 0" class="relative">
+            <button @click="toggleDropdown" @mouseenter="toggleDropdown"
+              class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
+              More...
+            </button>
+            <div v-if="isDropdownOpen" @mouseleave="closeDropdown"
+              class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
+              <router-link v-for="item in remainingItems" :key="item.name" :to="item.href"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                {{ item.name }}
+              </router-link>
+            </div>
+          </div>
+        </div>
 
         <div class="relative ml-5">
           <Menu as="div" class="flex-shrink-0 relative">
@@ -65,7 +68,7 @@
                 <span class="lowercase m-2 text-white">{{ user.email }}</span>
                 <span style="background-color:gray"
                   class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
-                  {{ user.username.match(/\b(\w)/g).join("")}}
+                  {{ user.username.match(/\b(\w)/g).join("") }}
                 </span>
               </MenuButton>
             </div>
@@ -85,20 +88,14 @@
                 </MenuItem>
 
                 <MenuItem v-slot="{ active }">
-                <a href="#" @click="gotoSystemsettings" :class="[
-                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                  'block px-4 py-2 text-sm',
-                ]">
+                <button @click="gotoSystemsettings" :class="menuItemClasses(active, true)">
                   System
-                </a>
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <a href="#" @click="onSignout" :class="[
-                  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                  'block px-4 py-2 text-sm',
-                ]">
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
-                </a>
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -121,7 +118,7 @@
     <!-- Footer -->
     <footer class="text-white text-center p-4" style="background-color: #096eb4;">
       <span class="inline-block align-middle text-sm">
-        
+
         © 2024 Designed by WFP Supply Chain Unit
       </span>
     </footer>
@@ -130,7 +127,7 @@
 
 
 <script setup>
-import { inject, ref, watch, reactive, onMounted,computed , toRefs } from "vue";
+import { inject, ref, watch, reactive, onMounted, computed, toRefs } from "vue";
 import { useSessionStore } from "../../stores/session.store";
 import { useRouter } from "vue-router";
 import {
@@ -203,9 +200,9 @@ function signOut() {
 }
 
 
-function gotoSystemsettings (){
-  $router.push({ path: '/admin/system'});
-     
+function gotoSystemsettings() {
+  $router.push({ path: '/admin/system' });
+
 }
 
 //MOUNTED
@@ -213,13 +210,15 @@ onMounted(() => { });
 //WAT
 function navigation() {
   let navList = [
-    { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
-    { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
-    { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
-    { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
-    { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
-    { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
-   
+    { name: "Home", href: "/planner/dashboard", icon: HomeIcon, current: false },
+    { name: "Dispatch", href: "/planner/dispatch-management", icon: LocationMarkerIcon, current: false },
+ /*    { name: "Commodities", href: "/planner/commodity-tracking", icon: CollectionIcon, current: false },
+  */   { name: "Receipts", href: "/planner/receipt-management", icon: DocumentDuplicateIcon, current: false },
+    { name: "Reports", href: "/planner/report-management", icon: DocumentDuplicateIcon, current: false },
+
+    /*    { name: "Requisitions", href: "/planner/requisition-management", icon: IdentificationIcon, current: false },
+     */ /*   { name: "Project Management", href: "/planner/project-management", icon: IdentificationIcon, current: false },
+      */
   ];
 
   for (let nav of navList)

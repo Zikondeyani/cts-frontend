@@ -8,6 +8,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+
+      extend: {
+        sky: colors.orange,
+        teal: colors.teal,
+        cyan: colors.cyan,
+        rose: colors.rose,
+      },
       // ... other color settings ...
       fontFamily: {
         heading: ['Segoe UI', 'sans-serif'],
@@ -16,6 +23,8 @@ module.exports = {
     },
   },
   plugins: [
-    // ... your plugins ...
+    require('@tailwindcss/forms'),
+    require('tw-elements/dist/plugin'),
+    require('@tailwindcss/line-clamp'),
   ],
 };

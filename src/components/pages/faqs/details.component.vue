@@ -19,7 +19,7 @@
                   <div class="col-span-6 sm:col-span-6">
                     <label for="question" class="block text-sm font-medium text-gray-700">Question</label>
                     <input type="text" name="question" id="question" v-model="question" autocomplete="question"
-                      class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ nameError }}
                     </p>
@@ -33,7 +33,7 @@
                     </label>
                     <div class="mt-1">
                       <textarea id="response" name="response" v-model="response" rows="3"
-                        class="shadow-sm focus:ring-gray-500 focus:border-green-500 block w-full sm:text-sm border border-gray-300 rounded-md"
+                        class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-300 rounded-md"
                         placeholder="" />
                     </div>
 

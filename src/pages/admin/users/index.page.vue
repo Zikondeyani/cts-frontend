@@ -34,7 +34,7 @@
                 font-medium
                 text-white
                 bg-teal-500
-                hover:bg-teal-600
+                hover:bg-blue-400
                 focus:outline-none
                 focus:ring-2
                 focus:ring-offset-2

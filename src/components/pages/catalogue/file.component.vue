@@ -124,7 +124,7 @@
                       <div class="grid grid-cols-6 gap-2">
                         <div class="col-span-6 sm:col-span-6">
                           <input type="file" @change="handleFileUpload($event)" accept="image/*, video/*"
-                            class="mt-1 p-2 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white" />
+                            class="mt-1 p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white" />
 
                           <p class="text-red-500 text-xs italic pt-1">
                             {{ attachmentError }}
@@ -163,7 +163,7 @@
                           id="publication-date"
                           v-model="publicationDate"
                           autocomplete="publication-date"
-                          class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                         <p class="text-red-500 text-xs italic pt-1">
                           {{ publicationDateError }}
@@ -195,7 +195,7 @@ import * as FileSaver from "file-saver";
 //SCHEMA AND STORES
 import { useFileStore } from "../../../stores/file.store";
 
-import { usesubcategory } from "../../../stores/subcategory.store";
+//import { usesubcategory } from "../../../stores/subcategory.store";
 
 //DECLARATIONS
 const system = reactive({

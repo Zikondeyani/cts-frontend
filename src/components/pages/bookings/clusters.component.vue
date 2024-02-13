@@ -108,7 +108,7 @@
                             name="clusters"
                             v-model="clusterId"
                             autocomplete="clusters-name"
-                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           >
                             <option
                               v-for="cluster in clusters"

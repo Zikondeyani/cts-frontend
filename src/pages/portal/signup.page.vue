@@ -46,7 +46,7 @@
             <label for="useracc" class="font-body block text-sm font-medium leading-6 text-gray-900">Account Type</label>
             <div class="mt-2">
               <select id="useracc" v-model="useracc" autocomplete="useracc"
-                class="font-body block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:max-w-xs sm:text-sm sm:leading-6">
+                class="font-body block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:max-w-xs sm:text-sm sm:leading-6">
                 <option>Service Provider</option>
                 <option>Customer</option>
               </select>
@@ -244,7 +244,7 @@
             <div class="col-span-6 sm:col-span-6" v-if="filteredSubTypes.length > 0">
               <div class="flex items-center">
                 <select v-model="selectedTag" @change="addTag"
-                  class="p-2 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded m-0 focus:text-gray-700 focus:bg-white">
+                  class="p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded m-0 focus:text-gray-700 focus:bg-white">
                   <option value="" disabled>Select a subtype</option>
                   <option v-for="tag in filteredSubTypes" :key="tag.id" :value="tag">{{ tag.name }}</option>
                 </select>

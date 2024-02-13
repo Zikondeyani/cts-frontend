@@ -1,0 +1,61 @@
+//District Profile Collection
+
+{
+population:
+ {
+   religion:
+{
+ muslims: 0,
+ christians: 0,     
+ other: 0
+},
+   households: 
+{
+female: 0, 
+male: 0
+},
+land_area: 0,
+district: "",
+education:
+ {enrollment:
+{
+males:0, 
+females: 0
+},
+facilithealth_centersies: 
+{hospital: "",
+ : 0
+},
+}
+
+{
+    "population": {
+         "religion": {
+            "muslims": "",
+            "christians": "",
+            "other": ""
+  
+          },
+          "households": {
+              "male":0,
+              "female": 0
+          }
+    },
+    "land_area": 0,
+    "district": "string",
+    "education": {
+        "enrollment": {
+            "male":0,
+            "female":0
+        }
+    },
+    "facilities": {
+        "health_centers":0,
+        "health_posts":0,
+        "hospitals": 0,
+        "dispensaries": 0
+    }
+    
+  }
+  
+

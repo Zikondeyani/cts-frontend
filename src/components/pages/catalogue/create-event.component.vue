@@ -1,7 +1,7 @@
 <template>
   <div>
     <button type="button"
-      class="inline-block px-6 py-2.5 bg-teal-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-800 active:shadow-lg transition duration-100 ease-in-out capitalize"
+      class="inline-block px-6 py-2.5 bg-blue-400 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
       @click="open = true">
       Add booking
     </button>
@@ -38,7 +38,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="firstname" class="block text-sm font-medium text-gray-700">Booking for?</label>
                       <input type="text" name="firstname" id="firstname" v-model="firstname" autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -48,7 +48,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="phone" class="block text-sm font-medium text-gray-700">Booker Phone:</label>
                       <input type="text" name="phone" id="phone" v-model="phone" autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -61,7 +61,7 @@
                         <span class="flex select-none items-center pb-1 text-gray-500 sm:text-sm">Date of
                           Appointment</span>
                         <div
-                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-teal-600 sm:max-w-md">
+                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md">
                           <input type="date" name="availableday" v-model="availableday" id="date"
                             autocomplete="availableday"
                             class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"

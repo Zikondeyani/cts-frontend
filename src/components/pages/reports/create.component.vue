@@ -27,7 +27,7 @@
               <div
                 class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
                 <h5 class="font-body text-md font-medium leading-normal text-gray-800" id="formModalLabel">
-                  Generate Report
+                  Create Loading Plan
                 </h5>
                 <button type="button"
                   class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
@@ -37,26 +37,123 @@
               <form @submit="onSubmit">
                 <div class="px-4 py-5 bg-white sm:p-6">
                   <div class="grid grid-cols-6 gap-2">
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Report From</label>
 
-                      <input type="date" name="reportFrom" v-model="reports.From" id="reportFrom"
-                        autocomplete="reportFrom"
+
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="transporter" class="block text-sm font-medium text-gray-700">
+                        Select Transporter</label>
+                      <select id="role" name="role" v-model="roleId" autocomplete="role-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+
+                    </div>
+
+
+
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="transporter" class="block text-sm font-medium text-gray-700">
+                        Select Commodity</label>
+                      <select id="commodity" name="commodity" v-model="roleId" autocomplete="commodity-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+
+                    </div>
+
+                  </div>
+
+                  <div class="grid grid-cols-6 gap-2">
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Quantity</label>
+
+                      <input type="number" name="reportFrom" v-model="reports.From" id="reportFrom"
+                        autocomplete="quantity"
                         class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Report From</label>
+                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
-                      <input type="date" name="reportFrom" v-model="reports.To" id="reportFrom" autocomplete="reportFrom"
+                      <select id="warehouse" name="warehouse" v-model="roleId" autocomplete="warehouse-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+
+
+                  <div class="grid grid-cols-6 gap-2">
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
+                        District</label>
+
+                      <select id="destination" name="destination" v-model="roleId" autocomplete="destination-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+
+                      <select id="project" name="project" v-model="roleId" autocomplete="project-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-6 gap-2">
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
+
+                      <select id="activity" name="activity" v-model="roleId" autocomplete="activity-name"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
+                    </div>
+
+                    <div class="col-span-3 sm:col-span-3">
+                      <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
+
+                      <input type="date" name="Start Date" v-model="reports.From" id="Start Date"
+                        autocomplete="Start Date"
                         class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
+                    </div>
+
+                    <div class="col-span-3 sm:col-span-3">
+                      <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
+
+                      <select id="End Date" name="End Date" v-model="roleId" autocomplete="Start Date"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
+                          {{ role }}
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </div>
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button type="submit"
+                  <button type="submit" style="background-color: #0a6eb4;"
                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    Generate Report
+                    Save
                   </button>
                 </div>
               </form>

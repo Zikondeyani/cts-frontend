@@ -151,7 +151,7 @@
                           <input
                             type="file"
                             @change="handleFileUpload($event)"
-                            class="mt-1 p-2 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white"
+                            class="mt-1 p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white"
                           />
 
                           <p class="text-red-500 text-xs italic pt-1">
@@ -174,7 +174,7 @@
                           id="publication-date"
                           v-model="publicationDate"
                           autocomplete="publication-date"
-                          class="mt-1 focus:ring-gray-500 focus:border-green-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                         <p class="text-red-500 text-xs italic pt-1">
                           {{ publicationDateError }}
