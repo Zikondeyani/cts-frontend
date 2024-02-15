@@ -1,15 +1,13 @@
 import axios from "axios";
-const resource = process.env.VUE_APP_ROOT_API + "/faqs";
+const resource = process.env.VUE_APP_ROOT_API + "/units";
 
-export default class FaqService {
+export default class UnitsService {
   get(id) {
     if (id == null) {
       return axios
         .get(
           resource +
-            `?filter={"include": [
-              "user"
-            ]}`,
+          `?filter={}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -30,9 +28,7 @@ export default class FaqService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": [
-          "user"
-        ]}`, {
+        .get(resource + `/` + id + `?filter={"include": ["Recipient", "dispatch" ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -51,54 +47,6 @@ export default class FaqService {
     }
   }
 
-  geFaqsClean(id) {
-    if (id == null) {
-      return axios
-        .get(
-          resource +
-            `?filter={"include": [
-          "user"
-        ]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
-        .then((response) => {
-          var result = response.data;
-
-          return result;
-        })
-        .catch((error) => {
-          if (error.response) {
-            throw error.response.data.error;
-          }
-        });
-    } else if (id != null) {
-      return axios
-        .get(resource + `/` + id + `?filter={"include": [
-          "user"
-        }`, {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        })
-        .then((response) => {
-          var result = response.data;
-          return result;
-        })
-        .catch((error) => {
-          if (error.response) {
-            throw error.response.data.error;
-          }
-        });
-    }
-  }
 
   create(data) {
     return axios
@@ -122,7 +70,7 @@ export default class FaqService {
 
   count() {
     return axios
-      .get(resource + `/count` + `?filter={"where": {},"include": []}`, {
+      .get(resource + `/count` + `?filter={}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json",
@@ -161,6 +109,33 @@ export default class FaqService {
   }
 
 
+
+
+
+
+  getByReference(data) {
+    return axios
+      .get(
+        resource +
+        `?filter={}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
   remove(id) {
     return axios
       .delete(resource + `/` + id, {

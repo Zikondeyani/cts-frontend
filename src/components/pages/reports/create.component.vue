@@ -43,10 +43,10 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="transporter" class="block text-sm font-medium text-gray-700">
                         Select Transporter</label>
-                      <select id="role" name="role" v-model="roleId" autocomplete="role-name"
+                      <select id="transporter" name="transporter" v-model="transporterid" autocomplete="transporter-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="transporter in transporters" :key="transporter" :value="transporter.Name" class="uppercase">
+                          {{ transporter.Name }}
                         </option>
                       </select>
 
@@ -60,8 +60,8 @@
                         Select Commodity</label>
                       <select id="commodity" name="commodity" v-model="roleId" autocomplete="commodity-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="commodity in commodities" :key="commodity" :value="commodity.Name" class="uppercase">
+                          {{ commodity.Name }}
                         </option>
                       </select>
 
@@ -71,20 +71,20 @@
 
                   <div class="grid grid-cols-6 gap-2">
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Quantity</label>
+                      <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
 
-                      <input type="number" name="reportFrom" v-model="reports.From" id="reportFrom"
+                      <input type="number" name="quantity" v-model="quantity" id="reportFrom"
                         autocomplete="quantity"
                         class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="publication-date" class="block text-sm font-medium text-gray-700">Warehouse</label>
+                      <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
                       <select id="warehouse" name="warehouse" v-model="roleId" autocomplete="warehouse-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.Name" class="uppercase">
+                          {{ warehouse.Name }}
                         </option>
                       </select>
                     </div>
@@ -97,10 +97,10 @@
                       <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
                         District</label>
 
-                      <select id="destination" name="destination" v-model="roleId" autocomplete="destination-name"
+                      <select id="destination" name="destination" v-model="districtid" autocomplete="destination-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="district in districts" :key="district" :value="district.Name" class="uppercase">
+                          {{ district.Name }}
                         </option>
                       </select>
                     </div>
@@ -108,10 +108,10 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
 
-                      <select id="project" name="project" v-model="roleId" autocomplete="project-name"
+                      <select id="project" name="project" v-model="projectid" autocomplete="project-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="project in projects" :key="project" :value="project.Name" class="uppercase">
+                          {{ project.Name }}
                         </option>
                       </select>
                     </div>
@@ -121,10 +121,10 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
 
-                      <select id="activity" name="activity" v-model="roleId" autocomplete="activity-name"
+                      <select id="activity" name="activity" v-model="activityid" autocomplete="activity-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
+                        <option v-for="activity in activities" :key="activity" :value="activity.Name" class="uppercase">
+                          {{ activity.Name }}
                         </option>
                       </select>
                     </div>
@@ -132,7 +132,7 @@
                     <div class="col-span-3 sm:col-span-3">
                       <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
 
-                      <input type="date" name="Start Date" v-model="reports.From" id="Start Date"
+                      <input type="date" name="Start Date" v-model="startdate" id="Start Date"
                         autocomplete="Start Date"
                         class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 
@@ -141,12 +141,10 @@
                     <div class="col-span-3 sm:col-span-3">
                       <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
 
-                      <select id="End Date" name="End Date" v-model="roleId" autocomplete="Start Date"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="role in ['roles']" :key="role" :value="role" class="uppercase">
-                          {{ role }}
-                        </option>
-                      </select>
+                      <input type="date" name="End Date" v-model="enddate" id="End Date"
+                        autocomplete="End Date"
+                        class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
                     </div>
                   </div>
                 </div>
@@ -185,24 +183,14 @@ import spinnerWidget from "../../../components/widgets/spinners/default.spinner.
 import { CreateUserSchema } from "../../../services/schema/user.schema";
 import { useRoleStore } from "../../../stores/role.store";
 import { useUserStore } from "../../../stores/user.store";
-
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import { usecommoditiestore } from "../../../stores/commodity.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
+import { usedistrictstore } from "../../../stores/districts.store";
+import { usetransporterstore } from "../../../stores/transporter.store";
+import { useprojectstore } from "../../../stores/project.store";
+import { useactivitiestore } from "../../../stores/activity.store";
 import { useSessionStore } from "../../../stores/session.store";
-//INJENCTIONS
-const $router = useRouter();
-const moment = inject("moment");
-const emit = defineEmits(["create"]);
-//VARIABLES
-const isLoading = ref(false);
-const open = ref(false);
-const isPwd = ref(true);
-const showModal = ref(false);
-const roleStore = useRoleStore();
-
-const userStore = useUserStore();
-const roles = reactive([]);
-
-const districts = reactive([]);
-const sessionStore = useSessionStore();
 
 ///FIELDS
 const { value: firstName, errorMessage: firstNameError } =
@@ -216,12 +204,158 @@ const { value: confirmPassword, errorMessage: confirmPasswordError } =
 const { value: status, errorMessage: statusError } = useField("status");
 const { value: roleId, errorMessage: roleIdError } = useField("roleId");
 
+//INJENCTIONS
+const $router = useRouter();
+const moment = inject("moment");
+const emit = defineEmits(["create"]);
+
+//VARIABLES
+const isLoading = ref(false);
+const open = ref(false);
+const isPwd = ref(true);
+const showModal = ref(false);
+const roleStore = useRoleStore();
+const loadingplanstore = useloadingplanstore();
+const loadingplans = reactive([])
+const commoditiesstore = usecommoditiestore();
+const commodities = reactive([])
+const activitiestore = useactivitiestore();
+const activities = reactive([])
+const districtstore = usedistrictstore();
+const districts = reactive([])
+const projectstore = useprojectstore();
+const projects = reactive([])
+const transporterStore = usetransporterstore();
+const transporters = reactive([])
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([])
+const userStore = useUserStore();
+const roles = reactive([]);
+const sessionStore = useSessionStore();
+
 //MOUNTED
-onMounted(() => { });
+onMounted(() => { getActivities(); getCommodities(); getDistricts(); getLoadingplan(); getProjects(); getTransporters(); getWarehouses(); });
 
 const reports = ref({});
 //FUNCTIONS
 const onSubmit = () => {
   emit("create", reports.value);
+};
+
+
+const getLoadingplan = async () => {
+  loadingplanstore
+    .get()
+    .then(result => {
+
+      loadingplans.length = 0; //empty array
+      loadingplans.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+
+const getWarehouses = async () => {
+  warehouseStore
+    .get()
+    .then(result => {
+
+      warehouses.length = 0; //empty array
+      warehouses.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+
+const getCommodities = async () => {
+  commoditiesstore
+    .get()
+    .then(result => {
+
+      commodities.length = 0; //empty array
+      commodities.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+
+const getActivities = async () => {
+  activitiestore
+    .get()
+    .then(result => {
+
+      activities.length = 0; //empty array
+      activities.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+const getDistricts = async () => {
+  districtstore
+    .get()
+    .then(result => {
+
+      districts.length = 0; //empty array
+      districts.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+
+const getProjects = async () => {
+  projectstore
+    .get()
+    .then(result => {
+
+      projects.length = 0; //empty array
+      projects.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
+};
+
+const getTransporters = async () => {
+  transporterStore
+    .get()
+    .then(result => {
+
+      transporters.length = 0; //empty array
+      transporters.push(...result);
+
+    })
+    .catch(error => {
+
+    })
+    .finally(() => {
+    });
 };
 </script>
