@@ -9,22 +9,27 @@
       </div>
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-teal-900 sm:text-2xl sm:truncate">
-            Dispatch Management
+          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
+            Dispatches
           </h2>
         </div>
-        <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-          <create-listing-form v-on:create="createListing" />
-        </div>
+       
+        <button
+      type="button"
+      class="font-body inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
+      @click="open = true"
+    >
+      Export Data
+    </button>
       </div>
       <!-- table  -->
-      <div class="align-middle inline-block min-w-full mt-5 shadow-lg">
-        <vue-good-table
+      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+         <vue-good-table
           :columns="columns"
-          :rows="catalogue"
+          :rows="dispaches"
           :search-options="{ enabled: true }"
           
-          style="font-weight: bold; color: teal;"
+          style="font-weight: bold; color: blue;"
           :pagination-options="{
             enabled: true,
           }"
@@ -38,7 +43,7 @@
               <router-link
                 :to="{ path: '/admin/catalogue/manage/' + props.row.id }"
               >
-                <a href="#" class="text-teal-500 text-sm hover:text-gray-900"
+                <a href="#" class="text-blue-500 text-sm hover:text-gray-900"
                   >Manage
                 </a>
               </router-link>
@@ -77,10 +82,16 @@ const Swal = inject("Swal");
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Catalogue", href: "#", current: true },
+  { name: "Dispatches", href: "#", current: true },
 ];
-const catalogueStore = useListingStore();
-const catalogue = reactive([]);
+
+
+import { useDispatcherStore } from "../../../stores/dispatch.store";
+
+
+
+const dispatchStore = useDispatcherStore();
+const dispaches = reactive([]);
 
 
 
@@ -88,7 +99,8 @@ const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
 const columns = ref([
-   {
+
+  {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
@@ -96,106 +108,77 @@ const columns = ref([
     tdClass: "capitalize"
   },
   {
-    label: "Name",
-    field: (row) => row.name,
+    label: "Origin Warehouse",
+    field: row => row.loadingPlan?.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize",
+    tdClass: "capitalize"
   },
- 
+  {
+    label: "Destination District",
+    field: row => row.loadingPlan?.district?.Name,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
 
-   {
-    label: "Type",
-    field: (row) => row.listingTypes.name,
-    sortable: true,
-    hidden: false,
-    firstSortType: "asc",
-    tdClass: "capitalize",
-  },
   {
-    label: "Status",
-    field: (row) => (row.status == true ? "Available" : "Unavailable"),
-    sortable: true,
-    hidden: true,
-    firstSortType: "asc",
-    tdClass: "capitalize",
-  },
-  {
-    label: "Created",
-    hidden: false,
-    field: (row) => moment(row.created).fromNow(),
+    label: "Date Created",
+    field: row => moment(row.loadingPlan.CreatedOn).format("d/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize",
+    tdClass: "capitalize"
   },
  
   {
-    label: "Options",
-    field: (row) => row,
-    sortable: false,
+    label: "Tonnage",
+    hidden: false,
+    field: row => row.Quantity,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
   },
+
+
 ]);
 //MOUNTED
 onMounted(() => {
-  getcatalogue();
+  getDispatches();
  // getLatest()
 });
 //FUNCTIONS
 
 
 
-const getcatalogue = async () => {
+const getDispatches = async () => {
   isLoading.value = true;
-  catalogueStore
-    .getCatalogue()
-    .then((result) => {
+  dispatchStore
+    .get()
+    .then(result => {
       // for (let i = 0; i < 100; i++) {
-      //   catalogue.push(...result);
+      //   users.push(...result);
       // }
-      catalogue.length = 0; //empty array
-      catalogue.push(...result);
-      catalogue.sort((a, b) => new Date(b.created) - new Date(a.created));
+      dispaches.length = 0; //empty array
+      dispaches.push(...result);
 
-   //  console.log(...result);
+
     })
-    .catch((error) => {
-      Swal.fire({
-        title: "Catalogue Retrieval Failed",
-        text: "Failed to get catalogue (Please refresh to try again)",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    })
+
+
     .finally(() => {
       isLoading.value = false;
     });
-};
 
-const createListing = async (model) => {
-  isLoading.value = true;
-  catalogueStore
-    .create(model)
-    .then((result) => {
-      Swal.fire({
-        title: "Success",
-        text: "created a new catalogue",
-        icon: "success",
-        confirmButtonText: "Ok",
-      }).then(() => {
-        $router.push({ path: "/admin/catalogue/manage/" + result.id });
-      });
-    })
-    .catch((error) => {
-      Swal.fire({
-        title: "Listing creation failed",
-        text: "Failed to create catalogue (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    })
-    .finally(() => {
-      isLoading.value = false;
-      getcatalogue();
-    });
-};
+}
+
+
 </script>
+
+<style>
+.rounded-table {
+  border-radius: 10px;
+  /* Adjust the radius as needed */
+  overflow: hidden;
+  /* This is important to apply rounded corners to child elements */
+}
+</style>

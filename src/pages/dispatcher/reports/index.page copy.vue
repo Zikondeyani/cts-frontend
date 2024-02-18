@@ -9,7 +9,7 @@
       </div>
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-teal-900 sm:text-2xl sm:truncate">
+          <h2 class="font-bold leading-7 text-blue-900 sm:text-2xl sm:truncate">
             Dispatch Management
           </h2>
         </div>
@@ -24,7 +24,7 @@
           :rows="catalogue"
           :search-options="{ enabled: true }"
           
-          style="font-weight: bold; color: teal;"
+          style="font-weight: bold; color: blue;"
           :pagination-options="{
             enabled: true,
           }"
@@ -38,7 +38,7 @@
               <router-link
                 :to="{ path: '/admin/catalogue/manage/' + props.row.id }"
               >
-                <a href="#" class="text-teal-500 text-sm hover:text-gray-900"
+                <a href="#" class="text-blue-500 text-sm hover:text-gray-900"
                   >Manage
                 </a>
               </router-link>

@@ -23,7 +23,7 @@
                       Change Status
                     </label>
                     <select id="status" name="status" v-model="model.status" autocomplete="status-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                       <option value="accepted">Accepted</option>
                       <option value="already booked">Not Available</option>
                     </select>
@@ -36,7 +36,7 @@
 
                     <label for="datepicker" class="block text-sm font-medium text-gray-700">Available on:</label>
                     <input type="date" id="datepicker" name="datepicker" v-model="model.availableday"
-                      class="mt-1 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
                     <div class="col-span-6 sm:col-span-3">
                       <div class="grid grid-cols-2 gap-4">
@@ -45,7 +45,7 @@
                           <label for="timepicker1" class="block text-sm font-medium text-gray-700 mt-3">Available
                             from:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="model.availabletimefrom" id="timepicker1">
                             </VueTimePicker>
                           </div>
@@ -56,7 +56,7 @@
                           <label for="timepicker2" class="block text-sm font-medium text-gray-700 mt-3">Available
                             to:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="model.availabletimeto" id="timepicker2">
                             </VueTimePicker>
                           </div>
@@ -68,7 +68,7 @@
                     <!-- Comment Box -->
                     <div class="mt-4">
                       <textarea rows="4" v-model="model.comment" placeholder="Add comment to enquirer"
-                        class="w-full border-gray-300 rounded-md focus:ring-gray-500 focus:border-teal-500"></textarea>
+                        class="w-full border-gray-300 rounded-md focus:ring-gray-500 focus:border-blue-500"></textarea>
                     </div>
                   </div>
                 </div>

@@ -77,7 +77,7 @@
                           <label for="timepicker1" class="block text-sm font-medium text-gray-700 mt-3">Available
                             from:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="availabletimefrom" id="timepicker1">
                             </VueTimePicker>
                           </div>
@@ -88,7 +88,7 @@
                           <label for="timepicker2" class="block text-sm font-medium text-gray-700 mt-3">Available
                             to:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="availabletimeto" id="timepicker2">
                             </VueTimePicker>
                           </div>

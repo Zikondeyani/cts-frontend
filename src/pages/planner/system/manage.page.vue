@@ -22,29 +22,29 @@
               <h3 class="text-lg font-medium leading-6 text-gray-900">
                 Enquiry Info
               </h3>
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Enquiry:</span>
                 {{ booking }}
               </p>
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Enquirer Email:</span>
                 {{ model.email }}
               </p>
 
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Enquirer Phone #:</span>
                 {{ model.phone }}
               </p>
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Enquired From:</span>
                 {{ moment(model.enquiryFrom).format("DD/MM/YYYY") }}
               </p>
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Enquired To:</span>
                 {{ moment(model.enquiryTo).format("DD/MM/YYYY") }}
               </p>
 
-              <p class="mt-1 text-sm text-teal-500">
+              <p class="mt-1 text-sm text-blue-500">
                 <span class="text-gray-500 font-bold">Service Type:</span>
                 {{ model.servicetype }}
               </p>

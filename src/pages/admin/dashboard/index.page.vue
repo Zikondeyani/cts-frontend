@@ -45,18 +45,36 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6   divide-x divide-y border border-gray-200">
-                <div v-for="stat in stats" :key="stat.label"
-                  class="flex flex-col shadow-2xl rounded-xl mx-4 my-4 items-center py-4">
-                  <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                  <span class="mt-1 text-sm text-gray-600">{{ stat.label }}</span>
-
-                  <span class="mt-2">
-
-                    <component :is="stat.icon" :class="`h-6 w-6`" :style="`color: ${stat.color}`" aria-hidden="true" />
-
-                  </span>
+              <div class="bg-gray-100 p-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <!-- Stats Cards -->
+                  <div v-for="stat in stats" :key="stat.label"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
+                        <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
+                      </div>
+                      <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
+                    </div>
+                    <div v-if="stat.percentageText" class="mt-4">
+                      <div class="flex items-center justify-between">
+                        <span :class="`text-${stat.textColor}`">{{ stat.percentageText }}</span>
+                        <component :is="stat.percentage >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
+                          :class="`text-${stat.textColor}`" />
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div :class="`bg-${stat.progressBarColor}-500 h-2 rounded-full`"
+                          :style="{ width: stat.percentage + '%' }"></div>
+                      </div>
+                    </div>
+                    <div v-if="stat.alertText" class="mt-4">
+                      <div class="flex items-center">
+                        <ExclamationIcon class="h-5 w-5 text-red-500" />
+                        <span class="ml-2 text-red-500 text-sm">{{ stat.alertText }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,6 +115,18 @@ import { useDispatcherStore } from "../../../stores/dispatch.store";
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 
+
+
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
+
+
+
+const loadingPlanStore = useloadingplanstore();
+const loadingplans = reactive([]);
+
+
+
+
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
   Menu,
@@ -124,11 +154,11 @@ import {
   XIcon,
   TruckIcon,
   DocumentDuplicateIcon,
-  ClipboardListIcon,
   CollectionIcon,
   IdentificationIcon,
   DocumentTextIcon,
   OfficeBuildingIcon,
+  DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
 
@@ -225,27 +255,44 @@ const getCatalogue = async () => {
     catalogueCount.value = result.count;
   });
 };
-
 const getDispatches = async () => {
   isLoading.value = true;
   dispatchStore
     .get()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
-      dispaches.length = 0; //empty array
-      dispaches.push(...result);
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      const sortedDispatches = [...result].sort((a, b) => {
+        // Convert the `createdOn` field to a Date object and compare
+        return new Date(b.createdon) - new Date(a.createdon);
+      });
 
-
+      // Clear the existing dispatches and push the sorted results
+      dispaches.length = 0;
+      dispaches.push(...sortedDispatches);
     })
-
-
     .finally(() => {
       isLoading.value = false;
     });
-
 }
+
+
+const getLoadingPlans = async () => {
+ // isLoading.value = true;
+  loadingPlanStore
+    .get()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      const sortedDispatches = [...result].sort((a, b) => {
+        // Convert the `createdOn` field to a Date object and compare
+        return new Date(b.createdon) - new Date(a.createdon);
+      });
+
+      // Clear the existing dispatches and push the sorted results
+      loadingplans.length = 0;
+      loadingplans.push(...sortedDispatches);
+    })
+}
+
 const getUsers = async () => {
   userStore.count().then((result) => {
     userCount.value = result.count;
@@ -283,76 +330,38 @@ const getBookings = async () => {
 
 
 const createReport = async (model) => {
-  const doc = new jsPDF();
+  isLoading.value = true;
 
-  // Get the "from" and "to" dates from the model
-  const { From, To } = model;
-
-  // Provide default values for "from" and "to" if not defined
-  const fromDate = From || new Date(0); // Default to the earliest possible date
-  const toDate = To || new Date(); // Default to the current date
-
-  // Filter the bookings by date range
-  // Filter the bookings by date range
-  const filteredBookings = bookings.filter((booking) => {
-    const bookingDate = formatDate(booking.bookingFrom);
-    const bookingToDate = formatDate(booking.bookingTo);
-
-    return (
-      bookingDate >= formatDate(fromDate) && bookingToDate <= formatDate(toDate)
-    );
-  });
-
-  // Generate the table headers
-  const headers = [
-    [
-      "Booking From",
-      "Booking To",
-      "Name",
-      "Price",
-      "Status",
-      "Phone",
-      "Service Type",
-      "Booked On",
-    ],
-  ];
-
-  // Generate the table rows from the filtered bookings
-  const rows = filteredBookings.map((booking) => [
-    formatDate(booking.bookingFrom),
-    formatDate(booking.bookingTo),
-    `${booking.firstname} ${booking.lastname}`,
-    booking.listings.price,
-    booking.status,
-    booking.phone,
-    booking.servicetype,
-    formatDate(booking.created),
-  ]);
-
-  // Set the table style
-  const tableStyle = {
-    startY: 60, // Adjust the startY value to leave space for the header image
-    headStyles: { fillColor: [0, 128, 128] }, // Maroon color
-    columnStyles: { 2: { halign: "right" } },
-  };
-
-  var imgData =
-    "";
-  doc.addImage(imgData, "JPEG", 10, 10, 40, 40);
-
-  // Add the heading to the PDF document
-  let reportHeading = "DODMA COMMO Service Enquiry Report";
-  if (From && To) {
-    reportHeading += "\n\n(From: " + From + " To: " + To + ")";
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id
+  if (model.StartDate) {
+    model.StartDate = moment(model.StartDate).toISOString();
   }
-  doc.setFontSize(18);
-  doc.text(reportHeading, 60, 25);
+  if (model.EndDate) {
+    model.EndDate = moment(model.EndDate).toISOString();
+  }
 
-  // Add the table to the PDF document
-  doc.autoTable({ head: headers, body: rows, ...tableStyle });
+  loadingPlanStore
+    .create(model)
+    .then(result => {
+      Swal.fire({
+        title: "Success",
+        text: "Created a new loading plan successfully",
+        icon: "success",
+        confirmButtonText: "Ok"
+      });
 
-  // Save the PDF file
-  doc.save("Machawi265 Service Enquiry .pdf");
+      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
+
+    })
+    .catch(error => {
+      // Handling error
+    })
+    .finally(() => {
+      isLoading.value = false;
+      getDispatches();
+      getLoadingPlans();
+    });
 };
 
 const formatDate = (date) => {
@@ -360,14 +369,67 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-let stats = [
-  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'teal' },
-  { label: "Dispatch Status", value: catalogueCount, icon: LocationMarkerIcon, color: 'blue' },
-  { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: '#008000' },
-  { label: "Dispatches done", value: userCount, icon: CheckCircleIcon, color: 'indigo' },
-  { label: "Receipts done", value: catalogueCount, icon: DocumentTextIcon, color: '#086db3' },
-  { label: "Requisitions", value: bookingCount, icon: ClipboardListIcon, color: 'red' },
-];
+// Dummy data for stats
+const stats = ref([
+  {
+    label: 'Dispatches Done',
+    value: 679,
+    icon: ClipboardListIcon,
+    iconColor: 'green-500',
+    percentageText: null
+  },
+  {
+    label: 'Receipts Done',
+    value: 326,
+    icon: DocumentIcon,
+    iconColor: 'blue-500',
+    percentageText: null
+  },
+  {
+    label: 'Pending Loading Plans',
+    value: 36,
+    icon: DocumentIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false
+  },
+  {
+    label: 'Total Stocks Planned',
+    value: '87,753.35MT',
+    icon: ExclamationCircleIcon,
+    iconColor: 'red-500',
+    percentageText: '26% dispatched',
+    textColor: 'red-500',
+    showProgress: true,
+    progress: 26,
+    isProgressPositive: false,
+    progressColor: 'red-500',
+    progressText: '353 Dispatches pending receipts!'
+  },
+  {
+    label: 'Dispatch Status',
+    value: '22,978.05MT',
+    icon: CheckCircleIcon,
+    iconColor: 'green-500',
+    percentageText: '67% received',
+    textColor: 'green-500',
+    showProgress: true,
+    progress: 67,
+    isProgressPositive: true,
+    progressColor: 'green-500',
+    progressText: ''
+  },
+  {
+    label: 'Requisitions',
+    value: 11,
+    icon: ClipboardListIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false
+  },
+]);
 const actions = [
   {
     icon: IdentificationIcon,

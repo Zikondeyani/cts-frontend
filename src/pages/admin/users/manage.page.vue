@@ -8,7 +8,7 @@
       </div>
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-teal-900 sm:text-2xl sm:truncate">
+          <h2 class="font-bold leading-7 text-blue-900 sm:text-2xl sm:truncate">
             Manage user account
           </h2>
         </div>
@@ -17,14 +17,14 @@
       <!-- tabs -->
       <div class="align-middle inline-block min-w-full">
         <ul
-          class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-teal-300"
+          class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300"
           id="tabs-menu"
           role="tablist"
         >
           <!-- <li class="nav-item" role="presentation">
             <a
               href="#user-profile"
-              class="nav-link block  font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-teal-100 focus:border-transparent active"
+              class="nav-link block  font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-profile"
               data-bs-toggle="pill"
               data-bs-target="#user-profile"
@@ -37,7 +37,7 @@
           <li class="nav-item" role="presentation">
             <a
               href="#user-settings"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-teal-100 focus:border-transparent active"
+              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-settings"
               data-bs-toggle="pill"
               data-bs-target="#user-settings"
@@ -50,7 +50,7 @@
           <li class="nav-item" role="presentation">
             <a
               href="#user-logs"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-teal-100 focus:border-transparent"
+              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
               id="tabs-user-logs"
               data-bs-toggle="pill"
               data-bs-target="#user-logs"

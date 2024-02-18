@@ -91,6 +91,18 @@ const routes = [
         name: "admin-dispatch-management",
         component: () => import("../pages/admin/dispatch/index.page.vue"),
       },
+
+      {
+        path: "/admin/dispatches",
+        name: "admin-dispatches",
+        component: () => import("../pages/admin/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/admin/loadingplans",
+        name: "admin-loadingplans",
+        component: () => import("../pages/admin/loadingplans/index.page.vue"),
+      },
       {
         path: "/admin/dispatch-management/manage/:id",
         name: "admin-manage-catalogue",

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import TransportersService from "../services/api/driver.service";
-const driverService = new TransportersService();
+import DriverService from "../services/api/driver.service";
+const driverService = new DriverService();
 
 export const usedriverstore = defineStore({
   id: 'drivers',
@@ -21,7 +21,6 @@ export const usedriverstore = defineStore({
     },
 
 
- 
 
     
     async getByReference(data) {

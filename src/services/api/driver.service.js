@@ -1,5 +1,5 @@
 import axios from "axios";
-const resource = process.env.VUE_APP_ROOT_API + "/truck-driver";
+const resource = process.env.VUE_APP_ROOT_API + "/truck-drivers";
 
 export default class DriverService {
   get(id) {

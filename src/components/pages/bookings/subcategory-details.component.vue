@@ -17,15 +17,15 @@
             <div class="space-y-2">
               <div v-for="(item, index) in subcategoryItems" :key="index" class="flex items-center">
 
-                <span class="ml-2 text-teal-700">{{ item.name }}</span>
+                <span class="ml-2 text-blue-700">{{ item.name }}</span>
                 <button @click="deleteItem(index)" class="ml-2 text-red-500">❌</button>
               </div>
             </div>
             <div class="mt-4">
               <input v-model="newItem" @keyup.enter="addItem"
-                class="rounded border-gray-300 text-gray-700 focus:ring-teal-400 py-2 px-4"
+                class="rounded border-gray-300 text-gray-700 focus:ring-blue-400 py-2 px-4"
                 placeholder="Add a new subcategory" @change="updatesubcategoryItem(item)" />
-              <button @click="addItem" class="ml-2 rounded bg-teal-500 text-white px-4 py-2">Add</button>
+              <button @click="addItem" class="ml-2 rounded bg-blue-500 text-white px-4 py-2">Add</button>
             </div>
 
           </div>

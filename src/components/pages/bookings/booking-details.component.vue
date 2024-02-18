@@ -23,7 +23,7 @@
                       Change Status
                     </label>
                     <select id="status" name="status" v-model="model.status" autocomplete="status-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                       <option value="accepted">Accepted</option>
                       <option value="already booked">Not Available</option>
                     </select>
@@ -36,7 +36,7 @@
 
                     <label for="datepicker" class="block text-sm font-medium text-gray-700">Available on:</label>
                     <input type="date" id="datepicker" name="datepicker" v-model="model.availableday"
-                      class="mt-1 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 
                     <div class="col-span-6 sm:col-span-3">
                       <div class="grid grid-cols-2 gap-4">
@@ -45,7 +45,7 @@
                           <label for="timepicker1" class="block text-sm font-medium text-gray-700 mt-3">Available
                             from:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="model.availabletimefrom" id="timepicker1">
                             </VueTimePicker>
                           </div>
@@ -56,7 +56,7 @@
                           <label for="timepicker2" class="block text-sm font-medium text-gray-700 mt-3">Available
                             to:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="model.availabletimeto" id="timepicker2">
                             </VueTimePicker>
                           </div>
@@ -94,7 +94,7 @@
             <h2 class="text-1xl font-semibold mb-4">Checklist</h2>
             <div class="space-y-2">
               <div v-for="(item, index) in checklistItems" :key="index" class="flex items-center">
-                <input type="checkbox" class="rounded border-gray-300 text-teal-500 focus:ring-teal-400 h-4 w-4"
+                <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-400 h-4 w-4"
                   v-model="item.completed" @change="updateChecklistItem(item)" />
                 <span class="ml-2 text-gray-700">{{ item.title }}</span>
                 <button @click="deleteItem(index)" class="ml-2 text-red-500">❌</button>
@@ -102,9 +102,9 @@
             </div>
             <div class="mt-4">
               <input v-model="newItem" @keyup.enter="addItem"
-                class="rounded border-gray-300 text-gray-700 focus:ring-teal-400 py-2 px-4" placeholder="Add a new checklist item"
+                class="rounded border-gray-300 text-gray-700 focus:ring-blue-400 py-2 px-4" placeholder="Add a new checklist item"
                 @change="updateChecklistItem(item)" />
-              <button @click="addItem" class="ml-2 rounded bg-teal-500 text-white px-4 py-2">Add</button>
+              <button @click="addItem" class="ml-2 rounded bg-blue-500 text-white px-4 py-2">Add</button>
             </div>
 
           </div>

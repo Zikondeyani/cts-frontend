@@ -361,7 +361,7 @@ const formatDate = (date) => {
 };
 
 let stats = [
-  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'teal' },
+  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'blue' },
   { label: "Dispatch Status", value: catalogueCount, icon: LocationMarkerIcon, color: 'blue' },
   { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: '#008000' },
   { label: "Dispatches done", value: userCount, icon: CheckCircleIcon, color: 'indigo' },

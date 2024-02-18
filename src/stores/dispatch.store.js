@@ -46,6 +46,8 @@ export const useDispatcherStore = defineStore({
         .create(data)
         .then((result) => {
           if (result) {
+
+            console.log(result, "over herer")
             return result;
           }
         })

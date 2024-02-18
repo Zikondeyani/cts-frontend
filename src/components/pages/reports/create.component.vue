@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button type="button" style="background-color: #0a6eb4;"
-      class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-teal-500 active:shadow-lg transition duration-100 ease-in-out capitalize"
+    <button type="button" style="background-color: #248cd6;"
+      class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-100 ease-in-out capitalize"
       @click="open = true">
       <PlusIcon class="h-5 w-5 mr-2" />
       Create a loading plan
@@ -26,7 +26,7 @@
               class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl">
               <div
                 class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
-                <h5 class="font-body text-md font-medium leading-normal text-gray-800" id="formModalLabel">
+                <h5 class="font-body text-md font-bold leading-normal text-blue-400" id="formModalLabel">
                   Create Loading Plan
                 </h5>
                 <button type="button"
@@ -34,127 +34,127 @@
                   @click="open = false"></button>
               </div>
 
-              <form @submit="onSubmit">
-                <div class="px-4 py-5 bg-white sm:p-6">
-                  <div class="grid grid-cols-6 gap-2">
+              <div class="px-4 py-5 bg-white sm:p-6">
+                <div class="grid grid-cols-6 gap-2">
 
 
 
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="transporter" class="block text-sm font-medium text-gray-700">
-                        Select Transporter</label>
-                      <select id="transporter" name="transporter" v-model="transporterid" autocomplete="transporter-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="transporter in transporters" :key="transporter" :value="transporter.Name" class="uppercase">
-                          {{ transporter.Name }}
-                        </option>
-                      </select>
-
-                    </div>
-
-
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="transporter" class="block text-sm font-medium text-gray-700">
-                        Select Commodity</label>
-                      <select id="commodity" name="commodity" v-model="roleId" autocomplete="commodity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="commodity in commodities" :key="commodity" :value="commodity.Name" class="uppercase">
-                          {{ commodity.Name }}
-                        </option>
-                      </select>
-
-                    </div>
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="transporter" class="block text-sm font-medium text-gray-700">
+                      Select Transporter</label>
+                    <select id="transporter" name="transporter" v-model="reports.transporterId"
+                      autocomplete="transporter-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="transporter in transporters" :key="transporter" :value="transporter.id"
+                        class="uppercase">
+                        {{ transporter.Name }}
+                      </option>
+                    </select>
 
                   </div>
 
-                  <div class="grid grid-cols-6 gap-2">
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
 
-                      <input type="number" name="quantity" v-model="quantity" id="reportFrom"
-                        autocomplete="quantity"
-                        class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
 
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
-                      <select id="warehouse" name="warehouse" v-model="roleId" autocomplete="warehouse-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.Name" class="uppercase">
-                          {{ warehouse.Name }}
-                        </option>
-                      </select>
-                    </div>
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="transporter" class="block text-sm font-medium text-gray-700">
+                      Select Commodity</label>
+                    <select id="commodity" name="commodity" v-model="reports.commodityId" autocomplete="commodity-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
+                        {{ commodity.Name }}
+                      </option>
+                    </select>
+
                   </div>
 
+                </div>
 
+                <div class="grid grid-cols-6 gap-2">
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
 
-                  <div class="grid grid-cols-6 gap-2">
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
-                        District</label>
-
-                      <select id="destination" name="destination" v-model="districtid" autocomplete="destination-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="district in districts" :key="district" :value="district.Name" class="uppercase">
-                          {{ district.Name }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
-
-                      <select id="project" name="project" v-model="projectid" autocomplete="project-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="project in projects" :key="project" :value="project.Name" class="uppercase">
-                          {{ project.Name }}
-                        </option>
-                      </select>
-                    </div>
+                    <input type="number" name="quantity" v-model="reports.Quantity" id="reportFrom"
+                      autocomplete="quantity"
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                   </div>
 
-                  <div class="grid grid-cols-6 gap-2">
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
-                      <select id="activity" name="activity" v-model="activityid" autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="activity in activities" :key="activity" :value="activity.Name" class="uppercase">
-                          {{ activity.Name }}
-                        </option>
-                      </select>
-                    </div>
-
-                    <div class="col-span-3 sm:col-span-3">
-                      <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
-
-                      <input type="date" name="Start Date" v-model="startdate" id="Start Date"
-                        autocomplete="Start Date"
-                        class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-
-                    </div>
-
-                    <div class="col-span-3 sm:col-span-3">
-                      <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
-
-                      <input type="date" name="End Date" v-model="enddate" id="End Date"
-                        autocomplete="End Date"
-                        class="mt-2 focus:ring-teal-500 focus:border-teal-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-
-                    </div>
+                    <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id" class="uppercase">
+                        {{ warehouse.Name }}
+                      </option>
+                    </select>
                   </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button type="submit" style="background-color: #0a6eb4;"
-                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    Save
-                  </button>
+
+
+
+                <div class="grid grid-cols-6 gap-2">
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
+                      District</label>
+
+                    <select id="destination" name="destination" v-model="reports.districtId"
+                      autocomplete="destination-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
+                        {{ district.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+
+                    <select id="project" name="project" v-model="reports.projectId" autocomplete="project-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="project in projects" :key="project" :value="project.id" class="uppercase">
+                        {{ project.Name }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
-              </form>
+
+                <div class="grid grid-cols-6 gap-2">
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
+
+                    <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                        {{ activity.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-span-3 sm:col-span-3">
+                    <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
+
+                    <input type="date" name="Start Date" v-model="reports.StartDate" id="Start Date"
+                      autocomplete="Start Date"
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
+                  </div>
+
+                  <div class="col-span-3 sm:col-span-3">
+                    <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
+
+                    <input type="date" name="End Date" v-model="reports.EndDate" id="End Date" autocomplete="End Date"
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
+                  </div>
+                </div>
+              </div>
+              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                <button @click="onSubmit" style="background-color: #329ce7;"
+                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                  Save
+                </button>
+              </div>
             </div>
           </TransitionChild>
         </div>
@@ -239,7 +239,10 @@ onMounted(() => { getActivities(); getCommodities(); getDistricts(); getLoadingp
 const reports = ref({});
 //FUNCTIONS
 const onSubmit = () => {
+
   emit("create", reports.value);
+  open.value = false; // This will set open.value to false after emitting the event
+
 };
 
 

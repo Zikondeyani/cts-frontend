@@ -33,12 +33,12 @@
                 text-sm
                 font-medium
                 text-white
-                bg-teal-500
+                bg-blue-500
                 hover:bg-blue-400
                 focus:outline-none
                 focus:ring-2
                 focus:ring-offset-2
-                focus:ring-teal-500
+                focus:ring-blue-500
                 capitalize
               "
             >

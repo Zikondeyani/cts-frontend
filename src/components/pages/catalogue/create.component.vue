@@ -62,7 +62,7 @@
                       <select :disabled="filteredListingTypesCategories.length == 0" id="catalogueTypeCategory"
                         name="catalogueTypeCategory" v-model="cataloguetypecategoryId"
                         autocomplete="catalogueTypeCategory"
-                        class="mt-1 focus:ring-teal-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-blue-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         <option v-for="type in filteredListingTypesCategories" :key="type.id" :value="type.id"
                           class="uppercase">
                           {{ type.name }}
