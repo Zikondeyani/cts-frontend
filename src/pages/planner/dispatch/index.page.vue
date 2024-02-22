@@ -18,7 +18,8 @@
       <div class="flex flex-wrap justify-center md:justify-start -mx-2 mt-7">
         <div v-for="option in options" :key="option.label" class="p-2 md:w-1/3 lg:w-1/5">
           <router-link :to="option.path" class="block">
-            <div class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
+            <div
+              class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
               <component :is="option.icon" class="h-6 w-6 mb-2" />
               <span class="text-center p-2">{{ option.label }}</span>
             </div>
@@ -41,12 +42,13 @@ const breadcrumbs = [
   { name: "Dispatch Management", href: "#", current: true },
 ];
 const options = ref([
-  { label: 'Dispatches', icon: LocationMarkerIcon, path: '/dispatches' },
-  { label: 'Loading Plans', icon: MapIcon, path: '/loading-plans' },
-  { label: 'Truck Drivers', icon: UserIcon, path: '/truck-drivers' },
+  { label: 'Loading Plans', icon: MapIcon, path: '/planner/loadingplans' },
+
+  { label: 'Dispatches', icon: LocationMarkerIcon, path: '/planner/dispatches' },
+ /*  { label: 'Truck Drivers', icon: UserIcon, path: '/truck-drivers' },
   { label: 'Transporters', icon: TruckIcon, path: '/transporters' },
   { label: 'Warehouses', icon: HomeIcon, path: '/warehouses' },
-  // ... other options as needed
+ */  // ... other options as needed
 ]);
 </script>
 

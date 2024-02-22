@@ -48,11 +48,11 @@ const breadcrumbs = [
   { name: "Receipt Management", href: "#", current: true },
 ];
 const options = ref([
-  { label: 'Instructions', icon: ClipboardListIcon, path: '/instructions' },
+/*   { label: 'Instructions', icon: ClipboardListIcon, path: '/instructions' },
   { label: 'Instructed Dispatches', icon: TruckIcon, path: '/instructed-dispatches' },
   { label: 'Instructed Commodities', icon: ArchiveIcon, path: '/instructed-commodities' },
   { label: 'Instructed Receipts', icon: ReceiptRefundIcon, path: '/instructed-receipts' },
-  { label: 'Receipts', icon: ClipboardIcon, path: '/receipts' },
+  */ { label: 'Receipts', icon: ClipboardIcon, path: '/recipient/receipts' },
 ]);
 </script>
 

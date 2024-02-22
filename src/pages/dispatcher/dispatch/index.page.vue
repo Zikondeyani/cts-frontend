@@ -42,11 +42,11 @@ const breadcrumbs = [
 ];
 const options = ref([
   { label: 'Dispatches', icon: LocationMarkerIcon, path: '/dispatches' },
-  { label: 'Loading Plans', icon: MapIcon, path: '/loading-plans' },
+ /*  { label: 'Loading Plans', icon: MapIcon, path: '/loading-plans' },
   { label: 'Truck Drivers', icon: UserIcon, path: '/truck-drivers' },
   { label: 'Transporters', icon: TruckIcon, path: '/transporters' },
   { label: 'Warehouses', icon: HomeIcon, path: '/warehouses' },
-  // ... other options as needed
+ */  // ... other options as needed
 ]);
 </script>
 

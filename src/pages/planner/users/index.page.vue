@@ -46,6 +46,7 @@
             </button>
           </router-link> -->
           <create-user-form v-on:create="createUser" />
+          
         </div>
       </div>
       <!-- table  -->
@@ -84,12 +85,17 @@ import {
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import createUserForm from "../../../components/pages/users/create.component.vue";
+
+
 //SCHEMA//AND//STORES
 import { useUserStore } from "../../../stores/user.store";
 //INJENCTIONS
 const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
+
+
+
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
@@ -155,6 +161,10 @@ const columns = ref([
 onMounted(() => {
   getUsers();
 });
+
+
+
+
 //FUNCTIONS
 const getUsers = async () => {
   isLoading.value = true;

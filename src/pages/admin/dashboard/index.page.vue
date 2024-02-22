@@ -46,7 +46,7 @@
                 </div>
               </div>
               <div class="bg-gray-100 p-5">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   <!-- Stats Cards -->
                   <div v-for="stat in stats" :key="stat.label"
                     class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
@@ -60,20 +60,19 @@
                     <div v-if="stat.percentageText" class="mt-4">
                       <div class="flex items-center justify-between">
                         <span :class="`text-${stat.textColor}`">{{ stat.percentageText }}</span>
-                        <component :is="stat.percentage >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
+                        <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
                           :class="`text-${stat.textColor}`" />
                       </div>
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div :class="`bg-${stat.progressBarColor}-500 h-2 rounded-full`"
-                          :style="{ width: stat.percentage + '%' }"></div>
+                        <div v-if="stat.progress > 50" :class="`bg-green-500 h-2 rounded-full`"
+                          :style="{ width: stat.progress + '%' }">
+                        </div>
+
+                        <div v-else :class="`bg-red-500 h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
+                        </div>
                       </div>
                     </div>
-                    <div v-if="stat.alertText" class="mt-4">
-                      <div class="flex items-center">
-                        <ExclamationIcon class="h-5 w-5 text-red-500" />
-                        <span class="ml-2 text-red-500 text-sm">{{ stat.alertText }}</span>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -120,12 +119,7 @@ import { usebookingstore } from "../../../stores/booking.store";
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
 
-
-const loadingPlanStore = useloadingplanstore();
-const loadingplans = reactive([]);
-
-
-
+import { usereceiptstore } from "../../../stores/receipt.store";
 
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
@@ -210,6 +204,18 @@ const columns = ref([
 
 
 ]);
+
+
+
+const loadingPlanStore = useloadingplanstore();
+const loadingplans = reactive([]);
+
+
+
+
+const recieptStore = usereceiptstore();
+const receipts = reactive([]);
+
 const $router = useRouter();
 //INJENCTIONS
 const moment = inject("moment");
@@ -241,12 +247,21 @@ const isLoading = ref(false);
 let userCount = ref(0);
 
 let bookingCount = ref(0);
+
+const receiptcount = ref(0)
+
+const dispatchcount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(() => {
   getCatalogue();
   getUsers();
   getBookings();
   getDispatches();
+  getReceipts();
+  getDispatchesCount();
+  getLoadingPlansPending();
+  getloadingplansSummary();
+  getdispatchSummary();
 });
 //WATCH
 
@@ -255,6 +270,15 @@ const getCatalogue = async () => {
     catalogueCount.value = result.count;
   });
 };
+
+
+const getReceipts = async () => {
+  recieptStore.count().then((result) => {
+    receiptcount.value = result.count;
+  });
+};
+
+
 const getDispatches = async () => {
   isLoading.value = true;
   dispatchStore
@@ -276,8 +300,14 @@ const getDispatches = async () => {
 }
 
 
+const getDispatchesCount = async () => {
+  dispatchStore.count().then((result) => {
+    dispatchcount.value = result.count;
+  });
+}
+
 const getLoadingPlans = async () => {
- // isLoading.value = true;
+  // isLoading.value = true;
   loadingPlanStore
     .get()
     .then(result => {
@@ -290,6 +320,59 @@ const getLoadingPlans = async () => {
       // Clear the existing dispatches and push the sorted results
       loadingplans.length = 0;
       loadingplans.push(...sortedDispatches);
+    })
+}
+
+const pendingplans = ref(0)
+
+const totalBalance = ref(0)
+
+const totalStockPlanned = ref("")
+const dispatchPercentageFormated = ref("")
+const totalDispatched = ref("")
+const totalReceived = ref("")
+const receivedPercentageFormated = ref("")
+const receivedPercentage = ref("")
+const dispatchPercentage = ref("")
+
+const getLoadingPlansPending = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansPending()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      pendingplans.value = result.count
+    })
+}
+
+
+const getdispatchSummary = async () => {
+  // isLoading.value = true;
+  dispatchStore
+    .getdispatchSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
+      totalReceived.value = result.totalReceived
+      receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
+
+      receivedPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+
+const getloadingplansSummary = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalance.value = result.totalBalance
+      dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
     })
 }
 
@@ -372,63 +455,67 @@ const formatDate = (date) => {
 // Dummy data for stats
 const stats = ref([
   {
+    label: 'Total Stocks Planned',
+    value: totalStockPlanned,
+    // Use a ternary operator for the icon
+    icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormated,
+    textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    progress: dispatchPercentage,
+    isProgressPositive: dispatchPercentage >= 50,
+    progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+  },
+
+  {
+    label: 'Dispatch Status',
+    value: totalDispatched,
+    // Use a ternary operator to decide between ExclamationCircleIcon and CheckCircleIcon
+    icon: receivedPercentage > 50 ? ExclamationCircleIcon : CheckCircleIcon,
+    iconColor: dispatchPercentage > 50 ? 'red-500' : 'green-500',
+    percentageText: receivedPercentageFormated,
+    textColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    showProgress: true,
+    progress: receivedPercentage,
+    isProgressPositive: receivedPercentage > 50,
+    progressColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    progressText: ''
+  },
+
+  {
     label: 'Dispatches Done',
-    value: 679,
+    value: dispatchcount,
     icon: ClipboardListIcon,
     iconColor: 'green-500',
     percentageText: null
   },
   {
     label: 'Receipts Done',
-    value: 326,
+    value: receiptcount,
     icon: DocumentIcon,
     iconColor: 'blue-500',
     percentageText: null
   },
   {
     label: 'Pending Loading Plans',
-    value: 36,
+    value: pendingplans,
     icon: DocumentIcon,
     iconColor: 'gray-400',
     percentageText: '',
     textColor: 'gray-600',
     showProgress: false
-  },
-  {
-    label: 'Total Stocks Planned',
-    value: '87,753.35MT',
-    icon: ExclamationCircleIcon,
-    iconColor: 'red-500',
-    percentageText: '26% dispatched',
-    textColor: 'red-500',
-    showProgress: true,
-    progress: 26,
-    isProgressPositive: false,
-    progressColor: 'red-500',
-    progressText: '353 Dispatches pending receipts!'
-  },
-  {
-    label: 'Dispatch Status',
-    value: '22,978.05MT',
-    icon: CheckCircleIcon,
-    iconColor: 'green-500',
-    percentageText: '67% received',
-    textColor: 'green-500',
-    showProgress: true,
-    progress: 67,
-    isProgressPositive: true,
-    progressColor: 'green-500',
-    progressText: ''
-  },
-  {
-    label: 'Requisitions',
-    value: 11,
-    icon: ClipboardListIcon,
-    iconColor: 'gray-400',
-    percentageText: '',
-    textColor: 'gray-600',
-    showProgress: false
-  },
+  }
+  /* ,
+   {
+     label: 'Requisitions',
+     value: 11,
+     icon: ClipboardListIcon,
+     iconColor: 'gray-400',
+     percentageText: '',
+     textColor: 'gray-600',
+     showProgress: false
+   }, */
 ]);
 const actions = [
   {
@@ -448,6 +535,10 @@ const actions = [
     details: "Manage all Enquiries made to services",
   },
 ];
+
+
+
+const dispatchstatus = ref(0)
 
 
 </script>

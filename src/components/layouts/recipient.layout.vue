@@ -17,9 +17,16 @@
 
 
           <!-- Admin Text in the Middle (if needed) -->
-          <span class="font-bold text-white mx-4">DODMA CTS | Receipient</span>
+          <span class="font-bold text-white mx-4">DODMA CTS | Recipient</span>
 
 
+
+          <div class="flex items-center ml-4">
+            <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
+            <span class="text-white font-medium text-sm">
+              {{ user.district }}
+            </span>
+          </div>
         </div>
 
 
@@ -87,11 +94,7 @@
                 </a>
                 </MenuItem>
 
-                <MenuItem v-slot="{ active }">
-                <button @click="gotoSystemsettings" :class="menuItemClasses(active, true)">
-                  System
-                </button>
-                </MenuItem>
+
                 <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
@@ -182,6 +185,15 @@ const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
 
+
+const menuItemClasses = (active, isButton = false) => [
+  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+  'block px-4 py-2 text-sm',
+  isButton ? 'w-full text-left' : ''
+];
+
+
+
 const isDropdownOpen = ref(false);
 
 
@@ -214,10 +226,10 @@ function navigation() {
  /*    { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
     { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
  */    { name: "Receipts", href: "/recipient/receipt-management", icon: DocumentDuplicateIcon, current: false },
-  /*   { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
-    { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
-  */   { name: "Reports", href: "/recipient/report-management", icon: DocumentDuplicateIcon, current: false },
-
+    /*   { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
+      { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
+    */  /*  { name: "Reports", href: "/recipient/report-management", icon: DocumentDuplicateIcon, current: false },
+   */
   ];
 
   for (let nav of navList)

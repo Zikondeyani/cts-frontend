@@ -100,6 +100,108 @@ export default class LoadingPlanService {
     }
   }
 
+
+
+  getloadingplansPending(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource + "/pending" + 
+          `?filter={"include": [
+            "activity", "user", "district", "transporter", "warehouse", "commodity"
+          ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id + `?filter={"include": [
+          "activity", "user", "district", "transporter", "warehouse", "commodity"
+        ]}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+
+
+  getloadingplansSummary(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource + "/stock-summary" + 
+          `?filter={"include": [
+            "activity", "user", "district", "transporter", "warehouse", "commodity"
+          ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/stock-summary` + id + `?filter={"include": [
+          "activity", "user", "district", "transporter", "warehouse", "commodity"
+        ]}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
   create(data) {
     return axios
       .post(resource, data, {

@@ -45,7 +45,7 @@
 
           <!-- Dropdown for the rest of the items -->
           <div v-if="remainingItems.length > 0" class="relative">
-            <button @click="toggleDropdown" @mouseenter="toggleDropdown" 
+            <button @click="toggleDropdown" @mouseenter="toggleDropdown"
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
             </button>
@@ -221,12 +221,12 @@ function navigation() {
   let navList = [
     { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
     { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
-    { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
+   /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
     { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
     { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
     { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
-    { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
- 
+  */   { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
+
   ];
 
   for (let nav of navList)

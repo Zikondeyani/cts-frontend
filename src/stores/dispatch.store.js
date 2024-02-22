@@ -14,9 +14,9 @@ export const useDispatcherStore = defineStore({
       return await dispatcherService
         .get()
         .then((result) => {
-         
-            return result;
-          
+
+          return result;
+
         })
         .catch((error) => {
           switch (error.statusCode) {
@@ -25,6 +25,27 @@ export const useDispatcherStore = defineStore({
           }
         });
     },
+
+
+
+    async getdispatchSummary() {
+      return await dispatcherService
+        .getdispatchSummary()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
+
 
     async getOne(id) {
       return await dispatcherService
@@ -41,13 +62,28 @@ export const useDispatcherStore = defineStore({
           }
         });
     },
+
+
+    async expected(districtname) {
+
+      return await dispatcherService
+        .expected(districtname)
+        .then((result) => {
+          return result
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
     async create(data) {
       return await dispatcherService
         .create(data)
         .then((result) => {
           if (result) {
-
-            console.log(result, "over herer")
             return result;
           }
         })

@@ -24,7 +24,7 @@
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Dispatch</h2>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2">Delivery Note</label>
+                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Delivery Note</label>
 
                       <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote"
                         autocomplete="DeliveryNote"
@@ -33,7 +33,7 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2">Final Destination
+                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Final Destination
                         Point</label>
 
                       <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint"
@@ -43,28 +43,22 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2">Number of Bags</label>
-
+                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of Bags</label>
                       <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="dispatch.NoBags"
                         id="NoBags" autocomplete="NoBags"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
-
-
-
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2">Tonnage</label>
-
-                      <input type="number" name="Quantity" v-model="dispatch.Quantity" @keypress="validateNumberInput"
-                        id="Quantity" autocomplete="Quantity"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage</label>
+                      <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity"
+                        readonly
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
                     </div>
 
 
-
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2">Date</label>
+                      <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Date</label>
 
                       <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -78,7 +72,7 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="driver" class="block text-sm font-bold text-gray-700 mb-2">Driver</label>
+                      <label for="driver" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver</label>
 
                       <select id="driver" name="driver" v-model="dispatch.DriverId" autocomplete="project-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -89,7 +83,7 @@
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2">Truck Number</label>
+                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck Number</label>
 
                       <input type="text" name="TruckNumber" v-model="dispatch.TruckNumber" id="TruckNumber"
                         autocomplete="TruckNumber"
@@ -153,13 +147,13 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Total Quantity: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.Quantity }} MT</span> 
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.Quantity }} MT</span>
                     </div>
 
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Balance: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.Balance }} MT</span> 
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.Balance }} MT</span>
                     </div>
                   </div>
                 </div>
@@ -224,7 +218,7 @@ const props = defineProps({
 
 
 
-const dispatch = ref({})
+const dispatch = ref({ NoBags: 0 })
 
 const closeDialog = () => {
   dispatch.value = {}
@@ -249,6 +243,11 @@ const resetDispatch = async () => {
 
 }
 
+const computedTonnage = computed(() => {
+  return dispatch.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
+});
+
+
 
 
 const validateNumberInput = (event) => {
@@ -269,12 +268,12 @@ const submitDispatch = async () => {
 
   dispatch.value.DispatcherId = user.value.id
   dispatch.value.loadingPlanId = props.loadingPlan.id
-
+  dispatch.value.Quantity = computedTonnage.value
 
   dispatchstore
     .create(dispatch.value)
     .then(result => {
-      
+
       emit('update');
       Swal.fire({
         title: "Dispatch Created",

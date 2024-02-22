@@ -5,7 +5,7 @@ const receiptsService = new ReceiptsService();
 export const usereceiptstore = defineStore({
   id: 'receipts',
   state: () => ({
-     receipts: [],
+    receipts: [],
   }),
   getters: {
 
@@ -21,21 +21,54 @@ export const usereceiptstore = defineStore({
     },
 
 
- 
 
-    
+    async countbydistrict(districtname) {
+      return await receiptsService
+        .countbydistrict(districtname)
+        .then((result) => {
+          if (result) {
+            return result
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
+
+
+    async quantitybydistrict(districtname) {
+      return await receiptsService
+        .quantitybydistrict(districtname)
+        .then((result) => {
+          if (result) {
+            return result
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
     async getByReference(data) {
       return await receiptsService.getByReference(data).then((result => {
-          if (result) {
-              return result
-          }
+        if (result) {
+          return result
+        }
       })).catch(error => {
-          switch (error.statusCode) {
-              default:
-                  throw error.message
-          }
+        switch (error.statusCode) {
+          default:
+            throw error.message
+        }
       });
-  },
+    },
 
     async getOne(id) {
       return await receiptsService

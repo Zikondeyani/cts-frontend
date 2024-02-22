@@ -48,6 +48,54 @@ export default class ReceiptsService {
   }
 
 
+  countbydistrict(districtname) {
+
+    return axios
+      .get(resource + `/count-by-district/` + districtname, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+
+  
+  quantitybydistrict(districtname) {
+
+    return axios
+      .get(resource + `/count-and-quantity-by-district/` + districtname, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
   create(data) {
     return axios
       .post(resource, data, {

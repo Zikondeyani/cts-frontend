@@ -74,6 +74,135 @@ export default class DispatcherService {
   }
 
 
+  getdispatchSummary(id) {
+    if (id == null) {
+      return axios
+        .get(resource + '/summary' + `?filter={"include": [
+        {
+          "relation": "loadingPlan",
+          "scope": {
+            "include": [
+              {
+                  "relation": "district"
+               },
+               {
+                "relation": "transporter"
+             },
+
+             {
+              "relation": "warehouse"
+           }
+           ,
+
+           {
+            "relation": "commodity"
+         },
+
+         {
+          "relation": "activity"
+       },
+
+       {
+        "relation": "user"
+     }
+            ]
+          }
+        }
+        , "Dispatcher", "Driver"]}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id + `?filter={"include":  ["loadingPlan", "Dispatcher", "Driver"]}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+
+
+
+
+  expected(districtname) {
+
+    return axios
+      .get(resource + `/expected-by-district/` + districtname + `?filter={"include": [
+        {
+          "relation": "loadingPlan",
+          "scope": {
+            "include": [
+              {
+                  "relation": "district"
+               },
+               {
+                "relation": "transporter"
+             },
+
+             {
+              "relation": "warehouse"
+           }
+           ,
+
+           {
+            "relation": "commodity"
+         },
+
+         {
+          "relation": "activity"
+       },
+
+       {
+        "relation": "user"
+     }
+            ]
+          }
+        }
+        , "Dispatcher", "Driver"]}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
   create(data) {
     return axios
       .post(resource, data, {
@@ -113,6 +242,8 @@ export default class DispatcherService {
         }
       });
   }
+
+
 
   update(data) {
     return axios

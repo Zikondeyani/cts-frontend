@@ -126,6 +126,14 @@ const routes = [
         name: "admin-receipt-management",
         component: () => import("../pages/admin/receipts/index.page.vue"),
       },
+
+
+      {
+        path: "/admin/receipts",
+        name: "admin-receipts",
+        component: () => import("../pages/admin/receipts/receipts.page.vue"),
+      },
+
       {
         path: "/admin/receipt-management/manage/:id",
         name: "admin-manage-receipt-management",
@@ -175,6 +183,140 @@ const routes = [
     },
   },
 
+
+
+   //Manager
+   {
+    path: "/manager",
+    name: "manager",
+    component: () => import("../components/layouts/manager.layout.vue"),
+    children: [
+      //Dashboard
+      {
+        path: "",
+        name: "manager-home",
+        redirect: { name: "manager-dashboard" },
+      },
+      {
+        path: "/manager/dashboard",
+        name: "manager-dashboard",
+        component: () => import("../pages/manager/dashboard/index.page.vue"),
+      },
+      //Users
+      {
+        path: "/manager/users",
+        name: "manager-users",
+        component: () => import("../pages/manager/users/index.page.vue"),
+      },
+      {
+        path: "/manager/users/manage/:id",
+        name: "manager-manage-user",
+        component: () => import("../pages/manager/users/manage.page.vue"),
+      },
+
+      {
+        path: "/manager/dispatch-management",
+        name: "manager-dispatch-management",
+        component: () => import("../pages/manager/dispatch/index.page.vue"),
+      },
+
+      {
+        path: "/manager/dispatches",
+        name: "manager-dispatches",
+        component: () => import("../pages/manager/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/manager/loadingplans",
+        name: "manager-loadingplans",
+        component: () => import("../pages/manager/loadingplans/index.page.vue"),
+      },
+      {
+        path: "/manager/dispatch-management/manage/:id",
+        name: "manager-manage-catalogue",
+        component: () => import("../pages/manager/dispatch/manage.page.vue"),
+      },
+
+      {
+        path: "/manager/commodity-tracking",
+        name: "manager-commodity-tracking",
+        component: () => import("../pages/manager/commodities/index.page.vue"),
+      },
+      {
+        path: "/manager/commodity-tracking/manage/:id",
+        name: "manager-manage-commodity-tracking",
+        component: () => import("../pages/manager/commodities/manage.page.vue"),
+      },
+
+
+      {
+        path: "/manager/receipt-management",
+        name: "manager-receipt-management",
+        component: () => import("../pages/manager/receipts/index.page.vue"),
+      },
+
+
+      {
+        path: "/manager/receipts",
+        name: "manager-receipts",
+        component: () => import("../pages/manager/receipts/receipts.page.vue"),
+      },
+
+      {
+        path: "/manager/receipt-management/manage/:id",
+        name: "manager-manage-receipt-management",
+        component: () => import("../pages/manager/receipts/manage.page.vue"),
+      },
+
+      {
+        path: "/manager/requisition-management",
+        name: "manager-requisition-management",
+        component: () => import("../pages/manager/requisitions/index.page.vue"),
+      },
+      {
+        path: "/manager/receipt-management/manage/:id",
+        name: "manager-manage-requisition-management",
+        component: () => import("../pages/manager/requisitions/manage.page.vue"),
+      },
+
+
+
+      {
+        path: "/manager/system",
+        name: "manager-system",
+        component: () => import("../pages/manager/system/index.page.vue"),
+      },
+
+
+      {
+        path: "/manager/project-management",
+        name: "manager-project-management",
+        component: () => import("../pages/manager/projects/index.page.vue"),
+      },
+
+
+      
+      {
+        path: "/manager/report-management",
+        name: "manager-report-management",
+        component: () => import("../pages/manager/reports/index.page.vue"),
+      },
+
+
+    ],
+    beforeEnter: (to, from, next) => {
+      let role = JSON.parse(sessionStorage.getItem("RLE"));
+      if (role != null && typeof role.name != "undefined") {
+        if (role.name == "manager") {
+          next();
+        } else {
+          next({ name: "portal-signin" });
+        }
+      } else {
+        next({ name: "portal-signin" });
+      }
+    },
+  },
 
 
   //Dispatcher
@@ -267,7 +409,7 @@ const routes = [
       },
 
 
-      
+
       {
         path: "/dispatcher/report-management",
         name: "dispatcher-report-management",
@@ -291,7 +433,7 @@ const routes = [
   },
 
 
-  
+
   //Planner
   {
     path: "/planner",
@@ -330,6 +472,20 @@ const routes = [
         path: "/planner/dispatch-management/manage/:id",
         name: "planner-manage-catalogue",
         component: () => import("../pages/planner/dispatch/manage.page.vue"),
+      },
+
+      
+
+      {
+        path: "/planner/dispatches",
+        name: "planner-dispatches",
+        component: () => import("../pages/planner/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/planner/loadingplans",
+        name: "planner-loadingplans",
+        component: () => import("../pages/planner/loadingplans/index.page.vue"),
       },
 
       {
@@ -375,6 +531,13 @@ const routes = [
       },
 
 
+
+      {
+        path: "/planner/receipts",
+        name: "planner-system",
+        component: () => import("../pages/planner/receipts/receipts.page.vue"),
+      },
+
       {
         path: "/planner/project-management",
         name: "planner-project-management",
@@ -399,7 +562,7 @@ const routes = [
   },
 
 
-   
+
   //Recipient
   {
     path: "/recipient",
@@ -480,6 +643,15 @@ const routes = [
         path: "/recipient/system",
         name: "recipient-system",
         component: () => import("../pages/recipient/system/index.page.vue"),
+      },
+
+
+
+
+      {
+        path: "/recipient/receipts",
+        name: "recipient-system",
+        component: () => import("../pages/recipient/receipts/receipts.page.vue"),
       },
 
 

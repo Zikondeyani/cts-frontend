@@ -45,29 +45,45 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6   divide-x divide-y border border-gray-200">
-                <div v-for="stat in stats" :key="stat.label"
-                  class="flex flex-col shadow-2xl rounded-xl mx-4 my-4 items-center py-4">
-                  <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                  <span class="mt-1 text-sm text-gray-600">{{ stat.label }}</span>
+              <div class="bg-gray-100 p-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                  <!-- Stats Cards -->
+                  <div v-for="stat in stats" :key="stat.label"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
+                        <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
+                      </div>
+                      <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
+                    </div>
+                    <div v-if="stat.percentageText" class="mt-4">
+                      <div class="flex items-center justify-between">
+                        <span :class="`text-${stat.textColor}`">{{ stat.percentageText }}</span>
+                        <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
+                          :class="`text-${stat.textColor}`" />
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div v-if="stat.progress > 50" :class="`bg-green-500 h-2 rounded-full`"
+                          :style="{ width: stat.progress + '%' }">
+                        </div>
 
-                  <span class="mt-2">
+                        <div v-else :class="`bg-red-500 h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
+                        </div>
+                      </div>
+                    </div>
 
-                    <component :is="stat.icon" :class="`h-6 w-6`" :style="`color: ${stat.color}`" aria-hidden="true" />
-
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
           </section>
-
           <!-- Actions panel -->
           <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
-            <p class="text-center text-gray-600 mt-4 font-bold"> Recent dispatches</p>
+            <p class="text-center text-gray-600 mt-4 font-bold"> Recent Loading Plans</p>
 
             <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
-              <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
+              <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
                 style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                 styleClass="vgt-table striped" compactMode>
                 <!-- ... -->
@@ -97,6 +113,13 @@ import { useDispatcherStore } from "../../../stores/dispatch.store";
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 
+
+
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
+
+
+import { usereceiptstore } from "../../../stores/receipt.store";
+
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
   Menu,
@@ -124,11 +147,11 @@ import {
   XIcon,
   TruckIcon,
   DocumentDuplicateIcon,
-  ClipboardListIcon,
   CollectionIcon,
   IdentificationIcon,
   DocumentTextIcon,
   OfficeBuildingIcon,
+  DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
 
@@ -143,14 +166,14 @@ const columns = ref([
   },
   {
     label: "Origin Warehouse",
-    field: row => row.loadingPlan?.warehouse?.Name,
+    field: row => row.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Destination District",
-    field: row => row.loadingPlan?.district?.Name,
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -158,14 +181,14 @@ const columns = ref([
 
   {
     label: "Date Created",
-    field: row => moment(row.loadingPlan.CreatedOn).format("d/MM/yyyy"),
+    field: row => moment(row.CreatedOn).format("d/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Loading Plan #",
-    field: row => row.loadingPlan.LoadingPlanNumber,
+    field: row => row.LoadingPlanNumber,
     sortable: true,
     firstSortType: "asc"
   },
@@ -178,8 +201,32 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
+  {
+    label: "Balance",
+    hidden: false,
+    field: row => row.Balance,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
+
+
+
+
 
 ]);
+
+
+
+const loadingPlanStore = useloadingplanstore();
+const loadingplans = reactive([]);
+
+
+
+
+const recieptStore = usereceiptstore();
+const receipts = reactive([]);
+
 const $router = useRouter();
 //INJENCTIONS
 const moment = inject("moment");
@@ -211,12 +258,22 @@ const isLoading = ref(false);
 let userCount = ref(0);
 
 let bookingCount = ref(0);
+
+const receiptcount = ref(0)
+
+const dispatchcount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(() => {
   getCatalogue();
   getUsers();
   getBookings();
   getDispatches();
+  getReceipts();
+  getLoadingPlans();
+  getDispatchesCount();
+  getLoadingPlansPending();
+  getloadingplansSummary();
+  getdispatchSummary();
 });
 //WATCH
 
@@ -226,26 +283,107 @@ const getCatalogue = async () => {
   });
 };
 
+
+const getReceipts = async () => {
+  recieptStore.count().then((result) => {
+    receiptcount.value = result.count;
+  });
+};
+
+
 const getDispatches = async () => {
   isLoading.value = true;
   dispatchStore
     .get()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
-      dispaches.length = 0; //empty array
-      dispaches.push(...result);
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      const sortedDispatches = [...result].sort((a, b) => {
+        // Convert the `createdOn` field to a Date object and compare
+        return new Date(b.createdon) - new Date(a.createdon);
+      });
 
-
+      // Clear the existing dispatches and push the sorted results
+      dispaches.length = 0;
+      dispaches.push(...sortedDispatches);
     })
-
-
     .finally(() => {
       isLoading.value = false;
     });
-
 }
+
+
+const getDispatchesCount = async () => {
+  dispatchStore.count().then((result) => {
+    dispatchcount.value = result.count;
+  });
+}
+
+const getLoadingPlans = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .get()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+    
+      // Clear the existing dispatches and push the sorted results
+      loadingplans.length = 0;
+      loadingplans.push(...result);
+    })
+}
+
+const pendingplans = ref(0)
+
+const totalBalance = ref(0)
+
+const totalStockPlanned = ref("")
+const dispatchPercentageFormated = ref("")
+const totalDispatched = ref("")
+const totalReceived = ref("")
+const receivedPercentageFormated = ref("")
+const receivedPercentage = ref("")
+const dispatchPercentage = ref("")
+
+const getLoadingPlansPending = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansPending()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      pendingplans.value = result.count
+    })
+}
+
+
+const getdispatchSummary = async () => {
+  // isLoading.value = true;
+  dispatchStore
+    .getdispatchSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
+      totalReceived.value = result.totalReceived
+      receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
+
+      receivedPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+
+const getloadingplansSummary = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalance.value = result.totalBalance
+      dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
 const getUsers = async () => {
   userStore.count().then((result) => {
     userCount.value = result.count;
@@ -283,76 +421,38 @@ const getBookings = async () => {
 
 
 const createReport = async (model) => {
-  const doc = new jsPDF();
+  isLoading.value = true;
 
-  // Get the "from" and "to" dates from the model
-  const { From, To } = model;
-
-  // Provide default values for "from" and "to" if not defined
-  const fromDate = From || new Date(0); // Default to the earliest possible date
-  const toDate = To || new Date(); // Default to the current date
-
-  // Filter the bookings by date range
-  // Filter the bookings by date range
-  const filteredBookings = bookings.filter((booking) => {
-    const bookingDate = formatDate(booking.bookingFrom);
-    const bookingToDate = formatDate(booking.bookingTo);
-
-    return (
-      bookingDate >= formatDate(fromDate) && bookingToDate <= formatDate(toDate)
-    );
-  });
-
-  // Generate the table headers
-  const headers = [
-    [
-      "Booking From",
-      "Booking To",
-      "Name",
-      "Price",
-      "Status",
-      "Phone",
-      "Service Type",
-      "Booked On",
-    ],
-  ];
-
-  // Generate the table rows from the filtered bookings
-  const rows = filteredBookings.map((booking) => [
-    formatDate(booking.bookingFrom),
-    formatDate(booking.bookingTo),
-    `${booking.firstname} ${booking.lastname}`,
-    booking.listings.price,
-    booking.status,
-    booking.phone,
-    booking.servicetype,
-    formatDate(booking.created),
-  ]);
-
-  // Set the table style
-  const tableStyle = {
-    startY: 60, // Adjust the startY value to leave space for the header image
-    headStyles: { fillColor: [0, 128, 128] }, // Maroon color
-    columnStyles: { 2: { halign: "right" } },
-  };
-
-  var imgData =
-    "";
-  doc.addImage(imgData, "JPEG", 10, 10, 40, 40);
-
-  // Add the heading to the PDF document
-  let reportHeading = "DODMA COMMO Service Enquiry Report";
-  if (From && To) {
-    reportHeading += "\n\n(From: " + From + " To: " + To + ")";
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id
+  if (model.StartDate) {
+    model.StartDate = moment(model.StartDate).toISOString();
   }
-  doc.setFontSize(18);
-  doc.text(reportHeading, 60, 25);
+  if (model.EndDate) {
+    model.EndDate = moment(model.EndDate).toISOString();
+  }
 
-  // Add the table to the PDF document
-  doc.autoTable({ head: headers, body: rows, ...tableStyle });
+  loadingPlanStore
+    .create(model)
+    .then(result => {
+      Swal.fire({
+        title: "Success",
+        text: "Created a new loading plan successfully",
+        icon: "success",
+        confirmButtonText: "Ok"
+      });
 
-  // Save the PDF file
-  doc.save("Machawi265 Service Enquiry .pdf");
+      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
+
+    })
+    .catch(error => {
+      // Handling error
+    })
+    .finally(() => {
+      isLoading.value = false;
+      getDispatches();
+      getLoadingPlans();
+    });
 };
 
 const formatDate = (date) => {
@@ -360,14 +460,65 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString(undefined, options);
 };
 
-let stats = [
-  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'blue' },
-  { label: "Dispatch Status", value: catalogueCount, icon: LocationMarkerIcon, color: 'blue' },
-  { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: '#008000' },
-  { label: "Dispatches done", value: userCount, icon: CheckCircleIcon, color: 'indigo' },
-  { label: "Receipts done", value: catalogueCount, icon: DocumentTextIcon, color: '#086db3' },
-  { label: "Requisitions", value: bookingCount, icon: ClipboardListIcon, color: 'red' },
-];
+// Dummy data for stats
+const stats = ref([
+  {
+    label: 'Total Stocks Planned',
+    value: totalStockPlanned,
+    // Use a ternary operator for the icon
+    icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormated,
+    textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    progress: dispatchPercentage,
+    isProgressPositive: dispatchPercentage >= 50,
+    progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+  },
+
+  {
+    label: 'Dispatch Status',
+    value: totalDispatched,
+    // Use a ternary operator to decide between ExclamationCircleIcon and CheckCircleIcon
+    icon: receivedPercentage > 50 ? ExclamationCircleIcon : CheckCircleIcon,
+    iconColor: dispatchPercentage > 50 ? 'red-500' : 'green-500',
+    percentageText: receivedPercentageFormated,
+    textColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    showProgress: true,
+    progress: receivedPercentage,
+    isProgressPositive: receivedPercentage > 50,
+    progressColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    progressText: ''
+  },
+
+ /*  {
+    label: 'Dispatches Done',
+    value: dispatchcount,
+    icon: ClipboardListIcon,
+    iconColor: 'green-500',
+    percentageText: null
+  },
+ 
+  {
+    label: 'Pending Loading Plans',
+    value: pendingplans,
+    icon: DocumentIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false
+  } */
+  /* ,
+   {
+     label: 'Requisitions',
+     value: 11,
+     icon: ClipboardListIcon,
+     iconColor: 'gray-400',
+     percentageText: '',
+     textColor: 'gray-600',
+     showProgress: false
+   }, */
+]);
 const actions = [
   {
     icon: IdentificationIcon,
@@ -386,6 +537,10 @@ const actions = [
     details: "Manage all Enquiries made to services",
   },
 ];
+
+
+
+const dispatchstatus = ref(0)
 
 
 </script>

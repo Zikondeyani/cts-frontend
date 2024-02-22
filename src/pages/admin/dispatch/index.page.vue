@@ -45,10 +45,10 @@ const options = ref([
   { label: 'Loading Plans', icon: MapIcon, path: '/admin/loadingplans' },
 
   { label: 'Dispatches', icon: LocationMarkerIcon, path: '/admin/dispatches' },
-  { label: 'Truck Drivers', icon: UserIcon, path: '/truck-drivers' },
+ /*  { label: 'Truck Drivers', icon: UserIcon, path: '/truck-drivers' },
   { label: 'Transporters', icon: TruckIcon, path: '/transporters' },
   { label: 'Warehouses', icon: HomeIcon, path: '/warehouses' },
-  // ... other options as needed
+ */  // ... other options as needed
 ]);
 </script>
 

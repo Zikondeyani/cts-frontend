@@ -87,11 +87,11 @@
                 </a>
                 </MenuItem>
 
-                <MenuItem v-slot="{ active }">
+                <!-- <MenuItem v-slot="{ active }">
                 <button @click="gotoSystemsettings" :class="menuItemClasses(active, true)">
                   System
                 </button>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
@@ -205,6 +205,13 @@ function gotoSystemsettings() {
 
 }
 
+const menuItemClasses = (active, isButton = false) => [
+  active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+  'block px-4 py-2 text-sm',
+  isButton ? 'w-full text-left' : ''
+];
+
+
 //MOUNTED
 onMounted(() => { });
 //WAT
@@ -214,8 +221,8 @@ function navigation() {
     { name: "Dispatch", href: "/planner/dispatch-management", icon: LocationMarkerIcon, current: false },
  /*    { name: "Commodities", href: "/planner/commodity-tracking", icon: CollectionIcon, current: false },
   */   { name: "Receipts", href: "/planner/receipt-management", icon: DocumentDuplicateIcon, current: false },
-    { name: "Reports", href: "/planner/report-management", icon: DocumentDuplicateIcon, current: false },
-
+  /*   { name: "Reports", href: "/planner/report-management", icon: DocumentDuplicateIcon, current: false },
+ */
     /*    { name: "Requisitions", href: "/planner/requisition-management", icon: IdentificationIcon, current: false },
      */ /*   { name: "Project Management", href: "/planner/project-management", icon: IdentificationIcon, current: false },
       */

@@ -55,7 +55,7 @@ const breadcrumbs = [
   { name: "System Management Panel", href: "#", current: true },
 ];
 const optionGroups = ref([
-/*   {
+ /*  {
     title: 'Organizational Management',
     options: [
       { label: 'Organisations', icon: OfficeBuildingIcon, path: '/organisations' },
@@ -69,7 +69,7 @@ const optionGroups = ref([
       { label: 'Logs', icon: ArchiveIcon, path: '/logs' },
      ],
   },
- /*  {
+  /* {
     title: 'Geographical and Unit Management',
     options: [
       { label: 'Districts', icon: MapIcon, path: '/districts' },

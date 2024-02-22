@@ -40,23 +40,47 @@
                       </p>
                     </div>
                   </div>
-                  <div class="mt-5 flex justify-center sm:mt-0">
-                    <create-report-form v-on:create="createReport" />
+                  <div class="mt-1 flex justify-center sm:mt-0">
+
+                    <LocationMarkerIcon class="h-5 w-5 text-gray mr-2" />
+                    <span class="text-gray font-medium text-sm">
+                      {{ user.district }}
+                    </span>
                   </div>
                 </div>
+
+
               </div>
-              <div
-                class="bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6   divide-x divide-y border border-gray-200">
-                <div v-for="stat in stats" :key="stat.label"
-                  class="flex flex-col shadow-2xl rounded-xl mx-4 my-4 items-center py-4">
-                  <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                  <span class="mt-1 text-sm text-gray-600">{{ stat.label }}</span>
-
-                  <span class="mt-2">
-
-                    <component :is="stat.icon" :class="`h-6 w-6`" :style="`color: ${stat.color}`" aria-hidden="true" />
-
-                  </span>
+              <div class="bg-gray-100 p-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <!-- Stats Cards -->
+                  <div v-for="stat in stats" :key="stat.label"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
+                        <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
+                      </div>
+                      <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
+                    </div>
+                    <div v-if="stat.percentageText" class="mt-4">
+                      <div class="flex items-center justify-between">
+                        <span :class="`text-${stat.textColor}`">{{ stat.percentageText }}</span>
+                        <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
+                          :class="`text-${stat.textColor}`" />
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div :class="`bg-${stat.iconColor} h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
+                        </div>
+                      </div>
+                    </div>
+                    <div v-if="stat.alertText" class="mt-4">
+                      <div class="flex items-center">
+                        <ExclamationIcon class="h-5 w-5 text-red-500" />
+                        <span class="ml-2 text-red-500 text-sm">{{ stat.alertText }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -64,14 +88,28 @@
 
           <!-- Actions panel -->
           <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
-            <p class="text-center text-gray-600 mt-4 font-bold"> Recent dispatches</p>
+            <p class="text-center text-gray-600 mt-4 font-bold"> Expected Dispatches</p>
 
             <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
-              <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
+              <vue-good-table :columns="columns" :rows="expectedDispatches" :search-options="{ enabled: true }"
                 style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                 styleClass="vgt-table striped" compactMode>
-                <!-- ... -->
+                <template #table-actions> </template>
+                <template #table-row="props">
+                  <span v-if="props.column.label == 'Options'">
+                    <button type="button" @click="openDispatchDialog(props.row)"
+                      class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+                      <DocumentTextIcon class="h-5 w-5 mr-2" />
+                      Receive
+                    </button>
+
+                  </span>
+                </template>
               </vue-good-table>
+
+              <ReceiptLoadingPlanDialog :isOpen="isReceiptDialogOpen" :dispatch="selectedDispatch"
+                @close="closeReceiptDialog" v-on:update="reloadPage" />
+
             </div>
           </section>
 
@@ -82,6 +120,9 @@
 </template>
 
 <script setup>
+
+
+
 import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
@@ -93,9 +134,13 @@ import { useUserStore } from "../../../stores/user.store";
 
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
+import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/create.receipt-recipient.component.vue";
+
 
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
+
+import { usereceiptstore } from "../../../stores/receipt.store";
 
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
@@ -111,6 +156,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import {
+
   AcademicCapIcon,
   BadgeCheckIcon,
   BellIcon,
@@ -124,11 +170,11 @@ import {
   XIcon,
   TruckIcon,
   DocumentDuplicateIcon,
-  ClipboardListIcon,
   CollectionIcon,
   IdentificationIcon,
   DocumentTextIcon,
   OfficeBuildingIcon,
+  DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
 
@@ -141,42 +187,55 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
+
+
   {
-    label: "Origin Warehouse",
-    field: row => row.loadingPlan?.warehouse?.Name,
+    label: "Quantity",
+    hidden: false,
+    field: row => `
+    <span >${row.NoBags !== null && row.NoBags !== undefined ? row.NoBags + " Bags" : "Not specified"} </span><br>
+    <span >${row.Quantity !== null ? row.Quantity + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
+    html: true, // Important for rendering HTML
     tdClass: "capitalize"
-  },
+  }
+  ,
+
   {
-    label: "Destination District",
-    field: row => row.loadingPlan?.district?.Name,
+    label: "Details",
+    hidden: false,
+    field: row => `<span >D.N: ${row.DeliveryNote}</span><br>` +
+      `<span>L.P: ${row.loadingPlanId !== null ? row.loadingPlanId : "N/A"}</span><br>`
+      +
+      `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>` +
+      `<span>On: ${moment(row.Date).format("DD/MM/YYYY") !== null ? moment(row.Date).format("DD/MM/YYYY") : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
+    html: true, // Important for rendering HTML
     tdClass: "capitalize"
   },
 
   {
-    label: "Date Created",
-    field: row => moment(row.loadingPlan.CreatedOn).format("d/MM/yyyy"),
+    label: "Dispatch Details",
+    field: row => `
+    <span class="from-color">Driver: ${row.Driver?.Name || "Driver Not Specified"}</span><br>
+    <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
+    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
+    html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
+
+
   {
-    label: "Loading Plan #",
-    field: row => row.loadingPlan.LoadingPlanNumber,
-    sortable: true,
-    firstSortType: "asc"
-  },
-  {
-    label: "Tonnage",
-    hidden: false,
-    field: row => row.Quantity,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
+    label: "Options",
+    field: row => row,
+    sortable: false
+  }
+
+
 
 
 ]);
@@ -190,10 +249,17 @@ const userStore = useUserStore();
 
 const dispatchStore = useDispatcherStore();
 
+
+const receiptStore = usereceiptstore();
+
 const catalogueStore = useListingStore();
 const bookingStore = usebookingstore();
 
 const bookings = reactive([]);
+
+
+const receipts = reactive([]);
+
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -202,41 +268,91 @@ const breadcrumbs = [
   { name: "", href: "#", current: true },
 ];
 
-let catalogueCount = ref(0);
-
-const users = reactive([]);
 
 const dispaches = reactive([]);
-const isLoading = ref(false);
-let userCount = ref(0);
 
-let bookingCount = ref(0);
+
+const expectedDispatchCount = ref(0);
+
+
+const receiptsCount = ref(0);
+
+const expectedDispatches = reactive([]);
+
+
+const quantityRecieved = ref("");
+
+
+const isLoading = ref(false);
+
+const isEditDialogOpen = ref(false);
+const selectedDispatch = ref(null);
+
+const openEditDialog = (dispatch) => {
+  selectedDispatch.value = dispatch;
+  isEditDialogOpen.value = true;
+};
+
+const closeEditDialog = () => {
+  isEditDialogOpen.value = false;
+};
+
+const isReceiptDialogOpen = ref(false);
+
+const openDispatchDialog = (dispatch) => {
+  selectedDispatch.value = dispatch;
+  isReceiptDialogOpen.value = true;
+
+};
+
+const closeReceiptDialog = () => {
+  isReceiptDialogOpen.value = false;
+};
+
+
+
 //MOUNTEDgetCatalogue
 onMounted(() => {
-  getCatalogue();
-  getUsers();
-  getBookings();
-  getDispatches();
+  getExpectedDispatches();
+  getReceipts();
+  getQuantityReceived();
 });
 //WATCH
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
+
+
+
+const getExpectedDispatches = async () => {
+
+  dispatchStore
+    .expected(user.value.district)
+    .then((result) => {
+
+      expectedDispatchCount.value = result.length
+
+
+      expectedDispatches.length = 0; //empty array
+      expectedDispatches.push(...result);
+
+
+    })
+    .catch((error) => {
+
+    })
+
 };
 
-const getDispatches = async () => {
+
+const getReceipts = async () => {
   isLoading.value = true;
-  dispatchStore
-    .get()
+  receiptStore
+    .countbydistrict(user.value.district)
     .then(result => {
       // for (let i = 0; i < 100; i++) {
       //   users.push(...result);
       // }
-      dispaches.length = 0; //empty array
-      dispaches.push(...result);
 
+      receiptsCount.value = result.count
 
     })
 
@@ -246,146 +362,60 @@ const getDispatches = async () => {
     });
 
 }
-const getUsers = async () => {
-  userStore.count().then((result) => {
-    userCount.value = result.count;
-  });
 
-  userStore
-    .get()
+
+
+const getQuantityReceived = async () => {
+  isLoading.value = true;
+  receiptStore
+    .quantitybydistrict(user.value.district)
     .then(result => {
       // for (let i = 0; i < 100; i++) {
       //   users.push(...result);
       // }
-      users.length = 0; //empty array
-      users.push(...result);
-
-      users.sort((a, b) => new Date(b.created) - new Date(a.created));
+      quantityRecieved.value = result.totalQuantity + " MT";
 
     })
-
-
     .finally(() => {
       isLoading.value = false;
     });
-};
 
-const getBookings = async () => {
-  bookingStore.count().then((result) => {
-    bookingCount.value = result.count;
-  });
-
-  bookingStore.getbookingsClean().then((result) => {
-    bookings.length = 0;
-    bookings.push(...result);
-  });
-};
+}
 
 
-const createReport = async (model) => {
-  const doc = new jsPDF();
 
-  // Get the "from" and "to" dates from the model
-  const { From, To } = model;
 
-  // Provide default values for "from" and "to" if not defined
-  const fromDate = From || new Date(0); // Default to the earliest possible date
-  const toDate = To || new Date(); // Default to the current date
-
-  // Filter the bookings by date range
-  // Filter the bookings by date range
-  const filteredBookings = bookings.filter((booking) => {
-    const bookingDate = formatDate(booking.bookingFrom);
-    const bookingToDate = formatDate(booking.bookingTo);
-
-    return (
-      bookingDate >= formatDate(fromDate) && bookingToDate <= formatDate(toDate)
-    );
-  });
-
-  // Generate the table headers
-  const headers = [
-    [
-      "Booking From",
-      "Booking To",
-      "Name",
-      "Price",
-      "Status",
-      "Phone",
-      "Service Type",
-      "Booked On",
-    ],
-  ];
-
-  // Generate the table rows from the filtered bookings
-  const rows = filteredBookings.map((booking) => [
-    formatDate(booking.bookingFrom),
-    formatDate(booking.bookingTo),
-    `${booking.firstname} ${booking.lastname}`,
-    booking.listings.price,
-    booking.status,
-    booking.phone,
-    booking.servicetype,
-    formatDate(booking.created),
-  ]);
-
-  // Set the table style
-  const tableStyle = {
-    startY: 60, // Adjust the startY value to leave space for the header image
-    headStyles: { fillColor: [0, 128, 128] }, // Maroon color
-    columnStyles: { 2: { halign: "right" } },
-  };
-
-  var imgData =
-    "";
-  doc.addImage(imgData, "JPEG", 10, 10, 40, 40);
-
-  // Add the heading to the PDF document
-  let reportHeading = "DODMA COMMO Service Enquiry Report";
-  if (From && To) {
-    reportHeading += "\n\n(From: " + From + " To: " + To + ")";
+// Dummy data for stats
+const stats = ref([
+  {
+    label: 'Total Receipts',
+    value: receiptsCount,
+    icon: ClipboardListIcon,
+    iconColor: 'green-500',
+    percentageText: null
+  },
+  {
+    label: 'Expected Dispatches',
+    value: expectedDispatchCount,
+    icon: DocumentIcon,
+    iconColor: 'blue-500',
+    percentageText: null
+  },
+  {
+    label: 'Quantity Received to date',
+    value: quantityRecieved,
+    icon: DocumentIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false
   }
-  doc.setFontSize(18);
-  doc.text(reportHeading, 60, 25);
 
-  // Add the table to the PDF document
-  doc.autoTable({ head: headers, body: rows, ...tableStyle });
+]);
 
-  // Save the PDF file
-  doc.save("Machawi265 Service Enquiry .pdf");
-};
 
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(date).toLocaleDateString(undefined, options);
-};
 
-let stats = [
-  { label: "Total Stocks Planned", value: userCount, icon: CollectionIcon, color: 'blue' },
-  { label: "Dispatch Status", value: catalogueCount, icon: LocationMarkerIcon, color: 'blue' },
-  { label: "Pending loading plans", value: bookingCount, icon: TruckIcon, color: '#008000' },
-  { label: "Dispatches done", value: userCount, icon: CheckCircleIcon, color: 'indigo' },
-  { label: "Receipts done", value: catalogueCount, icon: DocumentTextIcon, color: '#086db3' },
-  { label: "Requisitions", value: bookingCount, icon: ClipboardListIcon, color: 'red' },
-];
-const actions = [
-  {
-    icon: IdentificationIcon,
-    name: "Catalogue",
-    href: "/admin/catalogue",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all service catalogue",
-  },
-  {
-    icon: OfficeBuildingIcon,
-    name: "Enquiries",
-    href: "/admin/bookings",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all Enquiries made to services",
-  },
-];
+
 
 
 </script>
