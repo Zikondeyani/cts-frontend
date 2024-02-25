@@ -40,16 +40,8 @@
                       </p>
                     </div>
                   </div>
-                  <div class="mt-1 flex justify-center sm:mt-0">
-
-                    <LocationMarkerIcon class="h-5 w-5 text-gray mr-2" />
-                    <span class="text-gray font-medium text-sm">
-                      {{ user.district }}
-                    </span>
-                  </div>
+                  <!--  -->
                 </div>
-
-
               </div>
               <div class="bg-gray-100 p-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -70,16 +62,15 @@
                           :class="`text-${stat.textColor}`" />
                       </div>
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div :class="`bg-${stat.iconColor} h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
+                        <div v-if="stat.progress > 50" :class="`bg-green-500 h-2 rounded-full`"
+                          :style="{ width: stat.progress + '%' }">
+                        </div>
+
+                        <div v-else :class="`bg-red-500 h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
                         </div>
                       </div>
                     </div>
-                    <div v-if="stat.alertText" class="mt-4">
-                      <div class="flex items-center">
-                        <ExclamationIcon class="h-5 w-5 text-red-500" />
-                        <span class="ml-2 text-red-500 text-sm">{{ stat.alertText }}</span>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -88,29 +79,43 @@
 
           <!-- Actions panel -->
           <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
-            <p class="text-center text-gray-600 mt-4 font-bold"> Expected Dispatches</p>
+            <p class="text-center text-gray-600 mt-4 font-bold"> Recent Loading Plans</p>
 
-            <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
-              <vue-good-table :columns="columns" :rows="expectedDispatches" :search-options="{ enabled: true }"
+            <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
+              <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
                 style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                 styleClass="vgt-table striped" compactMode>
                 <template #table-actions> </template>
                 <template #table-row="props">
-                  <span v-if="props.column.label == 'Options'">
+                  <div v-if="props.column.label == 'Options'" class="flex space-x-2">
+
+
+
+
                     <button type="button" @click="openDispatchDialog(props.row)"
                       class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
-                      <DocumentTextIcon class="h-5 w-5 mr-2" />
-                      Receive
+                      <TruckIcon class="h-5 w-5 mr-2" />
+                      Dispatch
                     </button>
 
-                  </span>
+
+
+                  
+
+                  </div>
                 </template>
               </vue-good-table>
+
+              <!-- Edit Loading Plan Dialog -->
+              <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan"
+                @close="closeEditDialog" v-on:update="reloadPage" />
+
+              <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
+                @close="closeDispatchDialog" v-on:update="reloadPage" />
+
+
             </div>
           </section>
-
-          <ReceiptLoadingPlanDialog :isOpen="isReceiptDialogOpen" :dispatch="selectedReceipt" @close="closeReceiptDialog"
-          v-on:update="reloadPage" />
 
         </div>
       </div>
@@ -130,11 +135,20 @@ import { useUserStore } from "../../../stores/user.store";
 
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
-import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/create.receipt-recipient.component.vue";
-
 
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
+
+
+
+import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
+
+
+import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch.component.vue";
+
+
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
+
 
 import { usereceiptstore } from "../../../stores/receipt.store";
 
@@ -152,7 +166,6 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import {
-
   AcademicCapIcon,
   BadgeCheckIcon,
   BellIcon,
@@ -183,46 +196,38 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
-
-
   {
-    label: "Quantity",
-    hidden: false,
-    field: row => `
-    <span >${row.NoBags !== null && row.NoBags !== undefined ? row.NoBags + " Bags" : "Not specified"} </span><br>
-    <span >${row.Quantity !== null ? row.Quantity + " MT" : "Pending"}</span>`,
+    label: "Origin Warehouse",
+    field: row => row.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
     tdClass: "capitalize"
-  }
-  ,
-
+  },
   {
-    label: "Details",
-    hidden: false,
-    field: row => `<span >D.N: ${row.DeliveryNote}</span><br>` +
-      `<span>L.P: ${row.loadingPlanId !== null ? row.loadingPlanId : "N/A"}</span><br>`
-      +
-      `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>` +
-      `<span>On: ${moment(row.Date).format("DD/MM/YYYY") !== null ? moment(row.Date).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    label: "Destination District",
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
     tdClass: "capitalize"
   },
 
   {
-    label: "Dispatch Details",
-    field: row => `
-    <span class="from-color">Driver: ${row.Driver?.Name || "Driver Not Specified"}</span><br>
-    <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
-    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
+    label: "Date Created",
+    field: row => moment(row.CreatedOn).format("d/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
+
+  {
+    label: "Tonnage",
+    hidden: false,
+    field: row => row.Quantity,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
+
 
 
   {
@@ -231,10 +236,19 @@ const columns = ref([
     sortable: false
   }
 
-
-
-
 ]);
+
+
+
+const loadingPlanStore = useloadingplanstore();
+const loadingplans = reactive([]);
+
+
+
+
+const recieptStore = usereceiptstore();
+const receipts = reactive([]);
+
 const $router = useRouter();
 //INJENCTIONS
 const moment = inject("moment");
@@ -245,17 +259,10 @@ const userStore = useUserStore();
 
 const dispatchStore = useDispatcherStore();
 
-
-const receiptStore = usereceiptstore();
-
 const catalogueStore = useListingStore();
 const bookingStore = usebookingstore();
 
 const bookings = reactive([]);
-
-
-const receipts = reactive([]);
-
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -269,95 +276,177 @@ let catalogueCount = ref(0);
 const users = reactive([]);
 
 const dispaches = reactive([]);
-
-
-const expectedDispatchCount = ref(0);
-
-
-const receiptsCount = ref(0);
-
-const expectedDispatches = reactive([]);
-
-
-const quantityRecieved = ref("");
-
-
 const isLoading = ref(false);
 let userCount = ref(0);
 
 let bookingCount = ref(0);
+
+const receiptcount = ref(0)
+
+const dispatchcount = ref(0)
+
+
+
+const isEditDialogOpen = ref(false);
+
+const selectedLoadingPlan = ref(null);
+
+// Function to open the edit dialog
+const openEditDialog = (loadingPlan) => {
+  selectedLoadingPlan.value = loadingPlan;
+  isEditDialogOpen.value = true;
+};
+
+// Function to close the edit dialog
+const closeEditDialog = () => {
+  isEditDialogOpen.value = false;
+};
+
+
+
+const isDispatchDialogOpen = ref(false);
+
+// Function to open the edit dialog
+const openDispatchDialog = (loadingPlan) => {
+  console.log(loadingPlan, "tttttttttttttttttttt")
+  selectedLoadingPlan.value = loadingPlan;
+  isDispatchDialogOpen.value = true;
+};
+
+// Function to close the edit dialog
+const closeDispatchDialog = () => {
+  isDispatchDialogOpen.value = false;
+};
+
+
+
+
+
 //MOUNTEDgetCatalogue
 onMounted(() => {
+  getCatalogue();
   getUsers();
-  getExpectedDispatches();
+  getBookings();
+  getDispatches();
   getReceipts();
-  getQuantityReceived();
+  getDispatchesCount();
+  getLoadingPlansPending();
+  getloadingplansSummary();
+  getLoadingPlans();
+  getdispatchSummary();
 });
 //WATCH
 
-
-
-
-const getExpectedDispatches = async () => {
-
-  dispatchStore
-    .expected(user.value.district)
-    .then((result) => {
-
-      expectedDispatchCount.value = result.length
-
-
-      expectedDispatches.length = 0; //empty array
-      expectedDispatches.push(...result);
-
-
-    })
-    .catch((error) => {
-
-    })
-
+const getCatalogue = async () => {
+  catalogueStore.count().then((result) => {
+    catalogueCount.value = result.count;
+  });
 };
 
 
 const getReceipts = async () => {
+  recieptStore.count().then((result) => {
+    receiptcount.value = result.count;
+  });
+};
+
+
+const getDispatches = async () => {
   isLoading.value = true;
-  receiptStore
-    .countbydistrict(user.value.district)
+  dispatchStore
+    .get()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      const sortedDispatches = [...result].sort((a, b) => {
+        // Convert the `createdOn` field to a Date object and compare
+        return new Date(b.createdon) - new Date(a.createdon);
+      });
 
-      receiptsCount.value = result.count
-
-    })
-
-
-    .finally(() => {
-      isLoading.value = false;
-    });
-
-}
-
-
-
-const getQuantityReceived = async () => {
-  isLoading.value = true;
-  receiptStore
-    .quantitybydistrict(user.value.district)
-    .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
-      quantityRecieved.value = result.totalQuantity + " MT";
-
+      // Clear the existing dispatches and push the sorted results
+      dispaches.length = 0;
+      dispaches.push(...sortedDispatches);
     })
     .finally(() => {
       isLoading.value = false;
     });
-
 }
 
+
+const getDispatchesCount = async () => {
+  dispatchStore.count().then((result) => {
+    dispatchcount.value = result.count;
+  });
+}
+
+const getLoadingPlans = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .get()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      const sortedDispatches = [...result].sort((a, b) => {
+        // Convert the `createdOn` field to a Date object and compare
+        return new Date(b.createdon) - new Date(a.createdon);
+      });
+
+      // Clear the existing dispatches and push the sorted results
+      loadingplans.length = 0;
+      loadingplans.push(...sortedDispatches);
+    })
+}
+
+const pendingplans = ref(0)
+
+const totalBalance = ref(0)
+
+const totalStockPlanned = ref("")
+const dispatchPercentageFormated = ref("")
+const totalDispatched = ref("")
+const totalReceived = ref("")
+const receivedPercentageFormated = ref("")
+const receivedPercentage = ref("")
+const dispatchPercentage = ref("")
+
+const getLoadingPlansPending = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansPending()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      pendingplans.value = result.count
+    })
+}
+
+
+const getdispatchSummary = async () => {
+  // isLoading.value = true;
+  dispatchStore
+    .getdispatchSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
+      totalReceived.value = result.totalReceived
+      receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
+
+      receivedPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+
+const getloadingplansSummary = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansSummary()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+
+      totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalance.value = result.totalBalance
+      dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
 
 const getUsers = async () => {
   userStore.count().then((result) => {
@@ -383,34 +472,113 @@ const getUsers = async () => {
     });
 };
 
+const getBookings = async () => {
+  bookingStore.count().then((result) => {
+    bookingCount.value = result.count;
+  });
 
+  bookingStore.getbookingsClean().then((result) => {
+    bookings.length = 0;
+    bookings.push(...result);
+  });
+};
+
+
+const createReport = async (model) => {
+  isLoading.value = true;
+
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id
+  if (model.StartDate) {
+    model.StartDate = moment(model.StartDate).toISOString();
+  }
+  if (model.EndDate) {
+    model.EndDate = moment(model.EndDate).toISOString();
+  }
+
+  loadingPlanStore
+    .create(model)
+    .then(result => {
+      Swal.fire({
+        title: "Success",
+        text: "Created a new loading plan successfully",
+        icon: "success",
+        confirmButtonText: "Ok"
+      });
+
+      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
+
+    })
+    .catch(error => {
+      // Handling error
+    })
+    .finally(() => {
+      isLoading.value = false;
+      getDispatches();
+      getLoadingPlans();
+    });
+};
+
+const formatDate = (date) => {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return new Date(date).toLocaleDateString(undefined, options);
+};
 
 // Dummy data for stats
 const stats = ref([
+  /*  {
+     label: 'Total Stocks Planned',
+     value: totalStockPlanned,
+     // Use a ternary operator for the icon
+     icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+     iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+     percentageText: dispatchPercentageFormated,
+     textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+     showProgress: true,
+     progress: dispatchPercentage,
+     isProgressPositive: dispatchPercentage >= 50,
+     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+   },
+  */
   {
-    label: 'Total Receipts',
-    value: receiptsCount,
+    label: 'Dispatch Status',
+    value: totalDispatched,
+    // Use a ternary operator to decide between ExclamationCircleIcon and CheckCircleIcon
+    icon: receivedPercentage > 50 ? ExclamationCircleIcon : CheckCircleIcon,
+    iconColor: dispatchPercentage > 50 ? 'red-500' : 'green-500',
+    percentageText: receivedPercentageFormated,
+    textColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    showProgress: true,
+    progress: receivedPercentage,
+    isProgressPositive: receivedPercentage > 50,
+    progressColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    progressText: ''
+  },
+
+  {
+    label: 'Dispatches Done',
+    value: dispatchcount,
     icon: ClipboardListIcon,
     iconColor: 'green-500',
     percentageText: null
   },
   {
-    label: 'Expected Dispatches',
-    value: expectedDispatchCount,
+    label: 'Receipts Done',
+    value: receiptcount,
     icon: DocumentIcon,
     iconColor: 'blue-500',
     percentageText: null
-  },
-  {
-    label: 'Quantity Received to date',
-    value: quantityRecieved,
-    icon: DocumentIcon,
-    iconColor: 'gray-400',
-    percentageText: '',
-    textColor: 'gray-600',
-    showProgress: false
   }
-
+  /* ,
+   {
+     label: 'Requisitions',
+     value: 11,
+     icon: ClipboardListIcon,
+     iconColor: 'gray-400',
+     percentageText: '',
+     textColor: 'gray-600',
+     showProgress: false
+   }, */
 ]);
 const actions = [
   {
@@ -433,54 +601,7 @@ const actions = [
 
 
 
-
-const isReceiptDialogOpen = ref(false);
-const selectedDispatch = ref(null);
-
-
-// Function to open the edit dialog
-const openDispatchDialog = (dispatch) => {
-
-  selectedDispatch.value = dispatch;
-
-
-  isReceiptDialogOpen.value = true;
-  console.log("ddddddddddddddddddddd", dispatch)
-};
-
-
-
-
-const isEditDialogOpen = ref(false);
-
-const selectedReceipt = ref(null);
-
-// Function to open the edit dialog
-const openEditDialog = (dispatch) => {
-  selectedReceipt.value = dispatch;
-  isEditDialogOpen.value = true;
-};
-
-// Function to close the edit dialog
-const closeEditDialog = () => {
-  isEditDialogOpen.value = false;
-};
-
-
-
-// Function to open the edit dialog
-const openReceiptDialog = (dispatch) => {
-  selectedReceipt.value = dispatch;
-  isReceiptDialogOpen.value = true;
-};
-
-// Function to close the edit dialog
-const closeReceiptDialog = () => {
-  isReceiptDialogOpen.value = false;
-};
-
-
-
+const dispatchstatus = ref(0)
 
 
 </script>

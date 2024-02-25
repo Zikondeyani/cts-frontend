@@ -417,6 +417,22 @@ const routes = [
       },
 
 
+      
+      {
+        path: "/dispatcher/loadingplans",
+        name: "dispatcher-loadingplans",
+        component: () => import("../pages/dispatcher/loadingplans/index.page.vue"),
+      },
+
+
+         
+      {
+        path: "/dispatcher/dispatches",
+        name: "dispatcher-dispatches",
+        component: () => import("../pages/dispatcher/dispatch/dispatches.page.vue"),
+      },
+
+
     ],
     beforeEnter: (to, from, next) => {
       let role = JSON.parse(sessionStorage.getItem("RLE"));

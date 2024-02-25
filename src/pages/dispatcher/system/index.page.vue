@@ -55,21 +55,21 @@ const breadcrumbs = [
   { name: "System Management Panel", href: "#", current: true },
 ];
 const optionGroups = ref([
- /*  {
+  {
     title: 'Organizational Management',
     options: [
-      { label: 'Organisations', icon: OfficeBuildingIcon, path: '/organisations' },
+    /*   { label: 'Organisations', icon: OfficeBuildingIcon, path: '/organisations' },
       { label: 'User Roles', icon: UserGroupIcon, path: '/roles' },
-      { label: 'Users', icon: UserIcon, path: '/admin/users' },
+    */   { label: 'Users', icon: UserIcon, path: '/admin/users' },
     ],
-  }, */
-  {
+  },
+ /*  {
     title: 'Reporting and Logs',
     options: [
       { label: 'Logs', icon: ArchiveIcon, path: '/logs' },
      ],
   },
-  /* {
+  {
     title: 'Geographical and Unit Management',
     options: [
       { label: 'Districts', icon: MapIcon, path: '/districts' },

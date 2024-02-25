@@ -116,7 +116,7 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Created By: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.user.username.replace(/\./g, ' ') }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.user?.username?.replace(/\./g, ' ') }}</span>
                     </div>
 
                     <div class="mb-12">

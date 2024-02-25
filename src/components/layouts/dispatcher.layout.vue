@@ -88,11 +88,11 @@
                 </a>
                 </MenuItem>
 
-                <MenuItem v-slot="{ active }">
+               <!--  <MenuItem v-slot="{ active }">
                 <button @click="gotoSystemsettings" :class="menuItemClasses(active, true)">
                   System
                 </button>
-                </MenuItem>
+                </MenuItem> -->
                 <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
@@ -214,7 +214,6 @@ function navigation() {
     { name: "Home", href: "/dispatcher/dashboard", icon: HomeIcon, current: false },
     { name: "Dispatch", href: "/dispatcher/dispatch-management", icon: LocationMarkerIcon, current: false },
     //  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
-    { name: "Reports", href: "/dispatcher/report-management", icon: DocumentDuplicateIcon, current: false },
 
     /*   { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
      { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
