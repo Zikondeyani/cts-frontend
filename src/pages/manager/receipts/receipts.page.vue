@@ -15,7 +15,7 @@
         </div>
         <button type="button"
           class="font-body inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-          @click="open = true">
+          @click="generateExcel">
           Export Data
         </button>
       </div>
@@ -89,6 +89,8 @@ import ReceiptViewDialog from "../../../components/pages/dispatches/view.receipt
 
 import EditReceiptDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
 
+
+import * as XLSX from 'xlsx';
 
 
 import createListingForm from "../../../components/pages/catalogue/create.component.vue";
@@ -188,6 +190,32 @@ const selectedDispatch = ref(null);
 
 const selectedReceipt = ref(null);
 
+
+const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+  const wsName = 'Receipts';
+  // Create a worksheet from the flattened data array
+
+
+  const dataToExport = receipts;
+
+  // Map over the array to flatten each object
+  const flattenedData = dataToExport.map(receipt => ({
+    id: receipt.id,
+    CreatedOn: moment(receipt.CreatedOn).format("DD/MM/YYYY"),
+    UpdatedOn: moment(receipt.UpdatedOn).format("DD/MM/YYYY"),
+    NoBags: receipt.NoBags,
+    Quantity: receipt.Quantity,
+    FinalDestinationPoint: receipt.FinalDestinationPoint,
+    Remarks: receipt.Remarks
+  }))
+
+
+  const ws = XLSX.utils.json_to_sheet(flattenedData);
+  XLSX.utils.book_append_sheet(wb, ws, wsName);
+  // Export the workbook
+  XLSX.writeFile(wb, 'Receipts.xlsx');
+};
 
 
 // Function to open the edit dialog

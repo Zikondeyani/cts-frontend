@@ -13,7 +13,7 @@
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="mb-4">
           <h2 class="font-bold leading-7 text-gray-800 sm:text-2xl sm:truncate">
-            Reports
+           Loading Plan Reports
           </h2>
         </div>
 
@@ -25,7 +25,7 @@
               <label for="district" class="block text-sm font-medium text-gray-700">District</label>
               <select v-model="selectedDistrict" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Districts</option>
-                <option v-for="district in districts" :key="district" :value="district.Name">{{ district.Name }}</option>
+                <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.Name }}</option>
               </select>
             </div>
 
@@ -34,7 +34,7 @@
               <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
               <select v-model="selectedWarehouse" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Warehouses</option>
-                <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.Name">{{ warehouse.Name }}
+                <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.Name }}
                 </option>
               </select>
             </div>
@@ -44,7 +44,7 @@
               <label for="transporter" class="block text-sm font-medium text-gray-700">Transporter</label>
               <select v-model="selectedTransporter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Transporters</option>
-                <option v-for="transporter in transporters" :key="transporter" :value="transporter.Name">{{
+                <option v-for="transporter in transporters" :key="transporter.id" :value="transporter.id">{{
                   transporter.Name }}</option>
               </select>
             </div>
@@ -54,7 +54,7 @@
               <label for="commodity" class="block text-sm font-medium text-gray-700">Commodity</label>
               <select v-model="selectedCommodity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Commodities</option>
-                <option v-for="commodity in commodities" :key="commodity" :value="commodity.Name">{{ commodity.Name }}
+                <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">{{ commodity.Name }}
                 </option>
               </select>
             </div>
@@ -95,11 +95,11 @@
 
         </div>
 
-    
+
 
         <!-- Table -->
         <div class="relative overflow-x-auto rounded-table">
-          <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
+          <vue-good-table :columns="columns" :rows="filteredLoadingPlans" :search-options="{ enabled: true }"
             :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped">
             <!-- Table slots -->
           </vue-good-table>
@@ -315,13 +315,15 @@ const getLoadingplans = async () => {
     isLoading.value = false;
   }
 };
-
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Loading Plan';
 
+  // Determine whether to use filtered data or all data
+  const dataToExport = filteredLoadingPlans.value.length > 0 ? filteredLoadingPlans.value : loadingplans;
+
   // Map over the array to flatten each object
-  const flattenedData = loadingplans.reverse().map(plan => ({
+  const flattenedData = dataToExport.map(plan => ({
     id: plan.id,
     CreatedOn: plan.CreatedOn,
     UpdatedOn: plan.UpdatedOn,
@@ -343,6 +345,7 @@ const generateExcel = () => {
   // Export the workbook
   XLSX.writeFile(wb, 'LoadingPlans.xlsx');
 };
+
 
 
 const createReport = async (model) => {
@@ -425,15 +428,19 @@ const deleteItem = async (id) => {
 const selectedDistrict = ref('');
 const selectedWarehouse = ref('');
 const selectedTransporter = ref('');
-
 const selectedCommodity = ref('');
+const startDate = ref('');
+const endDate = ref('');
 // Reactive data for filtered loading plans
 const filteredLoadingPlans = computed(() => {
   // Filtering logic based on selected filters
   return loadingplans.filter(plan => {
-    return (!selectedDistrict.value || plan.district === selectedDistrict.value) &&
-      (!selectedWarehouse.value || plan.warehouse === selectedWarehouse.value) &&
-      (!selectedTransporter.value || plan.transporter === selectedTransporter.value); loadingplans
+    return (!selectedDistrict.value || plan.district.id === selectedDistrict.value) &&
+      (!selectedWarehouse.value || plan.warehouse.id === selectedWarehouse.value) &&
+      (!selectedTransporter.value || plan.transporter.id === selectedTransporter.value) &&
+      (!selectedCommodity.value || plan.commodity.id === selectedCommodity.value) &&
+      (!startDate.value || plan.StartDate === startDate.value) &&
+      (!endDate.value || plan.EndDate === endDate.value);
   });
 });
 
@@ -446,6 +453,9 @@ const resetFilters = () => {
   selectedDistrict.value = '';
   selectedWarehouse.value = '';
   selectedTransporter.value = '';
+  endDate.value = '';
+  startDate.value = '';
+  selectedCommodity.value = '';
 };
 
 
@@ -540,4 +550,5 @@ const getWarehouses = async () => {
 .by-color {
   color: gray;
   /* or any color you prefer */
-}</style>
+}
+</style>
