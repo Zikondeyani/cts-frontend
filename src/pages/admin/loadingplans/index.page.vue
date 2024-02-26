@@ -29,6 +29,7 @@
         </div>
 
       </div>
+      
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
         <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
@@ -283,6 +284,8 @@ const createReport = async (model) => {
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
+  
+  model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }

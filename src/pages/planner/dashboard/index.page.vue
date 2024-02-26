@@ -324,10 +324,11 @@ const getLoadingPlans = async () => {
     .get()
     .then(result => {
       // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
-    
+
       // Clear the existing dispatches and push the sorted results
       loadingplans.length = 0;
-      loadingplans.push(...result);
+      let sorteddata = result.reverse()
+      loadingplans.push(...sorteddata);
     })
 }
 
@@ -425,6 +426,9 @@ const createReport = async (model) => {
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
+  
+  model.Balance = model.Quantity
+  
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
@@ -442,7 +446,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
+      $router.push('/planner/loadingplans'); // Use the router's push method to navigate
 
     })
     .catch(error => {
@@ -491,23 +495,23 @@ const stats = ref([
     progressText: ''
   },
 
- /*  {
-    label: 'Dispatches Done',
-    value: dispatchcount,
-    icon: ClipboardListIcon,
-    iconColor: 'green-500',
-    percentageText: null
-  },
- 
-  {
-    label: 'Pending Loading Plans',
-    value: pendingplans,
-    icon: DocumentIcon,
-    iconColor: 'gray-400',
-    percentageText: '',
-    textColor: 'gray-600',
-    showProgress: false
-  } */
+  /*  {
+     label: 'Dispatches Done',
+     value: dispatchcount,
+     icon: ClipboardListIcon,
+     iconColor: 'green-500',
+     percentageText: null
+   },
+  
+   {
+     label: 'Pending Loading Plans',
+     value: pendingplans,
+     icon: DocumentIcon,
+     iconColor: 'gray-400',
+     percentageText: '',
+     textColor: 'gray-600',
+     showProgress: false
+   } */
   /* ,
    {
      label: 'Requisitions',

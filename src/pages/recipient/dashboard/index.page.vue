@@ -264,7 +264,7 @@ const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/recipient/dashboard", current: false },
   { name: "", href: "#", current: true },
 ];
 

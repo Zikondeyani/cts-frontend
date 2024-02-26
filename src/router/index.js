@@ -74,6 +74,12 @@ const routes = [
         name: "admin-dashboard",
         component: () => import("../pages/admin/dashboard/index.page.vue"),
       },
+
+      {
+        path: "/admin/report-management",
+        name: "admin-report-management",
+        component: () => import("../pages/admin/reports/index.page.vue"),
+      },
       //Users
       {
         path: "/admin/users",
@@ -185,8 +191,8 @@ const routes = [
 
 
 
-   //Manager
-   {
+  //Manager
+  {
     path: "/manager",
     name: "manager",
     component: () => import("../components/layouts/manager.layout.vue"),
@@ -295,7 +301,7 @@ const routes = [
       },
 
 
-      
+
       {
         path: "/manager/report-management",
         name: "manager-report-management",
@@ -417,7 +423,7 @@ const routes = [
       },
 
 
-      
+
       {
         path: "/dispatcher/loadingplans",
         name: "dispatcher-loadingplans",
@@ -425,7 +431,7 @@ const routes = [
       },
 
 
-         
+
       {
         path: "/dispatcher/dispatches",
         name: "dispatcher-dispatches",
@@ -490,7 +496,7 @@ const routes = [
         component: () => import("../pages/planner/dispatch/manage.page.vue"),
       },
 
-      
+
 
       {
         path: "/planner/dispatches",

@@ -66,7 +66,8 @@
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"  v-on:update="reloadPage"/>
+        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
+          v-on:update="reloadPage" />
 
         <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
           @close="closeDispatchDialog" v-on:update="reloadPage" />
@@ -283,6 +284,7 @@ const createReport = async (model) => {
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
+  model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
@@ -300,7 +302,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
+      $router.push('/planner/loadingplans'); // Use the router's push method to navigate
 
     })
     .catch(error => {

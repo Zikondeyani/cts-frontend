@@ -319,7 +319,8 @@ const getLoadingPlans = async () => {
 
       // Clear the existing dispatches and push the sorted results
       loadingplans.length = 0;
-      loadingplans.push(...sortedDispatches);
+      let data = sortedDispatches.reverse()
+      loadingplans.push(...data);
     })
 }
 
@@ -417,6 +418,8 @@ const createReport = async (model) => {
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
+  
+  model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }

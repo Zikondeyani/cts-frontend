@@ -222,10 +222,11 @@ function navigation() {
     { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
     { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
    /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
-    { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
     { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
     { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
   */   { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
+
+    { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
 
   ];
 

@@ -37,7 +37,7 @@ import { TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon } from "@her
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/recipient/dashboard", current: false },
   { name: "Dispatch Management", href: "#", current: true },
 ];
 const options = ref([
