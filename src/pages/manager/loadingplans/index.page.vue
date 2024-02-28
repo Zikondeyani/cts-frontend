@@ -187,7 +187,7 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/admin/loadingplans');
+  $router.push('/manager/loadingplans');
 }
 
 

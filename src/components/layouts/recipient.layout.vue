@@ -232,13 +232,17 @@ function navigation() {
    */
   ];
 
-  for (let nav of navList)
-    if (
-      nav.href.split("/")[1] + nav.href.split("/")[2] ==
-      $router.currentRoute.value.fullPath.split("/")[1] +
-      $router.currentRoute.value.fullPath.split("/")[2]
-    )
-      nav.current = true;
+  const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
+
+
+  navList.forEach(navItem => {
+    // Check if the current route base matches the nav item's href
+    // Or if it's the "Loading Plans" item and the current route base starts with /planner/loadingplans or /planner/dispatches
+    const isMatched = currentRouteBase === navItem.href ||
+      (navItem.name === "Receipts" && (currentRouteBase.startsWith("/recipient/receipts") || currentRouteBase.startsWith("/recipient/receipts")));
+    navItem.current = isMatched;
+  });
+
   return navList;
 }
 // select active page the route must be the same as the full path

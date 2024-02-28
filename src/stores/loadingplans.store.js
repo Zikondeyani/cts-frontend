@@ -42,6 +42,16 @@ export const useloadingplanstore = defineStore({
     },
 
 
+    async getloadingplansSummaryByCommodity() {
+      return await loadingplansService.getloadingplansSummaryByCommodity().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
 
     async getByReference(data) {
       return await loadingplansService.getByReference(data).then((result => {

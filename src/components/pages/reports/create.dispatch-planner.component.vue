@@ -19,24 +19,32 @@
                 <!-- Flex container for the two main sections -->
                 <div class="flex flex-nowrap">
 
-                  <!-- Left Side: Form for Receipt Creation -->
+                  <!-- Left Side: Form for Dispatch Creation -->
                   <div class="flex-grow p-4 bg-white">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Receipt</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Dispatch</h2>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Final Destination
-                        Point</label>
+                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Delivery Note</label>
 
-                      <input type="text" name="fdp" v-model="receipt.FinalDestinationPoint" id="DeliveryNote"
-                        autocomplete="FinalDestinationPoint"
+                      <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote"
+                        autocomplete="DeliveryNote"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
 
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Final Destination
+                        Point</label>
+
+                      <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint"
+                        id="FinalDestinationPoint" autocomplete="FinalDestinationPoint"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
 
                     <div class="col-span-6 sm:col-span-3">
                       <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of Bags</label>
-                      <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="receipt.NoBags"
+                      <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="dispatch.NoBags"
                         id="NoBags" autocomplete="NoBags"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
@@ -52,36 +60,53 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Date</label>
 
-                      <input type="date" name="Date" v-model="receipt.Date" id="Date" autocomplete="Date"
+                      <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 
                     </div>
 
+                    <hr>
+                    <h2 class="text-xl font-semibold mb-4  mt-5 text-blue-400 ">Driver Details</h2>
+
+
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="Remarks" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Remarks</label>
+                      <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver Name</label>
 
-                      <select name="Remarks" v-model="selectedRemark" id="Remarks"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">Select Remark</option>
-                        <option value="received_in_good_condition">Received in good condition</option>
-                        <option value="received_but_damaged">Received but damaged</option>
-                        <option value="received_but_not_expected_quantity">Received but not at the expected quantity
-                        </option>
-                        <option value="other">Other (please specify)</option>
-                      </select>
-
-                      <textarea v-if="selectedRemark === 'other'" v-model="receipt.Remarks" id="CustomRemark" rows="3"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        placeholder="Enter your custom remark here"></textarea>
+                      <input type="text" name="DriverName" v-model="dispatch.DriverName" id="DriverName"
+                        autocomplete="DriverName"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
+                        License</label>
+
+                      <input type="text" name="DriverLicense" v-model="dispatch.DriverLicense" id="DriverLicense"
+                        autocomplete="DriverLicense"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck
+                        Number</label>
+
+                      <input type="text" name="TruckNumber" v-model="dispatch.TruckNumber" id="TruckNumber"
+                        autocomplete="TruckNumber"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
+
+
+
                     <div class="flex justify-end mt-4">
-                      <button @click="resetReceipt()"
+                      <button @click="resetDispatch()"
                         class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">
                         Reset
                       </button>
-                      <button @click="submitReceipt()"
+                      <button @click="submitDispatch()"
                         class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-400 focus:outline-none focus:border-blue-400 focus:ring focus:ring-blue-200 active:bg-blue-400 transition ease-in-out duration-150">
                         Submit
                       </button>
@@ -93,45 +118,51 @@
 
                   <!-- Right Side: Loading Plan Details -->
                   <div class="flex-initial w-96 p-4 bg-white">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Receipt Details - ID
-                      {{ dispatch.id }}</h2>
+                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Loading Plan Details - ID
+                      {{ loadingPlan.id }}</h2>
                     <!-- ... Loading Plan Details ... -->
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Created By: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Dispatcher.username.replace(/\./g, ' ') }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.user?.username?.replace(/\./g, ' ') }}</span>
                     </div>
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Created On: </span>
-                      <span class="text-sm text-gray-600"> {{ moment(dispatch.createdOn).format("DD/MM/YYYY") }}</span>
+                      <span class="text-sm text-gray-600"> {{ moment(loadingPlan.createdOn).format("DD/MM/YYYY") }}</span>
                     </div>
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Final Destination: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.FinalDestinationPoint }}</span>
-                    </div>
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Quantity: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Quantity }}</span>
-                    </div>
-
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Date: </span>
-                      <span class="text-sm text-gray-600"> {{ moment(dispatch.Date).format("DD/MM/YYYY") }}</span>
+                      <span class="text-sm font-bold text-gray-700">Commodity: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.commodity.Name }}</span>
                     </div>
 
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Driver: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.DriverName }}</span>
+                      <span class="text-sm font-bold text-gray-700">Origin: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse.Name }}</span>
+                    </div>
+
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Destination: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.district.Name }}</span>
                     </div>
 
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">License: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.DriverLicense }}</span>
+                      <span class="text-sm font-bold text-gray-700">Transporter: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.transporter.Name }}</span>
                     </div>
 
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Total Quantity: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.Quantity }} MT</span>
+                    </div>
+
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Balance: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.Balance }} MT</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -159,25 +190,26 @@ import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headles
 import { useRouter } from "vue-router";
 import { inject, ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 
+import { usedriverstore } from "../../../stores/driver.store";
 
 
 const $router = useRouter();
 
-import { usereceiptstore } from "../../../stores/receipt.store";
+import { useDispatcherStore } from "../../../stores/dispatch.store";
 
 
 import { useSessionStore } from "../../../stores/session.store";
 
-
-
-const dispatchstore = usereceiptstore();
+const driverstore = usedriverstore();
 
 
 
-const receiptstore = usereceiptstore();
+const dispatchstore = useDispatcherStore();
 
 
-const selectedRemark = ref('');
+const drivers = ref([]);
+
+
 const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
@@ -189,36 +221,57 @@ const emit = defineEmits(['update', 'close']);
 
 const props = defineProps({
   isOpen: Boolean,
-  dispatch: Object
+  loadingPlan: Object
 });
 
 
 
-const receipt = ref({ NoBags: 0 })
+const dispatch = ref({ NoBags: 0 })
 
 const closeDialog = () => {
-  receipt.value = {}
+  dispatch.value = {}
   emit('close');
+};
+
+// Fetch data for dropdowns
+const fetchDrivers = async () => {
+  drivers.value = await driverstore.get();
 };
 
 
 
 
 
+onMounted(() => { fetchDrivers(); });
 
-onMounted(() => { });
 
+const resetDispatch = async () => {
 
-const resetReceipt = async () => {
-
-  receipt.value = {}
+  dispatch.value = {}
 
 }
 
-const computedTonnage = computed(() => {
-  return receipt.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
-});
 
+const isDecimal = (num) => {
+  return num % 1 !== 0;
+}
+
+
+
+
+const computedTonnage = computed(() => {
+  let TonnageConversion = props.loadingPlan.commodity.PackSize / 1000;
+
+  // Apply toFixed(2) only if the number is a decimal
+  if (isDecimal(TonnageConversion)) {
+    TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
+  }
+
+  let Tonnage = dispatch.value.NoBags * TonnageConversion;
+
+  // Apply toFixed(2) to the final result
+  return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
+});
 
 
 
@@ -231,47 +284,54 @@ const validateNumberInput = (event) => {
 
 
 
-const submitReceipt = async () => {
+const submitDispatch = async () => {
 
 
-  if (receipt.value.Date) {
-    receipt.value.Date = moment(receipt.value.Date).toISOString();
+  if (dispatch.value.Date) {
+    dispatch.value.Date = moment(dispatch.value.Date).toISOString();
   }
 
+  dispatch.value.DispatcherId = user.value.id
+  dispatch.value.loadingPlanId = props.loadingPlan.id
+  dispatch.value.Quantity = computedTonnage.value
 
-
-  receipt.value.Quantity = receipt.value.NoBags
-
-  delete receipt.value.NoBags
-
-  receipt.value.RecipientId = user.value.id
-  receipt.value.dispatchId = props.dispatch.id
-
-  receiptstore
-    .create(receipt.value)
+  dispatchstore
+    .create(dispatch.value)
     .then(result => {
 
       emit('update');
       Swal.fire({
-        title: "Receipt Created",
+        title: "Dispatch Created",
         html: `
-    <p>Your receipt has been successfully created.</p>
-    <p><strong>RECEIPT ID:</strong> ${result.id}</p>`,
+    <p>Your dispatch has been successfully created.</p>
+    <p><strong>Dispatch ID:</strong> ${result.id}</p>
+    <p>You can now track the dispatch status in the loading plans section.</p>
+  `,
         icon: "success",
         confirmButtonColor: '#3085d6',
-        confirmButtonText: "Go to Receipts",
+        confirmButtonText: "Go to Dispatches",
+        showCancelButton: true, // Enable the cancel button
+        cancelButtonText: "View All Loading Plans", // Change the text to "View All Loading Plans"
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/dispatcher/receipts');
+        if (result.isConfirmed) {
+          // If "Go to Dispatches" is clicked
+          closeDialog();
+          $router.push('/planner/dispatches');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // If "View All Loading Plans" (formerly the cancel button) is clicked
+          closeDialog();
+          $router.push('/planner/loadingplans');
+        }
       });
 
 
     })
     .catch(error => {
       Swal.fire({
-        title: "Receipt Denied",
-        text: "Unable to complete the receipt!",
+        title: "Dispatch Denied",
+        text: "Unable to complete the dispatch. The loading plan does not have enough balance or has already been closed. Please review the loading plan details and try again.",
         icon: "error",
         confirmButtonText: "Review Details",
         cancelButtonText: "Cancel",

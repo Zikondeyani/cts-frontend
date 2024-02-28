@@ -79,6 +79,7 @@
               <MenuItems
                 class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
+
                 <a :href="item.href" :class="[
                   active ? 'bg-white' : '',
                   'block py-2 px-4 text-sm text-white',
@@ -153,11 +154,13 @@ import {
   XIcon,
   UserCircleIcon,
   DocumentDuplicateIcon,
+  AdjustmentsIcon,
   LightningBoltIcon,
   LocationMarkerIcon,
   CollectionIcon,
   IdentificationIcon,
   OfficeBuildingIcon,
+  MapIcon,
 } from "@heroicons/vue/outline";
 import {
   ChevronRightIcon,
@@ -217,26 +220,25 @@ onMounted(() => { });
 //WAT
 function navigation() {
   let navList = [
-    { name: "Home", href: "/planner/dashboard", icon: HomeIcon, current: false },
-    { name: "Dispatch", href: "/planner/dispatch-management", icon: LocationMarkerIcon, current: false },
- /*    { name: "Commodities", href: "/planner/commodity-tracking", icon: CollectionIcon, current: false },
-  */   { name: "Receipts", href: "/planner/receipt-management", icon: DocumentDuplicateIcon, current: false },
-  /*   { name: "Reports", href: "/planner/report-management", icon: DocumentDuplicateIcon, current: false },
- */
-    /*    { name: "Requisitions", href: "/planner/requisition-management", icon: IdentificationIcon, current: false },
-     */ /*   { name: "Project Management", href: "/planner/project-management", icon: IdentificationIcon, current: false },
-      */
+    { name: "Home", href: "/planner/dashboard", icon: HomeIcon },
+    { name: "Plan & Dispatch", href: "/planner/dispatch-management", icon: AdjustmentsIcon },
+    { name: "Receipts", href: "/planner/receipt-management", icon: DocumentDuplicateIcon, current: false },
   ];
 
-  for (let nav of navList)
-    if (
-      nav.href.split("/")[1] + nav.href.split("/")[2] ==
-      $router.currentRoute.value.fullPath.split("/")[1] +
-      $router.currentRoute.value.fullPath.split("/")[2]
-    )
-      nav.current = true;
+  const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
+
+  navList.forEach(navItem => {
+    // Check if the current route base matches the nav item's href
+    // Or if it's the "Loading Plans" item and the current route base starts with /planner/loadingplans or /planner/dispatches
+    const isMatched = currentRouteBase === navItem.href ||
+      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/planner/loadingplans") || currentRouteBase.startsWith("/planner/dispatches")))
+      || (navItem.name === "Receipts" && (currentRouteBase.startsWith("/planner/receipts")));
+    navItem.current = isMatched;
+  });
+
   return navList;
 }
+
 // select active page the route must be the same as the full path
 const userNavigation = [
   /* { name: "Profile", href: "#" },

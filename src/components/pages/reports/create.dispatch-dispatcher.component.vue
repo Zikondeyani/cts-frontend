@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage</label>
+                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage (MT)</label>
                       <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity"
                         readonly
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
@@ -251,6 +251,7 @@ const resetDispatch = async () => {
 
 }
 
+
 const isDecimal = (num) => {
   return num % 1 !== 0;
 }
@@ -271,7 +272,6 @@ const computedTonnage = computed(() => {
   // Apply toFixed(2) to the final result
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 });
-
 
 const validateNumberInput = (event) => {
   // Allow only numeric input
@@ -316,11 +316,11 @@ const submitDispatch = async () => {
         if (result.isConfirmed) {
           // If "Go to Dispatches" is clicked
           closeDialog();
-          $router.push('/admin/dispatches');
+          $router.push('/dispatcher/dispatches');
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           // If "View All Loading Plans" (formerly the cancel button) is clicked
           closeDialog();
-          $router.push('/admin/loadingplans');
+          $router.push('/dispatcher/loadingplans');
         }
       });
 

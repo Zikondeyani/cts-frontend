@@ -73,6 +73,35 @@
                       </div>
                     </div>
 
+                    <div class="relative flex justify-center mt-3" v-if="stat.moreInfo">
+                      <span class="cursor-pointer text-blue-400 text-xs" @mouseover="showTooltip = true"
+                        @mouseleave="showTooltip = false">
+                        <InformationCircleIcon class="h-6 w-6 text-blue-500 inline-block align-middle mr-1" />
+                        <span class="align-middle">More Info</span>
+                      </span>
+
+                      <div v-if="showTooltip"
+                        class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10">
+                        <div v-for="(summary, index) in loadingPlanSummary" :key="index" class="mb-4 last:mb-0">
+                          <h5 class="font-bold text-lg text-capitalize flex text-gray-600 items-center">
+                            {{ summary.commodityName }}
+                          </h5>
+                          <div class="font-medium text-sm mt-2">
+                            <div>
+                              <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
+                              <b>Total Stock Planned:</b> <br> &nbsp; &nbsp; &nbsp; &nbsp;{{
+                                summary.totalStockPlanned.toLocaleString() }} MT
+                            </div>
+                            <div>
+                              <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
+                              <b> Total Balance: </b><br> &nbsp; &nbsp; &nbsp; &nbsp;{{
+                                summary.totalBalance.toLocaleString() }} MT
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -140,6 +169,7 @@ import {
   BellIcon,
   CashIcon,
   CheckCircleIcon,
+  InformationCircleIcon,
   LocationMarkerIcon,
   ClockIcon,
   MenuIcon,
@@ -155,6 +185,10 @@ import {
   DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
+
+
+
+const showTooltip = ref(false);
 
 const columns = ref([
 
@@ -189,7 +223,7 @@ const columns = ref([
   },
 
   {
-    label: "Tonnage",
+    label: "Dispatched Tonnage (MT)",
     hidden: false,
     field: row => row.Quantity,
     sortable: true,
@@ -198,9 +232,9 @@ const columns = ref([
   },
 
   {
-    label: "Balance",
+    label: "Loading Plan Balance (MT)",
     hidden: false,
-    field: row => row.Balance,
+    field: row => row.loadingPlan?.Balance,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -248,6 +282,8 @@ const users = reactive([]);
 
 const dispaches = reactive([]);
 const isLoading = ref(false);
+
+const loadingPlanSummary = reactive([]);
 let userCount = ref(0);
 
 let bookingCount = ref(0);
@@ -266,6 +302,7 @@ onMounted(() => {
   getLoadingPlansPending();
   getloadingplansSummary();
   getdispatchSummary();
+  getloadingplansSummaryByCommodity();
 });
 //WATCH
 
@@ -283,6 +320,20 @@ const getReceipts = async () => {
 };
 
 
+
+
+const getloadingplansSummaryByCommodity = async () => {
+  // isLoading.value = true;
+  loadingPlanStore
+    .getloadingplansSummaryByCommodity()
+    .then(result => {
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      loadingPlanSummary.length = 0;
+      loadingPlanSummary.push(...result);
+
+    })
+}
+
 const getDispatches = async () => {
   isLoading.value = true;
   dispatchStore
@@ -296,7 +347,8 @@ const getDispatches = async () => {
 
       // Clear the existing dispatches and push the sorted results
       dispaches.length = 0;
-      dispaches.push(...sortedDispatches);
+      let reversedData = sortedDispatches.reverse();
+      dispaches.push(...reversedData);
     })
     .finally(() => {
       isLoading.value = false;
@@ -467,6 +519,7 @@ const stats = ref([
     percentageText: dispatchPercentageFormated,
     textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
     showProgress: true,
+    moreInfo: true,
     progress: dispatchPercentage,
     isProgressPositive: dispatchPercentage >= 50,
     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
