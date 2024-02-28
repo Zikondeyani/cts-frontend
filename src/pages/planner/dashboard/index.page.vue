@@ -193,7 +193,7 @@ const columns = ref([
     firstSortType: "asc"
   },
   {
-    label: "Tonnage",
+    label: "Tonnage (MT)",
     hidden: false,
     field: row => row.Quantity,
     sortable: true,
@@ -202,7 +202,7 @@ const columns = ref([
   },
 
   {
-    label: "Balance",
+    label: "Balance (MT)",
     hidden: false,
     field: row => row.Balance,
     sortable: true,
@@ -426,9 +426,9 @@ const createReport = async (model) => {
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
-  
+
   model.Balance = model.Quantity
-  
+
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }

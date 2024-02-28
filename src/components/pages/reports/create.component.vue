@@ -72,7 +72,7 @@
 
                 <div class="grid grid-cols-6 gap-2">
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity (MT)</label>
 
                     <input type="number" name="quantity" v-model="reports.Quantity" id="reportFrom"
                       autocomplete="quantity"

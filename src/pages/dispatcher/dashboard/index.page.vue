@@ -100,7 +100,7 @@
 
 
 
-                  
+
 
                   </div>
                 </template>
@@ -144,7 +144,7 @@ import { usebookingstore } from "../../../stores/booking.store";
 import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
 
 
-import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch.component.vue";
+import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch-dispatcher.component.vue";
 
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
@@ -220,7 +220,7 @@ const columns = ref([
   },
 
   {
-    label: "Tonnage",
+    label: "Tonnage (MT)",
     hidden: false,
     field: row => row.Quantity,
     sortable: true,
@@ -228,6 +228,14 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
+  {
+    label: "Balance (MT)",
+    hidden: false,
+    field: row => row.Balance,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
 
 
   {
@@ -364,7 +372,9 @@ const getDispatches = async () => {
 
       // Clear the existing dispatches and push the sorted results
       dispaches.length = 0;
-      dispaches.push(...sortedDispatches);
+
+      let sorteddata = sortedDispatches.reverse()
+      dispaches.push(...sorteddata);
     })
     .finally(() => {
       isLoading.value = false;
@@ -391,7 +401,11 @@ const getLoadingPlans = async () => {
 
       // Clear the existing dispatches and push the sorted results
       loadingplans.length = 0;
-      loadingplans.push(...sortedDispatches);
+
+
+      let sorteddata = sortedDispatches.reverse()
+
+      loadingplans.push(...sorteddata);
     })
 }
 

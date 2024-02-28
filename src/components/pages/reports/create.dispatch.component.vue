@@ -70,20 +70,28 @@
 
 
 
-
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="driver" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver</label>
+                      <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver Name</label>
 
-                      <select id="driver" name="driver" v-model="dispatch.DriverId" autocomplete="project-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="driver in drivers" :key="project" :value="driver.id" class="uppercase">
-                          {{ driver.Name }}
-                        </option>
-                      </select>
+                      <input type="text" name="DriverName" v-model="dispatch.DriverName" id="DriverName"
+                        autocomplete="DriverName"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
+
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck Number</label>
+                      <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
+                        License</label>
+
+                      <input type="text" name="DriverLicense" v-model="dispatch.DriverLicense" id="DriverLicense"
+                        autocomplete="DriverLicense"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck
+                        Number</label>
 
                       <input type="text" name="TruckNumber" v-model="dispatch.TruckNumber" id="TruckNumber"
                         autocomplete="TruckNumber"
@@ -243,11 +251,26 @@ const resetDispatch = async () => {
 
 }
 
+const isDecimal = (num) => {
+  return num % 1 !== 0;
+}
+
+
+
+
 const computedTonnage = computed(() => {
-  return dispatch.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
+  let TonnageConversion = props.loadingPlan.commodity.PackSize / 1000;
+
+  // Apply toFixed(2) only if the number is a decimal
+  if (isDecimal(TonnageConversion)) {
+    TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
+  }
+
+  let Tonnage = dispatch.value.NoBags * TonnageConversion;
+
+  // Apply toFixed(2) to the final result
+  return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 });
-
-
 
 
 const validateNumberInput = (event) => {

@@ -281,7 +281,8 @@ const getReceipts = async () => {
       //   users.push(...result);
       // }
       receipts.length = 0; //empty array
-      receipts.push(...result);
+      let sorteddata = result.reverse()
+      receipts.push(...sorteddata);
 
 
     })

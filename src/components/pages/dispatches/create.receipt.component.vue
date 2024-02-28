@@ -76,9 +76,6 @@
                         placeholder="Enter your custom remark here"></textarea>
                     </div>
 
-
-
-
                     <div class="flex justify-end mt-4">
                       <button @click="resetReceipt()"
                         class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">
@@ -127,7 +124,12 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Driver: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Driver.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ dispatch.DriverName }}</span>
+                    </div>
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">License: </span>
+                      <span class="text-sm text-gray-600"> {{ dispatch.DriverLicense }}</span>
                     </div>
 
                   </div>
@@ -261,7 +263,7 @@ const submitReceipt = async () => {
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/admin/receipts');
+        $router.push('/dispatcher/receipts');
       });
 
 

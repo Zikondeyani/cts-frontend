@@ -106,7 +106,7 @@ export default class LoadingPlanService {
     if (id == null) {
       return axios
         .get(
-          resource + "/pending" + 
+          resource + "/pending" +
           `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
@@ -157,7 +157,7 @@ export default class LoadingPlanService {
     if (id == null) {
       return axios
         .get(
-          resource + "/stock-summary" + 
+          resource + "/stock-summary" +
           `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
@@ -201,6 +201,57 @@ export default class LoadingPlanService {
         });
     }
   }
+
+
+  getloadingplansSummaryByCommodity(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource + "/stock-summary-by-commodity" +
+          `?filter={"include": [
+            "activity", "user", "district", "transporter", "warehouse", "commodity"
+          ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/stock-summary-by-commodity` + id + `?filter={"include": [
+          "activity", "user", "district", "transporter", "warehouse", "commodity"
+        ]}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
 
   create(data) {
     return axios

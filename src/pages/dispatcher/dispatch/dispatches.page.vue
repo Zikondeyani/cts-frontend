@@ -34,9 +34,6 @@
                 Receive
               </button>
 
-
-           
-
               <!-- Delete Button with Trash Icon -->
               <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
@@ -156,7 +153,7 @@ const columns = ref([
   {
     label: "Dispatch Details",
     field: row => `
-    <span class="from-color">Driver: ${row.Driver?.Name || "Driver Not Specified"}</span><br>
+    <span class="from-color">Driver: ${row.DriverName || "Driver Not Specified"}</span><br>
     <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
     <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
     sortable: true,
@@ -229,7 +226,10 @@ const getDispatches = async () => {
       //   users.push(...result);
       // }
       dispaches.length = 0; //empty array
-      dispaches.push(...result);
+
+
+      let sorteddata = result.reverse();
+      dispaches.push(...sorteddata);
 
 
     })

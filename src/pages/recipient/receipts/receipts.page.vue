@@ -272,7 +272,9 @@ const getReceipts = async () => {
 
     // Update the receipts array with the filtered results
     receipts.length = 0;
-    receipts.push(...filteredReceipts);
+
+    let sorteddata = filteredReceipts.reverse();
+    receipts.push(...sorteddata);
   } catch (error) {
     console.error('Failed to fetch receipts:', error);
   } finally {

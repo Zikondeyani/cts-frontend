@@ -127,9 +127,13 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Driver: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Driver.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ dispatch.DriverName }}</span>
                     </div>
 
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">License: </span>
+                      <span class="text-sm text-gray-600"> {{ dispatch.DriverLicense }}</span>
+                    </div>
                   </div>
                 </div>
               </div>

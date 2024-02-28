@@ -332,7 +332,9 @@ const getExpectedDispatches = async () => {
 
 
       expectedDispatches.length = 0; //empty array
-      expectedDispatches.push(...result);
+
+      let sorteddata = result.reverse();
+      expectedDispatches.push(...sorteddata);
 
 
     })
@@ -352,7 +354,7 @@ const getReceipts = async () => {
       //   users.push(...result);
       // }
 
-      receiptsCount.value = result.count
+      receiptsCount.value = result.count.toLocaleString()
 
     })
 
@@ -373,7 +375,7 @@ const getQuantityReceived = async () => {
       // for (let i = 0; i < 100; i++) {
       //   users.push(...result);
       // }
-      quantityRecieved.value = result.totalQuantity + " MT";
+      quantityRecieved.value = result.totalQuantity.toLocaleString() + " MT";
 
     })
     .finally(() => {

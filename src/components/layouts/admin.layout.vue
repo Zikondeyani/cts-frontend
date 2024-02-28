@@ -152,8 +152,10 @@ import {
   MenuAlt1Icon,
   ViewListIcon,
   UsersIcon,
+  MapIcon,
   XIcon,
   UserCircleIcon,
+  AdjustmentsIcon,
   DocumentDuplicateIcon,
   LightningBoltIcon,
   LocationMarkerIcon,
@@ -220,7 +222,7 @@ onMounted(() => { });
 function navigation() {
   let navList = [
     { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
-    { name: "Dispatch", href: "/admin/dispatch-management", icon: LocationMarkerIcon, current: false },
+    { name: "Plan & Dispatch", href: "/admin/dispatch-management", icon: AdjustmentsIcon, current: false },
    /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
     { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
     { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
@@ -228,15 +230,22 @@ function navigation() {
 
     { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
 
+
+
+
   ];
 
-  for (let nav of navList)
-    if (
-      nav.href.split("/")[1] + nav.href.split("/")[2] ==
-      $router.currentRoute.value.fullPath.split("/")[1] +
-      $router.currentRoute.value.fullPath.split("/")[2]
-    )
-      nav.current = true;
+  const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
+
+
+  navList.forEach(navItem => {
+    // Check if the current route base matches the nav item's href
+    // Or if it's the "Loading Plans" item and the current route base starts with /planner/loadingplans or /planner/dispatches
+    const isMatched = currentRouteBase === navItem.href ||
+      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/admin/loadingplans") || currentRouteBase.startsWith("/admin/dispatches")));
+    navItem.current = isMatched;
+  });
+
   return navList;
 }
 // select active page the route must be the same as the full path

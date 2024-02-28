@@ -10,7 +10,7 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Dispatch Management
+            Loading Plan Management
           </h2>
         </div>
       </div>
@@ -39,7 +39,7 @@ import { TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon } from "@her
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Dispatch Management", href: "#", current: true },
+  { name: "Loading Plan Management", href: "#", current: true },
 ];
 const options = ref([
   { label: 'Loading Plans', icon: MapIcon, path: '/dispatcher/loadingplans' },

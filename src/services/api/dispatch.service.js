@@ -36,7 +36,7 @@ export default class DispatcherService {
             ]
           }
         }
-        , "Dispatcher", "Driver"]}`, {
+        , "Dispatcher"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -54,7 +54,7 @@ export default class DispatcherService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include":  ["loadingPlan", "Dispatcher", "Driver"]}`, {
+        .get(resource + `/` + id + `?filter={"include":  ["loadingPlan", "Dispatcher"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -108,7 +108,7 @@ export default class DispatcherService {
             ]
           }
         }
-        , "Dispatcher", "Driver"]}`, {
+        , "Dispatcher"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -126,7 +126,7 @@ export default class DispatcherService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include":  ["loadingPlan", "Dispatcher", "Driver"]}`, {
+        .get(resource + `/` + id + `?filter={"include":  ["loadingPlan", "Dispatcher"]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -183,7 +183,7 @@ export default class DispatcherService {
             ]
           }
         }
-        , "Dispatcher", "Driver"]}`, {
+        , "Dispatcher"]}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json",

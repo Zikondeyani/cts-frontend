@@ -89,7 +89,7 @@ import createReportForm from "../../../components/pages/reports/create.component
 import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
 
 
-import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch.component.vue";
+import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch-dispatcher.component.vue";
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -209,7 +209,7 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/admin/loadingplans');
+  $router.push('/dispatcher/loadingplans');
 }
 
 
