@@ -40,12 +40,12 @@
 
 
 
-
+<!-- 
               <button type="button" @click="openDispatchDialog(props.row)"
                 class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
                 <TruckIcon class="h-5 w-5 mr-2" />
                 Dispatch
-              </button>
+              </button> -->
 
 
               <!-- Edit Button with Pencil Icon -->

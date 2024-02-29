@@ -147,7 +147,30 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
+  {
+    label: "Status",
+    field: row => {
+      const today = moment();
+      const endDate = moment(row.loadingPlan.EndDate);
 
+      if (row.IsArchived) {
+        return "<span class='text-green-600'>Expensed</span>";
+      } else if (!row.IsArchived && endDate.isBefore(today)) {
+        const diffDays = today.diff(endDate, 'days');
+        if (diffDays <= 3) {
+          return "<span class='text-yellow-600'>Delayed</span>";
+        } else {
+          return "<span class='text-red-600'>Not Delivered</span>";
+        }
+      } else {
+        return "<span class='text-blue-400'>Pending</span>";
+      }
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true,
+    tdClass: "capitalize"
+  }
 
 
 ]);

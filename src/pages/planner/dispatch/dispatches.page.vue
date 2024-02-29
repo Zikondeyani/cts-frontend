@@ -25,7 +25,7 @@
           style="font-weight: bold; color: blue;" :pagination-options="{
             enabled: true,
           }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
-          <template #table-actions> </template>
+      <!--     <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
               <button type="button" @click="openDispatchDialog(props.row)"
@@ -35,21 +35,18 @@
               </button>
 
 
-              <!-- Edit Button with Pencil Icon -->
               <button @click="openEditDialog(props.row)"
                 class="text-green-500 hover:text-green-700 transition duration-300">
                 <PencilIcon class="h-5 w-5 inline-block mr-1" />
                 Edit
               </button>
-
-              <!-- Delete Button with Trash Icon -->
               <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
                 Delete
               </button>
 
             </span>
-          </template>
+          </template> -->
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
@@ -171,12 +168,31 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
-
   {
-    label: "Options",
-    field: row => row,
-    sortable: false
+    label: "Status",
+    field: row => {
+      const today = moment();
+      const endDate = moment(row.loadingPlan.EndDate);
+
+      if (row.IsArchived) {
+        return "<span class='text-green-600'>Expensed</span>";
+      } else if (!row.IsArchived && endDate.isBefore(today)) {
+        const diffDays = today.diff(endDate, 'days');
+        if (diffDays <= 3) {
+          return "<span class='text-yellow-600'>Delayed</span>";
+        } else {
+          return "<span class='text-red-600'>Not Delivered</span>";
+        }
+      } else {
+        return "<span class='text-blue-400'>Pending</span>";
+      }
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true,
+    tdClass: "capitalize"
   }
+  
 
 
 ]);

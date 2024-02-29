@@ -86,10 +86,11 @@
             </div>
           </section>
 
+
           <!-- Actions panel -->
           <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
             <p class="text-center text-gray-600 mt-4 font-bold"> Expected Dispatches</p>
-
+            
             <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
               <vue-good-table :columns="columns" :rows="expectedDispatches" :search-options="{ enabled: true }"
                 style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"

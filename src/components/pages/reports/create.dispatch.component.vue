@@ -256,8 +256,6 @@ const isDecimal = (num) => {
 }
 
 
-
-
 const computedTonnage = computed(() => {
   let TonnageConversion = props.loadingPlan.commodity.PackSize / 1000;
 
