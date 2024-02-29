@@ -40,7 +40,7 @@
 
 
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="transporter" class="block text-sm font-medium text-gray-700">
+                    <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Transporter</label>
                     <select id="transporter" name="transporter" v-model="reports.transporterId"
                       autocomplete="transporter-name"
@@ -57,7 +57,7 @@
 
 
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="transporter" class="block text-sm font-medium text-gray-700">
+                    <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Commodity</label>
                     <select id="commodity" name="commodity" v-model="reports.commodityId" autocomplete="commodity-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -72,7 +72,7 @@
 
                 <div class="grid grid-cols-6 gap-2">
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity (MT)</label>
+                    <label for="quantity" class="block text-sm font-bold text-gray-700">Quantity (MT)</label>
 
                     <input type="number" name="quantity" v-model="reports.Quantity" id="reportFrom"
                       autocomplete="quantity"
@@ -80,7 +80,7 @@
                   </div>
 
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
+                    <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
                     <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -95,7 +95,7 @@
 
                 <div class="grid grid-cols-6 gap-2">
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
+                    <label for="destination-district" class="block text-sm font-bold text-gray-700">Destination
                       District</label>
 
                     <select id="destination" name="destination" v-model="reports.districtId"
@@ -108,7 +108,7 @@
                   </div>
 
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+                    <label for="project" class="block text-sm font-bold text-gray-700">Project</label>
 
                     <select id="project" name="project" v-model="reports.projectId" autocomplete="project-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -117,10 +117,13 @@
                       </option>
                     </select>
                   </div>
+
+
+
                 </div>
 
-                <div class="grid grid-cols-6 gap-2">
-                  <div class="col-span-6 sm:col-span-3">
+                <div class="grid grid-cols-6 gap-2 mt-2">
+                  <!--    <div class="col-span-6 sm:col-span-3">
                     <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
 
                     <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
@@ -129,10 +132,20 @@
                         {{ activity.Name }}
                       </option>
                     </select>
+                  </div> -->
+
+
+                  <div class="col-span-3 sm:col-span-3">
+                    <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
+                      ATC NUMBER <span class="text-red-500">(optional)</span>
+                    </label>
+                    <input type="text" name="ATCNumber" v-model="reports.ATCNumber" id="ATCNumber"
+                      autocomplete="ATCNumber"
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
-                    <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
+                    <label for="project" class="block text-sm text-gray-700 font-bold">Start Date</label>
 
                     <input type="date" name="Start Date" v-model="reports.StartDate" id="Start Date"
                       autocomplete="Start Date"
@@ -141,7 +154,7 @@
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
-                    <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
+                    <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
 
                     <input type="date" name="End Date" v-model="reports.EndDate" id="End Date" autocomplete="End Date"
                       class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />

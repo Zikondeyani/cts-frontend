@@ -61,17 +61,17 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="Remarks" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Remarks</label>
 
-                      <select name="Remarks" v-model="selectedRemark" id="Remarks"
+                      <select name="Remarks" v-model="receipt.Remarks" id="Remarks"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         <option value="">Select Remark</option>
-                        <option value="received_in_good_condition">Received in good condition</option>
-                        <option value="received_but_damaged">Received but damaged</option>
-                        <option value="received_but_not_expected_quantity">Received but not at the expected quantity
+                        <option value="received in good condition">Received in good condition</option>
+                        <option value="received but damaged">Received but damaged</option>
+                        <option value="received but not expected quantity">Received but not at the expected quantity
                         </option>
                         <option value="other">Other (please specify)</option>
                       </select>
 
-                      <textarea v-if="selectedRemark === 'other'" v-model="receipt.Remarks" id="CustomRemark" rows="3"
+                      <textarea v-if="receipt.Remarks === 'other'" v-model="receipt.Remarks" id="CustomRemark" rows="3"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         placeholder="Enter your custom remark here"></textarea>
                     </div>
@@ -215,9 +215,26 @@ const resetReceipt = async () => {
 
 }
 
+
+const isDecimal = (num) => {
+  return num % 1 !== 0;
+}
+
+
 const computedTonnage = computed(() => {
-  return receipt.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
+  let TonnageConversion = props.dispatch?.loadingPlan?.commodity.PackSize / 1000;
+
+  // Apply toFixed(2) only if the number is a decimal
+  if (isDecimal(TonnageConversion)) {
+    TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
+  }
+
+  let Tonnage = receipt.value.NoBags * TonnageConversion;
+
+  // Apply toFixed(2) to the final result
+  return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 });
+
 
 
 
@@ -240,9 +257,8 @@ const submitReceipt = async () => {
 
 
 
-  receipt.value.Quantity = receipt.value.NoBags
+  receipt.value.Quantity = computedTonnage.value
 
-  delete receipt.value.NoBags
 
   receipt.value.RecipientId = user.value.id
   receipt.value.dispatchId = props.dispatch.id
@@ -263,7 +279,7 @@ const submitReceipt = async () => {
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/dispatcher/receipts');
+        $router.push('/admin/receipts');
       });
 
 

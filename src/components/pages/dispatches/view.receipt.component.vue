@@ -43,15 +43,37 @@
                       <span class="text-sm text-gray-600"> {{ receipt.FinalDestinationPoint }}</span>
                     </div>
 
+
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Quantity: </span>
+                      <span class="text-sm font-bold text-gray-700">Quantity Expected: </span>
+                      <span class="text-sm text-gray-600"> {{ receipt.dispatch?.Quantity }} MT </span>
+                    </div>
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Quantity Received: </span>
                       <span class="text-sm text-gray-600"> {{ receipt.Quantity }} MT </span>
                     </div>
 
 
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Date: </span>
+                      <span class="text-sm font-bold text-gray-700">Remarks: </span>
+                      <span class="text-sm text-gray-600"> {{ receipt.Remarks }} </span>
+                    </div>
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Date Received: </span>
                       <span class="text-sm text-gray-600"> {{ moment(receipt.Date).format("DD/MM/YYYY") }} </span>
+                    </div>
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Truck Driver #: </span>
+                      <span class="text-sm text-gray-600"> {{ receipt.dispatch.DriverName }}</span>
+                    </div>
+
+
+                    <div class="mb-12">
+                      <span class="text-sm font-bold text-gray-700">Truck Driver License: </span>
+                      <span class="text-sm text-gray-600"> {{ receipt.dispatch.DriverLicense }}</span>
                     </div>
 
                     <div class="mb-12">

@@ -28,14 +28,15 @@
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
-              <button type="button" @click="openDispatchDialog(props.row)"
+              <!--  <button type="button" @click="openDispatchDialog(props.row)"
                 class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
                 <DocumentTextIcon class="h-5 w-5 mr-2" />
                 Receive
-              </button>
+              </button> -->
 
               <!-- Delete Button with Trash Icon -->
-              <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
+              <button @click="deleteItem(props.row.id)" v-if="props.row.IsArchived == false"
+                class="text-red-500 hover:text-red-700 transition duration-300">
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
                 Delete
               </button>
@@ -162,6 +163,31 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
+  {
+    label: "Status",
+    field: row => {
+      const today = moment();
+      const endDate = moment(row.loadingPlan.EndDate);
+
+      if (row.IsArchived) {
+        return "<span class='text-green-600'>Expensed</span>";
+      } else if (!row.IsArchived && endDate.isBefore(today)) {
+        const diffDays = today.diff(endDate, 'days');
+        if (diffDays <= 3) {
+          return "<span class='text-yellow-600'>Delayed</span>";
+        } else {
+          return "<span class='text-red-600'>Not Delivered</span>";
+        }
+      } else {
+        return "<span class='text-blue-400'>Pending</span>";
+      }
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true,
+    tdClass: "capitalize"
+  }
+  ,
 
   {
     label: "Options",
