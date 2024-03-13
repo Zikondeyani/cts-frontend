@@ -6,7 +6,7 @@ export default class LogService {
         return axios
             .get(
                 resource +
-                '?filter={"where":{"user.id":"' + id + '"},"order":["created DESC"]}',
+                '?filter={}',
                 {
                     headers: {
                         "Access-Control-Allow-Origin": "*",

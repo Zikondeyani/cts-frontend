@@ -131,7 +131,9 @@
 import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
-import jsPDF from "jspdf";
+
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 import "jspdf-autotable";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";

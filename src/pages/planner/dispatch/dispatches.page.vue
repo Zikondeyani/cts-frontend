@@ -23,10 +23,10 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
-      <!--     <template #table-actions> </template>
-          <template #table-row="props">
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+          <!--     <template #table-actions> </template>
+<template #table-row="props">
             <span v-if="props.column.label == 'Options'">
               <button type="button" @click="openDispatchDialog(props.row)"
                 class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
@@ -192,7 +192,7 @@ const columns = ref([
     html: true,
     tdClass: "capitalize"
   }
-  
+
 
 
 ]);
@@ -217,14 +217,19 @@ const closeEditDialog = () => {
 
 
 
+
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Dispatches';
-  // Create a worksheet from the flattened data array
 
+  // Assuming dispaches is an array of objects
+  // Map over dispaches and exclude certain fields
+  const dataForExport = dispaches.map(({ CreatedOn, UpdatedOn, DispatcherId, loadingPlanId, Dispatcher, loadingPlan, ...keepAttrs }) => keepAttrs);
 
-  const ws = XLSX.utils.json_to_sheet(dispaches);
+  // Create a worksheet from the filtered data array
+  const ws = XLSX.utils.json_to_sheet(dataForExport);
   XLSX.utils.book_append_sheet(wb, ws, wsName);
+
   // Export the workbook
   XLSX.writeFile(wb, 'Dispatches.xlsx');
 };

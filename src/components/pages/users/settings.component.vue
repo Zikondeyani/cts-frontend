@@ -34,16 +34,16 @@
                       type="text"
                       name="first-name"
                       id="first-name"
-                      v-model="firstName"
+                      v-model="firstname"
                       autocomplete="given-name"
                       class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                     <p class="text-red-500 text-xs italic pt-1">
-                      {{ firstNameError }}
+                      {{ firstnameError }}
                     </p>
                   </div>
 
-                  <div class="col-span-6 sm:col-span-3" v-if="roleId !== 'PROVIDER1'" >
+                  <div class="col-span-6 sm:col-span-3" >
                     <label
                       for="last-name"
                       class="block text-sm font-medium text-gray-700"
@@ -53,47 +53,18 @@
                       type="text"
                       name="last-name"
                       id="last-name"
-                      v-model="lastName"
+                      v-model="lastname"
                       autocomplete="family-name"
                       class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                     <p class="text-red-500 text-xs italic pt-1">
-                      {{ lastNameError }}
+                      {{ lastnameError }}
                     </p>
                   </div>
 
 
-                  <div class="col-span-6 sm:col-span-3" v-if="roleId == 'PROVIDER1'" >
-                    <label
-                      for="nameOfOrg"
-                      class="block text-sm font-medium text-gray-700"
-                      >Business Name</label
-                    >
-                    <input
-                      type="text"
-                      name="nameOfOrg"
-                      id="nameOfOrg"
-                      v-model="nameOfOrg"
-                      autocomplete="nameOfOrg"
-                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                    />
-                    <p class="text-red-500 text-xs italic pt-1">
-                      {{ nameOfOrgError }}
-                    </p>
-                  </div>
+                
 
-
-                  <div class="col-span-12 sm:col-span-12" v-if="roleId == 'PROVIDER1'">
-             
-                    <div class="mt-4">
-                      <textarea
-                        rows="4"
-                        v-model="OrgDescription"
-                        placeholder="Business Description"
-                        class="w-full border-gray-300 rounded-md focus:ring-gray-500 focus:border-blue-500"
-                      ></textarea>
-                    </div>
-                    </div>
 
                   <div class="col-span-6 sm:col-span-4">
                     <label
@@ -366,7 +337,7 @@ const { meta } = useForm({
   // initialValues: {
   //   id: model.value.id,
   //   firstName: model.value.firstName,
-  //   lastName:  model.value.lastName,
+  //   lastname:  model.value.lastname,
   //   phone:  model.value.phone,
   //   email:  model.value.email,
   //   status:  model.value.status,
@@ -374,9 +345,9 @@ const { meta } = useForm({
   // },
 });
 ///FIELDS
-const { value: firstName, errorMessage: firstNameError } =
-  useField("firstName");
-const { value: lastName, errorMessage: lastNameError } = useField("lastName");
+const { value: firstname, errorMessage: firstnameError } =
+  useField("firstname");
+const { value: lastname, errorMessage: lastnameError } = useField("lastname");
 const { value: phone, errorMessage: phoneError } = useField("phone");
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: status, errorMessage: statusError } = useField("status");
@@ -398,8 +369,8 @@ const toggle = ref(false);
 //MOUNTED
 onMounted(() => {
   //Assign
-  firstName.value = model.value.firstName;
-  lastName.value = model.value.lastName;
+  firstname.value = model.value.firstname;
+  lastname.value = model.value.lastname;
   phone.value = model.value.phone;
   email.value = model.value.email;
   status.value = model.value.status;
@@ -412,8 +383,8 @@ onMounted(() => {
 const onSubmit = useSubmitForm((values, actions) => {
   let newValues = {
     id: model.value.id,
-    firstName: firstName.value,
-    lastName: lastName.value,
+    firstname: firstname.value,
+    lastname: lastname.value,
     phone: phone.value,
     email: email.value,
     status: status.value,

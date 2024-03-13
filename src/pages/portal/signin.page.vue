@@ -166,7 +166,6 @@ const onSubmit = useSubmitForm((values, actions) => {
   sessionStore
     .signIn(model)
     .then(result => {
-      console.log(result, "tetst")
       if (result == 'admin') {
         Swal.fire({
           text: 'Succesfully signed in',
