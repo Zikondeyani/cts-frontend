@@ -13,7 +13,7 @@
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <div class="mb-4">
           <h2 class="font-bold leading-7 text-gray-800 sm:text-2xl sm:truncate">
-           Loading Plan Reports
+            Loading Plan Reports
           </h2>
         </div>
 
@@ -25,7 +25,8 @@
               <label for="district" class="block text-sm font-medium text-gray-700">District</label>
               <select v-model="selectedDistrict" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Districts</option>
-                <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.Name }}</option>
+                <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.Name }}
+                </option>
               </select>
             </div>
 
@@ -45,7 +46,7 @@
               <select v-model="selectedTransporter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                 <option value="">All Transporters</option>
                 <option v-for="transporter in transporters" :key="transporter.id" :value="transporter.id">{{
-                  transporter.Name }}</option>
+      transporter.Name }}</option>
               </select>
             </div>
 
@@ -86,13 +87,41 @@
                 Apply Filters
               </button>
             </div>
-            <button @click="generateExcel"
-              class="inline-flex items-center px-4 py-2 bg-gray-500 text-white text-sm font-medium rounded hover:bg-blue-400">
-              <i class="fas fa-file-excel mr-2"></i>
-              Export to Excel
-            </button>
-          </div>
 
+            <div class="relative inline-block text-left">
+              <button type="button" @click="opendropdown = !opendropdown"
+                class="inline-flex justify-center w-full px-4 py-2 bg-gray-500 text-sm font-medium text-white rounded-md hover:bg-blue-400 focus:outline-none"
+                id="menu-button" aria-expanded="true" aria-haspopup="true">
+                Export
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+
+              <div v-if="opendropdown" @mouseleave="opendropdown = false"
+                class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+                role="menu" aria-orientation="vertical" aria-labelledby="menu-button" style="position: relative;">
+                <div class="py-1" role="none">
+                  <!-- Export to PDF -->
+                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem"
+                    @click="generatePDF">
+                    Export to PDF
+                  </a>
+
+                  <!-- Export to Excel -->
+                  <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem"
+                    @click="generateExcel">
+                    Export to Excel
+                  </a>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
 
@@ -136,6 +165,8 @@ import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loadin
 
 
 import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch.component.vue";
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 
 import { useUserStore } from "../../../stores/user.store";
@@ -160,6 +191,7 @@ const breadcrumbs = [
 
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import { leftHeaderImage, rightHeaderImage } from "../../../../util/imagedata";
 
 import * as XLSX from 'xlsx';
 
@@ -167,7 +199,7 @@ import * as XLSX from 'xlsx';
 const loadingPlanStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
-
+const opendropdown = ref(false)
 
 const commoditiesstore = usecommoditiestore();
 const commodities = reactive([])
@@ -274,8 +306,46 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/admin/loadingplans');
+  $router.push('/manager/loadingplans');
 }
+
+
+const generatePDF = () => {
+  const doc = new jsPDF();
+
+
+
+  // Draw the header images and text
+  doc.addImage(leftHeaderImage, 'JPEG', 18, 7, 25, 20); // Adjust dimensions and position as needed
+  doc.addImage(rightHeaderImage, 'JPEG', 160, 2, 30, 30); // Adjust dimensions and position as needed
+  doc.setFontSize(12); // Set the title font size
+  doc.text('DoDMA Commodity Tracking System Report', 105, 20, null, null, 'center'); // Centered title
+
+  const dataToExport = filteredLoadingPlans.value.length > 0 ? filteredLoadingPlans.value : loadingplans;
+
+  const tableData = dataToExport.map(plan => ([
+    plan.LoadingPlanNumber,
+    plan.Quantity,
+    plan.Balance,
+    moment(plan.StartDate).format("DD/MM/yyyy"),
+    moment(plan.EndDate).format("DD/MM/yyyy"),
+    plan.commodity?.Name,
+    plan.warehouse?.Name,
+    plan.transporter?.Name,
+    plan.district?.Name
+  ]));
+
+  autoTable(doc, {
+    startY: 30, // Adjust the starting position of the table
+    styles: { fontSize: 8 }, // Smaller font size for table
+    head: [['LPlan #', 'Qty (MT)', 'Balance (MT)', 'Start Date', 'End Date', 'Commodity', 'From', 'Transporter Name', 'To']],
+    body: tableData
+  });
+
+  doc.save('LoadingPlans.pdf');
+};
+
+
 
 
 const getCommodities = async () => {
@@ -435,10 +505,10 @@ const endDate = ref('');
 const filteredLoadingPlans = computed(() => {
   // Filtering logic based on selected filters
   return loadingplans.filter(plan => {
-    return (!selectedDistrict.value || plan.district.id === selectedDistrict.value) &&
-      (!selectedWarehouse.value || plan.warehouse.id === selectedWarehouse.value) &&
-      (!selectedTransporter.value || plan.transporter.id === selectedTransporter.value) &&
-      (!selectedCommodity.value || plan.commodity.id === selectedCommodity.value) &&
+    return (!selectedDistrict.value || plan.district?.id === selectedDistrict.value) &&
+      (!selectedWarehouse.value || plan.warehouse?.id === selectedWarehouse.value) &&
+      (!selectedTransporter.value || plan.transporter?.id === selectedTransporter.value) &&
+      (!selectedCommodity.value || plan.commodity?.id === selectedCommodity.value) &&
       (!startDate.value || plan.StartDate === startDate.value) &&
       (!endDate.value || plan.EndDate === endDate.value);
   });

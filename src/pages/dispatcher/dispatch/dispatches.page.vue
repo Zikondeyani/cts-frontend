@@ -15,7 +15,7 @@
         </div>
         <button type="button"
           class="font-body inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-          @click="open = true">
+          @click="generateExcel()">
           Export Data
         </button>
       </div>
@@ -23,16 +23,16 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
-              <!--  <button type="button" @click="openDispatchDialog(props.row)"
-                class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
-                <DocumentTextIcon class="h-5 w-5 mr-2" />
-                Receive
-              </button> -->
+              <button @click="openEditDialog(props.row)"
+                class="text-green-500 hover:text-green-700 transition duration-300">
+                <PencilIcon class="h-5 w-5 inline-block mr-1" />
+                Edit
+              </button>
 
               <!-- Delete Button with Trash Icon -->
               <button @click="deleteItem(props.row.id)" v-if="props.row.IsArchived == false"
@@ -85,6 +85,7 @@ import createListingForm from "../../../components/pages/catalogue/create.compon
 //SCHEMA//AND//STORES
 import { useListingStore } from "../../../stores/catalogue.store";
 
+import * as XLSX from 'xlsx';
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -240,6 +241,33 @@ onMounted(() => {
   // getLatest()
 });
 //FUNCTIONS
+
+
+const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+  const wsName = 'Dispatches';
+
+  // Assuming dispaches is an array of objects
+  // Map over dispaches and exclude certain fields
+  const dataForExport = dispaches.map(({ CreatedOn, UpdatedOn, DispatcherId, loadingPlanId, Dispatcher, loadingPlan, ...keepAttrs }) => keepAttrs);
+
+  // Create a worksheet from the filtered data array
+  const ws = XLSX.utils.json_to_sheet(dataForExport);
+  XLSX.utils.book_append_sheet(wb, ws, wsName);
+
+  // Export the workbook
+  XLSX.writeFile(wb, 'Dispatches.xlsx');
+};
+
+
+
+const reloadPage = async () => {
+  // Wait for getLoadingplans to complete its data fetching
+  await getDispatches();
+
+  // Navigate to the route after the data has been updated
+  $router.push('/dispatcher/dispatches');
+}
 
 
 

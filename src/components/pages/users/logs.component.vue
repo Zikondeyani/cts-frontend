@@ -3,19 +3,11 @@
     <!--spinner-->
     <spinner-widget v-bind:open="isLoading" />
     <!-- table  -->
-    <div class="align-middle inline-block min-w-full">
-      <vue-good-table
-        :columns="columns"
-        :rows="logs"
-        @on-row-dblclick="showMetadata"
-        :search-options="{ enabled: true }"
-        :pagination-options="{
-          enabled: true,
-        }"
-        theme="polar-bear"
-        styleClass=" vgt-table striped condensed"
-        compactMode
-      />
+    <div class="align-middle inline-block min-w-full rounded-table">
+      <vue-good-table :columns="columns" :rows="logs" @on-row-dblclick="showMetadata"
+        :search-options="{ enabled: true }" :pagination-options="{
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped condensed" compactMode />
     </div>
   </main>
 </template>
@@ -83,15 +75,17 @@ const columns = ref([
 // });
 //MOUNTED
 onMounted(() => {
-  getLogs(id.value);
+  getLogs(props.id);
 });
 //FUNCTIONS
 const getLogs = async (id) => {
+
   isLoading.value = true;
   logStore
     .get(id)
     .then((result) => {
-      logs.push(...result);
+      let filtereData = result.filter(item => item.user.id == props.id)
+      logs.push(...filtereData);
     })
     .catch((error) => {
       Swal.fire({

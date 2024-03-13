@@ -115,16 +115,14 @@
                 </div>
               </div>
 
-              <div class="grid grid-cols-6 gap-2">
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
-
-                  <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                    <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
-                      {{ activity.Name }}
-                    </option>
-                  </select>
+              <div class="grid grid-cols-6 gap-2 mt-3">
+                <div class="col-span-3 sm:col-span-3">
+                  <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
+                    ATC NUMBER <span class="text-red-500">(optional)</span>
+                  </label>
+                  <input type="text" name="ATCNumber" v-model="loadingPlan.ATCNumber" id="ATCNumber"
+                    autocomplete="ATCNumber"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
@@ -221,7 +219,6 @@ const transporters = ref([]);
 
 const loadingPlan = ref(props.loadingPlan || {});
 
-const NewLoadingPlan = ref({})
 
 // Watch for changes in props.loadingPlan
 watch(() => props.loadingPlan, (newVal) => {
@@ -236,16 +233,22 @@ const transporterStore = usetransporterstore();
 const commoditiesstore = usecommoditiestore();
 const commodities = ref([]);
 
-;
 
 // Methods
 const updateLoadingPlan = async () => {
 
 
+
   try {
     // Destructure to remove specific objects and keep the rest in a new object
-    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, ...updatedLoadingPlan } = loadingPlan.value;
 
+    loadingPlan.value.UpdatedOn = new Date();
+    
+    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, ...updatedLoadingPlan } = loadingPlan.value;
+
+
+
+    console.log(updatedLoadingPlan, "apapap")
     // Now, updatedLoadingPlan is a copy of loadingPlan.value without the specified properties
     await loadingPlanStore.update(updatedLoadingPlan);
 

@@ -81,6 +81,7 @@
 
                       <div v-if="showTooltip"
                         class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10">
+                        
                         <div v-for="(summary, index) in loadingPlanSummary" :key="index" class="mb-4 last:mb-0">
                           <h5 class="font-bold text-lg text-capitalize flex text-gray-600 items-center">
                             {{ summary.commodityName }}

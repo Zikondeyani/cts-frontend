@@ -8,7 +8,7 @@
       </div>
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-blue-900 sm:text-2xl sm:truncate">
+          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate mb-3">
             Manage user account
           </h2>
         </div>
@@ -16,11 +16,8 @@
       </div>
       <!-- tabs -->
       <div class="align-middle inline-block min-w-full">
-        <ul
-          class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300"
-          id="tabs-menu"
-          role="tablist"
-        >
+        <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300" id="tabs-menu"
+          role="tablist">
           <!-- <li class="nav-item" role="presentation">
             <a
               href="#user-profile"
@@ -34,31 +31,17 @@
               >Profile</a
             >
           </li> -->
-          <li class="nav-item" role="presentation">
-            <a
-              href="#user-settings"
+          <li class="nav-item mr-1" role="presentation">
+            <a href="#user-settings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
-              id="tabs-user-settings"
-              data-bs-toggle="pill"
-              data-bs-target="#user-settings"
-              role="tab"
-              aria-controls="user-settings"
-              aria-selected="false"
-              >Settings</a
-            >
+              id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
+              aria-controls="user-settings" aria-selected="false">Settings</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a
-              href="#user-logs"
+            <a href="#user-logs"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-logs"
-              data-bs-toggle="pill"
-              data-bs-target="#user-logs"
-              role="tab"
-              aria-controls="user-logs"
-              aria-selected="false"
-              >Logs</a
-            >
+              id="tabs-user-logs" data-bs-toggle="pill" data-bs-target="#user-logs" role="tab" aria-controls="user-logs"
+              aria-selected="false">Logs</a>
           </li>
         </ul>
         <div class="tab-content" id="tabs-user-options">
@@ -70,25 +53,12 @@
           >
             <user-profile v-bind:model="model" v-on:update="updateUser" :key="model.id+'profile'"/>
           </div> -->
-          <div
-             class="tab-pane fade show active"
-            id="user-settings"
-            role="tabpanel"
-            aria-labelledby="tabs-user-settings"
-          >
-            <user-settings
-              v-bind:model="model"
-              v-on:update="updateUser"
-              :key="model.id + 'settings'"
-            />
+          <div class="tab-pane fade show active" id="user-settings" role="tabpanel"
+            aria-labelledby="tabs-user-settings">
+            <user-settings v-bind:model="model" v-on:update="updateUser" :key="model.id + 'settings'" />
           </div>
 
-          <div
-            class="tab-pane fade"
-            id="user-logs"
-            role="tabpanel"
-            aria-labelledby="tabs-user-logs"
-          >
+          <div class="tab-pane fade" id="user-logs" role="tabpanel" aria-labelledby="tabs-user-logs">
             <user-logs v-bind:id="id" :key="model.id + 'logs'" />
           </div>
         </div>
@@ -188,3 +158,31 @@ const updateUser = async (newValues) => {
 };
 </script>
 
+<style>
+.nav-link {
+  background-color: #FFF;
+  /* Gray color for inactive links, adjust as needed */
+  /* ... other styles ... */
+}
+
+/* Optional: Add a hover effect for nav links */
+.nav-link:hover {
+  color: #000;
+  /* Light grey for hover, adjust as needed */
+  /* ... other styles ... */
+}
+
+.nav-tabs .nav-link.active {
+  color: #000;
+  border-color: #d3d3d3;
+  
+  background-color: #d3d3d3;
+}
+
+.rounded-table {
+  border-radius: 10px;
+  /* Adjust the radius as needed */
+  overflow: hidden;
+  /* This is important to apply rounded corners to child elements */
+}
+</style>

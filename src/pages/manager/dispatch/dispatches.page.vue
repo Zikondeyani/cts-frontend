@@ -23,9 +23,9 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
-        
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
@@ -209,14 +209,19 @@ const closeReceiptDialog = () => {
 };
 
 
+
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Dispatches';
-  // Create a worksheet from the flattened data array
 
+  // Assuming dispaches is an array of objects
+  // Map over dispaches and exclude certain fields
+  const dataForExport = dispaches.map(({ CreatedOn, UpdatedOn, DispatcherId, loadingPlanId, Dispatcher, loadingPlan, ...keepAttrs }) => keepAttrs);
 
-  const ws = XLSX.utils.json_to_sheet(dispaches);
+  // Create a worksheet from the filtered data array
+  const ws = XLSX.utils.json_to_sheet(dataForExport);
   XLSX.utils.book_append_sheet(wb, ws, wsName);
+
   // Export the workbook
   XLSX.writeFile(wb, 'Dispatches.xlsx');
 };

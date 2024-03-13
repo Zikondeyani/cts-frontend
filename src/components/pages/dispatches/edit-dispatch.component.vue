@@ -1,5 +1,3 @@
-
-
 <template>
   <TransitionRoot as="template" :show="isOpen">
     <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
@@ -60,8 +58,8 @@
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="NoBags" class="block text-sm font-medium text-gray-700 mb-2  mt-2">Number of Bags</label>
-                  <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="Dispatch.Quantity" id="NoBags"
-                    autocomplete="NoBags"
+                  <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="Dispatch.Quantity"
+                    id="NoBags" autocomplete="NoBags"
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
@@ -73,6 +71,8 @@
                 </div>
               </div>
 
+
+
               <hr>
               <h2 class="text-xl font-semibold mb-4  mt-5 text-blue-400 ">Driver Details</h2>
 
@@ -80,14 +80,21 @@
               <div class="grid grid-cols-6 gap-2">
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="driver" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver</label>
+                  <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver Name</label>
 
-                  <select id="driver" name="driver" v-model="Dispatch.DriverId" autocomplete="project-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                    <option v-for="driver in drivers" :key="project" :value="driver.id" class="uppercase">
-                      {{ driver.Name }}
-                    </option>
-                  </select>
+                  <input type="text" name="DriverName" v-model="Dispatch.DriverName" id="DriverName"
+                    autocomplete="DriverName"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                </div>
+
+
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver's
+                    License</label>
+
+                  <input type="text" name="DriverLicense" v-model="Dispatch.DriverLicense" id="DriverLicense"
+                    autocomplete="DriverLicense"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -112,9 +119,6 @@
               </button>
             </div>
           </div>
-
-
-
         </TransitionChild>
       </div>
     </Dialog>
@@ -215,7 +219,14 @@ const updateDispatch = async () => {
 
   try {
     // Destructure to remove specific objects and keep the rest in a new object
-    const { Dispatcher, Driver, loadingPlan , originalIndex, vgt_id, NoBags, ...updatedDispatch } = Dispatch.value;
+
+
+    Dispatch.value.UpdatedOn = moment().format().toString();
+
+
+    Dispatch.value.IsArchived = false;
+
+    const { Dispatcher, Driver, loadingPlan, originalIndex, vgt_id, NoBags, ...updatedDispatch } = Dispatch.value;
 
     // Now, updatedDispatch is a copy of Dispatch.value without the specified properties
     await DispatchStore.update(updatedDispatch);

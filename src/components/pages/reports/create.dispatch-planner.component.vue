@@ -24,7 +24,8 @@
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Dispatch</h2>
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Delivery Note</label>
+                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Delivery
+                        Note</label>
 
                       <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote"
                         autocomplete="DeliveryNote"
@@ -43,7 +44,8 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of Bags</label>
+                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of
+                        Bags</label>
                       <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="dispatch.NoBags"
                         id="NoBags" autocomplete="NoBags"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -51,8 +53,8 @@
 
                     <div class="col-span-6 sm:col-span-3">
                       <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage</label>
-                      <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity"
-                        readonly
+                      <input type="number" name="Quantity" :value="computedTonnage" id="Quantity"
+                        autocomplete="Quantity" readonly
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
                     </div>
 
@@ -71,7 +73,8 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
-                      <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver Name</label>
+                      <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
+                        Name</label>
 
                       <input type="text" name="DriverName" v-model="dispatch.DriverName" id="DriverName"
                         autocomplete="DriverName"
@@ -129,7 +132,8 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Created On: </span>
-                      <span class="text-sm text-gray-600"> {{ moment(loadingPlan.createdOn).format("DD/MM/YYYY") }}</span>
+                      <span class="text-sm text-gray-600"> {{ moment(loadingPlan.createdOn).format("DD/MM/YYYY")
+                        }}</span>
                     </div>
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Commodity: </span>
@@ -161,7 +165,9 @@
 
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Balance: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.Balance }} MT</span>
+                      <span class="text-sm text-gray-600">
+                        {{ (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)) }} MT
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -329,19 +335,40 @@ const submitDispatch = async () => {
 
     })
     .catch(error => {
-      Swal.fire({
-        title: "Dispatch Denied",
-        text: "Unable to complete the dispatch. The loading plan does not have enough balance or has already been closed. Please review the loading plan details and try again.",
-        icon: "error",
-        confirmButtonText: "Review Details",
-        cancelButtonText: "Cancel",
-        showCancelButton: true,
-        focusConfirm: false,
-        customClass: {
-          confirmButton: "swal-confirm-button", // Customize the class for confirm button
-          cancelButton: "swal-cancel-button" // Customize the class for cancel button
-        }
-      });
+
+      if (!dispatch.value.NoBags) {
+        Swal.fire({
+          title: "Dispatch Denied",
+          text: "Unable to complete the dispatch (Tonnage cannot be empty)",
+          icon: "error",
+          confirmButtonText: "Review Details",
+          cancelButtonText: "Cancel",
+          showCancelButton: true,
+          focusConfirm: false,
+          customClass: {
+            confirmButton: "swal-confirm-button", // Customize the class for confirm button
+            cancelButton: "swal-cancel-button" // Customize the class for cancel button
+          }
+        });
+      }
+
+      else {
+
+        Swal.fire({
+          title: "Dispatch Denied",
+          text: "Unable to complete the dispatch (" + error + ")",
+          icon: "error",
+          confirmButtonText: "Review Details",
+          cancelButtonText: "Cancel",
+          showCancelButton: true,
+          focusConfirm: false,
+          customClass: {
+            confirmButton: "swal-confirm-button", // Customize the class for confirm button
+            cancelButton: "swal-cancel-button" // Customize the class for cancel button
+          }
+        });
+      }
+
 
     })
 
