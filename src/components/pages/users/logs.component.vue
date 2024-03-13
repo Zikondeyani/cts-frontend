@@ -85,7 +85,7 @@ const getLogs = async (id) => {
     .get(id)
     .then((result) => {
       let filtereData = result.filter(item => item.user.id == props.id)
-      logs.push(...filtereData);
+      logs.push(...filtereData.reverse());
     })
     .catch((error) => {
       Swal.fire({
