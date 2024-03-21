@@ -81,7 +81,7 @@
 
                       <div v-if="showTooltip"
                         class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10">
-                        
+
                         <div v-for="(summary, index) in loadingPlanSummary" :key="index" class="mb-4 last:mb-0">
                           <h5 class="font-bold text-lg text-capitalize flex text-gray-600 items-center">
                             {{ summary.commodityName }}
@@ -90,12 +90,12 @@
                             <div>
                               <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
                               <b>Total Stock Planned:</b> <br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-                                summary.totalStockPlanned.toLocaleString() }} MT
+          summary.totalStockPlanned.toLocaleString() }} MT
                             </div>
                             <div>
                               <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
                               <b> Total Balance: </b><br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-                                summary.totalBalance.toLocaleString() }} MT
+          summary.totalBalance.toLocaleString() }} MT
                             </div>
                           </div>
                         </div>
@@ -213,7 +213,7 @@ const columns = ref([
 
   {
     label: "Date Created",
-    field: row => moment(row.loadingPlan?.CreatedOn).format("d/MM/yyyy"),
+    field: row => moment(row.loadingPlan?.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -463,10 +463,11 @@ const getBookings = async () => {
 };
 
 
+
+
 const createReport = async (model) => {
   isLoading.value = true;
 
-  // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
 
   model.Balance = model.Quantity
@@ -476,6 +477,29 @@ const createReport = async (model) => {
   if (model.EndDate) {
     model.EndDate = moment(model.EndDate).toISOString();
   }
+  // List of required fields
+  const requiredFields = ['StartDate', 'EndDate', 'Quantity', /* other required fields */];
+
+  // Check if all required fields are filled
+  for (const field of requiredFields) {
+    if (!model[field]) {
+      Swal.fire({
+        title: "Missing Information",
+        text: `Please fill in the ${field}.`,
+        icon: "error",
+        confirmButtonText: "Ok"
+      }).then(() => {
+        isLoading.value = false; // Stop loading
+      });
+      return; // Stop the function
+    }
+  }
+
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id;
+  model.Balance = model.Quantity;
+  model.StartDate = moment(model.StartDate).toISOString();
+  model.EndDate = moment(model.EndDate).toISOString();
 
   loadingPlanStore
     .create(model)
@@ -487,8 +511,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
-
+      $router.push('/admin/loadingplans'); // Navigate to loading plans
     })
     .catch(error => {
       // Handling error
@@ -499,6 +522,7 @@ const createReport = async (model) => {
       getLoadingPlans();
     });
 };
+
 
 const formatDate = (date) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -615,4 +639,5 @@ const dispatchstatus = ref(0)
 /* .fade-leave-active in <2.1.8 */
   {
   opacity: 0;
-}</style>
+}
+</style>

@@ -181,7 +181,7 @@ const columns = ref([
 
   {
     label: "Date Created",
-    field: row => moment(row.CreatedOn).format("d/MM/yyyy"),
+    field: row => moment(row.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -421,20 +421,44 @@ const getBookings = async () => {
 };
 
 
+
+
+
 const createReport = async (model) => {
   isLoading.value = true;
 
-  // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
 
   model.Balance = model.Quantity
-
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
   if (model.EndDate) {
     model.EndDate = moment(model.EndDate).toISOString();
   }
+  // List of required fields
+  const requiredFields = ['StartDate', 'EndDate', 'Quantity', /* other required fields */];
+
+  // Check if all required fields are filled
+  for (const field of requiredFields) {
+    if (!model[field]) {
+      Swal.fire({
+        title: "Missing Information",
+        text: `Please fill in the ${field}.`,
+        icon: "error",
+        confirmButtonText: "Ok"
+      }).then(() => {
+        isLoading.value = false; // Stop loading
+      });
+      return; // Stop the function
+    }
+  }
+
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id;
+  model.Balance = model.Quantity;
+  model.StartDate = moment(model.StartDate).toISOString();
+  model.EndDate = moment(model.EndDate).toISOString();
 
   loadingPlanStore
     .create(model)
@@ -446,8 +470,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/planner/loadingplans'); // Use the router's push method to navigate
-
+      $router.push('/planner/loadingplans'); // Navigate to loading plans
     })
     .catch(error => {
       // Handling error

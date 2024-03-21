@@ -213,7 +213,7 @@ const columns = ref([
 
   {
     label: "Date Created",
-    field: row => moment(row.CreatedOn).format("d/MM/yyyy"),
+    field: row => moment(row.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
