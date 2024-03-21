@@ -293,6 +293,25 @@ const validateNumberInput = (event) => {
 const submitDispatch = async () => {
 
 
+  // Check if number of bags is not 0
+  if (dispatch.value.NoBags === 0) {
+    Swal.fire({
+      title: "Dispatch Denied",
+      text: "Unable to create the dispatch (Number of bags cannot be zero)",
+      icon: "error",
+      confirmButtonText: "Review Details",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      focusConfirm: false,
+      customClass: {
+        confirmButton: "swal-confirm-button",
+        cancelButton: "swal-cancel-button"
+      }
+    });
+    return; // Stop the function execution
+  }
+
+
   if (dispatch.value.Date) {
     dispatch.value.Date = moment(dispatch.value.Date).toISOString();
   }

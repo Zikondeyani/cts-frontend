@@ -172,7 +172,7 @@ const columns = ref([
     label: "Status",
     field: row => {
       const today = moment();
-      const endDate = moment(row.loadingPlan.EndDate);
+      const endDate = moment(row.loadingPlan?.EndDate);
 
       if (row.IsArchived) {
         return "<span class='text-green-600'>Expensed</span>";
