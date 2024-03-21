@@ -218,7 +218,7 @@ const columns = ref([
 
   {
     label: "Date Created",
-    field: row => moment(row.loadingPlan.CreatedOn).format("d/MM/yyyy"),
+    field: row => moment(row.loadingPlan?.CreatedOn).format("d/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
