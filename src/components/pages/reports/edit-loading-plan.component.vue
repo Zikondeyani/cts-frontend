@@ -1,5 +1,3 @@
-
-
 <template>
   <TransitionRoot as="template" :show="isOpen">
     <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
@@ -55,7 +53,8 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="transporter" class="block text-sm font-medium text-gray-700">
                     Select Commodity</label>
-                  <select id="commodity" name="commodity" v-model="loadingPlan.commodityId" autocomplete="commodity-name"
+                  <select id="commodity" name="commodity" v-model="loadingPlan.commodityId"
+                    autocomplete="commodity-name"
                     class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                     <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
                       {{ commodity.Name }}
@@ -78,7 +77,8 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
-                  <select id="warehouse" name="warehouse" v-model="loadingPlan.warehouseId" autocomplete="warehouse-name"
+                  <select id="warehouse" name="warehouse" v-model="loadingPlan.warehouseId"
+                    autocomplete="warehouse-name"
                     class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                     <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id" class="uppercase">
                       {{ warehouse.Name }}
@@ -204,11 +204,8 @@ const props = defineProps({
 
 
 
-
 // Emits
 const emit = defineEmits(['update', 'close']);
-
-
 
 const closeDialog = () => {
   emit('close');
@@ -228,54 +225,54 @@ watch(() => props.loadingPlan, (newVal) => {
 // Stores
 const loadingPlanStore = useloadingplanstore();
 const transporterStore = usetransporterstore();
-
-
 const commoditiesstore = usecommoditiestore();
 const commodities = ref([]);
 
 
 // Methods
 const updateLoadingPlan = async () => {
-
-
-
   try {
-    // Destructure to remove specific objects and keep the rest in a new object
-
     loadingPlan.value.UpdatedOn = new Date();
-    
+
     const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, ...updatedLoadingPlan } = loadingPlan.value;
 
+    // Ensure ATCNumber is a string
+    updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
 
+    // Check if districtId or projectId is not selected
+    if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.projectId == null) {
+      // Show alert message
+      await Swal.fire({
+        title: "Missing Information",
+        text: "Please select both a district and a project before updating.",
+        icon: "warning",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "Ok"
+      });
+      return; // Stop the update process
+    }
 
-    console.log(updatedLoadingPlan, "apapap")
-    // Now, updatedLoadingPlan is a copy of loadingPlan.value without the specified properties
+    // Proceed with updating the loading plan
     await loadingPlanStore.update(updatedLoadingPlan);
-
-
     emit('update');
 
     // Show success message
     Swal.fire({
       title: "Loading Plan Updated",
-      html: `
-      <p>Your loading plan has been successfully updated.</p>
-    `,
+      html: `<p>Your loading plan has been successfully updated.</p>`,
       icon: "success",
       confirmButtonColor: '#3085d6',
       confirmButtonText: "View All Loading Plans",
-
       cancelButtonColor: '#aaa',
     }).then((result) => {
-
       emit('close');
     });
   } catch (error) {
     console.error('Failed to update loading plan:', error);
-    // Handle error (e.g., show an error message)
+    // Handle error with an appropriate message
   }
-
 };
+
 
 // Fetch data for dropdowns
 const fetchTransporters = async () => {

@@ -153,7 +153,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >D.N: ${row.dispatch.DeliveryNote !== undefined ? row.dispatch.DeliveryNote : "N/A"}</span><br>`
+    field: row => `<span >D.N: ${row.dispatch?.DeliveryNote !== undefined ? row.dispatch?.DeliveryNote : "N/A"}</span><br>`
       +
       `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
     sortable: true,

@@ -98,7 +98,7 @@
                     <label for="destination-district" class="block text-sm font-bold text-gray-700">Destination
                       District</label>
 
-                    <select id="destination" name="destination" required ="reports.districtId"
+                    <select id="destination" name="destination" required v-model="reports.districtId"
                       autocomplete="destination-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                       <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
