@@ -6,11 +6,6 @@ module.exports = {
         `
       }
     }
-  },
-  configureWebpack: {
-    output: {
-      filename: '[name].[hash].js',
-      chunkFilename: '[name].[hash].js',
-    },
-  },
+  }
+ 
 };
