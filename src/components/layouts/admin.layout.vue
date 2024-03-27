@@ -28,17 +28,17 @@
           <!-- Display the first five items -->
           <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href">
             <a :class="[
-              item.current
-                ? 'bg-white text-black'
-                : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
-              'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-            ]" :aria-current="item.current ? 'page' : undefined">
+            item.current
+              ? 'bg-white text-black'
+              : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
+            'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+          ]" :aria-current="item.current ? 'page' : undefined">
               <component :is="item.icon" :class="[
-                item.current
-                  ? 'text-gray-500'
-                  : 'text-white group-hover:text-white',
-                'mr-1 flex-shrink-0 h-6 w-6',
-              ]" aria-hidden="true" />
+            item.current
+              ? 'text-gray-500'
+              : 'text-white group-hover:text-white',
+            'mr-1 flex-shrink-0 h-6 w-6',
+          ]" aria-hidden="true" />
               {{ item.name }}
             </a>
           </router-link>
@@ -82,9 +82,9 @@
                 class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
                 <a :href="item.href" :class="[
-                  active ? 'bg-white' : '',
-                  'block py-2 px-4 text-sm text-white',
-                ]">
+            active ? 'bg-white' : '',
+            'block py-2 px-4 text-sm text-white',
+          ]">
                   {{ item.name }}
                 </a>
                 </MenuItem>
@@ -244,7 +244,10 @@ function navigation() {
     // Check if the current route base matches the nav item's href
     // Or if it's the "Loading Plans" item and the current route base starts with /planner/loadingplans or /planner/dispatches
     const isMatched = currentRouteBase === navItem.href ||
-      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/admin/loadingplans") || currentRouteBase.startsWith("/admin/dispatches")));
+      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/admin/loadingplans") || currentRouteBase.startsWith("/admin/dispatches")))
+      ||
+      (navItem.name === "Receipts" && currentRouteBase.startsWith("/admin/receipts")); // Added condition for Receipts
+    ;
     navItem.current = isMatched;
   });
 
