@@ -148,7 +148,6 @@
                     <select
                       id="role"
                       name="role"
-                      disabled
                       v-model="roleId"
                       autocomplete="role-name"
                       class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -179,7 +178,6 @@
                       id="status"
                       name="status"
                       v-model="status"
-                      disabled
                       autocomplete="status-name"
                       class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     >
@@ -381,6 +379,7 @@ onMounted(() => {
 });
 //FUNCTIONS
 const onSubmit = useSubmitForm((values, actions) => {
+  
   let newValues = {
     id: model.value.id,
     firstname: firstname.value,
@@ -392,6 +391,7 @@ const onSubmit = useSubmitForm((values, actions) => {
     nameOfOrg: nameOfOrg.value,
     OrgDescription: OrgDescription.value
   };
+
   emit("update", newValues);
 });
 

@@ -145,21 +145,19 @@
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
-                    <label for="project" class="block text-sm text-gray-700 font-bold">Start Date</label>
-
+                    <label for="Start Date" class="block text-sm text-gray-700 font-bold">Start Date</label>
                     <input type="date" name="Start Date" v-model="reports.StartDate" required id="Start Date"
-                      autocomplete="Start Date"
+                      autocomplete="Start Date" :max="reports.EndDate || new Date().toISOString().split('T')[0]"
                       class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
                     <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
-
-                    <input type="date" name="End Date" v-model="reports.EndDate" required id="End Date" autocomplete="End Date"
+                    <input type="date" name="End Date" v-model="reports.EndDate" required id="End Date"
+                      autocomplete="End Date" :min="reports.StartDate"
                       class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-
                   </div>
+
                 </div>
               </div>
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
