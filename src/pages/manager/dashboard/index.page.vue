@@ -532,13 +532,13 @@ const stats = ref([
     value: totalDispatched,
     // Use a ternary operator to decide between ExclamationCircleIcon and CheckCircleIcon
     icon: receivedPercentage > 50 ? ExclamationCircleIcon : CheckCircleIcon,
-    iconColor: dispatchPercentage > 50 ? 'red-500' : 'green-500',
+    iconColor: dispatchPercentage > 50 ? 'green-500' : 'red-500',
     percentageText: receivedPercentageFormated,
-    textColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    textColor: receivedPercentage > 50 ? 'green-500' : 'red-500',
     showProgress: true,
     progress: receivedPercentage,
     isProgressPositive: receivedPercentage > 50,
-    progressColor: receivedPercentage > 50 ? 'red-500' : 'green-500',
+    progressColor: receivedPercentage > 50 ? 'green-500' : 'red-500',
     progressText: ''
   },
 

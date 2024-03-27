@@ -19,8 +19,6 @@
                 <!-- Flex container for the two main sections -->
                 <div class="flex flex-nowrap">
 
-
-
                   <!-- Right Side: Loading Plan Details -->
                   <div class="flex-initial w-96 p-4 bg-white">
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">Receipt Details - ID
@@ -146,11 +144,6 @@ const props = defineProps({
 const closeDialog = () => {
   emit('close');
 };
-
-
-
-
-
 
 
 

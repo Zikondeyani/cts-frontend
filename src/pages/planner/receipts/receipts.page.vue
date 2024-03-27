@@ -25,8 +25,8 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="receipts" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
@@ -47,7 +47,7 @@
               </button>
 
 
-            <!--   <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
+              <!--   <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
                 Delete
               </button> -->
@@ -142,7 +142,7 @@ const columns = ref([
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.Date).format("DD/MM/YYYY") !== null ? moment(row.Date).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -165,14 +165,18 @@ const columns = ref([
 
   {
     label: "Quantity",
-    field: row => `
-    <span class="by-color"> ${row.Quantity + " MT" || "Unknown"}</span>`,
+    field: row => {
+      const expectedQuantity = row.dispatch.Quantity ? `${row.dispatch.Quantity} MT` : "Unknown";
+      const receivedQuantity = row.Quantity ? `${row.Quantity} MT` : "Unknown";
+      return `
+      <span class="from-color">Expected: ${expectedQuantity}</span><br>
+      <span class="to-color">Received: ${receivedQuantity}</span>`;
+    },
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
-
 
   {
     label: "Options",

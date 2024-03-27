@@ -23,13 +23,26 @@
         </button>
 
 
+        <!-- Import Excel Button -->
+        <button type="button"
+          class="font-body inline-flex items-center px-6 py-2.5 bg-blue-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-blue-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:bg-blue-700 transition duration-150 ease-in-out capitalize ml-4"
+          @click="triggerFileInput()">
+          <i class="fas fa-file-import mr-2"></i> <!-- Icon (Font Awesome used as an example) -->
+          Import Data
+        </button>
+
+        <!-- Hidden File Input for Importing Excel -->
+        <input type="file" id="excelFileInput" ref="fileInput" class="hidden" @change="importExcel"
+          accept=".xlsx, .xls" />
+
+
 
         <div class="mt-5 flex ml-4 justify-center sm:mt-0">
           <create-report-form v-on:create="createReport" />
         </div>
 
       </div>
-      
+
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
         <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
@@ -67,7 +80,8 @@
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"  v-on:update="reloadPage"/>
+        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
+          v-on:update="reloadPage" />
 
         <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
           @close="closeDispatchDialog" v-on:update="reloadPage" />
@@ -152,9 +166,9 @@ const columns = ref([
   },
   {
     label: "Details",
-    field: row => `<span class="from-color">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="to-color">To: ${row.district?.Name}</span><br>` +
-      `<span class="by-color">By: ${row.transporter?.Name}</span>`,
+    field: row => `<span class="from-color">From: ${row.warehouse?.Name == undefined ? "Not Specified" : row.warehouse?.Name}</span><br>` +
+      `<span class="to-color">To: ${row.district?.Name == undefined ? "Not Specified" : row.district?.Name}</span><br>` +
+      `<span class="by-color">By: ${row.transporter?.Name == undefined ? "Not Specified" : row.transporter?.Name}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -182,6 +196,56 @@ const columns = ref([
 
 ]);
 
+
+
+const fileInput = ref(null);
+
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+
+const importExcel = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const data = await readFile(file);
+    if (validateData(data)) {
+      for (const item of data) {
+        await createReport(item);
+      }
+    } else {
+
+      Swal.fire({
+        title: "Failed",
+        text: "Invalid file with wrong structure uploaded, please upload recommended file with the correct structure!",
+        icon: "error",
+        confirmButtonText: "Ok"
+      });
+    }
+  } catch (error) {
+    console.error('Error processing file:', error);
+  }
+};
+
+
+const validateData = (data) => {
+  if (!data || data.length === 0) return false;
+
+  // Check if all required columns exist and have the correct format
+  return data.every(row =>
+    typeof row.Quantity === 'number' &&
+    typeof row.Balance === 'number' &&
+    isValidDate(row.StartDate) &&
+    isValidDate(row.EndDate)
+  );
+};
+
+const isValidDate = (dateString) => {
+  return !isNaN(Date.parse(dateString));
+};
+
 const isEditDialogOpen = ref(false);
 
 const selectedLoadingPlan = ref(null);
@@ -191,6 +255,9 @@ const openEditDialog = (loadingPlan) => {
   selectedLoadingPlan.value = loadingPlan;
   isEditDialogOpen.value = true;
 };
+
+
+
 
 // Function to close the edit dialog
 const closeEditDialog = () => {
@@ -278,13 +345,29 @@ const generateExcel = () => {
   XLSX.writeFile(wb, 'LoadingPlans.xlsx');
 };
 
+const readFile = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: 'binary' });
+      // Assuming the first sheet is the one you need
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet);
+      resolve(json);
+    };
+    reader.onerror = (error) => reject(error);
+    reader.readAsBinaryString(file);
+  });
+};
 
 const createReport = async (model) => {
   isLoading.value = true;
 
   // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
-  
+
   model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
@@ -307,7 +390,13 @@ const createReport = async (model) => {
 
     })
     .catch(error => {
-      // Handling error
+
+      Swal.fire({
+        title: "Failed",
+        text: "Failed to create Loading plan",
+        icon: "error",
+        confirmButtonText: "Ok"
+      });
     })
     .finally(() => {
       isLoading.value = false;

@@ -137,7 +137,7 @@ const columns = ref([
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.Date).format("DD/MM/YYYY") !== null ? moment(row.Date).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -159,14 +159,20 @@ const columns = ref([
   },
 
   {
-    label: "Quantity",
-    field: row => `
-    <span class="by-color"> ${row.Quantity + " MT" || "Unknown"}</span>`,
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
+  label: "Quantity",
+  field: row => {
+    const expectedQuantity = row.dispatch.Quantity ? `${row.dispatch.Quantity} MT` : "Unknown";
+    const receivedQuantity = row.Quantity ? `${row.Quantity} MT` : "Unknown";
+    return `
+      <span class="from-color">Expected: ${expectedQuantity}</span><br>
+      <span class="to-color">Received: ${receivedQuantity}</span>`;
   },
+  sortable: true,
+  firstSortType: "asc",
+  html: true, // This is important to render HTML
+  tdClass: "capitalize"
+},
+
 
 
   {
@@ -268,13 +274,15 @@ const getReceipts = async () => {
     const allReceipts = await receiptStore.get();
 
     // Filter receipts based on the current user's ID
-    const filteredReceipts = allReceipts.filter(receipt => receipt.Recipient.id == user.value.id);
+    const filteredReceipts = allReceipts.filter(receipt => receipt.Recipient?.id == user.value.id);
 
     // Update the receipts array with the filtered results
     receipts.length = 0;
 
     let sorteddata = filteredReceipts.reverse();
     receipts.push(...sorteddata);
+
+    console.log(receipts, "receipts intact")
   } catch (error) {
     console.error('Failed to fetch receipts:', error);
   } finally {

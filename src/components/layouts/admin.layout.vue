@@ -229,6 +229,8 @@ function navigation() {
   */   { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
 
     { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
+    { name: "System", href: "/admin/system", icon: AdjustmentsIcon, current: false },
+
 
 
 

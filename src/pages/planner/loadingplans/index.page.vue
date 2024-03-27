@@ -49,11 +49,11 @@
 
 
               <!-- Edit Button with Pencil Icon -->
-              <button @click="openEditDialog(props.row)"
+            <!--   <button @click="openEditDialog(props.row)"
                 class="text-green-500 hover:text-green-700 transition duration-300">
                 <PencilIcon class="h-5 w-5 inline-block mr-1" />
                 Edit
-              </button>
+              </button> -->
 
               <!-- Delete Button with Trash Icon -->
               <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">

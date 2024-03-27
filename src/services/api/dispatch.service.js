@@ -165,6 +165,10 @@ export default class DispatcherService {
              },
 
              {
+              "relation": "dispatch"
+           },
+
+             {
               "relation": "warehouse"
            }
            ,
