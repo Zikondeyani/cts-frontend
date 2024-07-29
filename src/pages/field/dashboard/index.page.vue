@@ -560,32 +560,57 @@ onMounted(async () => {
 
 
 // Create dispatched commodities with the dispatch ID
-const createReceivedCommodities = async (receiptId, receivedCommodities) => {
+// Create received commodities with the receipt ID
+const createReceivedCommodities = async (receiptId, receivedCommodity) => {
+  const receiptModel = {
+    instructedReceiptId: receiptId,
+    commodityId: receivedCommodity.commodityId,
+    BatchNumber: receivedCommodity.BatchNumber,
+    FinalDestinationPoint: receivedCommodity.FinalDestinationPoint,
+    Quantity: receivedCommodity.Quantity,
+    NoBags: receivedCommodity.NoBags,
+    Remarks: receivedCommodity.Remarks,
+  };
 
-
-  const receivedCommodityPromises = receivedCommodities.map((item) => {
-    const receiptModel = {
-      instructedReceiptId: receiptId,
-      commodityId: item.commodityId,
-      BatchNumber: item.BatchNumber,
-      FinalDestinationPoint: item.FinalDestinationPoint,
-      Quantity: item.Quantity,
-      NoBags: item.NoBags,
-      Remarks: item.Remarks,
-    };
-
-
-    return receivedCommodityStore.create(receiptModel); // Assuming receivedCommodityStore is the correct reference
-  });
-
-  // Wait for all promises to complete
-  await Promise.all(receivedCommodityPromises);
-
-  getExpectedDispatches();
-
-  getDispatches();
+  await receivedCommodityStore.create(receiptModel); // Assuming receivedCommodityStore is the correct reference
 };
 
+// Create receipt and associated received commodities
+const createReceipt = async (originalModel) => {
+  // Separate relief items from the original model
+  const { receivedCommodities, ...receiptModel } = originalModel;
+
+  try {
+    // Create the receipt without the relief items
+    const createdReceipt = await instructedreceiptStore.create(receiptModel);
+    const receiptId = createdReceipt.id;
+
+    // Loop through each commodity and create it with the receipt ID
+    for (const commodity of originalModel.receivedCommodities) {
+      await createReceivedCommodities(receiptId, commodity);
+    }
+
+    Swal.fire({
+      title: "Success",
+      text: "Created a receipt and associated commodities successfully",
+      icon: "success",
+      confirmButtonText: "Ok"
+    });
+
+    await getReceipts();
+    $router.push({ path: '/field/receipts/emergency' });
+
+  } catch (error) {
+    Swal.fire({
+      title: "Creation Failed",
+      text: `Failed to create receipt and associated commodities: ${error}`,
+      icon: "error",
+      confirmButtonText: "Ok"
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 
 const createReceipts = async (item) => {
@@ -632,38 +657,6 @@ const createLeanReceipt = async (originalModel) => {
   }
 };
 
-const createReceipt = async (originalModel) => {
-
-  // Separate relief items from the original model
-  const { receivedCommodities, ...receiptModel } = originalModel;
-
-  try {
-    // Create the dispatch without the relief items
-    const createdReceipt = await instructedreceiptStore.create(receiptModel);
-    const receiptId = createdReceipt.id;
-
-    // Pass the dispatch ID and the original relief items to create dispatched commodities
-    await createReceivedCommodities(receiptId, originalModel.receivedCommodities);
-
-    Swal.fire({
-      title: "Success",
-      text: "Created a receipt and associated commodities successfully",
-      icon: "success",
-      confirmButtonText: "Ok"
-    });
-    await getReceipts()
-    $router.push({ path: '/field/receipts/emergency' });
-  } catch (error) {
-    Swal.fire({
-      title: "Creation Failed",
-      text: `Failed to create dispatch and associated commodities: ${error}`,
-      icon: "error",
-      confirmButtonText: "Ok"
-    });
-  } finally {
-    isLoading.value = false;
-  }
-};
 
 const getExpectedDispatches = async () => {
 

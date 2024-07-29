@@ -1,4 +1,6 @@
 <template>
+
+  <spinner-widget v-bind:open="isLoading" />
   <div>
     <!-- Modal -->
     <TransitionRoot as="template" :show="isOpen">
@@ -48,9 +50,9 @@
                         <tr class="hover:bg-gray-100">
                           <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.loadingPlan?.commodity?.Name }}</td>
                           <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.Quantity }} {{
-      dispatch?.loadingPlan?.commodity?.Unit === 'Kg' ? 'MT' : 'Units' }} ({{ dispatch?.NoBags }}
+    dispatch?.loadingPlan?.commodity?.Unit === 'Kg' ? 'MT' : 'Units' }} ({{ dispatch?.NoBags }}
                             {{
-      dispatch?.loadingPlan?.commodity?.Container_type }})</td>
+    dispatch?.loadingPlan?.commodity?.Container_type }})</td>
                         </tr>
                       </tbody>
                     </table>
@@ -76,8 +78,8 @@
                   <!-- Destination Form -->
                   <div v-for="(destination, index) in destinations" :key="index" class="mb-4">
                     <label :for="'destination-' + index" class="block text-sm font-medium text-gray-700">FDP {{
-      multipleDestinations ? index +
-        1 : "" }}</label>
+    multipleDestinations ? index +
+      1 : "" }}</label>
                     <div class="flex items-center space-x-2">
                       <input type="text" :id="'destination-' + index" v-model="destination.name"
                         placeholder="Enter Final Destination Point"
@@ -122,7 +124,7 @@
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                   <label for="quantity" class="text-sm font-medium text-gray-700">Quantity ({{
-      dispatch?.loadingPlan?.commodity?.Container_type }})</label>
+    dispatch?.loadingPlan?.commodity?.Container_type }})</label>
                                   <input type="number" v-model.number="remark.quantity" min="0"
                                     placeholder="Qty Received"
                                     class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -192,6 +194,10 @@ import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headles
 import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon } from "@heroicons/vue/solid";
 
 import { useSessionStore } from "../../../stores/session.store";
+
+
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
+const isLoading = ref(false);
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -271,6 +277,7 @@ const computedTonnagePerRemark = (packsize, bags) => {
 };
 
 
+
 const submitReceipt = async () => {
   const receivedCommodities = [];
 
@@ -286,7 +293,7 @@ const submitReceipt = async () => {
               Date: new Date().toISOString(),
               dispatchId: props.dispatch?.id,
               RecipientId: user.value.id,
-              RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-"+ Date.now().toString().slice(-3),
+              RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-" + Date.now().toString().slice(-3),
               IsArchived: true,
               Remarks: remark.remark,
               FinalDestinationPoint: destination.name,
@@ -297,9 +304,18 @@ const submitReceipt = async () => {
     });
   });
 
+  isLoading.value = true; // Start the loader
 
   try {
     emit("update", receivedCommodities);
+
+
+    Swal.fire({
+      title: "Success",
+      text: "Receipt Creation in progress...",
+      icon: "success",
+      confirmButtonText: "Ok"
+    });
 
     close();
   } catch (error) {
@@ -309,6 +325,8 @@ const submitReceipt = async () => {
       icon: "error",
       confirmButtonText: "Ok"
     });
+  } finally {
+    isLoading.value = false; // Stop the loader
   }
 };
 

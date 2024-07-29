@@ -1,4 +1,6 @@
 <template>
+  
+  <spinner-widget v-bind:open="isLoading" />
   <div>
     <button @click="open = true"
       class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
@@ -59,8 +61,9 @@
                   </div>
                   <!-- Destination Points -->
                   <div class="mb-6">
-                    <label for="multiple-destinations" class="block text-sm font-bold text-blue-500">Select Multiple
-                      Final Destination Points</label>
+                    <label for="multiple-destinations" class="block text-sm font-bold text-blue-500">
+                      Select Multiple Final Destination Points
+                    </label>
                     <div class="flex items-center mt-2">
                       <button @click="toggleMultipleDestinations" type="button"
                         :class="multipleDestinations ? 'bg-blue-600' : 'bg-gray-200'"
@@ -69,10 +72,14 @@
                           class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform">
                         </span>
                       </button>
-                      <label for="multiple-destinations" class="ml-2 text-sm text-gray-700">Enable Multiple
-                        Final Destinations</label>
+                      <label for="multiple-destinations" class="ml-2 text-sm text-gray-700">
+                        Enable Multiple Final Destinations
+                      </label>
                     </div>
+                    <p class="text-xs text-italic text-red-500 mt-3">Please ensure that the total received in the destination points
+                      is accurate.</p>
                   </div>
+
                   <!-- Inside the destination loop -->
                   <div v-for="(destination, index) in destinations" :key="index" class="mb-4">
                     <label :for="'destination-' + index" class="block text-sm font-medium text-gray-700">FDP {{
@@ -121,7 +128,7 @@
                                 </div>
                                 <div class="col-span-6 sm:col-span-3">
                                   <label for="quantity" class="text-sm font-medium text-gray-700">Quantity ({{
-                                   item.commodity.Container_type }})</label>
+      item.commodity.Container_type }})</label>
                                   <input type="number" v-model.number="remark.quantity" min="0"
                                     placeholder="Qty Received"
                                     class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -130,10 +137,13 @@
                                   class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                   <MinusCircleIcon class="h-5 w-5" />
                                 </button>
-                                <textarea v-if="remark.remark === 'other'" v-model="remark.Comments" id="CustomRemark" rows="3" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="Enter your custom remark here"></textarea>
-                        
+                                <textarea v-if="remark.remark === 'other'" v-model="remark.Comments" id="CustomRemark"
+                                  rows="3"
+                                  class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  placeholder="Enter your custom remark here"></textarea>
+
                               </div>
-                             
+
                             </div>
                             <button @click="addRemark(index, itemIndex)" type="button"
                               class="mt-2 inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
@@ -182,6 +192,8 @@ import { useForm, useSubmitForm } from "vee-validate";
 import { CreateRequisitionSchema } from "../../../services/schema/requisition.schema";
 import { useSessionStore } from "../../../stores/session.store";
 
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
+const isLoading = ref(false);
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const Swal = inject('Swal');
@@ -287,38 +299,54 @@ const computedTonnagePerRemark = (packsize, bags) => {
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 };
 
-const onSubmit = useSubmitForm((values) => {
-  destinations.value.forEach((destination, destinationIndex) => {
-    destination.commodities.forEach((commodity, commodityIndex) => {
-      if (commodity.remarks && commodity.remarks.length > 0) {
-        commodity.remarks.forEach((remark) => {
-          if (remark.remark) {
-            receivedCommodities.push({
-              BatchNumber: commodity.BatchNumber,
-              commodityId: commodity.commodity.id,
-              Comments: remark.Comments,
-              Date: new Date().toISOString(),
-              Quantity: computedTonnagePerRemark(commodity.commodity?.PackSize, remark.quantity),
-              NoBags: remark.quantity,
-              Remarks: remark.remark,
-              RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-"+ Date.now().toString().slice(-3),
-              FinalDestinationPoint: destination.name,
-            });
-          }
-        });
-      }
+const onSubmit = useSubmitForm(async (values) => {
+  isLoading.value = true;
+
+  try {
+    destinations.value.forEach((destination, destinationIndex) => {
+      destination.commodities.forEach((commodity, commodityIndex) => {
+        if (commodity.remarks && commodity.remarks.length > 0) {
+          commodity.remarks.forEach((remark) => {
+            if (remark.remark) {
+              receivedCommodities.push({
+                BatchNumber: commodity.BatchNumber,
+                commodityId: commodity.commodity.id,
+                Comments: remark.Comments,
+                Date: new Date().toISOString(),
+                Quantity: computedTonnagePerRemark(commodity.commodity?.PackSize, remark.quantity),
+                NoBags: remark.quantity,
+                Remarks: remark.remark,
+                RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-" + Date.now().toString().slice(-3),
+                FinalDestinationPoint: destination.name,
+              });
+            }
+          });
+        }
+      });
     });
-  });
 
-  let model = {
-    RecipientId: user.value.id,
-    CreatedOn: new Date().toISOString(),
-    instructedDispatchId: props.rowId,
-    receivedCommodities: receivedCommodities
-  };
+    let model = {
+      RecipientId: user.value.id,
+      CreatedOn: new Date().toISOString(),
+      instructedDispatchId: props.rowId,
+      receivedCommodities: receivedCommodities
+    };
 
-  emit("create", model);
-  open.value = false;
+     emit("create", model);
+
+     Swal.fire({
+      title: "Success",
+      text: "Receipt Creation in progress...",
+      icon: "success",
+      confirmButtonText: "Ok"
+    });
+
+  } catch (error) {
+    console.error("An error occurred while submitting the form:", error);
+  } finally {
+    isLoading.value = false;
+    open.value = false;
+  }
 });
 
 const summaryGoods = computed(() => {
