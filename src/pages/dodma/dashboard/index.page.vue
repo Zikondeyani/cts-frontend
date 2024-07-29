@@ -1056,7 +1056,7 @@ const damagedStockStatsEmergency = computed(() => {
       .filter(item => item.commodity === commodity)
     return {
       commodity,
-      percentage: totalForCommodity[0].damagePercentage.toFixed(2),
+      percentage: totalForCommodity[0].overallDamagePercentage.toFixed(2),
       color: colors[index % colors.length]
     };
   });
