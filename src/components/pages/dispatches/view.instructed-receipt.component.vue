@@ -30,7 +30,7 @@
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-bold text-gray-700">REF NO:</label>
-                      <p class="text-sm text-gray-600">{{ receipt.receivedCommodities[0]?.RefNO }}
+                      <p class="text-sm text-gray-600">{{ receipt?.receivedCommodities[0]?.RefNO }}
                       </p>
                     </div>
                     <div>
@@ -77,7 +77,6 @@
                   <table class="min-w-full mt-2 bg-white">
                     <thead>
                       <tr class="w-full bg-gray-200">
-                        <th class="px-4 py-2">Instruction No</th>
                         <th class="px-4 py-2">Warehouse</th>
                         <th class="px-4 py-2">Vehicle Reg No</th>
                         <th class="px-4 py-2">FDP</th>
@@ -87,8 +86,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in receipt.receivedCommodities" :key="item" class="w-full text-center">
-                        <td class="border px-4 py-2">{{ receipt.instructedDispatch?.instruction?.id }}</td>
+                      <tr v-for="item in receipt?.receivedCommodities" :key="item" class="w-full text-center">
                         <td class="border px-4 py-2">{{ receipt.instructedDispatch?.instruction?.warehouse?.Name }}</td>
                         <td class="border px-4 py-2">{{ receipt.instructedDispatch?.instruction?.VehicleRegNo }}</td>
                         <td class="border px-4 py-2">{{ item.FinalDestinationPoint }}</td>

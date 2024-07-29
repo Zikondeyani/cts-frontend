@@ -50,48 +50,64 @@
           </div>
         </div>
 
-        <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          <template #table-actions> </template>
-          <template #table-row="props">
+        <div class="overflow-x-auto">
+    <vue-good-table
+      :columns="columns"
+      :rows="loadingplans"
+      :search-options="{ enabled: true }"
+      style="font-weight: bold; color: #096eb4;"
+      :pagination-options="{ enabled: true }"
+      theme="polar-bear"
+      styleClass="vgt-table striped"
+      compactMode
+    >
+      <template #table-actions> </template>
+      <template #table-row="props">
+        <div v-if="props.column.label === 'Status'">
+          <span
+            v-if="props.row.IsApproved"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+          >
+            Approved
+          </span>
+          <span
+            v-else
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+          >
+            Not Approved
+          </span>
+        </div>
+        <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
+          <button
+            @click="openEditDialog(props.row)"
+            v-if="isOnline"
+            class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0"
+          >
+            <PencilIcon class="h-5 w-5 inline-block mr-1" />
+            Edit
+          </button>
 
-            <span v-if="props.column.label === 'Status'">
-              <div>
-                <span v-if="props.row.IsApproved"
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                  Approved
-                </span>
-                <span v-else
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
-                  Not Approved
-                </span>
-              </div>
-            </span>
-            <div v-if="props.column.label == 'Options'" class="flex space-x-2">
+          <button
+            @click="openAttachmentDialog(props.row)"
+            v-if="isOnline"
+            class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0"
+          >
+            <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
+            Attachments
+          </button>
 
-              <button @click="openEditDialog(props.row)" v-if="isOnline"
-                class="text-green-500 hover:text-green-700 transition duration-300">
-                <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                Edit
-              </button>
-
-              <button @click="openAttachmentDialog(props.row)" v-if="isOnline"
-                class="text-blue-500 hover:text-blue-500 transition duration-300">
-                <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
-                Attachments
-              </button>
-
-              <!-- Delete Button with Trash Icon -->
-              <button v-if="props.row.Balance > 0" @click="deleteItem(props.row.id)"
-                class="text-red-500 hover:text-red-700 transition duration-300">
-                <TrashIcon class="h-5 w-5 inline-block mr-1" />
-                Delete
-              </button>
-
-            </div>
-          </template>
-        </vue-good-table>
+          <button
+            v-if="props.row.Balance > 0"
+            @click="deleteItem(props.row.id)"
+            class="text-red-500 hover:text-red-700 transition duration-300"
+          >
+            <TrashIcon class="h-5 w-5 inline-block mr-1" />
+            Delete
+          </button>
+        </div>
+      </template>
+    </vue-good-table>
+  </div>
 
         <!-- Edit Loading Plan Dialog -->
         <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
