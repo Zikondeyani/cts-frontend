@@ -161,7 +161,7 @@ const columns = ref([
   {
   label: "Quantity",
   field: row => {
-    const expectedQuantity = row.dispatch.Quantity ? `${row.dispatch.Quantity} MT` : "Unknown";
+    const expectedQuantity = row.dispatch?.Quantity ? `${row.dispatch?.Quantity} MT` : "Unknown";
     const receivedQuantity = row.Quantity ? `${row.Quantity} MT` : "Unknown";
     return `
       <span class="from-color">Expected: ${expectedQuantity}</span><br>

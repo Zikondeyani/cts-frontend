@@ -39,20 +39,19 @@ import {
   TruckIcon,
   ArchiveIcon,
   ReceiptRefundIcon,
+  TemplateIcon, HeartIcon, LightningBoltIcon,
   ClipboardIcon
 } from "@heroicons/vue/outline";
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/dispatcher/dashboard", current: false },
   { name: "Receipt Management", href: "#", current: true },
 ];
 const options = ref([
-  /* { label: 'Instructions', icon: ClipboardListIcon, path: '/instructions' },
-  { label: 'Instructed Dispatches', icon: TruckIcon, path: '/instructed-dispatches' },
-  { label: 'Instructed Commodities', icon: ArchiveIcon, path: '/instructed-commodities' },
-  { label: 'Instructed Receipts', icon: ReceiptRefundIcon, path: '/instructed-receipts' },
-  */ { label: 'Receipts', icon: ClipboardIcon, path: '/admin/receipts' },
+  { label: 'Lean Season Response Receipts', icon: TemplateIcon, path: '/dispatcher/receipts/leanseason' },
+  { label: 'Emergency Response Receipts', icon: LightningBoltIcon, path: '/dispatcher/receipts/emergency' },
+
 ]);
 </script>
 

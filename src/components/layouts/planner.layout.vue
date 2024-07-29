@@ -17,7 +17,10 @@
 
 
           <!-- Admin Text in the Middle (if needed) -->
-          <span class="font-bold text-white mx-4">DODMA CTS | Planner </span>
+          <span class="font-bold text-white mx-4">DODMA CTS | Planner 
+            <span class="text-xs font-normal">(v2.0)</span>
+        
+          </span>
 
 
         </div>
@@ -94,10 +97,16 @@
                 </button>
                 </MenuItem> -->
                 <MenuItem v-slot="{ active }">
+                  <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                    About System
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
                 </button>
                 </MenuItem>
+               
               </MenuItems>
             </transition>
           </Menu>
@@ -120,7 +129,7 @@
     <footer class="text-white text-center p-4" style="background-color: #096eb4;">
       <span class="inline-block align-middle text-sm">
 
-        © 2024 Designed by WFP Supply Chain Unit
+        © WFP Malawi Supply Chain Unit | DoDMA
       </span>
     </footer>
   </div>
@@ -128,7 +137,7 @@
 
 
 <script setup>
-import { inject, ref, watch, reactive, onMounted, computed, toRefs } from "vue";
+import { inject, ref, watch, reactive, onMounted, computed, toRefs, onBeforeUnmount } from "vue";
 import { useSessionStore } from "../../stores/session.store";
 import { useRouter } from "vue-router";
 import {
@@ -168,6 +177,7 @@ import {
   SearchIcon,
   SelectorIcon,
 } from "@heroicons/vue/solid";
+import { saveDataOffline, getDataOffline,clearDataOffline } from '@/services/localbase';
 
 //DECLARATIONS
 const system = reactive({
@@ -187,6 +197,12 @@ const role = ref(sessionStore.getRole);
 
 const isDropdownOpen = ref(false);
 
+const signOutTimeout = ref(null);
+
+const onAbout = async () => {
+   $router.push({ path: "/planner/about-system" })
+  
+};
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -267,6 +283,8 @@ const itemClasses = (item) => [
 const onSignout = async () => {
   try {
     await sessionStore.signOut();
+    await clearDataOffline("session");
+
     sessionStore.$reset();
 
     await $router.push({ path: "/portal/signin" }).then((res) => {

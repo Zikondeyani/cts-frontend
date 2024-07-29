@@ -58,7 +58,7 @@
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="NoBags" class="block text-sm font-medium text-gray-700 mb-2  mt-2">Number of Bags</label>
-                  <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="Dispatch.Quantity"
+                  <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="Dispatch.NoBags"
                     id="NoBags" autocomplete="NoBags"
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
@@ -209,7 +209,7 @@ const commodities = ref([]);
 
 
 const computedTonnage = computed(() => {
-  return Dispatch.value.Quantity * 0.05; // Assuming 1 bag = 0.05 tons
+  return Dispatch.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
 });
 
 

@@ -70,7 +70,7 @@
                         <option value="other">Other (please specify)</option>
                       </select>
 
-                      <textarea v-if="receipt.Remarks === 'other'" v-model="receipt.Remarks" id="CustomRemark" rows="3"
+                      <textarea v-if="receipt.Remarks === 'other'" v-model="receipt.Comments" id="CustomRemark" rows="3"
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         placeholder="Enter your custom remark here"></textarea>
                     </div>
@@ -105,6 +105,9 @@
                       <span class="text-sm font-bold text-gray-700">Created On: </span>
                       <span class="text-sm text-gray-600"> {{ moment(dispatch.createdOn).format("DD/MM/YYYY") }}</span>
                     </div>
+
+                 
+
                     <div class="mb-12">
                       <span class="text-sm font-bold text-gray-700">Final Destination: </span>
                       <span class="text-sm text-gray-600"> {{ dispatch.FinalDestinationPoint }}</span>
@@ -258,7 +261,6 @@ const submitReceipt = async () => {
 
   receipt.value.Quantity = computedTonnage.value
 
-
   receipt.value.RecipientId = user.value.id
   receipt.value.dispatchId = props.dispatch.id
 
@@ -278,7 +280,7 @@ const submitReceipt = async () => {
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/admin/receipts');
+        $router.push('/field/receipts');
       });
 
 

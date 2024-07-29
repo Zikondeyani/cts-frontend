@@ -1,310 +1,322 @@
 <template>
-  <TransitionRoot as="template" :show="isOpen">
-    <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
-      <div class="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
-          leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-          <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </TransitionChild>
+  <div>
+    <!-- Modal -->
+    <TransitionRoot as="template" :show="isOpen">
+      <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="close" static>
+        <div class="flex items-center justify-center min-h-screen px-4 py-6">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
+            leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+            <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
 
-        <TransitionChild as="template" enter="ease-out duration-300"
-          enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
-          leave-from="opacity-100 translate-y-0 sm:scale-100"
-          leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-          <div
-            class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-start sm:my-8 sm:max-w-4xl sm:w-full">
-            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <div class="container mx-auto px-4 py-6">
-                <!-- Flex container for the two main sections -->
-                <div class="flex flex-nowrap">
-
-                  <!-- Left Side: Form for Receipt Creation -->
-                  <div class="flex-grow p-4 bg-white">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Receipt</h2>
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Final Destination
-                        Point</label>
-
-                      <input type="text" name="fdp" v-model="receipt.FinalDestinationPoint" id="DeliveryNote"
-                        autocomplete="FinalDestinationPoint"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of
-                        Bags</label>
-                      <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="receipt.NoBags"
-                        id="NoBags" autocomplete="NoBags"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage</label>
-                      <input type="number" name="Quantity" :value="computedTonnage" id="Quantity"
-                        autocomplete="Quantity" readonly
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
-                    </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Date</label>
-                      <input type="date" name="Date" v-model="receipt.Date" id="Date" autocomplete="Date"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        :max="new Date().toISOString().split('T')[0]" />
-                    </div>
-
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="Remarks" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Remarks</label>
-
-                      <select name="Remarks" v-model="receipt.Remarks" id="Remarks"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">Select Remark</option>
-                        <option value="received in good condition">Received in good condition</option>
-                        <option value="received but damaged">Received but damaged</option>
-                        <option value="received but not expected quantity">Received but not at the expected quantity
-                        </option>
-                        <option value="other">Other (please specify)</option>
-                      </select>
-
-                      <textarea v-if="receipt.Remarks === 'other'" v-model="receipt.Remarks" id="CustomRemark" rows="3"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        placeholder="Enter your custom remark here"></textarea>
-                    </div>
-
-
-
-
-                    <div class="flex justify-end mt-4">
-                      <button @click="resetReceipt()"
-                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">
-                        Reset
-                      </button>
-                      <button @click="submitReceipt()"
-                        class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-400 focus:outline-none focus:border-blue-400 focus:ring focus:ring-blue-200 active:bg-blue-400 transition ease-in-out duration-150">
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Vertical divider line -->
-                  <div class="hidden sm:block sm:w-px sm:bg-gray-200"></div>
-
-                  <!-- Right Side: Loading Plan Details -->
-                  <div class="flex-initial w-96 p-4 bg-white">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Receipt Details - ID
-                      {{ dispatch.id }}</h2>
-                    <!-- ... Loading Plan Details ... -->
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Created By: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Dispatcher.username.replace(/\./g, ' ') }}</span>
-                    </div>
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Created On: </span>
-                      <span class="text-sm text-gray-600"> {{ moment(dispatch.createdOn).format("DD/MM/YYYY") }}</span>
-                    </div>
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Final Destination: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.FinalDestinationPoint }}</span>
-                    </div>
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Quantity: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.Quantity }} MT</span>
-                    </div>
-
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Date: </span>
-                      <span class="text-sm text-gray-600"> {{ moment(dispatch.Date).format("DD/MM/YYYY") }}</span>
-                    </div>
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Driver: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.DriverName }}</span>
-                    </div>
-
-                    <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">License: </span>
-                      <span class="text-sm text-gray-600"> {{ dispatch.DriverLicense }}</span>
-                    </div>
-                  </div>
-                </div>
+          <TransitionChild as="template" enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <div
+              class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:w-full max-w-4xl">
+              <!-- Modal Header -->
+              <div class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+                <h5 class="text-lg font-bold text-gray-800">Lean Season Response Dispatch</h5>
+                <h5 class="text-md font-medium text-gray-800">Create Receipt for Dispatch (ID: {{ dispatch.id }})</h5>
+                <button type="button" class="text-gray-500 hover:text-gray-700" @click="close">
+                  <XIcon class="h-6 w-6" />
+                </button>
               </div>
 
+              <!-- Form -->
+              <form @submit.prevent="submitReceipt">
+                <div class="px-6 py-4">
+                  <!-- Summary of Dispatched Goods -->
+                  <p class="mb-4"><strong>Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
 
+                  <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-blue-500 mb-4">Summary of Dispatched Goods:</h3>
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Commodity</th>
+                          <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Quantity</th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-100">
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.loadingPlan?.commodity?.Name }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.Quantity }} {{
+      dispatch?.loadingPlan?.commodity?.Unit === 'Kg' ? 'MT' : 'Units' }} ({{ dispatch?.NoBags }}
+                            {{
+      dispatch?.loadingPlan?.commodity?.Container_type }})</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Destination Points -->
+                  <div class="mb-6">
+                    <label for="multiple-destinations" class="block text-sm font-bold text-blue-500">Select Multiple
+                      Final Destination Points</label>
+                    <div class="flex items-center mt-2">
+                      <button @click="toggleMultipleDestinations" type="button"
+                        :class="multipleDestinations ? 'bg-blue-600' : 'bg-gray-200'"
+                        class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span :class="multipleDestinations ? 'translate-x-6' : 'translate-x-1'"
+                          class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform">
+                        </span>
+                      </button>
+                      <label for="multiple-destinations" class="ml-2 text-sm text-gray-700">Enable Multiple
+                        Final Destinations</label>
+                    </div>
+                  </div>
+
+                  <!-- Destination Form -->
+                  <div v-for="(destination, index) in destinations" :key="index" class="mb-4">
+                    <label :for="'destination-' + index" class="block text-sm font-medium text-gray-700">FDP {{
+      multipleDestinations ? index +
+        1 : "" }}</label>
+                    <div class="flex items-center space-x-2">
+                      <input type="text" :id="'destination-' + index" v-model="destination.name"
+                        placeholder="Enter Final Destination Point"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                      <button type="button" @click="removeDestination(index)"
+                        class="inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        v-if="multipleDestinations && index > 0">
+                        <MinusCircleIcon class="h-5 w-5" />
+                      </button>
+                    </div>
+
+                    <!-- Commodity Remarks Table -->
+                    <table class="min-w-full divide-y divide-gray-200 mt-4">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Commodity</th>
+                          <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Remarks</th>
+                        </tr>
+                      </thead>
+                      <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-100">
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.loadingPlan?.commodity?.Name }}</td>
+                          <td class="py-2 px-4 border-b">
+                            <div class="space-y-2">
+                              <div v-for="(remark, i) in destination.commodities[0].remarks" :key="i"
+                                class="flex items-center space-x-2">
+                                <div class="col-span-6 sm:col-span-3">
+                                  <label class="text-sm font-medium text-gray-700">Select Remark</label>
+                                  <select name="Remarks" v-model="remark.remark" id="Remarks"
+                                    class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    <option value="">Select Remark</option>
+                                    <option value="received in good condition">Received in good condition</option>
+                                    <option value="received but damaged">Received but damaged</option>
+                                    <option value="received but not expected quantity">Received but not at the expected
+                                      quantity</option>
+                                    <option value="other">Other (please specify)</option>
+                                  </select>
+                                </div>
+                                <div class="col-span-6 sm:col-span-3">
+                                  <label for="quantity" class="text-sm font-medium text-gray-700">Quantity ({{
+      dispatch?.loadingPlan?.commodity?.Container_type }})</label>
+                                  <input type="number" v-model.number="remark.quantity" min="0"
+                                    placeholder="Qty Received"
+                                    class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                </div>
+                                <button @click="removeRemark(index, 0, i)" type="button"
+                                  class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                  <MinusCircleIcon class="h-5 w-5" />
+                                </button>
+                                <textarea v-if="remark.remark === 'other'" v-model="remark.Comments" id="CustomRemark"
+                                  rows="3"
+                                  class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  placeholder="Enter your custom remark here"></textarea>
+
+                              </div>
+
+                            </div>
+                            <button @click="addRemark(index, 0)" type="button"
+                              class="mt-2 inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
+                              <PlusCircleIcon class="h-5 w-5 mr-1" />
+                              Add Remark
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                  <!-- Add Destination Button -->
+                  <div class="mb-6" v-if="multipleDestinations">
+                    <button @click="addDestination" type="button"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
+                      <PlusCircleIcon class="h-5 w-5 mr-1" />
+                      Add Destination
+                    </button>
+                  </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                  <div class="flex justify-end space-x-3">
+                    <button type="button" @click="close"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      Cancel
+                    </button>
+                    <button type="submit"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <CheckCircleIcon class="h-5 w-5 mr-1" />
+                      Submit Receipt
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-              <button type="button"
-                class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 sm:w-auto sm:text-sm"
-                @click="closeDialog">
-                Close
-              </button>
-            </div>
-          </div>
-        </TransitionChild>
-      </div>
-    </Dialog>
-  </TransitionRoot>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+  </div>
 </template>
 
 <script setup>
+import { ref, reactive, inject, defineEmits } from 'vue';
 import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headlessui/vue';
 
-
-import { useRouter } from "vue-router";
-import { inject, ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-
-
-
-const $router = useRouter();
-
-import { usereceiptstore } from "../../../stores/receipt.store";
-
+import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon } from "@heroicons/vue/solid";
 
 import { useSessionStore } from "../../../stores/session.store";
 
-
-
-const dispatchstore = usereceiptstore();
-
-
-
-const receiptstore = usereceiptstore();
-
-
-const selectedRemark = ref('');
 const sessionStore = useSessionStore();
-
 const user = ref(sessionStore.getUser);
 
-const moment = inject("moment");
-
-const Swal = inject("Swal");
-const emit = defineEmits(['update', 'close']);
-
+const emit = defineEmits(["create", "close", "update"]);
+const Swal = inject('Swal');
+// Props
 const props = defineProps({
   isOpen: Boolean,
   dispatch: Object
 });
+const multipleDestinations = ref(false);
 
+const destinations = reactive([{ name: '', commodities: [{ name: props.dispatch?.loadingPlan?.commodity?.Name, remarks: [] }] }]);
 
+const toggleMultipleDestinations = () => {
+  multipleDestinations.value = !multipleDestinations.value;
+  if (!multipleDestinations.value) {
+    resetDestinations();
+  }
+};
 
-const receipt = ref({ NoBags: 0 })
+const resetDestinations = () => {
+  while (destinations.length > 1) {
+    destinations.pop();
+  }
+  destinations[0].name = '';
+};
 
-const closeDialog = () => {
-  receipt.value = {}
-  emit('close');
+const addDestination = () => {
+  if (destinations.every(dest => dest.name.trim() !== "")) {
+    destinations.push({ name: '', commodities: [{ name: props.dispatch?.loadingPlan?.commodity?.Name, remarks: [{ remark: '', quantity: 0 }] }] });
+
+  } else {
+    Swal.fire({
+      icon: "warning",
+      title: "Incomplete Destination",
+      text: "Please enter a destination name before adding another."
+    });
+  }
 };
 
 
 
+const removeDestination = (index) => {
+  if (destinations.length > 1) {
+    destinations.splice(index, 1);
+  }
+};
 
+const addRemark = (destinationIndex, commodityIndex) => {
+  destinations[destinationIndex].commodities[commodityIndex].remarks.push({ remark: '', quantity: 0 });
+};
 
+const removeRemark = (destinationIndex, commodityIndex, remarkIndex) => {
+  const remarks = destinations[destinationIndex].commodities[commodityIndex].remarks;
+  if (remarks.length > 1) {
+    remarks.splice(remarkIndex, 1);
+  }
+};
 
-onMounted(() => { });
-
-
-const resetReceipt = async () => {
-
-  receipt.value = {}
-
+const close = () => {
+  emit("close")
 }
-
 
 const isDecimal = (num) => {
   return num % 1 !== 0;
-}
+};
 
-
-const computedTonnage = computed(() => {
-  let TonnageConversion = props.dispatch?.loadingPlan?.commodity.PackSize / 1000;
-
-  // Apply toFixed(2) only if the number is a decimal
+const computedTonnagePerRemark = (packsize, bags) => {
+  let TonnageConversion = packsize / 1000;
   if (isDecimal(TonnageConversion)) {
     TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
   }
-
-  let Tonnage = receipt.value.NoBags * TonnageConversion;
-
-  // Apply toFixed(2) to the final result
+  let Tonnage = bags * TonnageConversion;
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
-});
-
-
-
-
-
-const validateNumberInput = (event) => {
-  // Allow only numeric input
-  if (!/^\d*$/.test(event.key)) {
-    event.preventDefault();
-  }
-}
-
+};
 
 
 const submitReceipt = async () => {
+  const receivedCommodities = [];
 
-  if (receipt.value.Date) {
-    receipt.value.Date = moment(receipt.value.Date).toISOString();
+  destinations.forEach((destination, destinationIndex) => {
+    destination.commodities.forEach((commodity, commodityIndex) => {
+      if (commodity.remarks && commodity.remarks.length > 0) {
+        commodity.remarks.forEach((remark) => {
+          if (remark.remark) {
+            receivedCommodities.push({
+              Quantity: computedTonnagePerRemark(props.dispatch?.loadingPlan?.commodity?.PackSize, remark.quantity),
+              NoBags: remark.quantity,
+              Comments: remark.Comments,
+              Date: new Date().toISOString(),
+              dispatchId: props.dispatch?.id,
+              RecipientId: user.value.id,
+              RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-"+ Date.now().toString().slice(-3),
+              IsArchived: true,
+              Remarks: remark.remark,
+              FinalDestinationPoint: destination.name,
+            });
+          }
+        });
+      }
+    });
+  });
+
+
+  try {
+    emit("update", receivedCommodities);
+
+    close();
+  } catch (error) {
+    Swal.fire({
+      title: "Creation Failed",
+      text: `Failed to create receipt: ${error.message}`,
+      icon: "error",
+      confirmButtonText: "Ok"
+    });
   }
-
-
-
-  receipt.value.Quantity = computedTonnage.value
-
-
-
-
-
-  receipt.value.RecipientId = user.value.id
-  receipt.value.dispatchId = props.dispatch.id
-
-  receiptstore
-    .create(receipt.value)
-    .then(result => {
-
-      emit('update');
-      Swal.fire({
-        title: "Receipt Created",
-        html: `
-    <p>Your receipt has been successfully created.</p>
-    <p><strong>RECEIPT ID:</strong> ${result.id}</p>`,
-        icon: "success",
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: "Go to Receipts",
-        cancelButtonColor: '#aaa', // Optional: style the cancel button
-      }).then((result) => {
-        closeDialog();
-        $router.push('/recipient/receipts');
-      });
-
-
-    })
-    .catch(error => {
-      Swal.fire({
-        title: "Receipt Denied",
-        text: "Unable to complete the receipt!",
-        icon: "error",
-        confirmButtonText: "Review Details",
-        cancelButtonText: "Cancel",
-        showCancelButton: true,
-        focusConfirm: false,
-        customClass: {
-          confirmButton: "swal-confirm-button", // Customize the class for confirm button
-          cancelButton: "swal-cancel-button" // Customize the class for cancel button
-        }
-      });
-
-    })
-
 };
+
+
+
+
 </script>
+
+<style scoped>
+/* Add your custom styles here */
+</style>

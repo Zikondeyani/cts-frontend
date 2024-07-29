@@ -1,5 +1,17 @@
 <template>
   <div class="bg-white py-16 px-4 overflow-hidden sm:px-6 lg:px-8 lg:py-24">
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+         <div>
+      <div style="background-color: #096eb4;" class="flex justify-center items-center mb-4 rounded-md p-4" >
+        <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
+        <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
+      </div>
+      <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center">
+        DoDMA Commodity Tracking System
+        <span class="text-sm font-normal">(v2.0)</span>
+      </h2>
+    </div>
+  </div>
     <div class="relative max-w-xl mx-auto">
       <svg
         class="absolute left-full transform translate-x-1/2"
@@ -68,16 +80,10 @@
         />
       </svg>
 
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <img
-          class="mx-auto h-28 w-auto"
-          src="../../assets/logo2.jpg"
-          alt="app logo"
-        />
-      </div>
+    
       <div class="text-center">
         <h2
-          class="font-body text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl"
+          class="font-body text-3xl mt-3 font-extrabold tracking-tight text-gray-900 sm:text-4xl"
         >
           Account recovery
         </h2>

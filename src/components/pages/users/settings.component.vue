@@ -103,6 +103,27 @@
                       {{ phoneError }}
                     </p>
                   </div>
+
+                       <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
+                      <label for="privileges" class="block text-sm font-medium text-gray-700">
+                        Account Delegations
+                      </label>
+                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                        <span v-for="(item, index) in delegations" :key="index"
+                          class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
+                          {{ item }}
+                          <button @click="removeTag(index)" class="ml-1 text-red-500">&times;</button>
+                        </span>
+
+                        <!-- Input for adding new tags -->
+                        <input type="text" v-model="newDelegate" @keydown.enter.prevent="addTag"
+                          placeholder="Add an email address then place enter..."
+                          class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
+                        
+                        </div>
+                        <p class="text-red-500 text-xs italic pt-1">{{ DelegateError }}</p>
+                  
+                    </div>
                 </div>
               </div>
               <div class="px-4 py-3 text-right sm:px-6">
@@ -330,6 +351,11 @@ const user = ref(sessionStore.getUser);
 const roles = reactive([]);
 const { model } = toRefs(props);
 ///FORM
+
+const delegations = ref([]); // Delegations field
+const newDelegate = ref('');
+const DelegateError = ref('');
+
 const { meta } = useForm({
   validationSchema: UpdateUserSchema,
   // initialValues: {
@@ -374,6 +400,7 @@ onMounted(() => {
   status.value = model.value.status;
   roleId.value = model.value.roleId;
   nameOfOrg.value = model.value.nameOfOrg;
+  delegations.value.push(model.value.delegations || null);
   OrgDescription.value = model.value.OrgDescription;
   getRoles();
 });
@@ -389,6 +416,7 @@ const onSubmit = useSubmitForm((values, actions) => {
     status: status.value,
     roleId: roleId.value,
     nameOfOrg: nameOfOrg.value,
+    delegations: delegations.value.join() ,
     OrgDescription: OrgDescription.value
   };
 
@@ -474,5 +502,22 @@ const changepassword = async () => {
       let role = user.value.roleId == "ADMIN1" ? "admin" : "manager";
       $router.push({ path: "/" + role + "/users" });
     });
+};
+
+const addTag = () => {
+  const delegate = newDelegate.value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (delegate && emailPattern.test(delegate) && !delegations.value.includes(delegate)) {
+    delegations.value.push(delegate);
+    newDelegate.value = '';
+    DelegateError.value = '';
+  } else {
+    DelegateError.value = 'Please enter a valid email address or the email already exists in the delegations!';
+  }
+};
+
+// Function to remove a delegate
+const removeTag = (index) => {
+  delegations.value.splice(index, 1);
 };
 </script>

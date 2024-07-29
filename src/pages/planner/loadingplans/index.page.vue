@@ -40,7 +40,7 @@
 
 
 
-<!-- 
+              <!-- 
               <button type="button" @click="openDispatchDialog(props.row)"
                 class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
                 <TruckIcon class="h-5 w-5 mr-2" />
@@ -49,7 +49,7 @@
 
 
               <!-- Edit Button with Pencil Icon -->
-            <!--   <button @click="openEditDialog(props.row)"
+              <!--   <button @click="openEditDialog(props.row)"
                 class="text-green-500 hover:text-green-700 transition duration-300">
                 <PencilIcon class="h-5 w-5 inline-block mr-1" />
                 Edit
@@ -117,6 +117,7 @@ const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
+  { name: "Lean Season Response", href: "#", current: true },
 ];
 
 
@@ -317,13 +318,21 @@ const createReport = async (model) => {
 
 
 
-
 const deleteItem = async (id) => {
-  // First, ask for confirmation
   try {
+    // First, ask for confirmation and reason
     const result = await Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Please enter the reason for deletion:",
+      input: 'textarea',
+      inputAttributes: {
+        'aria-label': 'Type your message here'
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to provide a reason!'
+        }
+      },
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -331,23 +340,29 @@ const deleteItem = async (id) => {
       confirmButtonText: "Yes, delete it!"
     });
 
-    // If confirmed, proceed to delete
-    if (result.isConfirmed) {
+    // If confirmed and reason provided, proceed to delete
+    if (result.isConfirmed && result.value) {
       isLoading.value = true;
 
-      await loadingPlanStore.remove(id);
+      // Create object with id and reason
+      const deletePayload = {
+        id: id,
+        reason: result.value
+      };
+
+      await loadingPlanStore.removeWithComments(deletePayload);
 
       // Show success message
       await Swal.fire("Deleted!", "Your loading plan has been deleted.", "success");
 
-      // Refresh the loading plans
+      // Refresh the dispatches
       await getLoadingplans();
     }
   } catch (error) {
     // Handle errors here
     Swal.fire({
       title: "Failed",
-      text: "Failed to remove Loading plan (" + error.message + ")",
+      text: "Failed to remove loading plan (" + error.message + ")",
       icon: "error",
       confirmButtonText: "Ok"
     });

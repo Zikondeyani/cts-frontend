@@ -8,7 +8,23 @@ export default class LoadingPlanService {
         .get(
           resource +
           `?filter={"include": [
-              "Recipient", "Driver", "Donor", "warehouse", "district"
+              "Recipient", "organisation", "warehouse", "district",
+              {
+                "relation": "donatedCommodities",
+                "scope": {
+                  "include": [
+                    {
+                      "relation": "commodity",
+                      "scope": {
+                        "include": [
+                          {
+                            "relation": "commodityType"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }}
             ]}`,
           {
             headers: {
@@ -31,7 +47,23 @@ export default class LoadingPlanService {
     } else if (id != null) {
       return axios
         .get(resource + `/` + id + `?filter={"include": [
-          "Recipient", "Driver", "Donor", "warehouse", "district"
+          "Recipient", "organisation", "warehouse", "district",
+          {
+            "relation": "donatedCommodities",
+            "scope": {
+              "include": [
+                {
+                  "relation": "commodity",
+                  "scope": {
+                    "include": [
+                      {
+                        "relation": "commodityType"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }}
         ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -57,7 +89,23 @@ export default class LoadingPlanService {
         .get(
           resource +
           `?filter={"include": [
-            "Recipient", "Driver", "Donor", "warehouse", "district"
+            "Recipient", "organisation", "warehouse", "district",
+            {
+              "relation": "donatedCommodities",
+              "scope": {
+                "include": [
+                  {
+                    "relation": "commodity",
+                    "scope": {
+                      "include": [
+                        {
+                          "relation": "commodityType"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }}
           ]}`,
           {
             headers: {
@@ -80,7 +128,23 @@ export default class LoadingPlanService {
     } else if (id != null) {
       return axios
         .get(resource + `/` + id + `?filter={"include": [
-          "Recipient", "Driver", "Donor", "warehouse", "district"
+          "Recipient", "organisation", "warehouse", "district",
+          {
+            "relation": "donatedCommodities",
+            "scope": {
+              "include": [
+                {
+                  "relation": "commodity",
+                  "scope": {
+                    "include": [
+                      {
+                        "relation": "commodityType"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }}
         ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -123,7 +187,23 @@ export default class LoadingPlanService {
   count() {
     return axios
       .get(resource + `/count` + `?filter={"include": [
-        "Recipient", "Driver", "Donor", "warehouse", "district"
+        "Recipient", "organisation", "warehouse", "district",
+        {
+          "relation": "donatedCommodities",
+          "scope": {
+            "include": [
+              {
+                "relation": "commodity",
+                "scope": {
+                  "include": [
+                    {
+                      "relation": "commodityType"
+                    }
+                  ]
+                }
+              }
+            ]
+          }}
       ]}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -170,7 +250,23 @@ export default class LoadingPlanService {
       .get(
         resource +
         `?filter={"include": [
-          "Recipient", "Driver", "Donor", "warehouse", "district"
+          "Recipient", "organisation", "warehouse", "district",
+          {
+            "relation": "donatedCommodities",
+            "scope": {
+              "include": [
+                {
+                  "relation": "commodity",
+                  "scope": {
+                    "include": [
+                      {
+                        "relation": "commodityType"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }}
         ]}`,
         {
           headers: {

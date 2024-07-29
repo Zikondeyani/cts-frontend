@@ -28,7 +28,7 @@
                         Note</label>
 
                       <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote"
-                        autocomplete="DeliveryNote"
+                        autocomplete="DeliveryNote" readonly
                         class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                     </div>
 
@@ -159,7 +159,7 @@
 
 
                     <div class="mb-12">
-                      <span class="text-sm font-bold text-gray-700">Total Quantitye: </span>
+                      <span class="text-sm font-bold text-gray-700">Total Quantity: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.Quantity }} MT</span>
                     </div>
 
@@ -192,37 +192,19 @@
 
 <script setup>
 import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headlessui/vue';
-
-
 import { useRouter } from "vue-router";
 import { inject, ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
-
 import { usedriverstore } from "../../../stores/driver.store";
-
-
-const $router = useRouter();
-
 import { useDispatcherStore } from "../../../stores/dispatch.store";
-
-
 import { useSessionStore } from "../../../stores/session.store";
 
+const $router = useRouter();
 const driverstore = usedriverstore();
-
-
-
 const dispatchstore = useDispatcherStore();
-
-
 const drivers = ref([]);
-
-
 const sessionStore = useSessionStore();
-
 const user = ref(sessionStore.getUser);
-
 const moment = inject("moment");
-
 const Swal = inject("Swal");
 const emit = defineEmits(['update', 'close']);
 
@@ -231,67 +213,59 @@ const props = defineProps({
   loadingPlan: Object
 });
 
-
-
-const dispatch = ref({ NoBags: 0 })
+const dispatch = ref({ NoBags: 0 });
 
 const closeDialog = () => {
-  dispatch.value = {}
+  dispatch.value = {};
   emit('close');
 };
 
-// Fetch data for dropdowns
 const fetchDrivers = async () => {
   drivers.value = await driverstore.get();
 };
 
+onMounted(() => { 
+  fetchDrivers(); 
+  generateUniqueDeliveryNote();
+});
 
+watch(() => props.isOpen, (newVal) => {
+  if (newVal) {
+    generateUniqueDeliveryNote();
+  }
+});
 
-
-
-onMounted(() => { fetchDrivers(); });
-
-
-const resetDispatch = async () => {
-
-  dispatch.value = {}
-
-}
-
+const resetDispatch = () => {
+  dispatch.value = {};
+  generateUniqueDeliveryNote();
+};
 
 const isDecimal = (num) => {
   return num % 1 !== 0;
-}
-
-
-
+};
 
 const computedTonnage = computed(() => {
   let TonnageConversion = props.loadingPlan.commodity.PackSize / 1000;
-
-  // Apply toFixed(2) only if the number is a decimal
   if (isDecimal(TonnageConversion)) {
     TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
   }
-
   let Tonnage = dispatch.value.NoBags * TonnageConversion;
-
-  // Apply toFixed(2) to the final result
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 });
 
 const validateNumberInput = (event) => {
-  // Allow only numeric input
   if (!/^\d*$/.test(event.key)) {
     event.preventDefault();
   }
-}
+};
 
-
+const generateUniqueDeliveryNote = () => {
+  const timestamp = new Date().getTime().toString(36);
+  const uniqueString = Math.random().toString(36).substr(2, 5).toUpperCase();
+  dispatch.value.DeliveryNote = `DODMA-LSR-${timestamp}-${uniqueString}`;
+};
 
 const submitDispatch = async () => {
-
-  // Check if number of bags is not 0
   if (dispatch.value.NoBags === 0) {
     Swal.fire({
       title: "Dispatch Denied",
@@ -306,88 +280,57 @@ const submitDispatch = async () => {
         cancelButton: "swal-cancel-button"
       }
     });
-    return; // Stop the function execution
+    return;
   }
-
 
   if (dispatch.value.Date) {
     dispatch.value.Date = moment(dispatch.value.Date).toISOString();
   }
 
-  dispatch.value.DispatcherId = user.value.id
-  dispatch.value.loadingPlanId = props.loadingPlan.id
-  dispatch.value.Quantity = computedTonnage.value
+  dispatch.value.DispatcherId = user.value.id;
+  dispatch.value.loadingPlanId = props.loadingPlan.id;
+  dispatch.value.Quantity = computedTonnage.value;
 
-  dispatchstore
-    .create(dispatch.value)
-    .then(result => {
-
-      emit('update');
-      Swal.fire({
-        title: "Dispatch Created",
-        html: `
+  try {
+    const result = await dispatchstore.create(dispatch.value);
+    emit('update');
+    Swal.fire({
+      title: "Dispatch Created",
+      html: `
   <p>Your dispatch has been successfully created.</p>
   <p><strong>Dispatch ID:</strong> ${result.id}</p>
   <p>You can now track the dispatch status in the loading plans section.</p>
 `,
-        icon: "success",
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: "Go to Dispatches",
-        showCancelButton: true, // Enable the cancel button
-        cancelButtonText: "View All Loading Plans", // Change the text to "View All Loading Plans"
-        cancelButtonColor: '#aaa', // Optional: style the cancel button
-      }).then((result) => {
+      icon: "success",
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: "Go to Dispatches",
+      showCancelButton: true,
+      cancelButtonText: "View All Loading Plans",
+      cancelButtonColor: '#aaa',
+    }).then((result) => {
+      closeDialog();
+      if (result.isConfirmed) {
         closeDialog();
-        if (result.isConfirmed) {
-          // If "Go to Dispatches" is clicked
-          closeDialog();
-          $router.push('/dispatcher/dispatches');
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // If "View All Loading Plans" (formerly the cancel button) is clicked
-          closeDialog();
-          $router.push('/dispatcher/loadingplans');
-        }
-      });
-
-
-    })
-    .catch(error => {
-
-      if (!dispatch.value.NoBags) {
-        Swal.fire({
-          title: "Dispatch Denied",
-          text: "Unable to complete the dispatch (Tonnage cannot be empty)",
-          icon: "error",
-          confirmButtonText: "Review Details",
-          cancelButtonText: "Cancel",
-          showCancelButton: true,
-          focusConfirm: false,
-          customClass: {
-            confirmButton: "swal-confirm-button", // Customize the class for confirm button
-            cancelButton: "swal-cancel-button" // Customize the class for cancel button
-          }
-        });
+        $router.push('/dispatcher/dispatches');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        closeDialog();
+        $router.push('/dispatcher/loadingplans');
       }
-
-      else {
-
-        Swal.fire({
-          title: "Dispatch Denied",
-          text: "Unable to complete the dispatch (" + error + ")",
-          icon: "error",
-          confirmButtonText: "Review Details",
-          cancelButtonText: "Cancel",
-          showCancelButton: true,
-          focusConfirm: false,
-          customClass: {
-            confirmButton: "swal-confirm-button", // Customize the class for confirm button
-            cancelButton: "swal-cancel-button" // Customize the class for cancel button
-          }
-        });
+    });
+  } catch (error) {
+    Swal.fire({
+      title: "Dispatch Denied",
+      text: "Unable to complete the dispatch (" + error + ")",
+      icon: "error",
+      confirmButtonText: "Review Details",
+      cancelButtonText: "Cancel",
+      showCancelButton: true,
+      focusConfirm: false,
+      customClass: {
+        confirmButton: "swal-confirm-button",
+        cancelButton: "swal-cancel-button"
       }
-
-
-    })
-
+    });
+  }
 };
 </script>

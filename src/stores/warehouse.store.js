@@ -5,7 +5,7 @@ const warehouseService = new WarehouseService();
 export const usewarehousestore = defineStore({
   id: 'warehouses',
   state: () => ({
-     warehouses: [],
+    warehouses: [],
   }),
   getters: {
 
@@ -21,21 +21,28 @@ export const usewarehousestore = defineStore({
     },
 
 
- 
 
-    
+    async inventorydetails() {
+      return await warehouseService.inventorydetails().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    }
+    ,
     async getByReference(data) {
       return await warehouseService.getByReference(data).then((result => {
-          if (result) {
-              return result
-          }
+        if (result) {
+          return result
+        }
       })).catch(error => {
-          switch (error.statusCode) {
-              default:
-                  throw error.message
-          }
+        switch (error.statusCode) {
+          default:
+            throw error.message
+        }
       });
-  },
+    },
 
     async getOne(id) {
       return await warehouseService

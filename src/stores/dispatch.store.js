@@ -28,6 +28,24 @@ export const useDispatcherStore = defineStore({
 
 
 
+    
+
+    async getdispatchDamageSummary() {
+      return await dispatcherService
+        .getdispatchDamageSummary()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
     async getdispatchSummary() {
       return await dispatcherService
         .getdispatchSummary()
@@ -136,6 +154,22 @@ export const useDispatcherStore = defineStore({
             default:
               throw error.message;
           }
+        });
+    },
+
+ 
+    async removeWithComments(data) {
+      return await dispatcherService
+        .removeWithComments(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+
+          throw error.message;
+
         });
     },
 

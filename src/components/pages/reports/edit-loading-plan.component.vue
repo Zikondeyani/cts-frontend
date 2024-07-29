@@ -165,6 +165,10 @@ import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headles
 
 import { inject, ref, reactive, onMounted, watch, computed } from "vue";
 
+import AttachDocumentsDialog from "../../../components/pages/reports/attach-documents.component.vue"; // Import your AttachDocumentsDialog component
+
+import { saveDataOffline, getDataOffline, getOfflineLoadingPlans, removeDataOffline, updateDataOffline } from '@/services/localbase';
+import { checkOnlineStatus } from '@/services/utils/network';
 
 const Swal = inject("Swal");
 const moment = inject("moment");
@@ -233,15 +237,10 @@ const commodities = ref([]);
 const updateLoadingPlan = async () => {
   try {
     loadingPlan.value.UpdatedOn = new Date();
-
-    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, ...updatedLoadingPlan } = loadingPlan.value;
-
-    // Ensure ATCNumber is a string
+    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, dispatches, ApprovedBy, IsApproved, ...updatedLoadingPlan } = loadingPlan.value;
     updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
 
-    // Check if districtId or projectId is not selected
     if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.projectId == null) {
-      // Show alert message
       await Swal.fire({
         title: "Missing Information",
         text: "Please select both a district and a project before updating.",
@@ -249,27 +248,43 @@ const updateLoadingPlan = async () => {
         confirmButtonColor: '#3085d6',
         confirmButtonText: "Ok"
       });
-      return; // Stop the update process
+      return;
     }
 
-    // Proceed with updating the loading plan
-    await loadingPlanStore.update(updatedLoadingPlan);
-    emit('update');
+    const isOnline = await checkOnlineStatus(); // Check online status
 
-    // Show success message
-    Swal.fire({
-      title: "Loading Plan Updated",
-      html: `<p>Your loading plan has been successfully updated.</p>`,
-      icon: "success",
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: "View All Loading Plans",
-      cancelButtonColor: '#aaa',
-    }).then((result) => {
-      emit('close');
-    });
+    if (!isOnline) {
+      await updateDataOffline('loading-plans', updatedLoadingPlan.key, updatedLoadingPlan); // Update locally
+      emit('update');
+      Swal.fire({
+        title: "Loading Plan Updated (Offline)",
+        html: `<p>Your loading plan has been updated locally (offline mode).</p>`,
+        icon: "success",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "View All Loading Plans",
+      });
+    } else {
+      await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
+      emit('update');
+      Swal.fire({
+        title: "Loading Plan Updated (Online)",
+        html: `<p>Your loading plan has been successfully updated online.</p>`,
+        icon: "success",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "View All Loading Plans",
+      });
+    }
+
+    emit('close');
   } catch (error) {
     console.error('Failed to update loading plan:', error);
-    // Handle error with an appropriate message
+    await Swal.fire({
+      title: "Error",
+      text: "Failed to update loading plan. Please try again later.",
+      icon: "error",
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: "Ok"
+    });
   }
 };
 

@@ -93,7 +93,6 @@ export const useSessionStore = defineStore({
       sessionStorage.removeItem("JWT");
       sessionStorage.removeItem("RLE");
       sessionStorage.removeItem("USR");
-
       return sessionStorage;
     },
     async check() {
