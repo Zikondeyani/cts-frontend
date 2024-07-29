@@ -7,7 +7,7 @@ export default class WarehouseService {
       return axios
         .get(
           resource +
-          `?filter={"include": ["district", "user", "organisation" ]}`,
+          `?filter={"include": ["district", "user", "organisation", "commodityInventories" ]}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -28,7 +28,7 @@ export default class WarehouseService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": ["district", "user", "organisation" ]}`, {
+        .get(resource + `/` + id + `?filter={"include": ["district", "user", "organisation", "commodityInventories" ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -110,7 +110,25 @@ export default class WarehouseService {
 
 
 
-
+  inventorydetails() {
+    return axios
+      .get(resource + `/detailed-inventories` + `?filter={}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
 
 
   getByReference(data) {

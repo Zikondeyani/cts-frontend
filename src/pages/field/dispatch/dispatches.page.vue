@@ -10,60 +10,40 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Receipts
+            Dispatches
           </h2>
         </div>
         <button type="button"
           class="font-body inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-          @click="open = true">
+          @click="generateExcel">
           Export Data
         </button>
       </div>
-
-
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-        <vue-good-table :columns="columns" :rows="receipts" :search-options="{ enabled: true }"
+        <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
-          <template #table-actions> </template>
-          <template #table-row="props">
-            <span v-if="props.column.label == 'Options'">
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
 
-              <!-- Edit Button with Pencil Icon -->
-              <!-- <button @click="openEditDialog(props.row)"
-                class="text-green-500 hover:text-green-700 transition duration-300">
-                <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                Edit
-              </button> -->
+<template #table-row="props">
+                  <span v-if="props.column.label == 'Options'">
+                    <button type="button" @click="openDispatchDialog(props.row)"
+                      class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+                      <DocumentTextIcon class="h-5 w-5 mr-2" />
+                      Receive
+                    </button>
 
-              <!-- Delete Button with Trash Icon -->
-
-              <button @click="openDispatchDialog(props.row)"
-                class="text-blue-400 hover:text-blue-300 transition duration-300">
-                <EyeIcon class="h-5 w-5 inline-block mr-1" />
-                View
-              </button>
-
-
-              <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
-                <TrashIcon class="h-5 w-5 inline-block mr-1" />
-                Delete
-              </button>
-
-            </span>
-          </template>
+                  </span>
+                </template>
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
-        <EditReceiptDialog :isOpen="isEditDialogOpen" :Receipt="selectedReceipt" @close="closeEditDialog"
+        <EditDispatchDialog :isOpen="isEditDialogOpen" :Dispatch="selectedDispatch" @close="closeEditDialog"
           v-on:update="reloadPage" />
 
 
-
-
-        <ReceiptViewDialog :isOpen="isReceiptDialogOpen" :receipt="selectedReceipt" @close="closeReceiptDialog"
+        <ReceiptLoadingPlanDialog :isOpen="isReceiptDialogOpen" :dispatch="selectedDispatch" @close="closeReceiptDialog"
           v-on:update="reloadPage" />
 
       </div>
@@ -80,7 +60,6 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   DocumentTextIcon,
-  EyeIcon,
   ChevronRightIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
@@ -88,10 +67,10 @@ import spinnerWidget from "../../../components/widgets/spinners/default.spinner.
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 
 
-import ReceiptViewDialog from "../../../components/pages/dispatches/view.receipt.component.vue";
+import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/create.receipt.component.vue";
 
 
-import EditReceiptDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
+import EditDispatchDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
 
 
 
@@ -108,19 +87,21 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Receipts", href: "#", current: true },
+  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Expected Dispatches", href: "#", current: true },
+  { name: "Lean Season Response", href: "#", current: true },
 ];
 
 
-import { usereceiptstore } from "../../../stores/receipt.store";
+import { useDispatcherStore } from "../../../stores/dispatch.store";
 
 
 
-const receiptStore = usereceiptstore();
-const receipts = reactive([]);
+const dispatchStore = useDispatcherStore();
+const dispaches = reactive([]);
 
 
+import * as XLSX from 'xlsx';
 
 const sessionStore = useSessionStore();
 
@@ -139,9 +120,10 @@ const columns = ref([
 
 
   {
-    label: "Date",
+    label: "Quantity",
     hidden: false,
-    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: row => `
+    <span >${row.Quantity !== null ? row.Quantity + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -152,28 +134,54 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >D.N: ${row.dispatch.DeliveryNote !== undefined ? row.dispatch.DeliveryNote : "N/A"}</span><br>`
+    field: row => `<span >D.N: ${row.DeliveryNote}</span><br>`
       +
       `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-
     tdClass: "capitalize"
   },
 
   {
-    label: "Quantity",
+    label: "Dispatch Details",
     field: row => `
-    <span class="by-color"> ${row.Quantity + " MT" || "Unknown"}</span>`,
+    <span class="from-color">Driver: ${row.DriverName || "Driver Not Specified"}</span><br>
+    <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
+    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
 
-
   {
+    label: "Status",
+    field: row => {
+      const today = moment();
+      const endDate = moment(row.loadingPlan?.EndDate);
+
+      if (row.IsArchived) {
+        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800'>Expensed</span>";
+      } else if (!row.IsArchived && endDate.isBefore(today)) {
+        const diffDays = today.diff(endDate, 'days');
+        if (diffDays <= 3) {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed</span>";
+        } else {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Not Delivered</span>";
+        }
+      } else {
+        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800'>Pending</span>";
+      }
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true,
+    tdClass: "capitalize"
+  }
+,
+
+{
     label: "Options",
     field: row => row,
     sortable: false
@@ -185,30 +193,13 @@ const columns = ref([
 
 
 
+const isEditDialogOpen = ref(false);
 
 const selectedDispatch = ref(null);
 
-
-
-const selectedReceipt = ref(null);
-
-
-
-// Function to open the edit dialog
-const openDispatchDialog = (dispatch) => {
-  selectedReceipt.value = dispatch;
-  isReceiptDialogOpen.value = true;
-};
-
-
-
-
-const isEditDialogOpen = ref(false);
-
-
 // Function to open the edit dialog
 const openEditDialog = (dispatch) => {
-  selectedReceipt.value = dispatch;
+  selectedDispatch.value = dispatch;
   isEditDialogOpen.value = true;
 };
 
@@ -222,8 +213,8 @@ const closeEditDialog = () => {
 const isReceiptDialogOpen = ref(false);
 
 // Function to open the edit dialog
-const openReceiptDialog = (dispatch) => {
-  selectedReceipt.value = dispatch;
+const openDispatchDialog = (dispatch) => {
+  selectedDispatch.value = dispatch;
   isReceiptDialogOpen.value = true;
 };
 
@@ -234,26 +225,43 @@ const closeReceiptDialog = () => {
 
 
 
+const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+  const wsName = 'Dispatches';
+
+  // Assuming dispaches is an array of objects
+  // Map over dispaches and exclude certain fields
+  const dataForExport = dispaches.map(({ CreatedOn, UpdatedOn, DispatcherId, loadingPlanId, Dispatcher, loadingPlan, InstructionId, ...keepAttrs }) => keepAttrs);
+
+  // Create a worksheet from the filtered data array
+  const ws = XLSX.utils.json_to_sheet(dispaches);
+  XLSX.utils.book_append_sheet(wb, ws, wsName);
+
+  // Export the workbook
+  XLSX.writeFile(wb, 'Dispatches.xlsx');
+};
+
 
 //MOUNTED
 onMounted(() => {
-  getReceipts();
+  getDispatches();
   // getLatest()
 });
 //FUNCTIONS
 
 
 
-const getReceipts = async () => {
+const getDispatches = async () => {
   isLoading.value = true;
-  receiptStore
+  dispatchStore
     .get()
     .then(result => {
       // for (let i = 0; i < 100; i++) {
       //   users.push(...result);
       // }
-      receipts.length = 0; //empty array
-      receipts.push(...result);
+      dispaches.length = 0; //empty array
+      let sorteddata = result.reverse()
+      dispaches.push(...sorteddata.filter(item => !item.IsArchived));
 
 
     })
@@ -283,19 +291,19 @@ const deleteItem = async (id) => {
     if (result.isConfirmed) {
       isLoading.value = true;
 
-      await receiptStore.remove(id);
+      await dispatchStore.remove(id);
 
       // Show success message
-      await Swal.fire("Deleted!", "Your Receipt has been deleted.", "success");
+      await Swal.fire("Deleted!", "Your Dispatch has been deleted.", "success");
 
       // Refresh the loading plans
-      await getReceipts();
+      await getDispatches();
     }
   } catch (error) {
     // Handle errors here
     Swal.fire({
       title: "Failed",
-      text: "Failed to remove Receipt (" + error.message + ")",
+      text: "Failed to remove Dispatch (" + error.message + ")",
       icon: "error",
       confirmButtonText: "Ok"
     });
@@ -303,9 +311,6 @@ const deleteItem = async (id) => {
     isLoading.value = false;
   }
 };
-
-
-
 
 
 

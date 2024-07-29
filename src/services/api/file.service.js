@@ -79,8 +79,6 @@ export default class FileService {
         formData.append('referenceId', data.referenceId);
         formData.append('type', data.type);
         formData.append('name', data.name);
-
-        formData.append('subcategory', data.subcategory);
         formData.append('metadata', JSON.stringify(data.metadata));
         return axios
             .post(resource + '/upload', formData, {

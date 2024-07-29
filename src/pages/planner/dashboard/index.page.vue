@@ -53,24 +53,30 @@
                     <div>
                       <div class="flex items-center justify-between">
                         <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                        <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
+                        <component v-if="stat.label == 'Dispatch Status'"
+                          :is="stat.progress >= 50 ? CheckCircleIcon : ExclamationCircleIcon"
+                          :class="`h-6 w-6 text-${stat.progress >= 50 ? 'green-500' : 'red-500'}`" />
+                        <component v-else :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
                       </div>
+
                       <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
                     </div>
                     <div v-if="stat.percentageText" class="mt-4">
+
                       <div class="flex items-center justify-between">
-                        <span :class="`text-${stat.textColor}`">{{ stat.percentageText }}</span>
+                        <span :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'">{{ stat.percentageText
+                          }}</span>
                         <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
-                          :class="`text-${stat.textColor}`" />
+                          :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'" />
                       </div>
+
+
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div v-if="stat.progress > 50" :class="`bg-green-500 h-2 rounded-full`"
+                        <div :class="stat.progress >= 50 ? 'bg-green-500' : 'bg-red-500'" class="h-2 rounded-full"
                           :style="{ width: stat.progress + '%' }">
                         </div>
-
-                        <div v-else :class="`bg-red-500 h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
-                        </div>
                       </div>
+
                     </div>
 
                   </div>
@@ -571,7 +577,7 @@ const dispatchstatus = ref(0)
 
 
 </script>
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

@@ -14,6 +14,10 @@
           </h2>
         </div>
 
+
+       <!--  <div class="mt-5 flex mr-4 justify-center sm:mt-0">
+          <create-report-form v-on:create="createReport" />
+        </div> -->
         <!-- Export Data Button -->
         <button type="button"
           class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
@@ -24,7 +28,7 @@
 
 
 
-     
+
 
       </div>
       <!-- table  -->
@@ -32,11 +36,12 @@
         <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
           style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
           styleClass="vgt-table striped" compactMode>
-        
+
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"  v-on:update="reloadPage"/>
+        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
+          v-on:update="reloadPage" />
 
         <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
           @close="closeDispatchDialog" v-on:update="reloadPage" />
@@ -68,6 +73,8 @@ import { useListingStore } from "../../../stores/catalogue.store";
 
 import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
 
+
+
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 
 
@@ -86,6 +93,8 @@ const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
+
+  { name: "Lean Season Response", href: "#", current: true },
 ];
 
 
@@ -121,9 +130,9 @@ const columns = ref([
   },
   {
     label: "Details",
-    field: row => `<span class="from-color">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="to-color">To: ${row.district?.Name}</span><br>` +
-      `<span class="by-color">By: ${row.transporter?.Name}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -133,8 +142,8 @@ const columns = ref([
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="from-color">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="to-color">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -187,7 +196,7 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/manager/loadingplans');
+  $router.push('/dodma/loadingplans');
 }
 
 
@@ -244,14 +253,38 @@ const generateExcel = () => {
 const createReport = async (model) => {
   isLoading.value = true;
 
-  // Format the StartDate and EndDate using moment.js
   model.userId = user.value.id
+
+  model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
   if (model.EndDate) {
     model.EndDate = moment(model.EndDate).toISOString();
   }
+  // List of required fields
+  const requiredFields = ['StartDate', 'EndDate', 'Quantity', /* other required fields */];
+
+  // Check if all required fields are filled
+  for (const field of requiredFields) {
+    if (!model[field]) {
+      Swal.fire({
+        title: "Missing Information",
+        text: `Please fill in the ${field}.`,
+        icon: "error",
+        confirmButtonText: "Ok"
+      }).then(() => {
+        isLoading.value = false; // Stop loading
+      });
+      return; // Stop the function
+    }
+  }
+
+  // Format the StartDate and EndDate using moment.js
+  model.userId = user.value.id;
+  model.Balance = model.Quantity;
+  model.StartDate = moment(model.StartDate).toISOString();
+  model.EndDate = moment(model.EndDate).toISOString();
 
   loadingPlanStore
     .create(model)
@@ -263,15 +296,14 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
-
+      $router.push('/dodma/loadingplans'); // Navigate to loading plans
     })
     .catch(error => {
       // Handling error
     })
     .finally(() => {
       isLoading.value = false;
-      getLoadingplans();
+      reloadPage();
     });
 };
 

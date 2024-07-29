@@ -21,7 +21,8 @@
         <div class="flex flex-wrap justify-center md:justify-start -mx-2 mt-4">
           <div v-for="option in group.options" :key="option.label" class="p-2 md:w-1/3 lg:w-1/5">
             <router-link :to="option.path" class="block">
-              <div class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
+              <div
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
                 <component :is="option.icon" class="h-6 w-6 mb-2" />
                 <span>{{ option.label }}</span>
               </div>
@@ -37,15 +38,16 @@
 import { ref } from 'vue';
 
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import { 
-  OfficeBuildingIcon, 
-  UserGroupIcon, 
-  UserIcon, 
-  KeyIcon, 
-  ArchiveIcon, 
-  FolderIcon, 
-  MailIcon, 
-  MapIcon, 
+import {
+  OfficeBuildingIcon,
+  UserGroupIcon,
+  ClipboardListIcon,
+  UserIcon,
+  KeyIcon,
+  ArchiveIcon,
+  FolderIcon,
+  MailIcon,
+  MapIcon,
   ScaleIcon
 } from "@heroicons/vue/outline";
 
@@ -58,24 +60,40 @@ const optionGroups = ref([
   {
     title: 'Organizational Management',
     options: [
-    /*   { label: 'Organisations', icon: OfficeBuildingIcon, path: '/organisations' },
-      { label: 'User Roles', icon: UserGroupIcon, path: '/roles' },
-    */   { label: 'Users', icon: UserIcon, path: '/admin/users' },
+      { label: 'Organisations', icon: OfficeBuildingIcon, path: '/admin/organisations' },
+      { label: 'User Roles', icon: UserGroupIcon, path: '/admin/userroles' },
+      { label: 'Users', icon: UserIcon, path: '/admin/users' },
     ],
   },
- /*  {
-    title: 'Reporting and Logs',
+ 
+
+  {
+    title: 'Commodity Management',
     options: [
-      { label: 'Logs', icon: ArchiveIcon, path: '/logs' },
-     ],
+    { label: 'Activities', icon: KeyIcon, path: '/admin/activity-management' },
+   
+      
+    { label: 'Stock Register', icon: ClipboardListIcon, path: '/admin/stock-management' },
+    { label: 'Warehouses', icon: OfficeBuildingIcon, path: '/admin/warehouse-management' },
+    
+      { label: 'Commodities', icon: MapIcon, path: '/admin/commodity-management' },
+      { label: 'Commodity Types', icon: ScaleIcon, path: '/admin/commodity-types' },
+    ],
   },
   {
-    title: 'Geographical and Unit Management',
+    title: 'Geographical Data Management',
     options: [
-      { label: 'Districts', icon: MapIcon, path: '/districts' },
-      { label: 'Units', icon: ScaleIcon, path: '/units' },
+      { label: 'Districts', icon: MapIcon, path: '/admin/districts' },/* 
+      { label: 'Units', icon: ScaleIcon, path: '/admin/units' }, */
     ],
-  }, */
+  },
+
+  {
+    title: 'Reporting and Logs',
+    options: [
+      { label: 'Logs', icon: ArchiveIcon, path: '/admin/logs' },
+    ],
+  },
   // Add more groups and options as needed
 ]);
 </script>

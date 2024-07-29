@@ -8,7 +8,7 @@ export default class CommodityInventoriesService {
         .get(
           resource +
           `?filter={"include": [
-              "user","warehouse"
+              "user","warehouse", "commodity"
             ]}`,
           {
             headers: {
@@ -31,7 +31,7 @@ export default class CommodityInventoriesService {
     } else if (id != null) {
       return axios
         .get(resource + `/` + id + `?filter={"include": [
-          "user","warehouse"
+          "user","warehouse", "commodity"
         ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -57,7 +57,7 @@ export default class CommodityInventoriesService {
         .get(
           resource +
           `?filter={"include": [
-            "user","warehouse"
+            "user","warehouse", "commodity"
           ]}`,
           {
             headers: {
@@ -80,7 +80,7 @@ export default class CommodityInventoriesService {
     } else if (id != null) {
       return axios
         .get(resource + `/` + id + `?filter={"include": [
-          "user","warehouse"
+          "user","warehouse", "commodity"
         ]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -123,7 +123,7 @@ export default class CommodityInventoriesService {
   count() {
     return axios
       .get(resource + `/count` + `?filter={"include": [
-        "user","warehouse"
+        "user","warehouse", "commodity"
       ]}`, {
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -170,7 +170,7 @@ export default class CommodityInventoriesService {
       .get(
         resource +
         `?filter={"include": [
-          "user","warehouse"
+          "user","warehouse", "commodity"
         ]}`,
         {
           headers: {

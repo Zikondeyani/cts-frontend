@@ -176,5 +176,23 @@ export const useloadingplanstore = defineStore({
           }
         });
     },
+
+
+    
+    async removeWithComments(data) {
+      return await loadingplansService
+        .removeWithComments(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+
+          throw error.message;
+
+        });
+    },
+
   },
 });

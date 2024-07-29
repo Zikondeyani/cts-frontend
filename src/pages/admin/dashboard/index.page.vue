@@ -40,15 +40,16 @@
                       </p>
                     </div>
                   </div>
-                  <div class="mt-5 flex justify-center sm:mt-0">
+                 <!--  <div class="mt-5 flex justify-center sm:mt-0">
                     <create-report-form v-on:create="createReport" />
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="bg-gray-100 p-5">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   <!-- Stats Cards -->
                   <div v-for="stat in stats" :key="stat.label"
+                    @click="navigateTo(stat.href)"
                     class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
                     <div>
                       <div class="flex items-center justify-between">
@@ -110,17 +111,16 @@
           </section>
 
           <!-- Actions panel -->
-          <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
-            <p class="text-center text-gray-600 mt-4 font-bold"> Recent dispatches</p>
+        <!--   <section aria-labelledby="quick-links-title" class="shadow-2xl bg-white rounded-table">
+            <p class="text-center text-gray-600 mt-4 font-bold"> Recent Dispatches</p>
 
             <div class="align-middle inline-block min-w-full mt-1 rounded-table mx-0">
               <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
                 style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                 styleClass="vgt-table striped" compactMode>
-                <!-- ... -->
               </vue-good-table>
             </div>
-          </section>
+          </section> -->
 
         </div>
       </div>
@@ -148,9 +148,18 @@ import { usebookingstore } from "../../../stores/booking.store";
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
+import { usetransporterstore } from "../../../stores/transporter.store";
+
+import { usewarehousestore } from "../../../stores/warehouse.store";
+
+import { useorganisationstore } from "../../../stores/organisations.store";
+
+import { usedistrictstore } from "../../../stores/districts.store";
+
 
 import { usereceiptstore } from "../../../stores/receipt.store";
 
+import { saveDataOffline, getDataOffline } from '@/services/localbase';
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
   Menu,
@@ -183,7 +192,16 @@ import {
   IdentificationIcon,
   DocumentTextIcon,
   OfficeBuildingIcon,
-  DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
+  DocumentIcon, 
+  ClipboardListIcon, 
+  ExclamationCircleIcon, 
+  ExclamationIcon, 
+  ArrowUpIcon, 
+  ArrowDownIcon, 
+  UserIcon, 
+  TruckIcon as TransportIcon, 
+  OfficeBuildingIcon as OrganisationIcon, 
+  MapIcon
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@heroicons/vue/solid";
 
@@ -242,6 +260,22 @@ const loadingPlanStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
 
+const transporterStore = usetransporterstore();
+const transporterCount = ref(0);
+
+const warehouseStore = usewarehousestore();
+const warehouseCount = ref(0);
+
+
+const organisationStore = useorganisationstore();
+const organisationCount = ref(0);
+
+
+const districtStore = usedistrictstore();
+const districtCount = ref(0);
+
+
+
 const showTooltip = ref(false);
 
 const recieptStore = usereceiptstore();
@@ -285,10 +319,14 @@ const dispatchcount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(() => {
   getCatalogue();
+  getWarehouses();
+  getOrganisations();
+  getTransporters();
   getUsers();
   getBookings();
   getDispatches();
   getReceipts();
+  getDistricts();
   getDispatchesCount();
   getLoadingPlansPending();
   getloadingplansSummary();
@@ -304,12 +342,41 @@ const getCatalogue = async () => {
 };
 
 
+const navigateTo = (href) => {
+  $router.push(href);
+};
+
 const getReceipts = async () => {
   recieptStore.count().then((result) => {
     receiptcount.value = result.count;
   });
 };
 
+
+const getWarehouses = async () => {
+  warehouseStore.count().then((result) => {
+    warehouseCount.value = result.count;
+  });
+};
+
+const getOrganisations = async () => {
+  organisationStore.count().then((result) => {
+    organisationCount.value = result.count;
+  });
+};
+
+
+const getTransporters = async () => {
+  transporterStore.count().then((result) => {
+    transporterCount.value = result.count;
+  });
+};
+
+const getDistricts = async () => {
+  districtStore.count().then((result) => {
+    districtCount.value = result.count;
+  });
+};
 
 const getDispatches = async () => {
   isLoading.value = true;
@@ -468,15 +535,16 @@ const getBookings = async () => {
 const createReport = async (model) => {
   isLoading.value = true;
 
-  model.userId = user.value.id
+  model.userId = user.value.id;
+  model.Balance = model.Quantity;
 
-  model.Balance = model.Quantity
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
   if (model.EndDate) {
     model.EndDate = moment(model.EndDate).toISOString();
   }
+
   // List of required fields
   const requiredFields = ['StartDate', 'EndDate', 'Quantity', /* other required fields */];
 
@@ -495,34 +563,51 @@ const createReport = async (model) => {
     }
   }
 
-  // Format the StartDate and EndDate using moment.js
-  model.userId = user.value.id;
-  model.Balance = model.Quantity;
-  model.StartDate = moment(model.StartDate).toISOString();
-  model.EndDate = moment(model.EndDate).toISOString();
-
-  loadingPlanStore
-    .create(model)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Created a new loading plan successfully",
-        icon: "success",
-        confirmButtonText: "Ok"
+  // Check network status
+  if (navigator.onLine) {
+    // If online, execute the original code
+    loadingPlanStore
+      .create(model)
+      .then(result => {
+        Swal.fire({
+          title: "Success",
+          text: "Created a new loading plan successfully",
+          icon: "success",
+          confirmButtonText: "Ok"
+        });
+        $router.push('/admin/loadingplans'); // Navigate to loading plans
+      })
+      .catch(error => {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to create loading plan",
+          icon: "error",
+          confirmButtonText: "Ok"
+        });
+        console.error('Error creating loading plan', error);
+      })
+      .finally(() => {
+        isLoading.value = false;
+        getDispatches();
+        getLoadingPlans();
       });
+  } else {
+    // If offline, save data offline
+    await saveDataOffline('loading-plans', { ...model });
 
-      $router.push('/admin/loadingplans'); // Navigate to loading plans
-    })
-    .catch(error => {
-      // Handling error
-    })
-    .finally(() => {
-      isLoading.value = false;
-      getDispatches();
-      getLoadingPlans();
+    const offlineData = await getDataOffline('loading-plans');
+    console.log(offlineData, "Offline Data");
+
+    Swal.fire({
+      title: "Offline",
+      text: "You are offline. The loading plan will be saved locally and synced when you're back online.",
+      icon: "info",
+      confirmButtonText: "Ok"
     });
-};
 
+    isLoading.value = false;
+  }
+};
 
 const formatDate = (date) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -532,68 +617,53 @@ const formatDate = (date) => {
 // Dummy data for stats
 const stats = ref([
   {
-    label: 'Total Stocks Planned',
-    value: totalStockPlanned,
-    // Use a ternary operator for the icon
-    icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
-    iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-    percentageText: dispatchPercentageFormated,
-    textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-    showProgress: true,
-    moreInfo: true,
-    progress: dispatchPercentage,
-    isProgressPositive: dispatchPercentage >= 50,
-    progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-  },
-
-  {
-    label: 'Dispatch Status',
-    value: totalDispatched,
-    // Use a ternary operator to decide between ExclamationCircleIcon and CheckCircleIcon
-    icon: receivedPercentage > 50 ? ExclamationCircleIcon : CheckCircleIcon,
-    iconColor: dispatchPercentage > 50 ? 'green-500' : 'red-500',
-    percentageText: receivedPercentageFormated,
-    textColor: receivedPercentage > 50 ? 'green-500' : 'red-500',
-    showProgress: true,
-    progress: receivedPercentage,
-    isProgressPositive: receivedPercentage > 50,
-    progressColor: receivedPercentage > 50 ? 'green-500' : 'red-500',
-    progressText: ''
-  },
-
-  {
-    label: 'Dispatches Done',
-    value: dispatchcount,
-    icon: ClipboardListIcon,
+    label: 'Users',
+    value: userCount,
+    icon: UserIcon,
     iconColor: 'green-500',
-    percentageText: null
+    percentageText: null,
+    
+    href: '/admin/users'
   },
   {
-    label: 'Receipts Done',
-    value: receiptcount,
-    icon: DocumentIcon,
+    label: 'Warehouses',
+    value: warehouseCount,
+    icon: OfficeBuildingIcon,
     iconColor: 'blue-500',
-    percentageText: null
+    percentageText: null,
+    
+    href: '/admin/warehouses'
   },
   {
-    label: 'Pending Loading Plans',
-    value: pendingplans,
-    icon: DocumentIcon,
+    label: 'Transporters',
+    value: transporterCount,
+    icon: TransportIcon,
     iconColor: 'gray-400',
     percentageText: '',
     textColor: 'gray-600',
-    showProgress: false
+    showProgress: false, 
+    href: '#'
+  },
+  {
+    label: 'Districts',
+    value: districtCount,
+    icon: MapIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false,  
+    href: '/admin/districts'
+  },
+  {
+    label: 'Organisations',
+    value: organisationCount,
+    icon: OrganisationIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false,
+    href: '/admin/organisations'
   }
-  /* ,
-   {
-     label: 'Requisitions',
-     value: 11,
-     icon: ClipboardListIcon,
-     iconColor: 'gray-400',
-     percentageText: '',
-     textColor: 'gray-600',
-     showProgress: false
-   }, */
 ]);
 const actions = [
   {
@@ -620,7 +690,7 @@ const dispatchstatus = ref(0)
 
 
 </script>
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

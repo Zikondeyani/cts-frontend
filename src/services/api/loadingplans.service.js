@@ -8,8 +8,10 @@ export default class LoadingPlanService {
         .get(
           resource +
           `?filter={"include": [
-              "activity", "user", "district", "transporter", "warehouse", "commodity"
-            ]}`,
+              "activity", "user", "district", "transporter", "warehouse", "commodity",
+              {"relation":"dispatches","scope":{"include":[{"relation":"receipts"}]}}
+            ]
+          }`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -346,6 +348,27 @@ export default class LoadingPlanService {
   remove(id) {
     return axios
       .delete(resource + `/` + id, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
+
+
+  async removeWithComments(data) {
+    return await axios
+      .post(resource + '/' + data.id + `/delete`, data, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json",
