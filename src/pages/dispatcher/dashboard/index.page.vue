@@ -95,6 +95,11 @@
                         View Details
                       </router-link>
 
+                      <router-link v-if="stat.label == 'Pending Loading Plans (Lean Season Response)'"
+                        to="/dispatcher/loadingplans" class="text-blue-500 hover:underline">
+                        View Details
+                      </router-link>
+
                     </div>
                   </div>
 
@@ -267,6 +272,7 @@ onMounted(() => {
   getDispatches();
   getReceipts();
   getDispatchesCount();
+  getLoadingPlans()
   getLoadingPlansPending();
   getloadingplansSummary();
   getdispatchSummary();
@@ -294,6 +300,8 @@ import { useinstructionstore } from "../../../stores/instructions.store";
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 const newInstructionsCount = ref(0)
+const newLoadingPlanCount = ref(0)
+
 //FUNCTIONS
 const getInstructions = async () => {
   instructionsStore
@@ -345,11 +353,10 @@ const getLoadingPlans = async () => {
   loadingPlanStore
     .get()
     .then(result => {
-      const sortedDispatches = [...result].sort((a, b) => {
-        return new Date(b.createdon) - new Date(a.createdon);
-      });
+     
       loadingplans.length = 0;
-      loadingplans.push(...sortedDispatches);
+      loadingplans.push(...result.filter(item =>  !item.IsArchived && item.IsApproved));
+      newLoadingPlanCount.value = loadingplans.length
     })
 }
 const pendingplans = ref(0)
@@ -458,6 +465,15 @@ const stats = ref([
   {
     label: 'Pending Instructions (Emergency Response)',
     value: newInstructionsCount,
+    icon: DocumentIcon,
+    iconColor: 'gray-400',
+    percentageText: '',
+    textColor: 'gray-600',
+    showProgress: false
+  },
+  {
+    label: 'Pending Loading Plans (Lean Season Response)',
+    value: newLoadingPlanCount,
     icon: DocumentIcon,
     iconColor: 'gray-400',
     percentageText: '',
