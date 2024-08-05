@@ -355,7 +355,7 @@ const getLoadingPlans = async () => {
     .then(result => {
      
       loadingplans.length = 0;
-      loadingplans.push(...result.filter(item =>  !item.IsArchived && item.IsApproved));
+      loadingplans.push(...result.filter(item =>  !item.IsArchived && item.IsApproved && item.isClosed));
       newLoadingPlanCount.value = loadingplans.length
     })
 }

@@ -39,7 +39,24 @@ export const usereceiptstore = defineStore({
     },
 
 
+    
 
+
+    async groupedbydeliverynote() {
+      return await receiptsService
+        .groupedbydeliverynote()
+        .then((result) => {
+          if (result) {
+            return result
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
     async quantitybydistrict(districtname) {
       return await receiptsService

@@ -569,6 +569,7 @@ const createReceivedCommodities = async (receiptId, receivedCommodity) => {
     FinalDestinationPoint: receivedCommodity.FinalDestinationPoint,
     Quantity: receivedCommodity.Quantity,
     NoBags: receivedCommodity.NoBags,
+    RefNO: receivedCommodity.RefNO,
     Remarks: receivedCommodity.Remarks,
   };
 
