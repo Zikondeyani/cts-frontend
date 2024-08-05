@@ -23,16 +23,12 @@
                   <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
                 </div>
 
-                <h2 class="text-center text-2xl font-semibold text-gray-800">Warehouse Goods Delivery Note</h2>
+                <h2 class="text-center text-2xl font-semibold text-gray-800"> Goods Delivery Note</h2>
 
                 <!-- Form Section -->
                 <div class="mt-4">
                   <div class="grid grid-cols-2 gap-4">
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">REF NO:</label>
-                      <p class="text-sm text-gray-600">{{ receipt?.receivedCommodities[0]?.RefNO }}
-                      </p>
-                    </div>
+                   
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Deliver Note No:</label>
                       <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.DeliveryNote }}</p>

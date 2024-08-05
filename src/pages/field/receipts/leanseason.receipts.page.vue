@@ -24,8 +24,8 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="receipts" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-            enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+      enabled: true,
+    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
@@ -116,6 +116,7 @@ import { usereceiptstore } from "../../../stores/receipt.store";
 
 const receiptStore = usereceiptstore();
 const receipts = reactive([]);
+const receiptsClean = reactive([]);
 
 
 
@@ -149,9 +150,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${row.dispatch?.DeliveryNote !== undefined ? row.dispatch?.DeliveryNote : "N/A"}</span><br>`
-      +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${row.deliveryNote !== undefined ? row.deliveryNote : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -160,19 +159,16 @@ const columns = ref([
   },
 
   {
-  label: "Quantity",
-  field: row => {
-    const expectedQuantity = row.dispatch?.Quantity ? `${row.dispatch?.Quantity} MT` : "Unknown";
-    const receivedQuantity = row.Quantity ? `${row.Quantity} MT` : "Unknown";
-    return `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Expected: ${expectedQuantity}</span><br>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Received: ${receivedQuantity}</span>`;
+    label: "Dispatcher",
+    field: row => {
+      return `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"> ${row.dispatcher}</span><br>`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // This is important to render HTML
+    tdClass: "capitalize"
   },
-  sortable: true,
-  firstSortType: "asc",
-  html: true, // This is important to render HTML
-  tdClass: "capitalize"
-},
 
 
 
@@ -239,7 +235,7 @@ const generateExcel = () => {
   // Create a worksheet from the flattened data array
 
 
-  const dataToExport = receipts;
+  const dataToExport = receiptsClean;
 
   // Map over the array to flatten each object
   const flattenedData = dataToExport.map(receipt => ({
@@ -262,6 +258,7 @@ const generateExcel = () => {
 //MOUNTED
 onMounted(() => {
   getReceipts();
+  getReceiptsClean();
   // getLatest()
 });
 //FUNCTIONS
@@ -271,10 +268,10 @@ const getReceipts = async () => {
 
   try {
     // Fetch all receipts
-    const allReceipts = await receiptStore.get();
+    const allReceipts = await receiptStore.groupedbydeliverynote();
 
     // Filter receipts based on the current user's ID
-    const filteredReceipts = allReceipts.filter(receipt => receipt.Recipient?.id == user.value.id);
+    const filteredReceipts = allReceipts.filter(receipt => receipt.recipient == user.value.id);
 
     // Update the receipts array with the filtered results
     receipts.length = 0;
@@ -292,6 +289,28 @@ const getReceipts = async () => {
 
 
 
+const getReceiptsClean = async () => {
+  isLoading.value = true;
+
+  try {
+    // Fetch all receipts
+    const allReceipts = await receiptStore.get();
+
+    // Filter receipts based on the current user's ID
+    const filteredReceipts = allReceipts.filter(receipt => receipt.Recipient?.id == user.value.id);
+
+    // Update the receipts array with the filtered results
+    receiptsClean.length = 0;
+
+    let sorteddata = filteredReceipts.reverse();
+    receiptsClean.push(...sorteddata);
+
+  } catch (error) {
+    console.error('Failed to fetch receipts:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 
 

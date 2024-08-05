@@ -127,7 +127,7 @@ const columns = ref([
 
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity}MT</span><br>`
       +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantity}MT</span><br>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantityAll}MT</span><br>`,
 
     sortable: true,
     firstSortType: "asc",
@@ -179,17 +179,22 @@ const generateExcel = () => {
   const dataToExport = damages;
 
 
-  const flattenedData = dataToExport.map(damage => ({
-    Commodity: damage.commodity,
-    'Loading Plan #': damage.loadingPlanNumber,
-    District: damage.district,
-    "Transporter": damage.transporter,
-    "Quantity Dispatched (MT)": damage.originQuantity,
-    "Quantity Damaged (MT)": damage.totalQuantity,
-    "Type of Loss": damage.typeOfLoss,
-    "Percentage Damaged (%)": damage.damagePercentage,
-    "Comments": damage.comments,
-  }))
+  const flattenedData = dataToExport.flatMap(damage => 
+    damage.lossTypes.map(lossType => ({
+      Commodity: damage.commodity,
+      'Loading Plan #': damage.loadingPlanNumber,
+      "REF NO": lossType.RefNO,
+      District: damage.district,
+      "Transporter": damage.transporter,
+      "Quantity Dispatched (MT)": damage.originQuantity,
+      "Quantity Damaged (MT)": lossType.totalQuantity,  
+      "FDP": lossType.FinalDestinationPoint,
+      "Type of Loss": lossType.typeOfLoss,
+      "Percentage Damaged (%)": lossType.damagePercentage,
+      "Comments": lossType.comments,
+    }))
+  );
+
 
 
   const ws = XLSX.utils.json_to_sheet(flattenedData);
@@ -222,6 +227,7 @@ const getdamages = async () => {
       // }
       damages.length = 0; //empty array
       let sorteddata = result.summary.reverse()
+  
       damages.push(...sorteddata.filter(item => item.typeOfLoss !== "" ));
 
 

@@ -73,6 +73,9 @@
                       <label for="multiple-destinations" class="ml-2 text-sm text-gray-700">Enable Multiple
                         Final Destinations</label>
                     </div>
+                    <p class="text-xs text-italic text-red-500 mt-3">Please ensure that the total received in the
+                      destination points
+                      is accurate.</p>
                   </div>
 
                   <!-- Destination Form -->
@@ -281,11 +284,36 @@ const computedTonnagePerRemark = (packsize, bags) => {
 const submitReceipt = async () => {
   const receivedCommodities = [];
 
-  destinations.forEach((destination, destinationIndex) => {
-    destination.commodities.forEach((commodity, commodityIndex) => {
+  for (let destination of destinations) {
+    // Validate that every destination has a name
+    if (!destination.name) {
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Destination",
+        text: "Please specify a final destination point for all entries before submmission.",
+      });
+      return;
+    }
+
+    for (let commodity of destination.commodities) {
       if (commodity.remarks && commodity.remarks.length > 0) {
-        commodity.remarks.forEach((remark) => {
+        let remarksSet = new Set();
+
+        for (let remark of commodity.remarks) {
+          // Validate that no duplicate remarks for the same commodity index exist
+          if (remarksSet.has(remark.remark)) {
+            Swal.fire({
+              icon: "warning",
+              title: "Duplicate Remark",
+              text: "The same remark cannot be added multiple times for the same commodity.",
+            });
+            return;
+          }
+          remarksSet.add(remark.remark);
+
           if (remark.remark) {
+            const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7); // Generate a unique ID
+
             receivedCommodities.push({
               Quantity: computedTonnagePerRemark(props.dispatch?.loadingPlan?.commodity?.PackSize, remark.quantity),
               NoBags: remark.quantity,
@@ -293,28 +321,29 @@ const submitReceipt = async () => {
               Date: new Date().toISOString(),
               dispatchId: props.dispatch?.id,
               RecipientId: user.value.id,
-              RefNO: destination.name.slice(0, 4) + "|" + props.dispatch?.DeliveryNote + "-" + Date.now().toString().slice(-3),
+              RefNO: destination.name.replace(/\s+/g, '') + "|" + (props.dispatch?.DeliveryNote || '') + "-" + uniqueId,
               IsArchived: true,
               Remarks: remark.remark,
               FinalDestinationPoint: destination.name,
             });
           }
-        });
+        }
       }
-    });
-  });
+    }
+  }
 
   isLoading.value = true; // Start the loader
 
   try {
     emit("update", receivedCommodities);
 
-
     Swal.fire({
-      title: "Success",
-      text: "Receipt Creation in progress...",
-      icon: "success",
-      confirmButtonText: "Ok"
+      title: 'Processing...',
+      text: 'Please wait while the receipt is being created.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      }
     });
 
     close();
@@ -329,6 +358,8 @@ const submitReceipt = async () => {
     isLoading.value = false; // Stop the loader
   }
 };
+
+
 
 
 

@@ -35,81 +35,72 @@
 
                           <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm font-bold text-gray-700  mr-2">Delivery Note:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.dispatch.DeliveryNote }}</span>
+                            <span class="text-sm text-gray-600">{{ receipt.deliveryNote }}</span>
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm font-bold text-gray-700 mr-2">Received On:</span>
                             <span class="text-sm text-gray-600">{{
-    moment(receipt.Recipient.created).format("DD/MM/YYYY") }}</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">RefNo:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.RefNO }}</span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Quantity Expected:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.dispatch?.Quantity }} MT</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Quantity Received (MT):</span>
-                            <span class="text-sm text-gray-600">{{ receipt.Quantity }} MT</span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Quantity Received (Bags):</span>
-                            <span class="text-sm text-gray-600">{{ receipt.NoBags }} bags</span>
+    moment(receipt.CreatedOn).format("DD/MM/YYYY") }}</span>
                           </td>
                         </tr>
 
                         <tr>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Date Received:</span>
-                            <span class="text-sm text-gray-600">{{ moment(receipt.Date).format("DD/MM/YYYY") }}</span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Truck Driver #:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.dispatch.DriverName }}</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Truck Driver License:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.dispatch.DriverLicense }}</span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Truck #:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.dispatch.TruckNumber }}</span>
-                          </td>
-                        </tr>
 
-                        <tr>
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Received By:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.Recipient.username.replace(/\./g, ' ')
-                              }}</span>
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Remarks:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.Remarks }}</span>
-                          </td>
-                        </tr>
-
-                        <tr>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Final Destination Point:</span>
-                            <span class="text-sm text-gray-600">{{ receipt.FinalDestinationPoint
-                              }}</span>
+                            <span class="text-sm font-bold text-gray-700  mr-2">Dispatched By:</span>
+                            <span class="text-sm text-gray-600">{{ receipt.dispatcher }}</span>
                           </td>
 
+                          <!-- <td class="px-6 py-4 whitespace-nowrap">
+  <span class="text-sm font-bold text-gray-700 mr-2">Received By:</span>
+  <span class="text-sm text-gray-600">{{ receipt.dispatcher }}</span>
+</td> -->
                         </tr>
 
                       </tbody>
                     </table>
+
+                    <!-- Goods List Section -->
+                    <div class="mt-6 mx-6">
+                      <h3 class="text-lg font-semibold text-gray-700 mb-3">Condition of received commodity</h3>
+                      <table class="min-w-full mt-2 bg-white">
+                        <thead>
+                          <tr class="w-full bg-gray-200">
+                            <th class="px-4 py-2">Received on</th>
+                            <th class="px-4 py-2">Condition</th>
+                            <th class="px-4 py-2">FDP</th>
+                            <th class="px-4 py-2">Commodity</th>
+                            <th class="px-4 py-2">No of Bags</th>
+                            <th class="px-4 py-2">Qty</th>
+
+                            <th class="px-4 py-2">Received By</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="item in receipt?.receipts" :key="item" class="w-full text-center">
+                            <td class="border px-4 py-2"> {{ moment(item.CreatedOn).format("DD-MM-YYYY") }}</td>
+                            <td class="border px-4 py-2">{{ item?.Remarks }}</td>
+                            <td class="border px-4 py-2"> {{ item?.FinalDestinationPoint }}</td>
+                            <td class="border px-4 py-2"> {{ item?.dispatch?.loadingPlan?.commodity?.Name }}</td>
+                            <td class="border px-4 py-2"> {{ item?.NoBags }}</td>
+                            <td class="border px-4 py-2">
+                              {{ item?.Quantity }} MT
+                            </td>
+                            <td class="border px-4 py-2">
+                              {{ item?.Recipient?.username?.split('.')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ') }} MT
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
                   </div>
+
+
+
 
                 </div>
                 <div class="text-center mb-4">

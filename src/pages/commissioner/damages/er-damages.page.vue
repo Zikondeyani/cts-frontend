@@ -99,8 +99,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">District: ${row.district}</span><br>` + 
-    `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-800">Type Of Loss: ${row.typeOfLoss}</span><br>` ,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">District: ${row.district}</span><br>`  ,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -148,26 +147,31 @@ const columns = ref([
 
 
 
-const generateExcel = () => {
+const generateExcel = (data) => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Emergency-losses';
-  // Create a worksheet from the flattened data array
-
+  
   const dataToExport = damages;
 
-  const flattenedData = dataToExport.map(damage => ({
-    Commodity: damage.commodity,
-    District: damage.district,
-    "Quantity Dispatched (MT)": damage.originQuantity,
-    "Quantity Damaged (MT)": damage.totalQuantity,
-    "Type of Loss": damage.typeOfLoss,
-    "Percentage Damaged (%)": damage.damagePercentage,
-    "Comments": damage.comments,
-  }))
+  // Flatten the data from the provided JSON structure
+  const flattenedData = dataToExport.flatMap(damage => {
+    return Object.entries(damage.typesOfLoss).map(([lossType, details]) => ({
+      Commodity: damage.commodity,
+      District: damage.district,
+      "Quantity Dispatched (MT)": damage.originQuantity,
+      "Quantity Damaged (MT)": details.totalQuantity,
+      "Type of Loss": lossType,   
+      "FDP": details.FinalDestinationPoint,
+      "REF NO": details.RefNO,
+      "Percentage Damaged (%)": details.damagePercentage,
+      "Comments": damage.comments || '',
+    }));
+  });
 
-
+  // Create a worksheet from the flattened data array
   const ws = XLSX.utils.json_to_sheet(flattenedData);
   XLSX.utils.book_append_sheet(wb, ws, wsName);
+  
   // Export the workbook
   XLSX.writeFile(wb, 'Emergency-losses.xlsx');
 };
