@@ -121,7 +121,12 @@
                     <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
                     <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
                     <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
-                    <p><strong>Affected Areas:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
+                    <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
+                    
+                    <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
+
+                    
+                    <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
                     <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
                   </div>
                   <!-- Requested Commodities Table -->
@@ -259,8 +264,8 @@ const columns = ref([
     label: "Details",
     field: (row) => {
       // Combine the disaster and activity names with proper formatting
-      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster.name}</span>`;
-      const activityFormatted = `<span style="color: green;">Activity: ${row.activity.Name}</span>`;
+      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster?.name}</span>`;
+      const activityFormatted = `<span style="color: green;">Activity: ${row.activity?.Name}</span>`;
       return `${disasterFormatted}<br/>${activityFormatted}`;
     },
     sortable: true,
@@ -288,7 +293,7 @@ const columns = ref([
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"

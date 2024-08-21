@@ -51,11 +51,13 @@
       <!-- table  -->
 
 
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-        <vue-good-table :columns="columns" :rows="instructions" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          <template #table-actions> </template>
+      <section aria-labelledby="quick-links-title" class=" bg-transparent rounded-table">
+            <div class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+       
+                 <vue-good-table :columns="columns" :rows="instructions" :search-options="{ enabled: true }"
+                  style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
+                  styleClass="vgt-table striped" compactMode>
+                  <template #table-actions> </template>
        
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
@@ -64,8 +66,16 @@
               </router-link>
             </span>
           </template>
-        </vue-good-table>
-      </div>
+                </vue-good-table>
+
+             
+          
+            </div>
+          </section>
+
+
+
+   
     </div>
   </main>
 </template>
@@ -198,5 +208,9 @@ const getInstructions = async () => {
   /* Adjust the radius as needed */
   overflow: hidden;
   /* This is important to apply rounded corners to child elements */
+}
+
+.good-table {
+  overflow-x: auto;
 }
 </style>

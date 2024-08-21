@@ -27,21 +27,21 @@
                     </h2>
                   </div>
 
-
+             
                   <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr>
 
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700  mr-2">Delivery Note:</span>
+                            <span class="text-sm font-bold text-gray-700  mr-2">System Delivery Note:</span>
                             <span class="text-sm text-gray-600">{{ receipt.deliveryNote }}</span>
                           </td>
 
+
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="text-sm font-bold text-gray-700 mr-2">Received On:</span>
-                            <span class="text-sm text-gray-600">{{
-    moment(receipt.CreatedOn).format("DD/MM/YYYY") }}</span>
+                            <span class="text-sm font-bold text-gray-700  mr-2">PhysicalDelivery Note:</span>
+                            <span class="text-sm text-gray-600">{{ receipt?.receipts[0]?.PhysicalDeliveryNote }}</span>
                           </td>
                         </tr>
 
@@ -51,6 +51,15 @@
                             <span class="text-sm font-bold text-gray-700  mr-2">Dispatched By:</span>
                             <span class="text-sm text-gray-600">{{ receipt.dispatcher }}</span>
                           </td>
+
+
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-bold text-gray-700 mr-2">Received On:</span>
+                            <span class="text-sm text-gray-600">{{
+                              moment(receipt.createdOn).format("DD/MM/YYYY") }}</span>
+                          </td>
+
+
 
                           <!-- <td class="px-6 py-4 whitespace-nowrap">
   <span class="text-sm font-bold text-gray-700 mr-2">Received By:</span>
@@ -89,8 +98,8 @@
                             </td>
                             <td class="border px-4 py-2">
                               {{ item?.Recipient?.username?.split('.')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ') }} MT
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                              .join(' ') }} MT
                             </td>
                           </tr>
                         </tbody>
