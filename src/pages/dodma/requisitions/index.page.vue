@@ -85,7 +85,8 @@
 
                 <!-- Create Instruction Button -->
 
-                <create-instruction-form :row-id="props.row.id" :district="props.row.district" v-on:create="createInstruction" />
+                <create-instruction-form :row-id="props.row.id" :district="props.row.district"
+                  v-on:create="createInstruction" />
 
 
               </div>
@@ -122,7 +123,12 @@
                     <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
                     <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
                     <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
-                    <p><strong>Affected Areas:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
+                    <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
+
+                    <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
+
+
+                    <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
                     <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
                   </div>
 
@@ -142,7 +148,7 @@
                           <th
                             class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                             Quantity</th>
-                       
+
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
@@ -150,8 +156,9 @@
                           class="hover:bg-gray-100">
                           <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
                           <td class="py-2 px-4 border-b">{{ item.commodity.Name }}</td>
-                          <td class="py-2 px-4 border-b">{{ item.NoBags }} {{item.commodity?.Container_type}} ({{item.Quantity}}{{item.commodity?.Unit == 'Kg' ? 'MT': 'Units'}})</td> 
-                  
+                          <td class="py-2 px-4 border-b">{{ item.NoBags }} {{ item.commodity?.Container_type }}
+                            ({{ item.Quantity }}{{ item.commodity?.Unit == 'Kg' ? 'MT' : 'Units' }})</td>
+
                         </tr>
                       </tbody>
                     </table>
@@ -247,8 +254,8 @@ const columns = ref([
     label: "Details",
     field: (row) => {
       // Combine the disaster and activity names with proper formatting
-      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster.name}</span>`;
-      const activityFormatted = `<span style="color: green;">Activity: ${row.activity.Name}</span>`;
+      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster?.name}</span>`;
+      const activityFormatted = `<span style="color: green;">Activity: ${row.activity?.Name}</span>`;
       return `${disasterFormatted}<br/>${activityFormatted}`;
     },
     sortable: true,
@@ -276,7 +283,7 @@ const columns = ref([
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -339,10 +346,10 @@ const createInstruction = async model => {
       });
 
       await eventBus.emit('requisitionArchived', result.id);
-  
+
       $router.push({ path: '/dodma/instruction-management/manage/' + result.id });
 
-     
+
     })
     .catch(error => {
       /*  Swal.fire({

@@ -23,19 +23,19 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
 
-<template #table-row="props">
-                  <span v-if="props.column.label == 'Options'">
-                    <button type="button" @click="openDispatchDialog(props.row)"
-                      class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
-                      <DocumentTextIcon class="h-5 w-5 mr-2" />
-                      Receive
-                    </button>
+          <template #table-row="props">
+            <span v-if="props.column.label == 'Options'">
+              <button type="button" @click="openDispatchDialog(props.row)"
+                class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+                <DocumentTextIcon class="h-5 w-5 mr-2" />
+                Receive
+              </button>
 
-                  </span>
-                </template>
+            </span>
+          </template>
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
@@ -179,9 +179,9 @@ const columns = ref([
     html: true,
     tdClass: "capitalize"
   }
-,
+  ,
 
-{
+  {
     label: "Options",
     field: row => row,
     sortable: false
@@ -252,24 +252,24 @@ onMounted(() => {
 
 
 const getDispatches = async () => {
-  isLoading.value = true;
+
+
   dispatchStore
-    .get()
-    .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
+    .expected(user.value.district)
+    .then((result) => {
+
+
+
       dispaches.length = 0; //empty array
-      let sorteddata = result.reverse()
-      dispaches.push(...sorteddata.filter(item => !item.IsArchived));
+
+      let sorteddata = result.reverse();
+      dispaches.push(...sorteddata);
 
 
     })
+    .catch((error) => {
 
-
-    .finally(() => {
-      isLoading.value = false;
-    });
+    })
 
 }
 

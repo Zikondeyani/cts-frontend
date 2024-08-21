@@ -31,8 +31,14 @@
               <form @submit.prevent="submitReceipt">
                 <div class="px-6 py-4">
                   <!-- Summary of Dispatched Goods -->
-                  <p class="mb-4"><strong>Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
+                  <p class="mb-4"><strong>System Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
 
+                  <div class="flex items-center space-x-2 mb-4">
+                      <input type="text" v-model="pdn"
+                        placeholder="Enter Delivery Note"
+                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                   
+                    </div>
                   <div class="mb-6">
                     <h3 class="text-lg font-semibold text-blue-500 mb-4">Summary of Dispatched Goods:</h3>
                     <table class="min-w-full divide-y divide-gray-200">
@@ -204,7 +210,7 @@ const isLoading = ref(false);
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
-
+const pdn = ref('')
 const emit = defineEmits(["create", "close", "update"]);
 const Swal = inject('Swal');
 // Props
@@ -325,6 +331,7 @@ const submitReceipt = async () => {
               IsArchived: true,
               Remarks: remark.remark,
               FinalDestinationPoint: destination.name,
+              PhysicalDeliveryNote: pdn.value
             });
           }
         }

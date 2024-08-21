@@ -139,7 +139,7 @@ const columns = ref([
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: row => `<span> ${moment(row.createdOn).format("DD/MM/YYYY") !== null ? moment(row.createdOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -270,8 +270,12 @@ const getReceipts = async () => {
     // Fetch all receipts
     const allReceipts = await receiptStore.groupedbydeliverynote();
 
-    // Filter receipts based on the current user's ID
-    const filteredReceipts = allReceipts.filter(receipt => receipt.recipient == user.value.id);
+    // Filter receipts based on the current user's district
+    const filteredReceipts = allReceipts.filter(receipt => 
+      receipt.receipts?.some(r => 
+        r.dispatch?.loadingPlan?.district?.Name === user.value.district
+      )
+    );
 
     // Update the receipts array with the filtered results
     receipts.length = 0;
@@ -289,6 +293,7 @@ const getReceipts = async () => {
 
 
 
+
 const getReceiptsClean = async () => {
   isLoading.value = true;
 
@@ -296,9 +301,16 @@ const getReceiptsClean = async () => {
     // Fetch all receipts
     const allReceipts = await receiptStore.get();
 
+   
     // Filter receipts based on the current user's ID
-    const filteredReceipts = allReceipts.filter(receipt => receipt.Recipient?.id == user.value.id);
 
+    const filteredReceipts = allReceipts.filter(receipt => 
+    
+      receipt.dispatch?.loadingPlan?.district.Name === user.value.district
+    
+    );
+    
+    console.log(filteredReceipts, "btdddd")
     // Update the receipts array with the filtered results
     receiptsClean.length = 0;
 

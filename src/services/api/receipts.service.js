@@ -7,7 +7,29 @@ export default class ReceiptsService {
       return axios
         .get(
           resource +
-          `?filter={"include": ["Recipient", "dispatch" ]}`,
+          `?filter={
+              "include": [
+                "Recipient",
+                {
+                  "relation": "dispatch",
+                  "scope": {
+                    "include": [
+                      {
+                        "relation": "loadingPlan",
+                        "scope": {
+                          "include": [
+                            {
+                              "relation": "district"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -28,7 +50,29 @@ export default class ReceiptsService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": ["Recipient", "dispatch" ]}`, {
+        .get(resource + `/` + id + `?filter={
+          "include": [
+            "Recipient",
+            {
+              "relation": "dispatch",
+              "scope": {
+                "include": [
+                  {
+                    "relation": "loadingPlan",
+                    "scope": {
+                      "include": [
+                        {
+                          "relation": "district"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -72,7 +116,7 @@ export default class ReceiptsService {
 
 
 
-  
+
   quantitybydistrict(districtname) {
 
     return axios

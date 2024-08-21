@@ -286,8 +286,8 @@ const { meta } = useForm({
 const { value: districtId, errorMessage: districtError } =
   useField("districtId");
 const { value: AffectedHouseholds, errorMessage: AffectedHouseholdsError } = useField("AffectedHouseholds")
-const { value: disasterId, errorMessage: disasterError } = useField("disasterId");
-const { value: activityId, errorMessage: activityError } = useField("activityId");
+const { value: disasterId } = useField("disasterId");
+const { value: activityId } = useField("activityId");
 
 
 
@@ -397,7 +397,7 @@ function removeItem(id) {
 const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
-
+  if (validateAreas() && validateCommodities()) {
   const district = districts.find(d => d.Name === user.value.district);
 
   let model = {
@@ -414,7 +414,7 @@ const onSubmit = useSubmitForm((values, actions) => {
   };
   emit("create", model);
   open.value = false;
-  model = {};
+  model = {};}
 });
 
 
@@ -430,8 +430,56 @@ const newGvh = ref(''); // Input value for new tags
 const newVillageVal = ref(''); // Input value for new tags
 const AffectedAreaError = ref(''); // Error message (if applicable)
 const gvhAreaError = ref(''); // Error message (if applicable)
+const disasterError = ref('')
+const activityError = ref('')
 const villageAreaError = ref(''); // Error message (if applicable)
 
+
+const validateAreas = () => {
+
+
+  if (!activityId.value) {
+    activityError.value = "Activity is required";
+    return false;
+  }
+  if (!disasterId.value) {
+    disasterError.value = "Disaster is required";
+    return false;
+  }
+
+  if (GVHSaffected.value.length < AffectedAreas.value.length) {
+    gvhAreaError.value = "You cannot have fewer GVHs than TAs, add a GVH and place enter.";
+    return false;
+  }
+
+
+  if (!AffectedAreas.value.length) {
+    AffectedAreaError.value = "TAs cannot be empty, add a TA and place enter.";
+    return false;
+  }
+  if (!GVHSaffected.value.length) {
+    gvhAreaError.value = "GVHs cannot be empty, add a GVH and place enter.";
+    return false;
+  }
+  if (!Villagesaffected.value.length) {
+    villageAreaError.value = "Villages cannot be empty, add a village and place enter.";
+    return false;
+  }
+  return true;
+};
+
+const validateCommodities = () => {
+  let valid = true;
+  reliefItems.value.forEach((item, index) => {
+    if (!item.commodityId || !item.Quantity) {
+      item.error = "Commodity and Quantity cannot be empty.";
+      valid = false;
+    } else {
+      item.error = "";
+    }
+  });
+  return valid;
+};
 function addTag() {
   const place = newVillage.value.trim();
   if (place && !AffectedAreas.value.includes(place)) {

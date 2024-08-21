@@ -141,7 +141,7 @@ const columns = ref([
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: row => moment(row.CreatedOn).format("DD/MM/YYYY"),
    sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -278,7 +278,7 @@ const getReceipts = async () => {
       // }
       receipts.length = 0; //empty array
       let sorteddata = result.reverse()
-      receipts.push(...sorteddata);
+      receipts.push(...sorteddata.filter(item => item.instructedDispatch?.instruction?.district?.Name == user.value.district));
 
 
     })
