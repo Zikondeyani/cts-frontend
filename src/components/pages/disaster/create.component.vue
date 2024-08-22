@@ -59,7 +59,7 @@
                         Select Disaster Type</label>
                       <select id="type" name="type" v-model="type" autocomplete="type-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="item in ['Floods', 'Heavy Rains', 'Droughts', 'Dry Spells', 'Flash Floos']"
+                        <option v-for="item in ['Accident', 'Droughts', 'Dry Spells', 'Fire', 'Flash Floods', 'Floods', 'Hailstorm', 'Stormy rains']"
                           :key="item" :value="item" class="uppercase">
                           {{ item }}
                         </option>

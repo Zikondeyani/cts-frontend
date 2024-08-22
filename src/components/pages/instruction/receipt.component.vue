@@ -35,6 +35,8 @@
               <form @submit.prevent="onSubmit">
                 <div class="px-6 py-4">
                   <p class="mb-4"><strong>Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
+                  <p class="mb-4"><strong>Target FDP:</strong> {{ dispatch.FinalDestinationPoint }}</p>
+                  <p class="mb-4"><strong>Purpose:</strong> {{ dispatch.instruction?.Purpose }}</p>
 
                   <div class="mb-6">
                     <h3 class="text-lg font-semibold text-blue-500 mb-4">Summary of Dispatched Goods:</h3>

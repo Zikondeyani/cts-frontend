@@ -49,6 +49,13 @@
               </div>
 
               <form @submit.prevent="onSubmit" class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
+
+                <div class="text-center mb-4">
+                  <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
+                  <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
+                  <h3 class="font-bold text-md mb-2">Loading Plan</h3>
+                
+                </div>
                 <!-- Instruction Details -->
                 <div class="flex gap-8">
                   <!-- Left: Instructions Panel -->

@@ -452,6 +452,10 @@ const validateAreas = () => {
     return false;
   }
 
+  if (Villagesaffected.value.length < GVHSaffected.value.length) {
+    villageAreaError.value = "You cannot have fewer Villages than GVHs, add a villages and place enter.";
+    return false;
+  }
 
   if (!AffectedAreas.value.length) {
     AffectedAreaError.value = "TAs cannot be empty, add a TA and place enter.";
