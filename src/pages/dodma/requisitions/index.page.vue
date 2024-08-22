@@ -111,54 +111,55 @@
                 class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
                 <div
                   class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-white rounded-t-md">
-                  <h5 class="text-lg font-medium leading-normal text-gray-800">Requisition Details</h5>
+                  <h5 class="text-lg font-medium leading-normal text-gray-800 no-print">Requisition Details</h5>
                   <button type="button" @click="closeModal"
                     class="btn-close box-content w-4 h-4 p-1 text-black border-none opacity-50 hover:text-black hover:opacity-75 focus:outline-none">
                     <XIcon class="h-4 w-4" />
                   </button>
                 </div>
-                <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
+                <div id="content">
+                <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
+                  <div class="text-center mb-4">
+                    <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
+                    <h3 class="font-bold text-md">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
+                    <h2 class="text-center text-md font-semibold text-gray-800">
+                      Commodity Requisition
+                    </h2>
+                  </div>
                   <div>
                     <h3 class="text-lg font-semibold mb-2">Requisition Information</h3>
                     <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
                     <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
                     <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
                     <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
-
+                    
                     <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
-
 
                     <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
                     <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
                   </div>
-
                   <!-- Requested Commodities Table -->
                   <div class="mt-4">
                     <h3 class="text-lg font-semibold text-blue-500 mb-2">Requested Commodities</h3>
                     <table class="min-w-full bg-white border border-gray-200 rounded-lg">
                       <thead class="bg-blue-100">
                         <tr>
-                          <th
-                            class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                             #
                           </th>
-                          <th
-                            class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                             Commodity</th>
-                          <th
-                            class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Quantity</th>
-
+                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
+                            Quantity Requested</th>
+                         
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200">
                         <tr v-for="(item, index) in selectedRequisition?.requestedCommodities" :key="index"
                           class="hover:bg-gray-100">
                           <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
-                          <td class="py-2 px-4 border-b">{{ item.commodity.Name }}</td>
-                          <td class="py-2 px-4 border-b">{{ item.NoBags }} {{ item.commodity?.Container_type }}
-                            ({{ item.Quantity }}{{ item.commodity?.Unit == 'Kg' ? 'MT' : 'Units' }})</td>
-
+                          <td class="py-2 px-4 border-b">{{ item.commodity?.Name }}</td>
+                          <td class="py-2 px-4 border-b">{{ item.NoBags }} {{item.commodity?.Container_type}} ({{item.Quantity}}{{item.commodity?.Unit == 'Kg' ? 'MT': 'Units'}})</td> 
                         </tr>
                       </tbody>
                     </table>
@@ -166,7 +167,11 @@
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
                   <button @click="closeModal"
-                    class="inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
+                    class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
+                    <button @click="printPDF"
+                class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
+
+                  </div>
                 </div>
               </div>
             </TransitionChild>
@@ -226,6 +231,8 @@ const toggleDropdown = (rowId) => {
 
 import eventBus from '../../../services/events/eventbus';
 
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 //VARIABLES
 const isLoading = ref(false);
@@ -301,6 +308,48 @@ onMounted(() => {
   getRequisitions();
 });
 
+
+
+const printPDF = async () => {
+  const noPrintElements = document.querySelectorAll('.no-print');
+  noPrintElements.forEach(element => {
+    element.style.display = 'none';
+  });
+
+  const contentElement = document.getElementById('content');
+
+  const scaleFactor = 2;
+  const canvas = await html2canvas(contentElement, {
+    scale: scaleFactor,
+    useCORS: true,
+  });
+
+  const imgData = canvas.toDataURL('image/png');
+
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
+
+  const imgWidth = 190;
+  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+
+  const currentDate = new Date().toLocaleString();
+  const footerText = `DODMA COMMODITY TRACKING SYSTEM REQ- ${currentDate}`;
+  const footerYPosition = 290;
+
+  pdf.setFontSize(14);
+  pdf.text(footerText, 10, footerYPosition);
+
+  pdf.save('DODMACTSRequistion.pdf');
+
+  noPrintElements.forEach(element => {
+    element.style.display = 'block';
+  });
+};
 
 
 

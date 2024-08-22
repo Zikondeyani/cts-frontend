@@ -367,7 +367,7 @@ const updateOrCreateReliefItems = async (items) => {
       icon: "success",
       showCancelButton: true,
       confirmButtonText: "Continue",
-      cancelButtonText: "Go back to instruction list"
+      cancelButtonText: "Go back to Requisition list"
     }).then((result) => {
       if (result.isConfirmed) {
         // Action to perform on Ok
@@ -402,7 +402,7 @@ const updateOrCreateReliefItems = async (items) => {
 // Define the function to go back to the instruction list
 const goToInstructionList = () => {
 
-  $router.push({ name: 'dodma-instruction-management' });
+  $router.push({ name: 'dodma-requisition-management' });
 };
 
 
