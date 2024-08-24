@@ -185,7 +185,7 @@
                           <div class="flex-1">
                             <label class="block text-sm font-bold text-gray-700">Quantity ({{
                               getCommodityUnit(item.commodityId) }})</label>
-                            <input type="number" v-model.number="item.Quantity"
+                            <input type="number" v-model.number="item.NoBags"
                               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
                               placeholder="Quantity" />
                           </div>
@@ -207,11 +207,19 @@
                     </div>
                   </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button type="submit" style="background-color: #096eb4;"
-                    class="`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
-                    Save
-                  </button>
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                  <div class="flex justify-end space-x-3">
+                    <button type="button" @click="saveAsDraft"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      <SaveIcon class="h-5 w-5 mr-3" />
+                      Save as Draft
+                    </button>
+
+                    <button type="submit"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      Submit for action
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -232,7 +240,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { XIcon } from "@heroicons/vue/outline";
+import { XIcon, SaveIcon } from "@heroicons/vue/outline";
 import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
@@ -385,12 +393,12 @@ function validateCommodity(index) {
 
   }
 
-  const isDuplicate = reliefItems.value.some((item, idx) => item.commodityId === selectedCommodity && idx !== index);
+  const isDuplicate = props.Requisition.requestedCommodities.some((item, idx) => item.commodityId === selectedCommodity && idx !== index);
   props.Requisition.requestedCommodities[index].error = isDuplicate ? "Commodity already added. Please select another." : "";
 }
 
 function addNewItem() {
-  props.Requisition.requestedCommodities.push({ id: props.Requisition.requestedCommodities.length + 1, commodityId: '', Quantity: '', NoBags: '', error: '' });
+  props.Requisition.requestedCommodities.push({ id: props.Requisition.requestedCommodities.length + 1, commodityId: '', Quantity: 0, NoBags: '', error: '' });
 }
 
 function removeItem(id) {
@@ -406,23 +414,55 @@ const onSubmit = useSubmitForm((values, actions) => {
     const district = districts.find(d => d.Name === user.value.district);
 
     let model = {
-      disasterId: disasterId.value,
-      districtId: district.id, // Use the district's ID if found, otherwise null
-      activityId: activityId.value,
-      AffectedAreas: AffectedAreas.value.join(),
-      AffectedHouseholds: AffectedHouseholds.value,
-      gvhs: GVHSaffected.value.join(),
-      villages_affected: Villagesaffected.value.join(),
+      id: props.Requisition.id,
+      disasterId: props.Requisition.disasterId,
+      districtId: district.id,
+      activityId: props.Requisition.activityId,
+      AffectedAreas: props.Requisition.AffectedAreas?.split(',').map(v => v.trim()).join(),
+      AffectedHouseholds: props.Requisition.AffectedHouseholds,
+      gvhs: props.Requisition.gvhs?.split(',').map(v => v.trim()).join(),
+      villages_affected: props.Requisition.Villagesaffected?.split(',').map(v => v.trim()).join(),
       RequesterId: user.value.id,
-      reliefItems: reliefItems.value,
-      CreatedOn: currentDate.value
+      reliefItems: props.Requisition.requestedCommodities,
+      CreatedOn: currentDate.value,
+      status: 2 // Status for Draft
+    
     };
-    emit("create", model);
-    open.value = false;
+
+    emit("update", model);
+    emit("close")
     model = {};
   }
 });
 
+
+const saveAsDraft = () => {
+  if (validateAreas() && validateCommodities()) {
+    const district = districts.find(d => d.Name === user.value.district);
+
+
+    let draftModel = {
+      id: props.Requisition.id,
+      disasterId: props.Requisition.disasterId,
+      districtId: district.id,
+      activityId: props.Requisition.activityId,
+      AffectedAreas: props.Requisition.AffectedAreas?.split(',').map(v => v.trim()).join(),
+      AffectedHouseholds: props.Requisition.AffectedHouseholds,
+      gvhs: props.Requisition.gvhs?.split(',').map(v => v.trim()).join(),
+      villages_affected: props.Requisition.Villagesaffected?.split(',').map(v => v.trim()).join(),
+      RequesterId: user.value.id,
+      reliefItems: props.Requisition.requestedCommodities,
+      CreatedOn: currentDate.value,
+      status: 3 // Status for Draft
+    
+    };
+
+    emit("update", draftModel);
+    open.value = false;
+    draftModel = {};
+    emit("close")
+  }
+};
 
 const AffectedAreas = ref([]); // Array of tags (places)
 
@@ -444,34 +484,34 @@ const villageAreaError = ref(''); // Error message (if applicable)
 const validateAreas = () => {
 
 
-  if (!activityId.value) {
+  if (!props.Requisition?.activityId) {
     activityError.value = "Activity is required";
     return false;
   }
-  if (!disasterId.value) {
+  if (!props.Requisition?.disasterId) {
     disasterError.value = "Disaster is required";
     return false;
   }
 
-  if (GVHSaffected.value.length < AffectedAreas.value.length) {
+  if (props.Requisition.gvhs?.split(',').map(v => v.trim()).length < props.Requisition.AffectedAreas?.split(',').map(v => v.trim()).length) {
     gvhAreaError.value = "You cannot have fewer GVHs than TAs, add a GVH and place enter.";
     return false;
   }
 
-  if (Villagesaffected.value.length < GVHSaffected.value.length) {
+  if (props.Requisition.villages_affected?.split(',').map(v => v.trim()).length < props.Requisition.gvhs?.split(',').map(v => v.trim()).length) {
     villageAreaError.value = "You cannot have fewer Villages than GVHs, add a villages and place enter.";
     return false;
   }
 
-  if (!AffectedAreas.value.length) {
+  if (!props.Requisition.AffectedAreas?.split(',').map(v => v.trim()).length) {
     AffectedAreaError.value = "TAs cannot be empty, add a TA and place enter.";
     return false;
   }
-  if (!GVHSaffected.value.length) {
+  if (!props.Requisition.gvhs?.split(',').map(v => v.trim()).length) {
     gvhAreaError.value = "GVHs cannot be empty, add a GVH and place enter.";
     return false;
   }
-  if (!Villagesaffected.value.length) {
+  if (!props.Requisition.villages_affected?.split(',').map(v => v.trim()).length) {
     villageAreaError.value = "Villages cannot be empty, add a village and place enter.";
     return false;
   }
@@ -480,8 +520,8 @@ const validateAreas = () => {
 
 const validateCommodities = () => {
   let valid = true;
-  reliefItems.value.forEach((item, index) => {
-    if (!item.commodityId || !item.Quantity) {
+  props.Requisition?.requestedCommodities.forEach((item, index) => {
+    if (!item.commodityId || !item.NoBags) {
       item.error = "Commodity and Quantity cannot be empty.";
       valid = false;
     } else {
