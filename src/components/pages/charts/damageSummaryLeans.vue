@@ -18,7 +18,7 @@ const colors = [
 
 const processedPieChartData = computed(() => {
   const commodities = [...new Set(props.commodityDispatchData[0].commoditySummary.map(item => item.commodity))];
-  const totalDamaged = props.commodityDispatchData[0].commoditySummary.reduce((acc, item) => acc + item.totalQuantity, 0);
+  const totalDamaged = props.commodityDispatchData[0].commoditySummary.reduce((acc, item) => acc + item.totalQuantity, 0).toFixed(2);
 
   const distributionPercentages = commodities.map(commodity => {
     const totalForCommodity = props.commodityDispatchData[0].commoditySummary.filter(item => item.commodity === commodity)

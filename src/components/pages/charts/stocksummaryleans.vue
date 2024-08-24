@@ -10,7 +10,7 @@ const props = defineProps({
 const pieChartRef = ref(null);
 const processedPieChartData = computed(() => {
   const commodities = props.leanStockSummary.map(item => item.commodityName);
-  const totalStockPlanned = props.leanStockSummary.reduce((acc, item) => acc + item.totalStockPlanned, 0);
+  const totalStockPlanned = props.leanStockSummary.reduce((acc, item) => acc + item.totalStockPlanned, 0).toFixed(2);
 
   const distributionPercentages = props.leanStockSummary.map(item => (item.totalStockPlanned / totalStockPlanned * 100).toFixed(2));
 

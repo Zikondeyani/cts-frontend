@@ -234,7 +234,7 @@
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
-                        <select id="district" v-model="selectedDistrict"
+                        <select id="district" v-model="selectedActivity"
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Activity</option>
                           <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
@@ -1191,9 +1191,11 @@ const filteredLeanCommodityDispatchData = computed(() => {
 const filteredLeanStockSummary = computed(() => {
   return leanStockSummary.value.filter(item => {
     const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
+    const matchDistrict = !selectedDistrict.value || item.commodityName == selectedDistrict.value;
+    const matchActivity = !selectedActivity.value || item.commodityName == selectedActivity.value;
 
-    return matchCommodity;
-  });
+    return matchCommodity && matchActivity && matchDistrict;
+  }); 
 });
 </script>
 

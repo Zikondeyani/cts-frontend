@@ -16,13 +16,13 @@ const processedChartData = computed(() => {
     // Required quantities
     const requiredData = labels.map(label => {
         return props.commodityDistributionData.filter(item => item.commodity === label)
-            .reduce((acc, item) => acc + item.required, 0);
+            .reduce((acc, item) => acc + item.required, 0).toFixed(2);
     });
 
     // Distributed quantities
     const distributedData = labels.map(label => {
         return props.commodityDistributionData.filter(item => item.commodity === label)
-            .reduce((acc, item) => acc + item.distributed, 0);
+            .reduce((acc, item) => acc + item.distributed, 0).toFixed(2);
     });
 
     return {
