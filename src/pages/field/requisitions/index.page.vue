@@ -55,7 +55,7 @@
       <!-- table  -->
 
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table container">
-        <div class="overflow-x-auto container">
+  <div class="overflow-x-auto container">
     <vue-good-table 
       :columns="columns" 
       :rows="requisitions" 
@@ -80,102 +80,96 @@
         </span>
         <span v-if="props.column.label === 'Options'">
           <div class="flex justify-center md:justify-start space-x-2">
+           
             <button @click.prevent="openRequisitionDetails(props.row)"
               class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-500 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
               <EyeIcon class="h-5 w-5 mr-1" />
-              View Requisition
+              View
             </button>
+            <!-- Conditionally show Edit button if status is 'In progress' -->
+            <button v-if="props.row.IsArchived === false"
+              @click.prevent="editRequisition(props.row)"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-500 hover:text-blue-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
+              <PencilIcon class="h-5 w-5 mr-1" />
+              Edit
+            </button>
+
+         
           </div>
         </span>
       </template>
     </vue-good-table>
+
+
+    <edit-requisition-dialog :open="isEditDialogOpen" :Requisition="selectedRow" @close="closeEditDialog" :commodities="commodities" v-on:update="reloadPage"/>
+    
   </div>
 
-        <TransitionRoot as="template" :show="isModalOpen">
-          <Dialog as="div"
-            class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto">
-            <!-- Background overlay -->
-            <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0"
-              enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100"
-              leave-to="opacity-0">
-              <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-            </TransitionChild>
-            <!-- Modal content -->
-            <TransitionChild as="template" enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:scale-95">
-              <div
-                class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-                <div
-                  class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-white rounded-t-md">
-                  <h5 class="text-lg font-medium leading-normal text-gray-800 no-print">Requisition Details</h5>
-                  <button type="button" @click="closeModal"
-                    class="btn-close box-content w-4 h-4 p-1 text-black border-none opacity-50 hover:text-black hover:opacity-75 focus:outline-none">
-                    <XIcon class="h-4 w-4" />
-                  </button>
-                </div>
-                <div id="content">
-                <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
-                  <div class="text-center mb-4">
-                    <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
-                    <h3 class="font-bold text-md">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
-                    <h2 class="text-center text-md font-semibold text-gray-800">
-                      Commodity Requisition
-                    </h2>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold mb-2">Requisition Information</h3>
-                    <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
-                    <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
-                    <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
-                    <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
-                    
-                    <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
-
-                    <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
-                    <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
-                  </div>
-                  <!-- Requested Commodities Table -->
-                  <div class="mt-4">
-                    <h3 class="text-lg font-semibold text-blue-500 mb-2">Requested Commodities</h3>
-                    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
-                      <thead class="bg-blue-100">
-                        <tr>
-                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            #
-                          </th>
-                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Commodity</th>
-                          <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                            Quantity Requested</th>
-                         
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-200">
-                        <tr v-for="(item, index) in selectedRequisition?.requestedCommodities" :key="index"
-                          class="hover:bg-gray-100">
-                          <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
-                          <td class="py-2 px-4 border-b">{{ item.commodity?.Name }}</td>
-                          <td class="py-2 px-4 border-b">{{ item.NoBags }} {{item.commodity?.Container_type}} ({{item.Quantity}}{{item.commodity?.Unit == 'Kg' ? 'MT': 'Units'}})</td> 
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-                  <button @click="closeModal"
-                    class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
-                    <button @click="printPDF"
-                class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
-
-                  </div>
-                </div>
+  <!-- Modal for viewing details -->
+  <TransitionRoot as="template" :show="isModalOpen">
+    <Dialog as="div" class="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto">
+      <!-- Background overlay -->
+      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+        <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+      </TransitionChild>
+      <!-- Modal content -->
+      <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:scale-95">
+        <div class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+          <div class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-white rounded-t-md">
+            <h5 class="text-lg font-medium leading-normal text-gray-800 no-print">Requisition Details</h5>
+            <button type="button" @click="closeModal" class="btn-close box-content w-4 h-4 p-1 text-black border-none opacity-50 hover:text-black hover:opacity-75 focus:outline-none">
+              <XIcon class="h-4 w-4" />
+            </button>
+          </div>
+          <div id="content">
+            <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
+              <div class="text-center mb-4">
+                <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
+                <h3 class="font-bold text-md">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
+                <h2 class="text-center text-md font-semibold text-gray-800">Commodity Requisition</h2>
               </div>
-            </TransitionChild>
-          </Dialog>
-        </TransitionRoot>
-      </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-2">Requisition Information</h3>
+                <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
+                <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
+                <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
+                <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
+                <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
+                <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
+                <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
+              </div>
+              <!-- Requested Commodities Table -->
+              <div class="mt-4">
+                <h3 class="text-lg font-semibold text-blue-500 mb-2">Requested Commodities</h3>
+                <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                  <thead class="bg-blue-100">
+                    <tr>
+                      <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">#</th>
+                      <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">Commodity</th>
+                      <th class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">Quantity Requested</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-200">
+                    <tr v-for="(item, index) in selectedRequisition?.requestedCommodities" :key="index" class="hover:bg-gray-100">
+                      <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
+                      <td class="py-2 px-4 border-b">{{ item.commodity?.Name }}</td>
+                      <td class="py-2 px-4 border-b">{{ item.NoBags }} {{item.commodity?.Container_type}} ({{item.Quantity}}{{item.commodity?.Unit == 'Kg' ? 'MT': 'Units'}})</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
+              <button @click="closeModal" class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
+              <button @click="printPDF" class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
+            </div>
+          </div>
+        </div>
+      </TransitionChild>
+    </Dialog>
+  </TransitionRoot>
+</div>
+
     </div>
   </main>
 </template>
@@ -207,6 +201,7 @@ import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.brea
 import createInstructionForm from "../../../components/pages/instruction/create.component.vue";
 import createRequisitionForm from "../../../components/pages/requisition/create.component.vue";
 
+import EditRequisitionDialog from "../../../components/pages/requisition/edit.component.vue";
 
 import { useinstructionstore } from "../../../stores/instructions.store";
 
@@ -239,6 +234,22 @@ const toggleDropdown = (rowId) => {
 };
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+
+const isEditDialogOpen = ref(false);
+
+const selectedRow = ref(null);
+
+
+const editRequisition = (row) => {
+  // Handle the logic to open an edit modal or navigate to an edit page
+  // For example, you might set the selected requisition to be edited
+
+  selectedRow.value = row;
+  
+  console.log(selectedRow.value)
+  isEditDialogOpen.value = true; // Assuming you have a boolean ref to control edit modal visibility
+
+};
 
 
 
@@ -290,7 +301,7 @@ const columns = ref([
   },
 
   {
-    label: "Affected Areas",
+    label: "TAs Affected",
     field: row => row.AffectedAreas,
     sortable: true,
     firstSortType: "asc",
@@ -375,6 +386,11 @@ const printPDF = async () => {
   });
 };
 
+
+
+const closeEditDialog = () => {
+  isEditDialogOpen.value = false;
+};
 
 const getCommodities = async () => {
   isLoading.value = true;
