@@ -142,7 +142,7 @@ const columns = ref([
 
   {
     label: "Transporter",
-    field: row => row.transporter.Name,
+    field: row => row.transporter?.Name,
     sortable: true,
     firstSortType: "asc",
     thClass: "w-1/6", // Set width to 1/6th of the table
@@ -150,7 +150,7 @@ const columns = ref([
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
@@ -182,7 +182,7 @@ const getInstructions = async () => {
       //   instructions.push(...result);
       // }
       instructions.length = 0; //empty array
-      instructions.push(...result);
+      instructions.push(...result.reverse());
 
       
     })

@@ -129,9 +129,9 @@
                           class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
                       </div>
                       <p class="text-red-500 text-xs italic pt-1">{{ gvhAreaError }}</p>
-                  
+
                     </div>
- 
+
                     <div class="col-span-12 sm:col-span-12">
                       <label for="AffectedAreas" class="block text-sm font-medium text-gray-700">
                         Villages Affected
@@ -151,7 +151,7 @@
                           class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
                       </div>
                       <p class="text-red-500 text-xs italic pt-1">{{ villageAreaError }}</p>
-                  
+
                     </div>
 
                     <div class="col-span-12 sm:col-span-12">
@@ -188,12 +188,23 @@
                     </div>
                   </div>
                 </div>
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                  <button type="submit" style="background-color: #096eb4;"
-                    class="`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
-                    Save
-                  </button>
+
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                  <div class="flex justify-end space-x-3">
+                    <button type="button" @click="saveAsDraft"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      <SaveIcon class="h-5 w-5 mr-3" />
+                      Save as Draft
+                    </button>
+
+                    <button type="submit"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      Submit for action
+                    </button>
+                  </div>
                 </div>
+
+
               </form>
             </div>
           </TransitionChild>
@@ -213,7 +224,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { XIcon } from "@heroicons/vue/outline";
+import { XIcon, DocumentTextIcon, SaveIcon } from "@heroicons/vue/outline";
 import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
@@ -300,6 +311,30 @@ onMounted(() => {
 });
 //FUNCTIONS
 
+
+const saveAsDraft = () => {
+  if (validateAreas() && validateCommodities()) {
+    const district = districts.find(d => d.Name === user.value.district);
+
+    let draftModel = {
+      disasterId: disasterId.value,
+      districtId: district?.id, // Use the district's ID if found, otherwise null
+      activityId: activityId.value,
+      AffectedAreas: AffectedAreas.value.join(),
+      AffectedHouseholds: AffectedHouseholds.value,
+      gvhs: GVHSaffected.value.join(),
+      villages_affected: Villagesaffected.value.join(),
+      RequesterId: user.value.id,
+      reliefItems: reliefItems.value,
+      CreatedOn: currentDate.value,
+      status: 3 // Status for Draft
+    };
+
+    emit("create", draftModel);
+    open.value = false;
+    draftModel = {};
+  }
+};
 
 const getRequisition = async () => {
   warehouseStore
@@ -398,23 +433,26 @@ const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
   if (validateAreas() && validateCommodities()) {
-  const district = districts.find(d => d.Name === user.value.district);
+    const district = districts.find(d => d.Name === user.value.district);
 
-  let model = {
-    disasterId: disasterId.value,
-    districtId: district.id, // Use the district's ID if found, otherwise null
-    activityId: activityId.value,
-    AffectedAreas: AffectedAreas.value.join(),
-    AffectedHouseholds: AffectedHouseholds.value,
-    gvhs: GVHSaffected.value.join(),
-    villages_affected: Villagesaffected.value.join(),
-    RequesterId: user.value.id,
-    reliefItems: reliefItems.value,
-    CreatedOn: currentDate.value
-  };
-  emit("create", model);
-  open.value = false;
-  model = {};}
+    let model = {
+      disasterId: disasterId.value,
+      districtId: district.id, // Use the district's ID if found, otherwise null
+      activityId: activityId.value,
+      AffectedAreas: AffectedAreas.value.join(),
+      AffectedHouseholds: AffectedHouseholds.value,
+      gvhs: GVHSaffected.value.join(),
+      villages_affected: Villagesaffected.value.join(),
+      RequesterId: user.value.id,
+      reliefItems: reliefItems.value,
+      CreatedOn: currentDate.value,
+      status: 2 // Status for Draft
+    
+    };
+    emit("create", model);
+    open.value = false;
+    model = {};
+  }
 });
 
 

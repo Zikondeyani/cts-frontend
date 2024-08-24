@@ -106,7 +106,7 @@
                   <div v-for="(item, index) in reliefItems" :key="index" class="flex space-x-4 items-center">
                     <div class="flex-1">
                       <label class="block text-sm font-bold text-gray-700">Commodity</label>
-                      <select v-model="item.commodityId" @change="validateCommodity(index)"
+                      <select v-model="item.commodityId"
                         class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
                         <option value="" disabled>Select a commodity</option>
                         <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
@@ -325,12 +325,12 @@ const validateCommodity = (index) => {
 
 const toggle = ref(false);
 //MOUNTED
-onMounted(() => {
+onMounted(async () => {
 
   getCommodities()
   //Assign
   getCommodityInventories();
-  getReliefItems()
+  await getReliefItems()
 
 });
 
