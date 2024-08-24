@@ -60,13 +60,13 @@
                   </span>
                 </div>
                 <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
-                  <button @click="openEditDialog(props.row)" v-if="isOnline"
+                  <button @click="openEditDialog(props.row)" v-if="props.row.Balance > 0"
                     class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                    Edit
+                    Edit 
                   </button>
 
-                  <button @click="openAttachmentDialog(props.row)" v-if="isOnline"
+                  <button @click="openAttachmentDialog(props.row)" v-if="props.row.Balance > 0"
                     class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0">
                     <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
                     Attachments

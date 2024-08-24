@@ -103,24 +103,24 @@
                   </select>
                 </div>
 
-               
-                <div class="col-span-6 sm:col-span-3">
-                    <label for="transporter" class="block text-sm font-bold text-gray-700">
-                      Select Activity</label>
-                      <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
-                        {{ activity.Name }}
-                      </option>
-                    </select>
 
-                  </div>
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
+                    Select Activity</label>
+                  <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                      {{ activity.Name }}
+                    </option>
+                  </select>
+
+                </div>
               </div>
 
               <div class="grid grid-cols-6 gap-2 mt-3">
                 <div class="col-span-3 sm:col-span-3">
                   <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
-                    ATC NUMBER 
+                    ATC NUMBER
                   </label>
                   <input type="text" name="ATCNumber" v-model="loadingPlan.ATCNumber" id="ATCNumber"
                     autocomplete="ATCNumber"
@@ -233,7 +233,13 @@ const loadingPlanStore = useloadingplanstore();
 const transporterStore = usetransporterstore();
 const commoditiesstore = usecommoditiestore();
 const commodities = ref([]);
+const originalQuantity = ref(loadingPlan.value.Quantity); // Store the original quantity
 
+// Watch for changes to update the original quantity when loadingPlan changes
+watch(() => props.loadingPlan, (newVal) => {
+  loadingPlan.value = { ...newVal };
+  originalQuantity.value = newVal.Quantity; // Update the original quantity when loadingPlan changes
+});
 
 // Methods
 const updateLoadingPlan = async () => {
@@ -247,9 +253,11 @@ const updateLoadingPlan = async () => {
     } = loadingPlan.value;
 
     updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
-    updatedLoadingPlan.Balance = updatedLoadingPlan.Quantity
-  
-    
+
+    // Calculate the new balance
+    updatedLoadingPlan.Balance = (updatedLoadingPlan.Quantity - originalQuantity.value ) + loadingPlan.value.Balance;
+
+    // Check for negative balance
     if (updatedLoadingPlan.Balance < 0) {
       await Swal.fire({
         title: "Invalid Balance",
@@ -261,6 +269,7 @@ const updateLoadingPlan = async () => {
       return;
     }
 
+    // Check for missing information
     if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.activityId == null) {
       await Swal.fire({
         title: "Missing Information",
@@ -272,6 +281,7 @@ const updateLoadingPlan = async () => {
       return;
     }
 
+    // Check online status and update data
     const isOnline = await checkOnlineStatus(); // Check online status
 
     if (!isOnline) {
@@ -308,6 +318,7 @@ const updateLoadingPlan = async () => {
     });
   }
 };
+
 
 
 
