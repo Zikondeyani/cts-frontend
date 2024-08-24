@@ -8,7 +8,7 @@ export default class InstructedDispatchesService {
         .get(
           resource +
           `?filter=
-          {"include":["Dispatcher", {"relation":"instruction","scope":{"include":[{"relation":"warehouse"}, {"relation":"district"}]}},  {"relation":"dispatchedCommodities","scope":{"include":[{"relation":"commodity"}]} }]}`,
+          {"include":["Dispatcher", {"relation":"instruction","scope":{"include":[{"relation":"district"}]}},  {"relation":"dispatchedCommodities","scope":{"include":[{"relation":"commodity"}]} }]}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ export default class InstructedDispatchesService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include":["Dispatcher", {"relation":"instruction","scope":{"include":[{"relation":"warehouse"}, {"relation":"district"}]}},  {"relation":"dispatchedCommodities","scope":{"include":[{"relation":"commodity"}]}}]}`, {
+        .get(resource + `/` + id + `?filter={"include":["Dispatcher", {"relation":"instruction","scope":{"include":[ {"relation":"district"}]}},  {"relation":"dispatchedCommodities","scope":{"include":[{"relation":"commodity"}]}}]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",

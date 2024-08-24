@@ -28,7 +28,7 @@
               </div>
 
               <!-- Form -->
-              <form @submit.prevent="submitReceipt">
+              <form @submit.prevent="confirmSubmission">
                 <div class="px-6 py-4">
                   <!-- Summary of Dispatched Goods -->
                   <p class="mb-4"><strong>System Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
@@ -176,7 +176,12 @@
                 <!-- Modal Footer -->
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
-                    <button type="button" @click="close"
+                    <button type="button" @click="saveProgress"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      <SaveIcon class="h-5 w-5 mr-1" />
+                      Save Progress
+                    </button>
+                    <button type="button" @click="open = false"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
                       Cancel
                     </button>
@@ -200,7 +205,7 @@
 import { ref, reactive, inject, defineEmits } from 'vue';
 import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headlessui/vue';
 
-import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon } from "@heroicons/vue/solid";
+import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon, SaveIcon } from "@heroicons/vue/solid";
 
 import { useSessionStore } from "../../../stores/session.store";
 
@@ -235,6 +240,24 @@ const resetDestinations = () => {
   }
   destinations[0].name = '';
 };
+
+
+const confirmSubmission = () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Once submitted, you will need to go through the reversal process if changes are required.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, submit it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      submitReceipt(); // Call the actual submit function if confirmed
+    }
+  });
+};
+
 
 const addDestination = () => {
   if (destinations.every(dest => dest.name.trim() !== "")) {

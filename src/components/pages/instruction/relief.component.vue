@@ -15,12 +15,15 @@
             <div class="overflow-hidden sm:rounded-md">
               <div class="px-4 py-5 bg-white sm:p-6">
                 <div class="space-y-4">
-                  <span class="text-gray-700 mb-3">Draw Down From: {{ model?.warehouse?.Name }}</span>
-        
-                  <div class="mt-6">
-                    <span class="text-gray-700 mb-5" v-if="model.IsRejected">Comments (If Rejected): {{ model?.RejectionComment }}</span>
+                  <span class="text-gray-700 mb-3">Draw Down From: {{ model.warehouses?.map(warehouse =>
+                    warehouse?.name).join(', ') }}</span>
 
-                    <h3 class="text-lg font-bold leading-6 text-gray-900 capitalize mt-5">Summary of Requested Commodities
+                  <div class="mt-6">
+                    <span class="text-gray-700 mb-5" v-if="model.IsRejected">Comments (If Rejected): {{
+                      model?.RejectionComment }}</span>
+
+                    <h3 class="text-lg font-bold leading-6 text-gray-900 capitalize mt-5">Summary of Requested
+                      Commodities
                     </h3>
                     <table class="min-w-full divide-y divide-gray-200 mt-2">
                       <thead class="bg-gray-100">
@@ -45,10 +48,10 @@
 
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ item.commodity?.Name }}
-                            <span v-if="item.commodity" class="text-green-800 text-xs font-light">
+                            <!-- <span v-if="item.commodity" class="text-green-800 text-xs font-light">
                               ( {{ calculateTotalQuantity(item.commodity, model?.warehouse?.id) }}
                               {{ item.commodity?.Unit === "Kg" ? "MT" : "Units" }} Available)
-                            </span>
+                            </span> -->
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ item.Quantity }} {{ item.commodity?.Unit == "Kg" ? " MT" : item.commodity?.Unit }}
@@ -146,8 +149,9 @@
               <!-- Submit Button -->
               <div class="px-4 py-3 text-right sm:px-6">
                 <button type="submit"
-                  class="inline-flex justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                  Submit
+                  class="inline-flex items-center justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ease-in-out">
+                  <CheckIcon class="w-5 h-5 mr-2" aria-hidden="true" />
+                  Submit Update
                 </button>
               </div>
             </div>
@@ -164,7 +168,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 //COMPONENTS
 //SCHEMA AND STORES
-import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon } from "@heroicons/vue/solid";
+import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckIcon, CheckCircleIcon } from "@heroicons/vue/solid";
 
 import { UpdateUserSchema } from "../../../services/schema/commoditytype.schema";
 import { useRoleStore } from "../../../stores/role.store";
@@ -340,8 +344,8 @@ const updateInstruction = async (newValues) => {
   };
 
   try {
-     await instructionsStore.update(updatedValues);
-     eventBus.emit('requisitionArchived', updatedValues.id);
+    await instructionsStore.update(updatedValues);
+    eventBus.emit('requisitionArchived', updatedValues.id);
 
   } catch (error) {
     console.error("Error updating instruction:", error);

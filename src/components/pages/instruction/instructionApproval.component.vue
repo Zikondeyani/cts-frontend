@@ -48,32 +48,32 @@
                 </button>
               </div>
 
-         
+
               <form @submit.prevent="onSubmit" class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
-                     
-              <div class="text-center mb-4">
+
+                <div class="text-center mb-4">
                   <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
                   <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
                   <h3 class="font-bold text-md mb-2">Commodity Requisition Instruction</h3>
-                
+
                 </div>
-                
+
                 <!-- Instruction Details -->
                 <div class="flex gap-8">
                   <!-- Left: Instructions Panel -->
                   <div class="flex-1 bg-white rounded-table">
                     <h3 class="text-xl font-semibold mb-4">Instruction Details</h3>
                     <p class="mb-4"><strong>Purpose:</strong> {{ instruction.Purpose }}</p>
-                    <p class="mb-4"><strong>Vehicle Reg #:</strong> {{ instruction.VehicleRegNo }}</p>
-                    <p class="mb-4"><strong>Driver Name:</strong> {{ instruction.DriverName }}</p>
-                    <p class="mb-4"><strong>Warehouse (From):</strong> {{ instruction.warehouse.Name }}</p>
-                    <p class="mb-4"><strong>District (To):</strong> {{ instruction.district.Name }}</p>
-                    <p class="mb-4"><strong>Transporter:</strong> {{ instruction.transporter.Name }}</p>
-                   <!--  <p class="mb-4" v-if="instruction.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ instruction.RejectionComment }}</p>
+                    <p class="mb-4"><strong>Instruction:</strong> {{ instruction?.Remarks }}</p>
+                    <p class="mb-4"><strong>Warehouse(s) (From):</strong> {{ instruction.warehouses?.map(warehouse =>
+                      warehouse?.name).join(', ') }}</p>
+                    <p class="mb-4"><strong>District (To):</strong> {{ instruction.district?.Name }}</p>
+                    <p class="mb-4"><strong>Transporter:</strong> {{ instruction.transporter?.Name }}</p>
+                    <!--  <p class="mb-4" v-if="instruction.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ instruction.RejectionComment }}</p>
  -->
                     <!-- Table for Goods List -->
                     <h3 class="text-lg font-semibold text-blue-500 mb-3">List of Goods Required: </h3>
-                    
+
                     <div>
                       <table class="min-w-full bg-white border border-0 rounded-lg">
                         <thead class="bg-blue-100">
@@ -87,14 +87,15 @@
                             <th
                               class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
                               Quantity</th>
-                         
+
                           </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                           <tr v-for="(item, index) in commodities" :key="index" class="hover:bg-gray-100">
                             <td class="py-2 px-4 border-b">{{ index + 1 }}</td>
                             <td class="py-2 px-4 border-b">{{ item.commodity.Name }}</td>
-                            <td class="py-2 px-4 border-b">{{ item.Quantity }} {{  item.commodity.Unit == "Kg" ? "MT": "Units" }} ({{item.NoBags}} {{item.commodity.Container_type}})</td>
+                            <td class="py-2 px-4 border-b">{{ item.Quantity }} {{ item.commodity.Unit == "Kg" ? "MT" :
+                              "Units" }} ({{ item.NoBags }} {{ item.commodity.Container_type }})</td>
                           </tr>
                         </tbody>
                       </table>
@@ -111,18 +112,18 @@
                 <!-- Footer Buttons -->
 
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-                  <button @click="closeDialog"
+                  <button type="button" @click="closeDialog"
                     class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">Close</button>
                   <button type="submit" v-if="!isRejecting"
                     class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <CheckCircleIcon class="h-5 w-5 mr-1" />
                     Approve Instruction
                   </button>
-                 <button @click.prevent="startRejection" v-if="!isRejecting"
+                  <button @click.prevent="startRejection" v-if="!isRejecting"
                     class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <XIcon class="h-5 w-5 mr-1" />
                     Reject Instruction
-                  </button> 
+                  </button>
                   <button @click="submitRejection" v-if="isRejecting"
                     class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <XIcon class="h-5 w-5 mr-1" />
@@ -133,7 +134,7 @@
                     Cancel Rejection
                   </button>
                 </div>
-          
+
               </form>
             </div>
           </TransitionChild>
@@ -252,6 +253,7 @@ const onSubmit = useSubmitForm((values, actions) => {
     IsApproved: true,
     ApprovedBy: user.value.username.replace('.', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
   };
+  
   emit("create", model);
   open.value = false;
 });
@@ -267,7 +269,7 @@ const cancelRejection = () => {
 };
 const submitRejection = async () => {
   let model = {
-    id:props.instruction.id,
+    id: props.instruction.id,
     IsRejected: true,
     RejectionComment: RejectionComment.value
   };

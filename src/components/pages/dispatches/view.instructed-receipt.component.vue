@@ -37,19 +37,8 @@
                       <label class="block text-sm font-bold text-gray-700">Date:</label>
                       <p class="text-sm text-gray-600">{{ moment(receipt.CreatedOn).format("DD-MM-YYYY") }}</p>
                     </div>
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">Warehouse:</label>
-                      <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.instruction?.warehouse?.Name }}
-                      </p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">Vehicle Reg No:</label>
-                      <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.instruction?.VehicleRegNo }}</p>
-                    </div>
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">Driver Name:</label>
-                      <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.instruction?.DriverName }}</p>
-                    </div>
+                 
+                 
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Purpose:</label>
                       <p class="text-sm text-gray-600">
@@ -73,9 +62,9 @@
                   <table class="min-w-full mt-2 bg-white">
                     <thead>
                       <tr class="w-full bg-gray-200">
-                        <th class="px-4 py-2">Warehouse</th>
-                        <th class="px-4 py-2">Vehicle Reg No</th>
-                        <th class="px-4 py-2">FDP</th>
+                         <th class="px-4 py-2">FDP</th>
+                         <th class="px-4 py-2">Truck #</th>
+                       
                         <th class="px-4 py-2">Commodity</th>
                         <th class="px-4 py-2">Condition</th>
                         <th class="px-4 py-2">Qty</th>
@@ -83,9 +72,10 @@
                     </thead>
                     <tbody>
                       <tr v-for="item in receipt?.receivedCommodities" :key="item" class="w-full text-center">
-                        <td class="border px-4 py-2">{{ receipt.instructedDispatch?.instruction?.warehouse?.Name }}</td>
-                        <td class="border px-4 py-2">{{ receipt.instructedDispatch?.instruction?.VehicleRegNo }}</td>
-                        <td class="border px-4 py-2">{{ item.FinalDestinationPoint }}</td>
+                       
+                         <td class="border px-4 py-2">{{ item.FinalDestinationPoint }}</td>
+                         <td class="border px-4 py-2">{{ item.TruckNumber }}</td>
+                       
                         <td class="border px-4 py-2">{{ item?.commodity?.Name }}</td>
                         <td class="border px-4 py-2">{{ item?.Remarks }}</td>
                         <td class="border px-4 py-2">
@@ -99,12 +89,12 @@
                 <!-- Approvals Section -->
                 <div class="mt-6">
                   <h3 class="text-lg font-semibold text-gray-700">Approvals</h3>
-                  <div class="grid grid-cols-4 gap-4 mt-2">
+                  <div class="grid grid-cols-3 gap-4 mt-2">
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Dispatched By:</label>
                       <p class="text-sm text-gray-600">
                         {{ receipt.instructedDispatch?.Dispatcher?.firstname }} {{
-    receipt.instructedDispatch?.Dispatcher?.lastname }}
+                          receipt.instructedDispatch?.Dispatcher?.lastname }}
                       </p>
                     </div>
                     <div>
@@ -121,12 +111,7 @@
                         {{ receipt.Recipient?.lastname }}
                       </p>
                     </div>
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">Driver Name:</label>
-                      <p class="text-sm text-gray-600">
-                        {{ receipt.instructedDispatch?.instruction?.DriverName }}
-                      </p>
-                    </div>
+                  
                   </div>
                 </div>
               </div>

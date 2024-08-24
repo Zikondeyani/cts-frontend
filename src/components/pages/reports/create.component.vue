@@ -37,7 +37,17 @@
               <div class="px-4 py-5 bg-white sm:p-6">
                 <div class="grid grid-cols-6 gap-2">
 
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="transporter" class="block text-sm font-bold text-gray-700">
+                      Select Activity</label>
+                      <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                        {{ activity.Name }}
+                      </option>
+                    </select>
 
+                  </div>
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
@@ -70,7 +80,7 @@
 
                 </div>
 
-                <div class="grid grid-cols-6 gap-2">
+                <div class="grid grid-cols-6 gap-2 mt-2">
                   <div class="col-span-6 sm:col-span-3">
                     <label for="quantity" class="block text-sm font-bold text-gray-700">Quantity ({{selectedCommodityName?.commodityType?.Name == "Food" ? "MT": "Units"}})</label>
 
@@ -129,7 +139,7 @@
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
-                      ATC NUMBER <span class="text-red-500">(optional)</span>
+                      ATC NUMBER 
                     </label>
                     <input type="text" name="ATCNumber" v-model="reports.ATCNumber" id="ATCNumber"
                       autocomplete="ATCNumber"
@@ -139,17 +149,7 @@
                 </div>
 
                 <div class="grid grid-cols-6 gap-2 mt-2">
-                  <!--    <div class="col-span-6 sm:col-span-3">
-                    <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
-
-                    <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
-                        {{ activity.Name }}
-                      </option>
-                    </select>
-                  </div> -->
-
+                  
 
 
 
@@ -273,8 +273,9 @@ const reports = ref({});
 //FUNCTIONS
 const onSubmit = () => {
 
-  reports.value.projectId = 1
+ // reports.value.projectId = 1
   emit("create", reports.value);
+  reports.value = {}
   open.value = false; // This will set open.value to false after emitting the event
 
 };

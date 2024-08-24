@@ -59,8 +59,16 @@
                         Select Disaster Type</label>
                       <select id="type" name="type" v-model="type" autocomplete="type-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="item in ['Accident', 'Droughts', 'Dry Spells', 'Fire', 'Flash Floods', 'Floods', 'Hailstorm', 'Stormy rains']"
-                          :key="item" :value="item" class="uppercase">
+                        <option v-for="item in ['Strong winds (with no rains)',
+                          'Floods',
+                          'Stormy rains',
+                          'Hailstorm',
+                          'Earthquake',
+                          'Accident',
+                          'Lightening',
+                          'Disease and Pest outbreak',
+                          'Human-animal conflicts',
+                          'Dry spells']" :key="item" :value="item" class="uppercase">
                           {{ item }}
                         </option>
                       </select>
@@ -77,8 +85,9 @@
 
 
                     <div class="col-span-12 sm:col-span-12">
-                      <label for="date_of_occurrence" class="block text-sm font-medium text-gray-700">Date of Occurrence</label>
-                      <input type="date" v-model="date_of_occurrence"  id="date_of_occurrence" :max="today"
+                      <label for="date_of_occurrence" class="block text-sm font-medium text-gray-700">Date of
+                        Occurrence</label>
+                      <input type="date" v-model="date_of_occurrence" id="date_of_occurrence" :max="today"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ dateError }}
@@ -173,14 +182,24 @@ const { meta } = useForm({
 
   },
 });
+
+
+
+const gvhError = ref('')
+
+const typeError = ref('')
+
+const nameError = ref('')
+
+const dateError = ref('')
 ///FIELDS
 const { value: ta, errorMessage: taError } =
   useField("ta");
-const { value: gvh, errorMessage: gvhError } = useField("gvh")
-const { value: type, errorMessage: typeError } = useField("type");
+const { value: gvh } = useField("gvh")
+const { value: type } = useField("type");
 const { value: district, errorMessage: districError } = useField("district");
-const { value: name, errorMessage: nameError } = useField("name");
-const { value: date_of_occurrence, errorMessage: dateError } = useField("date_of_occurrence");
+const { value: name } = useField("name");
+const { value: date_of_occurrence } = useField("date_of_occurrence");
 
 const today = new Date().toISOString().split('T')[0];
 
@@ -227,18 +246,42 @@ const getDistricts = async () => {
 };
 
 
+const validateAreas = () => {
+  if (!name.value) {
+    nameError.value = "Disaster name is required.";
+    return false;
+  }
+  if (!type.value) {
+    typeError.value = "Disaster type is required.";
+    return false;
+  }
+  if (!date_of_occurrence.value) {
+    dateError.value = "Date of occurrence is required.";
+    return false;
+  }
+
+  return true;
+};
+
 const onSubmit = useSubmitForm((values, actions) => {
-  let model = {
-    name: name.value,
-    type: type.value,
-    date_of_occurrence: date_of_occurrence.value,
-    district: user.value.district,
-   
-  };
-  emit("create", model);
-  open.value = false;
-  actions.resetForm();
+
+  if (validateAreas()) {
+    let model = {
+      name: name.value,
+      type: type.value,
+      date_of_occurrence: date_of_occurrence.value,
+      district: user.value.district,
+
+    };
+    emit("create", model);
+    open.value = false;
+    actions.resetForm();
+  }
 });
+
+
+
+
 
 
 const villages_affected = ref([]); // Array of tags (villages)

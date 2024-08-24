@@ -249,6 +249,10 @@ const expectedDispatches = reactive([]);
 import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/create.receipt-recipient.component.vue";
 
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
+
+import { usewarehousestore } from "../../../stores/warehouse.store";
+
+
 const isEditDialogOpen = ref(false);
 const selectedDispatch = ref(null);
 
@@ -405,13 +409,22 @@ const columns2 = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
+
   {
     label: "From Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
+    field: (row) => {
+      const warehouses = row.warehouses?.map(warehouse => warehouse?.Name).join(', ');
+      const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
+      return `${warehouseFormatted}`;
+    },
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
+    thClass: "w-1/6", // Set width to 1/6th of the table
+    html: true,
+    tdAttr: { "v-html": true },
   },
+
   {
     label: "Dispatched By",
     field: row => row.Dispatcher?.username.replace(/\./g, ' '),
@@ -470,6 +483,11 @@ const disasters = reactive([]);
 const recieptStore = usereceiptstore();
 
 const instructedreceiptStore = useInstructedReceiptsStore();
+
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([]);
+
+
 
 const receipts = reactive([]);
 
@@ -542,21 +560,73 @@ const fetchUser = async () => {
 const dispatchcount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
-  await fetchUser()
-  getCatalogue();
-  getExpectedDispatches()
-  getUsers();
-  getBookings();
-  getDispatches();
-  getReceipts();
-  getDispatchesCount();
-  getLoadingPlansPending();
-  getloadingplansSummary();
-  getloadingplansSummaryByCommodity();
-  getRequisitions();
-  getDisasters();
+  await fetchUser();
+  await getWarehouses(); // Ensure warehouses are fetched before dispatches
+  await getCatalogue();
+  await getExpectedDispatches();
+  await getUsers();
+  await getBookings();
+  await getDispatches(); // Fetch dispatches after warehouses
+  await getReceipts();
+  await getDispatchesCount();
+  await getLoadingPlansPending();
+  await getloadingplansSummary();
+  await getloadingplansSummaryByCommodity();
+  await getRequisitions();
+  await getDisasters();
 });
-//WATCH
+
+const getWarehouses = async () => {
+  try {
+    const result = await warehouseStore.get();
+
+    warehouses.length = 0; // Empty array before pushing new results
+    warehouses.push(...result);
+  } catch (error) {
+    console.error('Error fetching warehouses:', error);
+  }
+};
+
+const getDispatches = async () => {
+  isLoading.value = true;
+
+  try {
+    const result = await dispatchStore.get();
+
+    // Sort dispatches by `createdOn` date
+    const sortedDispatches = [...result].sort((a, b) => new Date(b.createdon) - new Date(a.createdon));
+    
+    dispaches.length = 0; // Clear existing dispatches
+    const reversedData = sortedDispatches.reverse();
+
+    // Filter and map the dispatches
+    const filteredDispatches = reversedData
+      .filter(item => !item.IsArchived && item.instruction.district?.Name === user.value.district)
+      .map(dispatch => {
+        // Map warehouse IDs to warehouse objects
+        const warehouseArray = dispatch.instruction?.warehouseIds?.map(warehouseId => {
+          return warehouses.find(warehouse => warehouse.id === warehouseId);
+        }).filter(warehouse => warehouse); // Filter out undefined results
+
+      
+        // Add the warehouse array to the dispatch object
+        return {
+          ...dispatch,
+          warehouses: warehouseArray,
+        };
+      });
+
+    // Update dispatches with the mapped data
+    dispaches.push(...filteredDispatches);
+
+
+  } catch (error) {
+    console.error('Error fetching dispatches:', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 
 
 // Create dispatched commodities with the dispatch ID
@@ -566,6 +636,8 @@ const createReceivedCommodities = async (receiptId, receivedCommodity) => {
     instructedReceiptId: receiptId,
     commodityId: receivedCommodity.commodityId,
     BatchNumber: receivedCommodity.BatchNumber,
+    
+    TruckNumber: receivedCommodity.TruckNumber,
     FinalDestinationPoint: receivedCommodity.FinalDestinationPoint,
     Quantity: receivedCommodity.Quantity,
     NoBags: receivedCommodity.NoBags,
@@ -659,6 +731,7 @@ const createLeanReceipt = async (originalModel) => {
 };
 
 
+
 const getExpectedDispatches = async () => {
 
   leanseasondispatchStore
@@ -736,26 +809,8 @@ const getloadingplansSummaryByCommodity = async () => {
     })
 }
 
-const getDispatches = async () => {
-  isLoading.value = true;
-  dispatchStore
-    .get()
-    .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
-      const sortedDispatches = [...result].sort((a, b) => {
-        // Convert the `createdOn` field to a Date object and compare
-        return new Date(b.createdon) - new Date(a.createdon);
-      });
 
-      // Clear the existing dispatches and push the sorted results
-      dispaches.length = 0;
-      let reversedData = sortedDispatches.reverse();
-      dispaches.push(...reversedData.filter(item => !item.IsArchived && item.instruction.district?.Name == user.value.district));
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
-}
+
 
 
 const getDispatchesCount = async () => {

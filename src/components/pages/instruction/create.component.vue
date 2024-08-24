@@ -60,29 +60,26 @@
 
 
                     <div class="col-span-12 sm:col-span-12">
-                      <label for="user-district" class="block text-sm font-medium text-gray-700">
-                        Select Warehouse (From)</label>
-                      <select id="activity" name="activity" v-model="warehouseId" autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="item in warehouses" :key="item.id" :value="item.id" class="uppercase">
-                          {{ item.Name }}
-                        </option>
-                      </select>
 
-                      <span class="text-md text-red-500 mb-5 text-italic font-medium text-sm" v-if="warehouseId">
-                        {{ availableBalance }}</span>
+                      <label class="block text-sm font-medium text-gray-700">
+                        Select Warehouse(s)</label>
+                      <multiselect v-model="selectedWarehouseIds" tag-placeholder="Add this as new warehouse"
+                        placeholder="Search or add a warehouse" label="Name" track-by="id" :options="warehouses"
+                        :multiple="true" :taggable="true" @tag="addWarehouse"></multiselect>
+
 
                     </div>
 
                     <div class="col-span-12 sm:col-span-12">
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         District (To)</label>
-                    
 
-                      <p class="mt-1 focus:ring-gray-500 font-bold focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+
+                      <p
+                        class="mt-1 focus:ring-gray-500 font-bold focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         {{ props.district?.Name }}
                       </p>
-                     
+
                     </div>
 
                     <div class="col-span-12 sm:col-span-12">
@@ -99,7 +96,7 @@
                       </p>
                     </div>
 
-                <!--     <div class="col-span-12 sm:col-span-12">
+                    <!--     <div class="col-span-12 sm:col-span-12">
                       <label for="DriverName" class="block text-sm font-medium text-gray-700">Driver Name</label>
                       <input type="text" v-model="DriverName" name="DriverName" id="From" autocomplete="off"
                         placeholder="Driver Name"
@@ -180,6 +177,8 @@ import {
   PencilIcon, PlusCircleIcon
 } from "@heroicons/vue/solid";
 
+import Multiselect from 'vue-multiselect'
+
 import {
   Dialog,
   DialogOverlay,
@@ -223,6 +222,26 @@ const $route = useRoute();
 
 const commodityinventoriestore = usecommodityinventoriestore();
 const commodityinventories = reactive([])
+
+const selectedWarehouseIds = ref([]);
+const selectedWarehouses = ref([]);
+
+
+
+
+// Watch for changes in selectedWarehouseIds to update selectedWarehouses
+// Watch the selectedWarehouseIds to see changes
+watch(selectedWarehouseIds, (newSelection) => {
+   selectedWarehouses.value = newSelection.map(warehouse => warehouse.id);
+});
+const addWarehouse = (newTag) => {
+  const tag = {
+    name: newTag,
+    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+  }
+  this.options.push(tag)
+  this.value.push(tag)
+}
 
 const props = defineProps({
   rowId: {
@@ -296,7 +315,7 @@ const { meta } = useForm({
     Quantity: "",
     ExpiryDate: "",
     commodityId: "",
-    warehouseId: "",
+    warehouseIds: "",
     districtId: "",
     userId: ""
 
@@ -308,7 +327,7 @@ const { value: AffectedHouseholds, errorMessage: AffectedHouseholdsError } = use
 const { value: disasterId, errorMessage: disasterError } = useField("disasterId");
 const { value: activityId, errorMessage: activityError } = useField("activityId");
 const { value: transporterId, errorMessage: transporterError } = useField("transporterId");
-const { value: warehouseId, errorMessage: warehouseError } = useField("warehouseId");
+const { value: warehouseIds, errorMessage: warehouseError } = useField("warehouseIds");
 const { value: Remarks, errorMessage: remarksError } = useField("Remarks");
 const { value: Purpose, errorMessage: PurposeError } = useField("Purpose");
 const { value: VehicleRegNo, errorMessage: VRnoError } = useField("VehicleRegNo");
@@ -352,8 +371,8 @@ const getWarehouses = async () => {
 
       warehouses.length = 0; //empty array
       warehouses.push(...result.filter(item => item.organisationId == 2));
-  
-  
+
+
     })
     .catch(error => {
 
@@ -431,7 +450,7 @@ const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
   let model = {
-    warehouseId: warehouseId.value,
+    warehouseIds: selectedWarehouses.value,
     districtId: props.district?.id,
     transporterId: transporterId.value,
     Remarks: Remarks.value,
@@ -469,7 +488,7 @@ function removeTag(index) {
   AffectedAreas.value.splice(index, 1);
 }
 
-watch(
+/* watch(
   () => [warehouseId.value],
   ([newWarehouseId]) => {
     if (newWarehouseId) {
@@ -487,7 +506,7 @@ watch(
       availableBalance.value = 'Please select a warehouse to check stock availability.';
     }
   }
-);
+); */
 
 
 </script>

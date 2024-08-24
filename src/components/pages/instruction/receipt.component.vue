@@ -32,7 +32,7 @@
                 </button>
               </div>
 
-              <form @submit.prevent="onSubmit">
+              <form @submit.prevent="confirmSubmission">
                 <div class="px-6 py-4">
                   <p class="mb-4"><strong>Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
                   <p class="mb-4"><strong>Target FDP:</strong> {{ dispatch.FinalDestinationPoint }}</p>
@@ -54,7 +54,7 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(item, index) in dispatch?.dispatchedCommodities" :key="index"
                           class="hover:bg-gray-100">
-                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{ item.TruckNumber }})</td>
                           <td class="px-6 py-4 text-sm text-gray-900">{{ item.Quantity }} {{ item.commodity.Unit
       === 'Kg' ? 'MT' : 'Units' }} ({{ item.NoBags }} {{ item.commodity.Container_type }})</td>
                         </tr>
@@ -78,7 +78,7 @@
                         Enable Multiple Final Destinations
                       </label>
                     </div>
-                    <p class="text-xs text-italic text-red-500 mt-3">Please ensure that the total received in the destination points
+                    <p class="text-xs text-italic text-red-500 mt-3">NB: * Please ensure that the total received in the destination points
                       is accurate.</p>
                   </div>
 
@@ -112,7 +112,7 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(item, itemIndex) in destination.commodities" :key="itemIndex"
                           class="hover:bg-gray-100">
-                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{ item.TruckNumber }})</td>
                           <td class="py-2 px-4 border-b">
                             <div class="space-y-2">
                               <div v-for="(remark, i) in item.remarks" :key="i" class="flex items-center space-x-2">
@@ -166,6 +166,11 @@
 
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
+                    <button type="button" @click="saveProgress"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      <SaveIcon class="h-5 w-5 mr-1" />
+                      Save Progress
+                    </button>
                     <button type="button" @click="open = false"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
                       Cancel
@@ -188,7 +193,7 @@
 
 <script setup>
 import { ref, reactive, inject, defineProps, defineEmits, computed } from "vue";
-import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon } from "@heroicons/vue/solid";
+import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon, SaveIcon } from "@heroicons/vue/solid";
 import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { useForm, useSubmitForm } from "vee-validate";
 import { CreateRequisitionSchema } from "../../../services/schema/requisition.schema";
@@ -301,10 +306,28 @@ const computedTonnagePerRemark = (packsize, bags) => {
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 };
 
+
+const confirmSubmission = () => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "Once submitted, you will need to go through the reversal process if changes are required.",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, submit it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      onSubmit(); // Call the actual submit function if confirmed
+    }
+  });
+};
+
 const onSubmit = useSubmitForm(async (values) => {
   isLoading.value = true;
   const receivedCommodities = [];
 
+  
   try {
     for (let destination of destinations.value) {
       // Validate that every destination has a name
@@ -343,6 +366,7 @@ const onSubmit = useSubmitForm(async (values) => {
               receivedCommodities.push({
                 BatchNumber: commodity.BatchNumber,
                 commodityId: commodity.commodity.id,
+                TruckNumber: commodity.TruckNumber,
                 Comments: remark.Comments,
                 Date: new Date().toISOString(),
                 Quantity: computedTonnagePerRemark(commodity.commodity?.PackSize, remark.quantity),
@@ -397,4 +421,21 @@ const summaryGoods = computed(() => {
   });
   return Object.values(summary);
 });
+
+
+const saveProgress = () => {
+  // Your logic to save progress
+  const saveData = {
+    destinations: destinations.value,
+    multipleDestinations: multipleDestinations.value,
+    // Add any other data you want to save
+  };
+  
+  console.log("Saving progress...", saveData);
+  Swal.fire({
+    icon: "success",
+    title: "Progress Saved",
+    text: "Your progress has been saved successfully.",
+  });
+};
 </script>
