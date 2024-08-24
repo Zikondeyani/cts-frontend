@@ -158,7 +158,7 @@ const columns = ref([
       } else {
         colorClass = 'bg-red-100 text-red-800';
       }
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage}%</span>`;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage.toFixed(2)}%</span>`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -186,11 +186,11 @@ const generateExcel = () => {
       "REF NO": lossType.RefNO,
       District: damage.district,
       "Transporter": damage.transporter,
-      "Quantity Dispatched (MT)": damage.originQuantity,
-      "Quantity Damaged (MT)": lossType.totalQuantity,  
+      "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
+      "Quantity Damaged (MT)": lossType.totalQuantity.toFixed(2),  
       "FDP": lossType.FinalDestinationPoint,
       "Type of Loss": lossType.typeOfLoss,
-      "Percentage Damaged (%)": lossType.damagePercentage,
+      "Percentage Damaged (%)": lossType.damagePercentage.toFixed(2),
       "Comments": lossType.comments,
     }))
   );

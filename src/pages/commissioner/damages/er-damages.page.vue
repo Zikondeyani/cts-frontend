@@ -111,9 +111,9 @@ const columns = ref([
   {
     label: "Status",
 
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity}MT</span><br>`
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity.toFixed(2)}MT</span><br>`
       +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantity}MT</span><br>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantity.toFixed(2)}MT</span><br>`,
 
     sortable: true,
     firstSortType: "asc",
@@ -135,7 +135,7 @@ const columns = ref([
       } else {
         colorClass = 'bg-red-100 text-red-800';
       }
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage}%</span>`;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage.toFixed(2)}%</span>`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -158,12 +158,12 @@ const generateExcel = (data) => {
     return Object.entries(damage.typesOfLoss).map(([lossType, details]) => ({
       Commodity: damage.commodity,
       District: damage.district,
-      "Quantity Dispatched (MT)": damage.originQuantity,
-      "Quantity Damaged (MT)": details.totalQuantity,
+      "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
+      "Quantity Damaged (MT)": details.totalQuantity.toFixed(2),
       "Type of Loss": lossType,   
       "FDP": details.FinalDestinationPoint,
       "REF NO": details.RefNO,
-      "Percentage Damaged (%)": details.damagePercentage,
+      "Percentage Damaged (%)": details.damagePercentage.toFixed(2),
       "Comments": damage.comments || '',
     }));
   });

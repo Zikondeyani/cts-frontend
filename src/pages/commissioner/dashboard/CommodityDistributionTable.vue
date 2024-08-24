@@ -60,9 +60,9 @@
     <tr v-for="(row, index) in filteredData" :key="index">
         <td class="px-6 py-4 whitespace-nowrap">{{ row.district }}</td>
         <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ row.required }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ row.distributed }}</td>
-        <td class="px-6 py-4 whitespace-nowrap">{{ row.balance }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ row.required.toFixed(2) }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ row.distributed.toFixed(2) }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ row.balance.toFixed(2) }}</td>
         <td class="px-6 py-4 whitespace-nowrap">
             <span v-if="row.percentage > 100" class="relative group">
                 100%

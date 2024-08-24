@@ -11,7 +11,7 @@ const chartRef = ref(null);
 
 const processedChartData = computed(() => {
   const commodities = [...new Set(props.commodityDistributionData.map(item => item.commodity))];
-  const totalDistributed = props.commodityDistributionData.reduce((acc, item) => acc + item.distributed, 0);
+  const totalDistributed = props.commodityDistributionData.reduce((acc, item) => acc + item.distributed, 0).toFixed(2);
 
   const distributionPercentages = commodities.map(commodity => {
     const totalForCommodity = props.commodityDistributionData.filter(item => item.commodity === commodity)
