@@ -115,38 +115,37 @@ const breadcrumbs = [
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 const columns = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-
-  {
-    label: "Details",
-    field: (row) => {
-      // Combine the disaster and activity names with proper formatting
-      const warehouseFormatted = `<span style="color: #096eb4;">From: ${row.warehouse.Name}</span>`;
-      const districtFormatted = `<span style="color: green;">To: ${row.district.Name}</span>`;
-      return `${warehouseFormatted}<br/>${districtFormatted}`;
-    },
-    sortable: true,
-    firstSortType: "asc",
     tdClass: "capitalize",
-    html: true, // This is important to render HTML
-    tdAttr: { "v-html": true } // Use v-html directive to render HTML
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
+  {
+  label: "Details",
+  field: (row) => {
+    const warehouses = row.warehouses?.map(warehouse => warehouse?.name).join(', ');
+    const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
+    const districtFormatted = `<span style="color: green;">To: ${row.district.Name}</span>`;
+    return `${warehouseFormatted}<br/>${districtFormatted}`;
+  },
+  sortable: true,
+  firstSortType: "asc",
+  tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
+  thClass: "w-1/6", // Set width to 1/6th of the table
+  html: true,
+  tdAttr: { "v-html": true },
+},
 
-
- 
 
   {
     label: "Transporter",
     field: row => row.transporter.Name,
     sortable: true,
-    firstSortType: "asc"
+    firstSortType: "asc",
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
   {
     label: "District",
@@ -154,16 +153,17 @@ const columns = ref([
     field: row => row.district.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
-  
- 
   {
     label: "Options",
     field: row => row,
-    sortable: false
+    sortable: false,
+    thClass: "w-1/6", // Set width to 1/6th of the table
   }
 ]);
+
 //MOUNTED
 onMounted(() => {
   getInstructions();

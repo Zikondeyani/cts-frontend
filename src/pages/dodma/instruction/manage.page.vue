@@ -37,10 +37,10 @@
               aria-controls="user-file" aria-selected="false">File Management</a>
           </li>
           <li class="nav-item ml-auto mb-4" role="presentation">
-            <button @click="showPrintModal = true"
+           <!--  <button @click="showPrintModal = true"
               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
               Print Goods Release Instruction
-            </button>
+            </button> -->
 
             <div v-if="showPrintModal"
               class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">

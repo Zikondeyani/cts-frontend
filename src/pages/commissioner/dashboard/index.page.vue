@@ -123,13 +123,15 @@
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+
+
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
-                       
+
                         <select id="district" v-model="selectedDistrict"
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Districts</option>
-                         
+
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
                           </option>
@@ -177,7 +179,7 @@
                     </div>
                   </div>
                   <!-- Instance of chart components -->
-                  <div class="mx-3"> 
+                  <div class="mx-3">
                     <distribution-by-commodity v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
 
@@ -210,6 +212,9 @@
               <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
                 <!-- Content for Lean Season Response Dashboard -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+               
+
                   <!-- Aligned images in the center -->
                   <div v-show="screenshotMode"
                     class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5">
@@ -227,6 +232,17 @@
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+                      <div class="flex flex-col">
+                        <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
+                        <select id="district" v-model="selectedDistrict"
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option value="">All Activity</option>
+                          <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
+                            {{ activity.Name }}
+                          </option>
+                        </select>
+                      </div>
+
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
@@ -256,7 +272,35 @@
                     </div>
                   </div>
 
-             
+
+                     <!-- Dashboard Cards Section -->
+                     <div class="col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <!-- Total Commodities Dispatched -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="text-gray-500 text-sm">Total Commodities Dispatched</div>
+                      <div class="text-2xl font-bold">6</div>
+                    </div>
+
+                    <!-- Total Commodities Received -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="text-gray-500 text-sm">Total Commodities Received</div>
+                      <div class="text-2xl font-bold">6</div>
+                    </div>
+
+                    <!-- Total Requisitions from Councils -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="text-gray-500 text-sm">Total Requisitions from Councils</div>
+                      <div class="text-2xl font-bold">5</div>
+                    </div>
+
+                    <!-- Total Damaged Commodities Received -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="text-gray-500 text-sm">Total Damaged Commodities Received</div>
+                      <div class="text-2xl font-bold">3</div>
+                    </div>
+                  </div>
+
+                  <!-- Charts Section -->
                   <div class="mx-3">
                     <damage-summary-lean v-if="filteredLeanCommodityDispatchData[0]?.commoditySummary?.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData" />
@@ -266,8 +310,7 @@
                     </div>
                   </div>
                   <div class="mx-3">
-                    
-                    <damage-summary-leans v-if="filteredLeanCommodityDispatchData.length >  0"
+                    <damage-summary-leans v-if="filteredLeanCommodityDispatchData.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
@@ -282,10 +325,9 @@
                       No Data
                     </div>
                   </div>
-
-
                 </div>
               </div>
+
 
               <!-- Emergency Response Dashboard -->
               <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
@@ -345,12 +387,12 @@
                               <div>
                                 <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
                                 <b>Total Stock Planned:</b> <br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-          summary.totalStockPlanned.toLocaleString() }} MT
+                                  summary.totalStockPlanned.toLocaleString() }} MT
                               </div>
                               <div>
                                 <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
                                 <b> Total Balance: </b><br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-          summary.totalBalance.toLocaleString() }} MT
+                                  summary.totalBalance.toLocaleString() }} MT
                               </div>
                             </div>
                           </div>
@@ -502,6 +544,9 @@ import { usereceiptstore } from "../../../stores/receipt.store";
 import { usedonationstore } from "../../../stores/donation.store";
 
 import { usedistrictstore } from "../../../stores/districts.store";
+
+import { useactivitiestore } from "../../../stores/activity.store";
+
 import { useDisasterstore } from "../../../stores/disaster.store";
 import { usecommoditiestore } from "../../../stores/commodity.store";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";
@@ -568,6 +613,9 @@ const toggleView = (view) => {
 const showTooltip = ref(false);
 
 const districtstore = usedistrictstore();
+
+const activitystore = useactivitiestore();
+
 const commoditystore = usecommoditiestore();
 
 const donationstore = usedonationstore();
@@ -577,6 +625,8 @@ const commoditytypestore = usecommoditytypestore();
 
 const receivedcommoditiesstore = useReceivedCommoditiesStore();
 const districts = reactive([]);
+
+const activities = reactive([]);
 const disasters = reactive([]);
 const commodities = reactive([]);
 const commodityTypes = reactive([]);
@@ -703,7 +753,7 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
-  
+  getActivities();
   getCommodities();
   getDisasters();
   getDistricts();
@@ -783,6 +833,21 @@ const getDistricts = async () => {
     })
     .catch(error => {
       console.error("Failed to load districts:", error);
+    })
+    .finally(() => {
+    });
+};
+
+const getActivities = async () => {
+  activitystore
+    .get()
+    .then(result => {
+      activities.length = 0; //empty array
+      activities.push(...result);
+
+    })
+    .catch(error => {
+      console.error("Failed to load activities:", error);
     })
     .finally(() => {
     });
@@ -1083,6 +1148,8 @@ const damagedStockStatsEmergency = computed(() => {
 
 // Filters
 const selectedDistrict = ref('');
+
+const selectedActivity = ref('');
 const selectedCommodity = ref('');
 const selectedDisaster = ref('');
 const selectedDateFrom = ref('');
@@ -1091,6 +1158,7 @@ const selectedDateTo = ref('');
 // Reset filters
 const resetFilters = () => {
   selectedDistrict.value = '';
+  selectedActivity.value = ''
   selectedCommodity.value = '';
   selectedDisaster.value = '';
   selectedDateFrom.value = '';
@@ -1100,6 +1168,7 @@ const resetFilters = () => {
 // Filtered data for Emergency Response Dashboard
 const filteredCommodityDistributionData = computed(() => {
   return commodityDistributionData.value.filter(item => {
+
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
     const matchDisaster = !selectedDisaster.value || item.disaster === selectedDisaster.value;
@@ -1112,9 +1181,10 @@ const filteredCommodityDistributionData = computed(() => {
 // Filtered data for Lean Season Response Dashboard
 const filteredLeanCommodityDispatchData = computed(() => {
   return commodityDispatchData.value.filter(item => {
+    const matchActivity = !selectedActivity.value || item.summary.some(summaryItem => summaryItem.activity === selectedActivity.value);
     const matchDistrict = !selectedDistrict.value || item.summary.some(summaryItem => summaryItem.district === selectedDistrict.value);
     const matchCommodity = !selectedCommodity.value || item.summary.some(summaryItem => summaryItem.commodity === selectedCommodity.value);
-    return matchDistrict && matchCommodity;
+    return matchDistrict && matchCommodity && matchActivity;
   });
 });
 

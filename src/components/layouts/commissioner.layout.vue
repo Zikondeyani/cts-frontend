@@ -394,7 +394,7 @@ const getInstructions = async () => {
 
 
       // Push the filtered instructions into the array
-      instructions.push(...result.filter(item => !item.IsApproved));
+      instructions.push(...result.filter(item => !item.IsApproved && item.instructedCommodities));
 
 
       // Update the count of new instructions

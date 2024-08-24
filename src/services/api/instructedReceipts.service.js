@@ -8,7 +8,7 @@ export default class InstructedReceiptService {
         .get(
           resource +
           `?filter=
-        {"include":[ {"relation":"receivedCommodities","scope":{"include":[{"relation":"commodity"}]}}, {"relation":"instructedDispatch","scope":{"include":[{"relation": "Dispatcher"}, {"relation":"instruction", "scope":{"include":[{"relation":"warehouse"}, {"relation":"district"}]} }]}}, "Recipient"]}`,
+        {"include":[ {"relation":"receivedCommodities","scope":{"include":[{"relation":"commodity"}]}}, {"relation":"instructedDispatch","scope":{"include":[{"relation": "Dispatcher"}, {"relation":"instruction", "scope":{"include":[{"relation":"district"}]} }]}}, "Recipient"]}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",

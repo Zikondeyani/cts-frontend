@@ -6,38 +6,7 @@ export default class InstructionService {
     if (id == null) {
       return axios
         .get(
-          resource +
-          `?filter={"include": [
-            "district", "user", "transporter", "warehouse",
-            {
-              "relation": "requisition",
-              "scope": {
-                "include": [
-                  {
-                    "relation": "requestedCommodities",
-                    "scope": {
-                      "include": [
-                     
-                        {
-                          "relation": "commodity",
-                          "scope": {
-                            "include": [
-                              {
-                                "relation": "commodityType"
-                              },
-                              {
-                                "relation": "commodityInventories"
-                              }
-                            ]
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]}`,
+          resource,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -58,37 +27,7 @@ export default class InstructionService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": [
-          "district", "user", "transporter", "warehouse",
-          {
-            "relation": "requisition",
-            "scope": {
-              "include": [
-                {
-                  "relation": "requestedCommodities",
-                  "scope": {
-                    "include": [
-                   
-                      {
-                        "relation": "commodity",
-                        "scope": {
-                          "include": [
-                            {
-                              "relation": "commodityType"
-                            },
-                              {
-                                "relation": "commodityInventories"
-                              }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]}`, {
+        .get(resource + `/` + id , {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",

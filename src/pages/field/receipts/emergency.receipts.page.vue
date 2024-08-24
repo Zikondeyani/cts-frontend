@@ -163,9 +163,9 @@ const columns = ref([
   },
 
   {
-    label: "Truck Number",
+    label: "Target FDP",
     field: row => `
-    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"> ${row.instructedDispatch?.TruckNumber || "Unknown"}</span>`,
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"> ${row.instructedDispatch?.FinalDestinationPoint || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML

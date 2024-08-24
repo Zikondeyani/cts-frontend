@@ -34,7 +34,7 @@
 
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="transporter" class="block text-sm font-medium text-gray-700">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
                     Select Transporter</label>
                   <select id="transporter" name="transporter" v-model="loadingPlan.transporterId"
                     autocomplete="transporter-name"
@@ -51,7 +51,7 @@
 
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="transporter" class="block text-sm font-medium text-gray-700">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
                     Select Commodity</label>
                   <select id="commodity" name="commodity" v-model="loadingPlan.commodityId"
                     autocomplete="commodity-name"
@@ -67,7 +67,7 @@
 
               <div class="grid grid-cols-6 gap-2">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                  <label for="quantity" class="block text-sm font-bold text-gray-700">Quantity</label>
 
                   <input type="number" name="quantity" v-model="loadingPlan.Quantity" id="reportFrom"
                     autocomplete="quantity"
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
+                  <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
                   <select id="warehouse" name="warehouse" v-model="loadingPlan.warehouseId"
                     autocomplete="warehouse-name"
@@ -91,7 +91,7 @@
 
               <div class="grid grid-cols-6 gap-2">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
+                  <label for="destination-district" class="block text-sm font-bold text-gray-700">Destination
                     District</label>
 
                   <select id="destination" name="destination" v-model="loadingPlan.districtId"
@@ -103,22 +103,24 @@
                   </select>
                 </div>
 
+               
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+                    <label for="transporter" class="block text-sm font-bold text-gray-700">
+                      Select Activity</label>
+                      <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                        {{ activity.Name }}
+                      </option>
+                    </select>
 
-                  <select id="project" name="project" v-model="loadingPlan.projectId" autocomplete="project-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                    <option v-for="project in projects" :key="project" :value="project.id" class="uppercase">
-                      {{ project.Name }}
-                    </option>
-                  </select>
-                </div>
+                  </div>
               </div>
 
               <div class="grid grid-cols-6 gap-2 mt-3">
                 <div class="col-span-3 sm:col-span-3">
                   <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
-                    ATC NUMBER <span class="text-red-500">(optional)</span>
+                    ATC NUMBER 
                   </label>
                   <input type="text" name="ATCNumber" v-model="loadingPlan.ATCNumber" id="ATCNumber"
                     autocomplete="ATCNumber"
@@ -126,7 +128,7 @@
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
-                  <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
+                  <label for="project" class="block text-sm font-bold text-gray-700">Start Date</label>
 
 
 
@@ -136,7 +138,7 @@
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
-                  <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
+                  <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
 
                   <input type="date" name="End Date" v-model="formattedEndDate" id="End Date" autocomplete="End Date"
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -146,7 +148,7 @@
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
               <button @click="updateLoadingPlan" style="background-color: #329ce7;"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 Save
               </button>
             </div>
@@ -237,13 +239,32 @@ const commodities = ref([]);
 const updateLoadingPlan = async () => {
   try {
     loadingPlan.value.UpdatedOn = new Date();
-    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, dispatches, ApprovedBy, IsApproved, ...updatedLoadingPlan } = loadingPlan.value;
-    updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
 
-    if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.projectId == null) {
+    const {
+      commodity, district, transporter, warehouse, activity, IsRejected, RejectionComment,
+      user, originalIndex, vgt_id, IsActive, IsArchived, NoBags, dispatches,
+      ApprovedBy, IsApproved, ...updatedLoadingPlan
+    } = loadingPlan.value;
+
+    updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
+    updatedLoadingPlan.Balance = updatedLoadingPlan.Quantity
+  
+    
+    if (updatedLoadingPlan.Balance < 0) {
+      await Swal.fire({
+        title: "Invalid Balance",
+        text: "The balance cannot be negative. Please check the quantities.",
+        icon: "error",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+
+    if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.activityId == null) {
       await Swal.fire({
         title: "Missing Information",
-        text: "Please select both a district and a project before updating.",
+        text: "Please select both a district and an activity before updating.",
         icon: "warning",
         confirmButtonColor: '#3085d6',
         confirmButtonText: "Ok"
@@ -267,8 +288,8 @@ const updateLoadingPlan = async () => {
       await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
       emit('update');
       Swal.fire({
-        title: "Loading Plan Updated (Online)",
-        html: `<p>Your loading plan has been successfully updated online.</p>`,
+        title: "Loading Plan Updated",
+        html: `<p>Your loading plan has been successfully updated.</p>`,
         icon: "success",
         confirmButtonColor: '#3085d6',
         confirmButtonText: "View All Loading Plans",
@@ -287,6 +308,7 @@ const updateLoadingPlan = async () => {
     });
   }
 };
+
 
 
 // Fetch data for dropdowns

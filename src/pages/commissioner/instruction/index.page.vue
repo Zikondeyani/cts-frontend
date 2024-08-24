@@ -24,7 +24,7 @@
         <button @click="currentTab = 'leanSeason'" class="rounded-md" :class="{ active: currentTab === 'leanSeason' }">
           Lean Season Instructions
           <span v-if="emergencyResponseInstructions.length > 0" class="badge badge-red">{{
-      emergencyResponseInstructions.length }}</span>
+            emergencyResponseInstructions.length }}</span>
         </button>
         <button @click="currentTab = 'emergencyResponse'" class="rounded-md"
           :class="{ active: currentTab === 'emergencyResponse' }">
@@ -45,7 +45,7 @@
             <template #table-row="props">
               <span v-if="props.column.label === 'Status'">
                 <div>
-                 <!--  <span v-if="props.row.IsRejected !== null">
+                  <!--  <span v-if="props.row.IsRejected !== null">
                     <span v-if="props.row.IsRejected"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                       Rejected
@@ -94,7 +94,7 @@
             <template #table-row="props">
               <span v-if="props.column.label === 'Status'">
                 <div>
-                 
+
                   <span>
                     <span v-if="props.row.IsApproved"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
@@ -185,26 +185,32 @@ const columns = ref([
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
   {
     label: "Details",
     field: (row) => {
-      const warehouseFormatted = `<span style="color: #096eb4;">From: ${row.warehouse.Name}</span>`;
+      const warehouses = row.warehouses?.map(warehouse => warehouse?.name).join(', ');
+      const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
       const districtFormatted = `<span style="color: green;">To: ${row.district.Name}</span>`;
       return `${warehouseFormatted}<br/>${districtFormatted}`;
     },
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize",
+    tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
+    thClass: "w-1/6", // Set width to 1/6th of the table
     html: true,
-    tdAttr: { "v-html": true }
+    tdAttr: { "v-html": true },
   },
+
+
   {
     label: "Transporter",
-    field: row => row.transporter.Name,
+    field: row => row.transporter?.Name,
     sortable: true,
-    firstSortType: "asc"
+    firstSortType: "asc",
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
   {
     label: "District",
@@ -212,20 +218,14 @@ const columns = ref([
     field: row => row.district.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Status",
-    hidden: false,
-    field: row => row.IsApproved,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
+    thClass: "w-1/6", // Set width to 1/6th of the table
   },
   {
     label: "Options",
     field: row => row,
-    sortable: false
+    sortable: false,
+    thClass: "w-1/6", // Set width to 1/6th of the table
   }
 ]);
 
@@ -246,19 +246,22 @@ const getInstructions = async () => {
   instructionsStore
     .get()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   instructions.push(...result);
-      // }
+      // Clear the leanSeasonInstructions array
       leanSeasonInstructions.length = 0;
 
-      leanSeasonInstructions.push(...result.filter(item => !item.IsApproved && !item.IsRejected));
+      // Filter instructions where IsApproved and IsRejected are false,
+      // and requestCommodities is not empty
+      leanSeasonInstructions.push(...result.filter(item => {
+        return !item.IsApproved &&
+          !item.IsRejected && item.instructedCommodities
+      }));
 
-  
+      console.log(leanSeasonInstructions, "Filtered Lean Season Instructions");
     })
     .catch(error => {
       Swal.fire({
         title: "User Retrieval Failed",
-        text: "failed to get instructions (Please refresh to try again)",
+        text: "Failed to get instructions (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok"
       });
@@ -267,6 +270,7 @@ const getInstructions = async () => {
       isLoading.value = false;
     });
 };
+
 
 
 const getLoadingPlans = async () => {

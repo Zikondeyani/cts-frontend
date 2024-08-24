@@ -8,7 +8,7 @@ export default class InstructedCommoditiesService {
         .get(
           resource +
           `?filter=
-          {"include":["commodity", {"relation":"instruction","scope":{"include":[{"relation":"warehouse"}]}}]}`,
+          {"include":["commodity", {"relation":"instruction"}]}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -29,7 +29,7 @@ export default class InstructedCommoditiesService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include":["commodity", {"relation":"instruction","scope":{"include":[{"relation":"warehouse"}]}}]}`, {
+        .get(resource + `/` + id + `?filter={"include":["commodity", {"relation":"instruction"}]}`, {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",

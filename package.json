@@ -26,6 +26,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.5.0",
     "@heroicons/vue": "^1.0.6",
+    "@johmun/vue-tags-input": "^2.1.0",
     "@sweetalert2/theme-material-ui": "^5.0.10",
     "@sweetalert2/theme-minimal": "^5.0.10",
     "@sweetalert2/themes": "^5.0.10",
@@ -63,6 +64,7 @@
     "vee-validate": "^4.5.10",
     "vue": "^3.2.36",
     "vue-good-table-next": "^0.1.0",
+    "vue-multiselect": "^3.0.0",
     "vue-router": "^4.0.3",
     "vue-tailwind": "^2.5.1",
     "vue3-pdfjs": "^0.1.6",
