@@ -85,7 +85,7 @@
                   <div class="col-span-6 sm:col-span-3">
                     <label for="Donorid" class="block text-sm font-bold text-gray-700">
                       Donor</label>
-                    <select id="Donorid" name="Donorid" v-model="donation.DonorId" autocomplete="Donor-name"
+                    <select id="Donorid" name="Donorid" v-model="donation.organisationId" autocomplete="Donor-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                       <option v-for="donor in donors" :key="donor.id" :value="donor.id">
                         {{ donor.Name }}
@@ -123,7 +123,7 @@
                   </div>
                   <div class="col-span-3 sm:col-span-3">
                     <label for="quantity" class="block text-sm font-bold text-gray-700">
-                      Quantity</label>
+                      Quantity (MT)</label>
                     <input type="number" :id="'quantity-' + index" v-model="item.quantity" autocomplete="quantity"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                   </div>
@@ -139,10 +139,12 @@
                 </div>
               </div>
 
+             
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <button @click="onSubmit" style="background-color: #329ce7;"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                  Save
+                <button @click="onSubmit"
+                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <CheckIcon class="h-5 w-5 mr-2" />
+                  Save Donation
                 </button>
               </div>
             </div>
@@ -154,7 +156,7 @@
 </template>
 <script setup>
 import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headlessui/vue';
-import { PlusIcon } from "@heroicons/vue/outline";
+import { PlusIcon, CheckCircleIcon, CheckIcon } from "@heroicons/vue/outline";
 import { inject, ref, reactive, defineEmits, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { usedriverstore } from "../../../stores/driver.store";
@@ -190,7 +192,7 @@ const donation = reactive({
   Remarks: '',
   districtId: null,
   warehouseId: null,
-  DonorId: null,
+  organisationId: null,
   DriverName: '',
   RecipientId: user.value.id,
 });
@@ -219,7 +221,7 @@ const generateGoodsReceiveNote = () => {
   donation.GoodsReceiveNote = `DODMA-${timestamp}`;
 };
 
-onMounted(fetchInitialData);
+onMounted(fetchInitialData());
 
 const onSubmit = async () => {
   if (donatedCommodities.length === 0) {
@@ -252,6 +254,7 @@ const onSubmit = async () => {
     });
     open.value = false;
     emit('create');
+    await fetchInitialData()
   } catch (error) {
     Swal.fire({
       title: "Error",

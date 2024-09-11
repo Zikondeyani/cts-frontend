@@ -163,28 +163,29 @@ const columns = ref([
   {
     label: "Details",
     field: (row) => {
-      // Combine the disaster and activity names with proper formatting
-      const warehouseFormatted = `<span style="color: #096eb4;">From: ${row.warehouse.Name}</span>`;
+      const warehouses = row.warehouses?.map(warehouse => warehouse?.name).join(', ');
+      const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
       const districtFormatted = `<span style="color: green;">To: ${row.district.Name}</span>`;
       return `${warehouseFormatted}<br/>${districtFormatted}`;
     },
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize",
-    html: true, // This is important to render HTML
-    tdAttr: { "v-html": true } // Use v-html directive to render HTML
+    tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
+    thClass: "w-1/6", // Set width to 1/6th of the table
+    html: true,
+    tdAttr: { "v-html": true },
   },
 
   {
     label: "Transporter",
-    field: row => row.transporter.Name,
+    field: row => row.transporter?.Name,
     sortable: true,
     firstSortType: "asc"
   },
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: row => row.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -205,14 +206,40 @@ onMounted(() => {
   getCommodity();
 });
 
+const isDecimal = (num) => {
+  return num % 1 !== 0;
+}
+
+
+const computedTonnagePerRemark = ((packsize, bags) => {
+  let TonnageConversion = packsize / 1000;
+
+  // Apply toFixed(2) only if the number is a decimal
+  if (isDecimal(TonnageConversion)) {
+    TonnageConversion = parseFloat(TonnageConversion.toFixed(2));
+  }
+
+  let Tonnage = bags * TonnageConversion;
+
+  // Apply toFixed(2) to the final result
+  return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
+});
+
+
 // Create dispatched commodities with the dispatch ID
 const createDispatchedCommodities = async (dispatchId, reliefItems) => {
   const dispatchedCommodityPromises = reliefItems.map((item) => {
+
     const dispatchedModel = {
       instructedDispatchId: dispatchId,
       commodityId: item.commodityId.commodity.id,
       BatchNumber: item.commodityId.BatchNumber,
-      Quantity: item.Quantity,
+      DriverName: item.DriverName,
+      DriverLicense: item.DriverLicense,
+      TruckNumber: item.TruckNumber,
+      Quantity: computedTonnagePerRemark(item.commodityId?.commodity.PackSize, item.Quantity),
+      NoBags: item.Quantity
+
     };
 
     return DispatchedCommoditiesStore.create(dispatchedModel);
@@ -286,9 +313,9 @@ const getInstructions = async () => {
       //   instructions.push(...result);
       // }
       instructions.length = 0; //empty array
-      instructions.push(...result.filter(item => (item.district.Name == user.value.district) && item.IsApproved && !item.IsArchived));
+      instructions.push(...result.filter(item => item.IsApproved && !item.IsArchived));
       eventBus.emit('instructionArchived', result.id);
-   
+
     })
     .catch(error => {
       Swal.fire({
@@ -345,7 +372,7 @@ const filteredCommodities = (instructionID) => {
 
 </script>
 
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

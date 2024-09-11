@@ -28,7 +28,7 @@
           </div>
         </div>
         <!-- Mobile Admin Text -->
-        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | Recipient
+        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | District Council
           <span class="text-xs font-normal">(v2.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Notification Button -->
-        <div class="relative hidden lg:block">
+     <!--    <div class="relative hidden lg:block">
           <button @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
             <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
@@ -78,7 +78,7 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- User Menu for Desktop -->
         <div class="relative ml-5 hidden lg:block">
@@ -285,7 +285,7 @@ const menuItemClasses = (active, isButton = false) => [
 ];
 
 const onAbout = async () => {
-  $router.push({ path: "/field/about-system" })
+  $router.push({ path: "/district/about-system" })
 
 };
 
@@ -296,14 +296,14 @@ const updateNotifications = () => {
   if (newLeanSeasonCount.value > 0) {
     notifications.value.push({
       message: `Lean Season Dispatches(${newLeanSeasonCount.value})`,
-      href: "/field/dispatch-management"
+      href: "/district/dispatch-management"
     });
   }
 
   if (newEmerCount.value > 0) {
     notifications.value.push({
       message: `Emergency Response Dispatches (${newEmerCount.value})`,
-      href: "/field/dispatches/emergency"
+      href: "/district/dispatches/emergency"
     });
   }
 
@@ -338,7 +338,7 @@ function signOut() {
 
 
 function gotoSystemsettings() {
-  $router.push({ path: '/warehouse/system' });
+  $router.push({ path: '/district/system' });
 
 }
 
@@ -473,19 +473,19 @@ const fetchUser = async () => {
 //WAT
 function navigation() {
   let navList = [
-    { name: "Home", href: "/field/dashboard", icon: HomeIcon, current: false },
-    { name: "Requisitions", href: "/field/requisition-management", icon: ClipboardListIcon, current: false },
+    { name: "Home", href: "/district/dashboard", icon: HomeIcon, current: false },
+    { name: "Requisitions", href: "/district/requisition-management", icon: ClipboardListIcon, current: false },
     /*  { name: "Commodities", href: "/warehouse/commodity-tracking", icon: CollectionIcon, current: false },
      { name: "Requisitions", href: "/warehouse/requisition-management", icon: IdentificationIcon, current: false },
      { name: "Project Management", href: "/warehouse/project-management", icon: IdentificationIcon, current: false },
    */  /*  { name: "Dispatches", href: "/field/dispatch-management", icon: AdjustmentsIcon, current: false },
         */
 
-    { name: "Disasters", href: "/field/emergency-management", icon: ExclamationIcon, current: false },
+ /*    { name: "Disasters", href: "/field/emergency-management", icon: ExclamationIcon, current: false },
+ */
+    { name: "Dispatches", href: "/district/project-management", icon: IdentificationIcon, current: false },
 
-    { name: "Dispatches", href: "/field/project-management", icon: IdentificationIcon, current: false },
-
-    { name: "Receipts", href: "/field/receipts", icon: DocumentDuplicateIcon, current: false },
+    { name: "Receipts", href: "/district/receipts", icon: DocumentDuplicateIcon, current: false },
 
     /*   { name: "Reports", href: "/field/report-management", icon: DocumentTextIcon, current: false },
    */
@@ -499,8 +499,8 @@ function navigation() {
     // Check if the current route base matches the nav item's href
     // Or if it's the "Loading Plans" item and the current route base starts with /planner/loadingplans or /planner/dispatches
     const isMatched = currentRouteBase === navItem.href ||
-      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/warehouse/loadingplans") || currentRouteBase.startsWith("/warehouse/dispatches"))) ||
-      (navItem.name === "Receipts" && (currentRouteBase.startsWith("/warehouse/receipts")));
+      (navItem.name === "Plan & Dispatch" && (currentRouteBase.startsWith("/district/loadingplans") || currentRouteBase.startsWith("/warehouse/dispatches"))) ||
+      (navItem.name === "Receipts" && (currentRouteBase.startsWith("/district/receipts")));
     navItem.current = isMatched;
   });
 
@@ -523,8 +523,8 @@ const open = ref(false);
 //FUNCTIONS
 
 const navItems = computed(() => navigation());
-const firstFiveItems = computed(() => navItems.value.slice(0, 3));
-const remainingItems = computed(() => navItems.value.slice(3));
+const firstFiveItems = computed(() => navItems.value.slice(0, 4));
+const remainingItems = computed(() => navItems.value.slice(4));
 
 const itemClasses = (item) => [
   item.current ? 'bg-white text-black' : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',

@@ -19,7 +19,7 @@
         </button>
 
         <div class="mt-5 flex ml-4 justify-center sm:mt-0">
-          <create-donation-form v-on:create="createReport" />
+          <create-donation-form v-on:create="fetchDonations" />
         </div>
       </div>
 

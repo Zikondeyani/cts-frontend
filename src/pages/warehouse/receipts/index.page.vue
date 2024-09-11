@@ -49,8 +49,8 @@ const breadcrumbs = [
   { name: "Receipt Management", href: "#", current: true },
 ];
 const options = ref([
-  { label: 'Lean Season Response Receipts', icon: TemplateIcon, path: '/warehouse/receipts/leanseason' },
-  { label: 'Emergency Response Receipts', icon: LightningBoltIcon, path: '/warehouse/receipts/emergency' },
+  { label: 'Lean Season Response Receipts', icon: TemplateIcon, path: '/field/receipts/leanseason' },
+  { label: 'Emergency Response Receipts', icon: LightningBoltIcon, path: '/field/receipts/emergency' },
 
 ]);
 </script>

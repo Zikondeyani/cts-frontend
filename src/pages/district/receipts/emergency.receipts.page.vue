@@ -76,7 +76,7 @@
               </button>
 
 
-              <button @click="requestReversal(props.row)" v-if="props.row.status !== 4"
+            <!--   <button @click="requestReversal(props.row)" v-if="props.row.status !== 4"
                 class="text-orange-500 hover:text-orange-700 transition duration-300  ml-2 mr-2">
                 <XIcon class="h-5 w-5 inline-block" />
                 Request Reversal
@@ -86,7 +86,7 @@
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 ml-1">
                 <span> submitted for reversal</span>
               </span>
-
+ -->
 
             </span>
           </template>

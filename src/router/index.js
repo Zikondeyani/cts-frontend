@@ -786,7 +786,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       let role = JSON.parse(sessionStorage.getItem("RLE"));
       if (role != null && typeof role.name != "undefined") {
-        if (role.name == "dispatcher") {
+        if (role.name == "warehouse") {
           next();
         } else {
           next({ name: "portal-signin" });
@@ -1175,6 +1175,209 @@ const routes = [
          const localSession = await getDataOffline('session');
    
          if ((localSession[0] && localSession[0].role === "field officer")) {
+           // Role found in sessionStorage and it's an admin
+           next();
+         } else {
+           next({ name: 'portal-signin' });
+   
+         }
+       } */
+
+  },
+
+
+  {
+    path: "/district",
+    name: "district",
+    component: () => import("../components/layouts/district.layout.vue"),
+    children: [
+      //Dashboard
+      {
+        path: "",
+        name: "district-home",
+        redirect: { name: "district-dashboard" },
+      },
+      {
+        path: "/district/dashboard",
+        name: "district-dashboard",
+        component: () => import("../pages/district/dashboard/index.page.vue"),
+      },
+      //Users
+      {
+        path: "/district/users",
+        name: "district-users",
+        component: () => import("../pages/district/users/index.page.vue"),
+      },
+      {
+        path: "/district/users/manage/:id",
+        name: "district-manage-user",
+        component: () => import("../pages/district/users/manage.page.vue"),
+      },
+
+      {
+        path: "/district/dispatch-management",
+        name: "district-dispatch-management",
+        component: () => import("../pages/district/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/district/dispatches/emergency",
+        name: "district-emergency-dispatch-management",
+        component: () => import("../pages/district/dispatch/emergencydispatches.page.vue"),
+      },
+
+
+
+      {
+        path: "/district/dispatches",
+        name: "district-dispatches",
+        component: () => import("../pages/district/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/district/loadingplans",
+        name: "district-loadingplans",
+        component: () => import("../pages/district/loadingplans/index.page.vue"),
+      },
+      {
+        path: "/district/dispatch-management/manage/:id",
+        name: "district-manage-catalogue",
+        component: () => import("../pages/district/dispatch/manage.page.vue"),
+      },
+
+      {
+        path: "/district/commodity-tracking",
+        name: "district-commodity-tracking",
+        component: () => import("../pages/district/commodities/index.page.vue"),
+      },
+      {
+        path: "/district/commodity-tracking/manage/:id",
+        name: "district-manage-commodity-tracking",
+        component: () => import("../pages/district/commodities/manage.page.vue"),
+      },
+
+
+      {
+        path: "/district/receipt-management",
+        name: "district-receipt-management",
+        component: () => import("../pages/district/receipts/index.page.vue"),
+      },
+
+
+      {
+        path: "/district/receipts",
+        name: "district-receipts",
+        component: () => import("../pages/district/receipts/index.page.vue"),
+      },
+
+      {
+        path: "/district/receipts/emergency",
+        name: "district-receipts-emergency",
+        component: () => import("../pages/district/receipts/emergency.receipts.page.vue"),
+      },
+
+      {
+        path: "/district/receipts/leanseason",
+        name: "district-receipts-leanseason",
+        component: () => import("../pages/district/receipts/leanseason.receipts.page.vue"),
+      },
+
+      {
+        path: "/district/receipt-management/manage/:id",
+        name: "district-manage-receipt-management",
+        component: () => import("../pages/district/receipts/manage.page.vue"),
+      },
+
+      {
+        path: "/district/requisition-management",
+        name: "district-requisition-management",
+        component: () => import("../pages/district/requisitions/index.page.vue"),
+      },
+
+
+      {
+        path: "/district/requisition-management/requisitions",
+        name: "district-requisition-management-rq",
+        component: () => import("../pages/district/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/district/requisition-management/requisitions/manage/:id",
+        name: "district-manage-requisitions-management-id",
+        component: () => import("../pages/district/requisitions/edit.page.vue"),
+      },
+
+      {
+        path: "/district/receipt-management/manage/:id",
+        name: "district-manage-requisition-management",
+        component: () => import("../pages/district/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/district/emergency-management",
+        name: "district-emergency-management",
+        component: () => import("../pages/district/emergency/index.page.vue"),
+      },
+
+      {
+        path: "/district/emergency-management/manage/:id",
+        name: "district-manage-emergency-management",
+        component: () => import("../pages/district/emergency/manage.page.vue"),
+      },
+
+
+
+
+
+      {
+        path: "/district/system",
+        name: "district-system",
+        component: () => import("../pages/district/system/index.page.vue"),
+      },
+
+
+      {
+        path: "/district/project-management",
+        name: "district-project-management",
+        component: () => import("../pages/district/projects/index.page.vue"),
+      },
+
+
+
+      {
+        path: "/district/report-management",
+        name: "district-report-management",
+        component: () => import("../pages/district/reports/index.page.vue"),
+      },
+
+      {
+        path: "/district/about-system",
+        name: "district-about-system",
+        component: () => import("../pages/about/index.page.vue"),
+      },
+
+
+    ],
+
+    beforeEnter: (to, from, next) => {
+      let role = JSON.parse(sessionStorage.getItem("RLE"));
+      if (role != null && typeof role.name != "undefined") {
+        if (role.name == "district") {
+          next();
+        } else {
+          next({ name: "portal-signin" });
+        }
+      } else {
+        next({ name: "portal-signin" });
+      }
+    },
+
+    /*    beforeEnter: async (to, from, next) => {
+         // Check sessionStorage for existing session
+         let role = JSON.parse(sessionStorage.getItem("RLE"));
+         const localSession = await getDataOffline('session');
+   
+         if ((localSession[0] && localSession[0].role === "district officer")) {
            // Role found in sessionStorage and it's an admin
            next();
          } else {

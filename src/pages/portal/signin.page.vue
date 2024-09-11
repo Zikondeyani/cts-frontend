@@ -327,9 +327,18 @@ const onSubmit = useSubmitForm((values, actions) => {
         $router.push({ path: '/field' });
       }
 
+      else if (result.role === 'district') {
+        // Specific redirection for warehouse officer
+        $router.push({ path: '/district' });
+      }
       else if (result.role === 'commissioner') {
         // Specific redirection for warehouse officer
         $router.push({ path: '/commissioner' });
+      }
+
+      else if (result.role === 'warehouse') {
+        // Specific redirection for warehouse officer
+        $router.push({ path: '/warehouse' });
       }
       else {
         // General redirection for other roles

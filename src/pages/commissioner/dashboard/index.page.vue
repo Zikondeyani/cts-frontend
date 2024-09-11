@@ -156,7 +156,7 @@
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Disasters</option>
                           <option v-for="disaster in disasters" :key="disaster.name" :value="disaster.name">
-                            {{ disaster.name }}
+                            {{ disaster.type }} |   {{ disaster.date_of_occurrence }}
                           </option>
                         </select>
                       </div>

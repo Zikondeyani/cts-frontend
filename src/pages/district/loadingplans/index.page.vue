@@ -84,7 +84,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/district/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
 ];
 

@@ -17,7 +17,7 @@
             <MenuIcon class="h-6 w-6 text-white" />
           </button>
           <!-- Admin Text and Location Info -->
-          <span class="font-bold text-white mx-4 hidden lg:block">DODMA CTS | District Officer
+          <span class="font-bold text-white mx-4 hidden lg:block">DODMA CTS | Warehouse Officer
             <span class="text-xs font-normal">(v2.0)</span>
           </span>
           <div class="flex items-center ml-2 hidden lg:flex">
@@ -28,7 +28,7 @@
           </div>
         </div>
         <!-- Mobile Admin Text -->
-        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | District Officer
+        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS |  Warehouse Officer
           <span class="text-xs font-normal">(v2.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
@@ -375,8 +375,7 @@ function navigation() {
   let navList = [
     { name: "Home", href: "/warehouse/dashboard", icon: HomeIcon, current: false },
     { name: "Instructions", href: "/warehouse/instruction-management", icon: CollectionIcon, current: false },
-    { name: "Project Management", href: "/warehouse/project-management", icon: IdentificationIcon, current: false },
-    ...(user.value.privileges.includes("Warehouse management") || user.value.privileges.includes("All") ? [{ name: "Warehouse Management", href: "/warehouse/warehouse-management", icon: OfficeBuildingIcon, current: false }] : []),
+    { name: "Warehouse management", href: "/warehouse/warehouse-management", icon: IdentificationIcon, current: false },
     { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
     { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
 
