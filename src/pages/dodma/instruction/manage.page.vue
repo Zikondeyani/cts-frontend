@@ -33,11 +33,11 @@
           <li class="nav-item" role="presentation">
             <a href="#user-file"
               class="nav-link block ml-1 font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-file" data-bs-toggle="pill" data-bs-target="#user-file" role="tab"
-              aria-controls="user-file" aria-selected="false">File Management</a>
+              id="tabs-user-file" data-bs-toggle="pill" data-bs-target="#user-file" role="tab" aria-controls="user-file"
+              aria-selected="false">File Management</a>
           </li>
           <li class="nav-item ml-auto mb-4" role="presentation">
-           <!--  <button @click="showPrintModal = true"
+            <!--  <button @click="showPrintModal = true"
               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
               Print Goods Release Instruction
             </button> -->
@@ -116,7 +116,8 @@
                           {{ item.commodity.PackSize }}
 
                           {{ item.commodity.Unit }}</td>
-                        <td class="border border-gray-400 p-1">{{ item.Quantity }} {{ item.commodity.Unit == 'Kg' ? "MT": item.commodity.Unit }} ({{ item.NoBags }} {{item.commodity?.Container_type}})</td>
+                        <td class="border border-gray-400 p-1">{{ item.Quantity }} {{ item.commodity.Unit == 'Kg' ?
+                          "MT" : item.commodity.Unit }} ({{ item.NoBags }} {{ item.commodity?.Container_type }})</td>
                       </tr>
                     </tbody>
                   </table>
@@ -138,10 +139,10 @@
                         <td class="border border-gray-400 p-2">{{ model.ApprovedBy || 'Not Available' }}</td>
                         <td class="border border-gray-400 p-2">
                           {{
-      model.ApprovedBy
-        ? model.ApprovedBy.split(/\s+/).map(word => word.charAt(0).toUpperCase()).join('')
-        : 'N/A'
-    }}
+                            model.ApprovedBy
+                              ? model.ApprovedBy.split(/\s+/).map(word => word.charAt(0).toUpperCase()).join('')
+                              : 'N/A'
+                          }}
                         </td>
                       </tr>
                     </tbody>
@@ -158,7 +159,7 @@
               </div>
             </div>
           </li>
-          
+
         </ul>
         <div class="tab-content" id="tabs-user-options">
           <div class="tab-pane fade show active mt-3" id="user-relief" role="tabpanel"
@@ -166,16 +167,16 @@
             <user-relief v-bind:model="model" v-on:update="updateOrCreateReliefItems" :key="model.id + 'relief'" />
           </div>
           <div class="tab-pane fade" id="user-settings" role="tabpanel" aria-labelledby="tabs-user-settings">
+
             <user-settings v-bind:model="model" v-on:update="updateInstruction" :key="model.id + 'settings'" />
           </div>
 
           <div class="tab-pane fade" id="user-file" role="tabpanel" aria-labelledby="tabs-user-file">
-            <user-files v-bind:model="files" :key="refresh + 'File'" 
-          v-on:refresh="getFiles()" />
- 
+            <user-files v-bind:model="files" :key="refresh + 'File'" v-on:refresh="getFiles()" />
+
           </div>
 
-       
+
         </div>
       </div>
     </div>
@@ -211,9 +212,7 @@ const moment = inject("moment");
 const Swal = inject("Swal");
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { useFileStore } from "../../../stores/file.store";
 
-const fileStore = useFileStore();
 //VARIABLES
 const id = ref(null);
 const isLoading = ref(false);
@@ -230,7 +229,9 @@ const model = ref({
 
 });
 
+import { useFileStore } from "../../../stores/file.store";
 
+const fileStore = useFileStore();
 const files = reactive([]);
 // Instruction header and details
 
@@ -274,7 +275,7 @@ const getInstructedCommodities = async () => {
 
 
 const getFiles = async () => {
- 
+
   fileStore
     .getByReference({ id: id.value, type: "DOCUMENT" })
     .then((result) => {
@@ -282,14 +283,14 @@ const getFiles = async () => {
       files.push(...result);
     })
     .catch((error) => {
-    /*   Swal.fire({
-        title: "Failed",
-        text: "failed to get files error (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      }); */
+      /*   Swal.fire({
+          title: "Failed",
+          text: "failed to get files error (" + error + ")",
+          icon: "error",
+          confirmButtonText: "Ok",
+        }); */
     })
-    
+
 };
 
 const getInstruction = async () => {
@@ -319,11 +320,19 @@ const updateInstruction = async (newValues) => {
   InstructionStore
     .update(newValues)
     .then((result) => {
+
       Swal.fire({
-        title: "Success",
-        text: "Successfully updated instruction",
-        icon: "success",
+        text: 'Successfully updated instruction',
+        icon: 'success',
+        toast: true,
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
+
+
+      getInstruction();
     })
     .catch((error) => {
       Swal.fire({
@@ -332,6 +341,8 @@ const updateInstruction = async (newValues) => {
         icon: "error",
         confirmButtonText: "Ok",
       });
+
+      getInstruction();
     })
     .finally(() => {
       isLoading.value = false;
@@ -352,37 +363,46 @@ const updateOrCreateReliefItems = async (items) => {
         // Check if the item has an `id` field to determine if it's an existing item
         if (cleanedItem.id) {
           // Update the existing relief item (using the `id` for updates)
-          return InstructedCommoditiesStore.update(cleanedItem);
+          await InstructedCommoditiesStore.update(cleanedItem);
+          getInstruction();
+          getFiles()
+          getInstructedCommodities();
         } else {
           // Create a new relief item if there's no `id` field
-          return InstructedCommoditiesStore.create(cleanedItem);
+          await InstructedCommoditiesStore.create(cleanedItem);
+          getInstruction();
+          getFiles()
+          getInstructedCommodities();
         }
       })
     );
 
-  // Notify the user of the successful operation
-  Swal.fire({
+    await InstructedCommoditiesStore.get();
+    getInstruction();
+    getFiles()
+    getInstructedCommodities();
+    // Notify the user of the successful operation
+    Swal.fire({
       title: "Success",
       text: "Successfully updated/added the relief item list",
       icon: "success",
       showCancelButton: true,
       confirmButtonText: "Continue",
       cancelButtonText: "Go back to Requisition list"
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         // Action to perform on Ok
-       
-  getInstruction();
-  getFiles()
-  getInstructedCommodities();
+
+        await  getInstruction();
+        await getFiles()
+        await getInstructedCommodities();
         Swal.close();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Action to perform when the "Go back to instruction list" button is clicked
-        
-  getInstruction();
-  getFiles()
-  getInstructedCommodities();
-        goToInstructionList();
+        await getInstruction();
+        await getFiles()
+        await getInstructedCommodities();
+        await goToInstructionList();
       }
     });
   } catch (error) {

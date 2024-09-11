@@ -1,5 +1,5 @@
 <template>
-  
+
   <spinner-widget v-bind:open="isLoading" />
   <div>
     <button @click="open = true"
@@ -33,11 +33,11 @@
               </div>
 
               <form @submit.prevent="confirmSubmission">
-                <div class="px-6 py-4">
-                  <p class="mb-4"><strong>Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
-                  <p class="mb-4"><strong>Target FDP:</strong> {{ dispatch.FinalDestinationPoint }}</p>
-                  <p class="mb-4"><strong>Purpose:</strong> {{ dispatch.instruction?.Purpose }}</p>
-
+                <div class="px-6 py-2">
+                  <p class="mb-1"><strong>System Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
+                  <p class="mb-1"><strong>Target FDP:</strong> {{ dispatch.FinalDestinationPoint }}</p>
+                  
+                  <p class="mb-1"><strong>Purpose:</strong> {{ dispatch.instruction?.Purpose }}</p>
                   <div class="mb-6">
                     <h3 class="text-lg font-semibold text-blue-500 mb-4">Summary of Dispatched Goods:</h3>
                     <table class="min-w-full divide-y divide-gray-200">
@@ -54,13 +54,22 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(item, index) in dispatch?.dispatchedCommodities" :key="index"
                           class="hover:bg-gray-100">
-                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{ item.TruckNumber }})</td>
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{
+                            item.TruckNumber }})</td>
                           <td class="px-6 py-4 text-sm text-gray-900">{{ item.Quantity }} {{ item.commodity.Unit
-      === 'Kg' ? 'MT' : 'Units' }} ({{ item.NoBags }} {{ item.commodity.Container_type }})</td>
+                            === 'Kg' ? 'MT' : 'Units' }} ({{ item.NoBags }} {{ item.commodity.Container_type }})</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
+                  <hr>
+                  <div class="flex items-center space-x-2 mb-4 mt-2">
+                    <p class="text-xs text-italic text-red-500 mt-3">*</p> <input type="text" v-model="pdn"
+                      placeholder="Enter Physical Delivery Note"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+
+                  </div>
+
                   <!-- Destination Points -->
                   <div class="mb-6">
                     <label for="multiple-destinations" class="block text-sm font-bold text-blue-500">
@@ -78,15 +87,16 @@
                         Enable Multiple Final Destinations
                       </label>
                     </div>
-                    <p class="text-xs text-italic text-red-500 mt-3">NB: * Please ensure that the total received in the destination points
+                    <p class="text-xs text-italic text-red-500 mt-3">NB: * Please ensure that the total received in the
+                      destination points
                       is accurate.</p>
                   </div>
 
                   <!-- Inside the destination loop -->
                   <div v-for="(destination, index) in destinations" :key="index" class="mb-4">
                     <label :for="'destination-' + index" class="block text-sm font-medium text-gray-700">FDP {{
-      multipleDestinations ? index +
-        1 : "" }}</label>
+                      multipleDestinations ? index +
+                        1 : "" }}</label>
                     <div class="flex items-center space-x-2">
                       <input type="text" :id="'destination-' + index" v-model="destinations[index].name"
                         placeholder="Enter Final Destination Point"
@@ -112,7 +122,8 @@
                       <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(item, itemIndex) in destination.commodities" :key="itemIndex"
                           class="hover:bg-gray-100">
-                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{ item.TruckNumber }})</td>
+                          <td class="px-6 py-4 text-sm text-gray-900">{{ item.commodity.Name }} (Truck #: {{
+                            item.TruckNumber }})</td>
                           <td class="py-2 px-4 border-b">
                             <div class="space-y-2">
                               <div v-for="(remark, i) in item.remarks" :key="i" class="flex items-center space-x-2">
@@ -123,14 +134,26 @@
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
                                     <option value="received but damaged">Received but damaged</option>
+                                    <option value="received in excess">Received in excess</option>
                                     <option value="received but not expected quantity">Received but not at the
                                       expected quantity</option>
                                     <option value="other">Other (please specify)</option>
                                   </select>
                                 </div>
+                                <div class="col-span-6 sm:col-span-3" v-if="remark.remark === 'received but damaged'">
+                                  <label for="quantity" class="text-sm font-medium text-gray-700"> Extend of damage
+
+                                    <select name="Extent" v-model="remark.extentofdamage" id="Remarks"
+                                      class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                      <option value="">Select Remark</option>
+                                      <option value="received in good condition">Bags wet</option>
+                                      <option value="received but damaged">Bags need reconstitution</option>
+                                    </select>
+                                  </label>
+                                </div>
                                 <div class="col-span-6 sm:col-span-3">
                                   <label for="quantity" class="text-sm font-medium text-gray-700">Quantity ({{
-      item.commodity.Container_type }})</label>
+                                    item.commodity.Container_type }})</label>
                                   <input type="number" v-model.number="remark.quantity" min="0"
                                     placeholder="Qty Received"
                                     class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -166,19 +189,20 @@
 
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
-                    <button type="button" @click="saveProgress"
+                    <!--  <button type="button" @click="saveProgress"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
                       <SaveIcon class="h-5 w-5 mr-1" />
                       Save Progress
-                    </button>
-                    <button type="button" @click="open = false"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
-                      Cancel
-                    </button>
+                    </button> -->
+
                     <button type="submit"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                       <CheckCircleIcon class="h-5 w-5 mr-1" />
                       Submit Receipt
+                    </button>
+                    <button type="button" @click="open = false"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -213,9 +237,9 @@ const props = defineProps({
   dispatchedCommodities: Array
 });
 
-const emit = defineEmits(["create"]);
+const emit = defineEmits(["create", "draft"]);
 const open = ref(false);
-
+const pdn = ref('')
 const { meta } = useForm({
   validationSchema: CreateRequisitionSchema,
   initialValues: {
@@ -326,39 +350,224 @@ const confirmSubmission = () => {
 const onSubmit = useSubmitForm(async (values) => {
   isLoading.value = true;
   const receivedCommodities = [];
+  const receivedRemarks = {}; // To track remarks per commodity
 
-  
   try {
+    // Check for Physical Delivery Note
+    if (!pdn.value) {
+      Swal.fire({
+        icon: "warning",
+        title: "🚫Missing Physical Delivery Note",
+        html: `<p>Please provide the Physical Delivery Note before submitting the receipt.</p>`,
+        allowOutsideClick: false,
+        customClass: { popup: 'swal-wide' }
+      });
+      isLoading.value = false;
+      return;
+    }
+
+    // Summary of dispatched quantities
+    const dispatchedSummary = {};
+    for (let item of props.dispatch.dispatchedCommodities) {
+      if (!dispatchedSummary[item.commodity.Name]) {
+        dispatchedSummary[item.commodity.Name] = {
+          totalQuantity: 0,
+          totalBags: 0
+        };
+      }
+      dispatchedSummary[item.commodity.Name].totalQuantity += item.Quantity;
+      dispatchedSummary[item.commodity.Name].totalBags += item.NoBags;
+    }
+
+    // Summary of received quantities and remarks
+    const receivedSummary = {};
+
     for (let destination of destinations.value) {
-      // Validate that every destination has a name
       if (!destination.name) {
         Swal.fire({
           icon: "warning",
-          title: "Missing Destination",
-          text: "Please specify a final destination point for all entries before submmission.",
-          allowOutsideClick: false, // Prevent closing by clicking outside
+          title: "🚫Missing Destination",
+          html: `<p>Please specify a final destination point for all entries before submission.</p>`,
+          allowOutsideClick: false,
+          customClass: { popup: 'swal-wide' }
         });
         isLoading.value = false;
         return;
       }
 
       for (let commodity of destination.commodities) {
+        if (!commodity.remarks || commodity.remarks.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "🚫Missing Remarks",
+            html: `<p>Each commodity must have at least one remark before submission.</p>`,
+            allowOutsideClick: false,
+            customClass: { popup: 'swal-wide' }
+          });
+          isLoading.value = false;
+          return;
+        }
+
+        // Initialize received quantity and remarks set
+        if (!receivedSummary[commodity.commodity.Name]) {
+          receivedSummary[commodity.commodity.Name] = 0;
+        }
+        if (!receivedRemarks[commodity.commodity.Name]) {
+          receivedRemarks[commodity.commodity.Name] = new Set();
+        }
+
+        // Process each remark
+        for (let remark of commodity.remarks) {
+          if (remark.quantity <= 0) {
+            Swal.fire({
+              icon: "error",
+              title: "❗Quantity Invalid",
+              html: `<p>Quantity cannot be zero or negative. Please ensure all quantities are positive.</p>`,
+              allowOutsideClick: false,
+              customClass: { popup: 'swal-wide' }
+            });
+            isLoading.value = false;
+            return;
+          }
+
+          receivedSummary[commodity.commodity.Name] += remark.quantity;
+          receivedRemarks[commodity.commodity.Name].add(remark.remark);
+
+          if (remark.remark) {
+            const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7);
+
+            receivedCommodities.push({
+              BatchNumber: commodity.BatchNumber,
+              commodityId: commodity.commodity.id,
+              TruckNumber: commodity.TruckNumber,
+              Comments: remark.Comments,
+              extentofdamage: remark.extentofdamage,
+              Date: new Date().toISOString(),
+              Quantity: computedTonnagePerRemark(commodity.commodity?.PackSize, remark.quantity),
+              NoBags: remark.quantity,
+              Remarks: remark.remark,
+              RefNO: destination.name.replace(/\s+/g, '') + "|" + (props.dispatch?.DeliveryNote || '') + "-" + uniqueId,
+              FinalDestinationPoint: destination.name,
+              PhysicalDeliveryNote: pdn.value
+            });
+          }
+        }
+      }
+    }
+
+    // Final validation for each commodity
+    for (let commodityName in dispatchedSummary) {
+      const dispatchedQuantity = dispatchedSummary[commodityName].totalBags;
+      const receivedQuantity = receivedSummary[commodityName] || 0;
+      const remarksSet = receivedRemarks[commodityName] || new Set();
+
+      // Check for excess quantity
+      if (receivedQuantity > dispatchedQuantity) {
+        if (!remarksSet.has('received in excess')) {
+          Swal.fire({
+            icon: "error",
+            title: "❗Quantity Exceeded",
+            html: `<p>The total received quantity for <strong>${commodityName}</strong> across all destinations exceeds the dispatched quantity.</p>
+                   <p>Please select <strong>'received in excess'</strong> in the remarks.</p>`,
+            allowOutsideClick: false,
+            customClass: { popup: 'swal-wide' }
+          });
+          isLoading.value = false;
+          return;
+        }
+      }
+
+      // Check for less quantity
+      if (receivedQuantity < dispatchedQuantity) {
+        if (!remarksSet.has('received but not expected quantity')) {
+          Swal.fire({
+            icon: "error",
+            title: "❗Quantity Less Than Expected",
+            html: `<p>The total received quantity for <strong>${commodityName}</strong> across all destinations is less than the dispatched quantity.</p>
+                   <p>Please select <strong>'received but not expected quantity'</strong> in the remarks.</p>`,
+            allowOutsideClick: false,
+            customClass: { popup: 'swal-wide' }
+          });
+          isLoading.value = false;
+          return;
+        }
+      }
+    }
+
+    // Submit the form if everything is validated
+    if (receivedCommodities.length > 0) {
+      let model = {
+        RecipientId: user.value.id,
+        CreatedOn: new Date().toISOString(),
+        instructedDispatchId: props.rowId,
+        receivedCommodities: receivedCommodities,
+      };
+
+      emit("create", model);
+
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while the receipt is being created.',
+        allowOutsideClick: false, // Prevent closing by clicking outside
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Only close the dialog after the successful creation of the receipt
+      open.value = false;
+    }
+  } catch (error) {
+    console.error("Error during submission:", error);
+    Swal.fire({
+      icon: 'error',
+      title: '❌ Submission Failed',
+      html: `<p>There was an error during submission. Please try again later.</p>`,
+      allowOutsideClick: false,
+      customClass: { popup: 'swal-wide' }
+    });
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+
+
+const summaryGoods = computed(() => {
+  let summary = {};
+  props.dispatch.dispatchedCommodities.forEach((item) => {
+    if (!summary[item.commodity.Name]) {
+      summary[item.commodity.Name] = {
+        commodity: item.commodity,
+        totalQuantity: 0,
+        remarks: []
+      };
+    }
+    summary[item.commodity.Name].totalQuantity += item.Quantity;
+  });
+  return Object.values(summary);
+});
+
+
+
+
+
+
+const saveProgress = () => {
+  isLoading.value = true;
+  const receivedCommodities = [];
+
+
+  try {
+    for (let destination of destinations.value) {
+      // Validate that every destination has a name
+
+      for (let commodity of destination.commodities) {
         if (commodity.remarks && commodity.remarks.length > 0) {
-          let remarksSet = new Set();
 
           for (let remark of commodity.remarks) {
             // Validate that no duplicate remarks for the same commodity index exist
-            if (remarksSet.has(remark.remark)) {
-              Swal.fire({
-                icon: "warning",
-                title: "Duplicate Remark",
-                text: "The same remark cannot be added multiple times for the same commodity, please check.",
-                allowOutsideClick: false, // Prevent closing by clicking outside
-              });
-              isLoading.value = false;
-              return;
-            }
-            remarksSet.add(remark.remark);
+
 
             if (remark.remark) {
               const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7); // Generate a unique ID
@@ -384,11 +593,12 @@ const onSubmit = useSubmitForm(async (values) => {
     let model = {
       RecipientId: user.value.id,
       CreatedOn: new Date().toISOString(),
+      status: 3,
       instructedDispatchId: props.rowId,
       receivedCommodities: receivedCommodities,
     };
 
-    emit("create", model);
+    emit("draft", model);
 
     Swal.fire({
       title: 'Processing...',
@@ -405,37 +615,6 @@ const onSubmit = useSubmitForm(async (values) => {
     isLoading.value = false;
     open.value = false;
   }
-});
-
-const summaryGoods = computed(() => {
-  let summary = {};
-  props.dispatch.dispatchedCommodities.forEach((item) => {
-    if (!summary[item.commodity.Name]) {
-      summary[item.commodity.Name] = {
-        commodity: item.commodity,
-        totalQuantity: 0,
-        remarks: []
-      };
-    }
-    summary[item.commodity.Name].totalQuantity += item.Quantity;
-  });
-  return Object.values(summary);
-});
-
-
-const saveProgress = () => {
-  // Your logic to save progress
-  const saveData = {
-    destinations: destinations.value,
-    multipleDestinations: multipleDestinations.value,
-    // Add any other data you want to save
-  };
-  
-  console.log("Saving progress...", saveData);
-  Swal.fire({
-    icon: "success",
-    title: "Progress Saved",
-    text: "Your progress has been saved successfully.",
-  });
 };
+
 </script>

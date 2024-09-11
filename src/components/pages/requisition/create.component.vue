@@ -43,19 +43,6 @@
                 <div class="px-4 py-5 bg-white sm:p-6">
                   <div class="grid grid-cols-6 gap-2">
 
-                    <div class="col-span-12 sm:col-span-12">
-                      <label for="user-district" class="block text-sm font-medium text-gray-700">
-                        Select Activity</label>
-                      <select id="activity" name="activity" v-model="activityId" autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option v-for="item in activities" :key="item.id" :value="item.id" class="uppercase">
-                          {{ item.Name }}
-                        </option>
-                      </select>
-                      <p class="text-red-500 text-xs italic pt-1">
-                        {{ activityError }}
-                      </p>
-                    </div>
 
                     <div class="col-span-12 sm:col-span-12">
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
@@ -63,7 +50,7 @@
                       <select id="activity" name="activity" v-model="disasterId" autocomplete="activity-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                         <option v-for="item in disasters" :key="item.id" :value="item.id" class="uppercase">
-                          {{ item.name }}
+                          {{ item.type }} | {{ item.date_of_occurrence }}
                         </option>
                       </select>
                       <p class="text-red-500 text-xs italic pt-1">
@@ -88,7 +75,7 @@
 
                     <div class="col-span-12 sm:col-span-12">
                       <label for="AffectedAreas" class="block text-sm font-medium text-gray-700">
-                        TAs Affected
+                        TAs/Constituency Affected
                       </label>
 
                       <!-- Tags display -->
@@ -110,50 +97,42 @@
                     </div>
 
 
+
                     <div class="col-span-12 sm:col-span-12">
                       <label for="AffectedAreas" class="block text-sm font-medium text-gray-700">
-                        GVHs Affected
+                        GVHs/Wards Affected
                       </label>
 
                       <!-- Tags display -->
                       <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
-                        <span v-for="(place, index) in GVHSaffected" :key="index"
-                          class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
-                          {{ place }}
-                          <button @click="removeTagGvh(index)" class="ml-1 text-red-500">&times;</button>
-                        </span>
 
                         <!-- Input for adding new tags -->
-                        <input type="text" v-model="newGvh" @keydown.enter.prevent="addTagGvh"
-                          placeholder="Add a place then place enter..."
+                        <input type="number" v-model="newGvh" placeholder="Enter Number Affected"
                           class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
                       </div>
-                      <p class="text-red-500 text-xs italic pt-1">{{ gvhAreaError }}</p>
 
                     </div>
 
                     <div class="col-span-12 sm:col-span-12">
                       <label for="AffectedAreas" class="block text-sm font-medium text-gray-700">
-                        Villages Affected
+                        Villages/Blocks Affected
                       </label>
 
                       <!-- Tags display -->
                       <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
-                        <span v-for="(place, index) in Villagesaffected" :key="index"
-                          class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
-                          {{ place }}
-                          <button @click="removeTagVg(index)" class="ml-1 text-red-500">&times;</button>
-                        </span>
 
                         <!-- Input for adding new tags -->
-                        <input type="text" v-model="newVillageVal" @keydown.enter.prevent="addTagVg"
-                          placeholder="Add a place then place enter..."
+                        <input type="number" v-model="newVillageVal" placeholder="Enter Number Affected"
                           class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
                       </div>
-                      <p class="text-red-500 text-xs italic pt-1">{{ villageAreaError }}</p>
 
                     </div>
 
+                  <!--   <div class="col-span-12 sm:col-span-12 tab-pane fade" id="user-file" role="tabpanel"
+                      aria-labelledby="tabs-user-file">
+                      <user-files v-bind:model="files" :key="refresh + 'File'" v-on:refresh="getFiles()" />
+
+                    </div> -->
                     <div class="col-span-12 sm:col-span-12">
                       <h3 class="text-lg font-semibold text-blue-500 mb-3">Relief Items</h3>
                       <div class="space-y-3">
@@ -226,7 +205,7 @@ import {
 } from "@headlessui/vue";
 import { XIcon, DocumentTextIcon, SaveIcon } from "@heroicons/vue/outline";
 import { inject, ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
@@ -239,6 +218,12 @@ import { usedistrictstore } from "../../../stores/districts.store";
 
 import { useDisasterstore } from "../../../stores/disaster.store";
 
+import { useFileStore } from "../../../stores/file.store";
+
+const fileStore = useFileStore();
+const files = reactive([]);
+
+import UserFiles from "../../../components/pages/requisition/file.component.vue";
 
 import { useactivitiestore } from "../../../stores/activity.store";
 
@@ -258,6 +243,8 @@ const roleStore = useRoleStore();
 
 const userStore = useUserStore();
 const roles = reactive([]);
+
+const $route = useRoute();
 
 const districtstore = usedistrictstore();
 const districts = reactive([])
@@ -302,15 +289,37 @@ const { value: activityId } = useField("activityId");
 
 
 
+const id = ref(null);
 //MOUNTED
 onMounted(() => {
   getRequisition();
   getActivities()
   getDisasters()
   getDistricts()
+  getFiles()
+  
+  id.value = $route.params.id;
 });
 //FUNCTIONS
 
+const getFiles = async () => {
+
+fileStore
+  .getByReference({ id: id.value, type: "REQ-DOCUMENT" })
+  .then((result) => {
+    files.length = 0;
+    files.push(...result);
+  })
+  .catch((error) => {
+    /*   Swal.fire({
+        title: "Failed",
+        text: "failed to get files error (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      }); */
+  })
+
+};
 
 const saveAsDraft = () => {
   if (validateAreas() && validateCommodities()) {
@@ -322,8 +331,8 @@ const saveAsDraft = () => {
       activityId: activityId.value,
       AffectedAreas: AffectedAreas.value.join(),
       AffectedHouseholds: AffectedHouseholds.value,
-      gvhs: GVHSaffected.value.join(),
-      villages_affected: Villagesaffected.value.join(),
+      gvhs: newGvh.value,
+      villages_affected: newVillageVal.value,
       RequesterId: user.value.id,
       reliefItems: reliefItems.value,
       CreatedOn: currentDate.value,
@@ -441,13 +450,13 @@ const onSubmit = useSubmitForm((values, actions) => {
       activityId: activityId.value,
       AffectedAreas: AffectedAreas.value.join(),
       AffectedHouseholds: AffectedHouseholds.value,
-      gvhs: GVHSaffected.value.join(),
-      villages_affected: Villagesaffected.value.join(),
+      gvhs: newGvh.value,
+      villages_affected: newVillageVal.value,
       RequesterId: user.value.id,
       reliefItems: reliefItems.value,
       CreatedOn: currentDate.value,
       status: 2 // Status for Draft
-    
+
     };
     emit("create", model);
     open.value = false;
@@ -474,41 +483,43 @@ const villageAreaError = ref(''); // Error message (if applicable)
 
 
 const validateAreas = () => {
+  let isValid = true;
 
-
-  if (!activityId.value) {
-    activityError.value = "Activity is required";
-    return false;
-  }
+  // Check if Disaster is selected
   if (!disasterId.value) {
     disasterError.value = "Disaster is required";
-    return false;
+    isValid = false;
+  } else {
+    disasterError.value = "";
   }
 
-  if (GVHSaffected.value.length < AffectedAreas.value.length) {
-    gvhAreaError.value = "You cannot have fewer GVHs than TAs, add a GVH and place enter.";
-    return false;
-  }
-
-  if (Villagesaffected.value.length < GVHSaffected.value.length) {
-    villageAreaError.value = "You cannot have fewer Villages than GVHs, add a villages and place enter.";
-    return false;
-  }
-
+  // Check if Affected Areas are added
   if (!AffectedAreas.value.length) {
-    AffectedAreaError.value = "TAs cannot be empty, add a TA and place enter.";
-    return false;
+    AffectedAreaError.value = "TAs cannot be empty, add a TA and press enter.";
+    isValid = false;
+  } else {
+    AffectedAreaError.value = "";
   }
-  if (!GVHSaffected.value.length) {
-    gvhAreaError.value = "GVHs cannot be empty, add a GVH and place enter.";
-    return false;
+
+  // Check if GVHs are added
+  if (!newGvh.value) {
+    gvhAreaError.value = "GVHs/Wards Affected cannot be empty.";
+    isValid = false;
+  } else {
+    gvhAreaError.value = "";
   }
-  if (!Villagesaffected.value.length) {
-    villageAreaError.value = "Villages cannot be empty, add a village and place enter.";
-    return false;
+
+  // Check if Villages/Blocks Affected are added
+  if (!newVillageVal.value) {
+    villageAreaError.value = "Villages/Blocks Affected cannot be empty.";
+    isValid = false;
+  } else {
+    villageAreaError.value = "";
   }
-  return true;
+
+  return isValid;
 };
+
 
 const validateCommodities = () => {
   let valid = true;
@@ -537,37 +548,5 @@ function removeTag(index) {
   AffectedAreas.value.splice(index, 1);
 }
 
-function addTagGvh() {
-  const place = newGvh.value.trim();
-  if (place && !GVHSaffected.value.includes(place)) {
-    GVHSaffected.value.push(place);
-    newGvh.value = '';
-    gvhAreaError.value = '';
-  } else {
-    gvhAreaError.value = 'GVH name is either empty or already added!';
-  }
-}
-
-function removeTagGvh(index) {
-  GVHSaffected.value.splice(index, 1);
-}
-
-
-
-
-function addTagVg() {
-  const place = newVillageVal.value.trim();
-  if (place && !Villagesaffected.value.includes(place)) {
-    Villagesaffected.value.push(place);
-    newVillageVal.value = '';
-    villageAreaError.value = '';
-  } else {
-    villageAreaError.value = 'Village name is either empty or already added!';
-  }
-}
-
-function removeTagVg(index) {
-  Villagesaffected.value.splice(index, 1);
-}
 
 </script>

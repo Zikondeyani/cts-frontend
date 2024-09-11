@@ -268,8 +268,7 @@ function navigation() {
   let navList = [
     { name: "Home", href: "/manager/dashboard", icon: HomeIcon, current: false },
    
-  { name: "Project Management", href: "/manager/project-management", icon: IdentificationIcon, current: false },
-  
+
     { name: "Reports", href: "/manager/report-management", icon: DocumentTextIcon, current: false },
 
   ];

@@ -70,6 +70,14 @@ const routes = [
         name: "admin-home",
         redirect: { name: "admin-dashboard" },
       },
+
+      {
+        path: "/admin/reversals",
+        name: "admin-reversals",
+        component: () => import("../pages/admin/receipts/reversal.receipts.page.vue"),
+      },
+
+
       {
         path: "/admin/dashboard",
         name: "admin-dashboard",
@@ -317,6 +325,18 @@ const routes = [
         name: "manager-users",
         component: () => import("../pages/manager/users/index.page.vue"),
       },
+
+      {
+        path: "/manager/Lean-season-losses",
+        name: "manager-lean-season-damage-management",
+        component: () => import("../pages/manager/damages/damages.page.vue"),
+      },
+
+      {
+        path: "/manager/Emergency-season-losses",
+        name: "manager-emergency-season-damage-management",
+        component: () => import("../pages/manager/damages/er-damages.page.vue"),
+      },
       {
         path: "/manager/users/manage/:id",
         name: "manager-manage-user",
@@ -330,16 +350,17 @@ const routes = [
       },
 
       {
-        path: "/manager/Lean-season-losses",
-        name: "manager-Lean-season-losses",
-        component: () => import("../pages/manager/damages/damages.page.vue"),
+        path: "/manager/instruction-management",
+        name: "manager-instruction-management",
+        component: () => import("../pages/manager/instruction/index.page.vue"),
+      },
+      {
+        path: "/manager/instruction-management/manage/:id",
+        name: "manager-manage-instruction-management",
+        component: () => import("../pages/manager/instruction/manage.page.vue"),
       },
 
-      {
-        path: "/manager/Emergency-season-losses",
-        name: "manager-emergency-season-damage-management",
-        component: () => import("../pages/manager/damages/er-damages.page.vue"),
-      },
+
       {
         path: "/manager/dispatches",
         name: "manager-dispatches",
@@ -427,7 +448,6 @@ const routes = [
         name: "manager-about-system",
         component: () => import("../pages/about/index.page.vue"),
       },
-
 
 
     ],
@@ -609,7 +629,7 @@ const routes = [
 
 
 
- 
+
   //warehouse
   {
     path: "/warehouse",
@@ -1149,19 +1169,19 @@ const routes = [
       }
     },
 
- /*    beforeEnter: async (to, from, next) => {
-      // Check sessionStorage for existing session
-      let role = JSON.parse(sessionStorage.getItem("RLE"));
-      const localSession = await getDataOffline('session');
-
-      if ((localSession[0] && localSession[0].role === "field officer")) {
-        // Role found in sessionStorage and it's an admin
-        next();
-      } else {
-        next({ name: 'portal-signin' });
-
-      }
-    } */
+    /*    beforeEnter: async (to, from, next) => {
+         // Check sessionStorage for existing session
+         let role = JSON.parse(sessionStorage.getItem("RLE"));
+         const localSession = await getDataOffline('session');
+   
+         if ((localSession[0] && localSession[0].role === "field officer")) {
+           // Role found in sessionStorage and it's an admin
+           next();
+         } else {
+           next({ name: 'portal-signin' });
+   
+         }
+       } */
 
   },
 

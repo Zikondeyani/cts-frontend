@@ -39,6 +39,13 @@
           </li>
 
 
+          <li class="nav-item mr-1" role="presentation">
+            <a href="#user-loadings"
+              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
+              id="tabs-user-loadings" data-bs-toggle="pill" data-bs-target="#user-loadings" role="tab"
+              aria-controls="user-loadings" aria-selected="false">Lean Season Delivery Reports</a>
+          </li>
+
         </ul>
         <div class="tab-content" id="tabs-user-options">
           <div class="tab-pane fade show active mt-3" id="user-relief" role="tabpanel"
@@ -50,6 +57,13 @@
             <commodity-distribution-table :data="commodityDistributionData" :screenshotMode="screenshotMode" />
 
           </div>
+
+          <div class="tab-pane fade" id="user-loadings" role="tabpanel" aria-labelledby="tabs-user-loadings">
+
+            <loading-plan-distribution-table :data="loadingplansdata" :screenshotMode="screenshotMode" />
+
+          </div>
+
           <div class="tab-pane fade" id="user-lean" role="tabpanel" aria-labelledby="tabs-user-lean">
 
             <user-lean :screenshotMode="screenshotMode" />
@@ -73,6 +87,7 @@ import UserProfile from "../../../components/pages/users/profile.component.vue";
 import UserLogs from "../../../components/pages/users/logs.component.vue";
 import UserSettings from "../../../components/pages/instruction/settings.component.vue";
 import CommodityDistributionTable from './CommodityDistributionTable.vue';
+import LoadingPlanDistributionTable from './LoadingPlanDistributionTable.vue';
 
 import UserRelief from "./StockPositioning.vue";
 
@@ -87,9 +102,12 @@ import { useInstructedCommoditiesStore } from "../../../stores/instructedCommodi
 
 import { useinstructionstore } from "../../../stores/instructions.store";
 import { userequisitionstore } from "../../../stores/requisition.store";
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
 import { usewarehousestore } from "../../../stores/warehouse.store";
 const requisitionStore = userequisitionstore();
+
+const loadingplanStore = useloadingplanstore();
 
 //INJENCTIONS
 const $router = useRouter();
@@ -122,6 +140,7 @@ const model = ref({
 const instructedCommodities = reactive([]);
 const warehousesinventory = reactive([])
 const commodityDistributionData = ref([])
+const loadingplansdata = ref([])
 
 
 //MOUNTED
@@ -133,6 +152,10 @@ onMounted(async () => {
   try {
     const data = await requisitionStore.getCommodityDistributionSummary();
     commodityDistributionData.value = [...data];
+
+    const loadingplandata = await loadingplanStore.getloadingplansDataSummary();
+    loadingplansdata.value = [...loadingplandata];
+
   } catch (error) {
     console.error("Failed to load commodity data:", error);
   } finally {
@@ -144,6 +167,9 @@ onMounted(async () => {
 ///FIELDS
 
 //FUNCTIONS
+
+
+
 
 const getWarehouseInventory = async () => {
   isLoading.value = true;

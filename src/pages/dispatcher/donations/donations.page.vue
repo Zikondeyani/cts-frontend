@@ -222,7 +222,7 @@ const generateExcel = async () => {
 
 onMounted(fetchInitialData);
 </script>
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   overflow: hidden;

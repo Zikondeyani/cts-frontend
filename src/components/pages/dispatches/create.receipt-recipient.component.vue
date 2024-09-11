@@ -32,13 +32,10 @@
                 <div class="px-6 py-4">
                   <!-- Summary of Dispatched Goods -->
                   <p class="mb-4"><strong>System Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
+                  <p class="mb-4"><strong>Target FDP:</strong> {{ dispatch?.FinalDestinationPoint }}</p>
+                  <p class="mb-4"><strong>Driver Phone #:</strong> {{ dispatch?.PhoneNumber }}</p>
 
-                  <div class="flex items-center space-x-2 mb-4">
-                      <input type="text" v-model="pdn"
-                        placeholder="Enter Delivery Note"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                   
-                    </div>
+
                   <div class="mb-6">
                     <h3 class="text-lg font-semibold text-blue-500 mb-4">Summary of Dispatched Goods:</h3>
                     <table class="min-w-full divide-y divide-gray-200">
@@ -56,14 +53,20 @@
                         <tr class="hover:bg-gray-100">
                           <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.loadingPlan?.commodity?.Name }}</td>
                           <td class="px-6 py-4 text-sm text-gray-900">{{ dispatch?.Quantity }} {{
-    dispatch?.loadingPlan?.commodity?.Unit === 'Kg' ? 'MT' : 'Units' }} ({{ dispatch?.NoBags }}
+                            dispatch?.loadingPlan?.commodity?.Unit === 'Kg' ? 'MT' : 'Units' }} ({{ dispatch?.NoBags }}
                             {{
-    dispatch?.loadingPlan?.commodity?.Container_type }})</td>
+                              dispatch?.loadingPlan?.commodity?.Container_type }})</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
+                  <hr>
+                  <div class="flex items-center space-x-2 mb-4">
+                    <p class="text-xs text-italic text-red-500 mt-3">*</p> <input type="text" v-model="pdn"
+                      placeholder="Enter Physical Delivery Note"
+                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
+                  </div>
                   <!-- Destination Points -->
                   <div class="mb-6">
                     <label for="multiple-destinations" class="block text-sm font-bold text-blue-500">Select Multiple
@@ -87,8 +90,8 @@
                   <!-- Destination Form -->
                   <div v-for="(destination, index) in destinations" :key="index" class="mb-4">
                     <label :for="'destination-' + index" class="block text-sm font-medium text-gray-700">FDP {{
-    multipleDestinations ? index +
-      1 : "" }}</label>
+                      multipleDestinations ? index +
+                        1 : "" }}</label>
                     <div class="flex items-center space-x-2">
                       <input type="text" :id="'destination-' + index" v-model="destination.name"
                         placeholder="Enter Final Destination Point"
@@ -126,18 +129,32 @@
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
                                     <option value="received but damaged">Received but damaged</option>
+                                    <option value="received in excess">Received in excess</option>
                                     <option value="received but not expected quantity">Received but not at the expected
                                       quantity</option>
                                     <option value="other">Other (please specify)</option>
                                   </select>
                                 </div>
+
+                                <div class="col-span-6 sm:col-span-3" v-if="remark.remark === 'received but damaged'">
+                                  <label for="quantity" class="text-sm font-medium text-gray-700"> Extend of damage
+
+                                    <select name="Extent" v-model="remark.extentofdamage" id="Remarks"
+                                      class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                      <option value="">Select Remark</option>
+                                      <option value="received in good condition">Bags wet</option>
+                                      <option value="received but damaged">Bags need reconstitution</option>
+                                    </select>
+                                  </label>
+                                </div>
                                 <div class="col-span-6 sm:col-span-3">
                                   <label for="quantity" class="text-sm font-medium text-gray-700">Quantity ({{
-    dispatch?.loadingPlan?.commodity?.Container_type }})</label>
+                                    dispatch?.loadingPlan?.commodity?.Container_type }})</label>
                                   <input type="number" v-model.number="remark.quantity" min="0"
                                     placeholder="Qty Received"
                                     class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                 </div>
+
                                 <button @click="removeRemark(index, 0, i)" type="button"
                                   class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
                                   <MinusCircleIcon class="h-5 w-5" />
@@ -146,6 +163,7 @@
                                   rows="3"
                                   class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                   placeholder="Enter your custom remark here"></textarea>
+
 
                               </div>
 
@@ -176,19 +194,21 @@
                 <!-- Modal Footer -->
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
-                    <button type="button" @click="saveProgress"
+                    <!--  <button type="button" @click="saveProgress"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
                       <SaveIcon class="h-5 w-5 mr-1" />
                       Save Progress
-                    </button>
-                    <button type="button" @click="open = false"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
-                      Cancel
-                    </button>
+                    </button> -->
+
                     <button type="submit"
                       class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                       <CheckCircleIcon class="h-5 w-5 mr-1" />
                       Submit Receipt
+                    </button>
+
+                    <button type="button" @click="close"
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -216,7 +236,7 @@ const isLoading = ref(false);
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const pdn = ref('')
-const emit = defineEmits(["create", "close", "update"]);
+const emit = defineEmits(["create", "close", "update", "draft"]);
 const Swal = inject('Swal');
 // Props
 const props = defineProps({
@@ -308,56 +328,133 @@ const computedTonnagePerRemark = (packsize, bags) => {
   return isDecimal(Tonnage) ? parseFloat(Tonnage.toFixed(2)) : Tonnage;
 };
 
-
-
 const submitReceipt = async () => {
+  if (!pdn.value) {
+    Swal.fire({
+      icon: "warning",
+      title: "🚫Missing Physical Delivery Note",
+      html: `<p>Please provide the Physical Delivery Note before submitting the receipt.</p>`,
+      allowOutsideClick: false,
+      customClass: { popup: 'swal-wide' }
+    });
+    return;
+  }
+
   const receivedCommodities = [];
+  const commodityTotals = {}; // To track cumulative quantity per commodity across all destinations
+  const remarksMap = {}; // To track if required remarks are added for each commodity
 
   for (let destination of destinations) {
-    // Validate that every destination has a name
     if (!destination.name) {
       Swal.fire({
         icon: "warning",
-        title: "Missing Destination",
-        text: "Please specify a final destination point for all entries before submmission.",
+        title: "🚫Missing Destination",
+        html: `<p>Please specify a final destination point for all entries before submission.</p>`,
+        allowOutsideClick: false,
+        customClass: { popup: 'swal-wide' }
       });
       return;
     }
 
+    // Track remarks per destination to check for duplicates
+    const destinationRemarksMap = {};
+
     for (let commodity of destination.commodities) {
-      if (commodity.remarks && commodity.remarks.length > 0) {
-        let remarksSet = new Set();
+      if (!commodity.remarks || commodity.remarks.length === 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "🚫Missing Remarks",
+          html: `<p>Each commodity must have at least one remark before submission.</p>`,
+          allowOutsideClick: false,
+          customClass: { popup: 'swal-wide' }
+        });
+        return;
+      }
 
-        for (let remark of commodity.remarks) {
-          // Validate that no duplicate remarks for the same commodity index exist
-          if (remarksSet.has(remark.remark)) {
-            Swal.fire({
-              icon: "warning",
-              title: "Duplicate Remark",
-              text: "The same remark cannot be added multiple times for the same commodity.",
-            });
-            return;
-          }
-          remarksSet.add(remark.remark);
+      const commodityName = props.dispatch?.loadingPlan?.commodity?.Name;
 
-          if (remark.remark) {
-            const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7); // Generate a unique ID
+      if (!commodityTotals[commodityName]) {
+        commodityTotals[commodityName] = 0;
+        remarksMap[commodityName] = new Set();
+      }
 
-            receivedCommodities.push({
-              Quantity: computedTonnagePerRemark(props.dispatch?.loadingPlan?.commodity?.PackSize, remark.quantity),
-              NoBags: remark.quantity,
-              Comments: remark.Comments,
-              Date: new Date().toISOString(),
-              dispatchId: props.dispatch?.id,
-              RecipientId: user.value.id,
-              RefNO: destination.name.replace(/\s+/g, '') + "|" + (props.dispatch?.DeliveryNote || '') + "-" + uniqueId,
-              IsArchived: true,
-              Remarks: remark.remark,
-              FinalDestinationPoint: destination.name,
-              PhysicalDeliveryNote: pdn.value
-            });
-          }
+      for (let remark of commodity.remarks) {
+        // Check for duplicate remarks per destination
+        if (!destinationRemarksMap[remark.remark]) {
+          destinationRemarksMap[remark.remark] = true;
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "Duplicate Remark",
+            text: "The same remark cannot be added multiple times for the same commodity within the same destination.",
+          });
+          return;
         }
+
+        remarksMap[commodityName].add(remark.remark);
+        commodityTotals[commodityName] += remark.quantity;
+
+        if (remark.quantity <= 0) {
+          Swal.fire({
+            icon: "error",
+            title: "❗Quantity Invalid",
+            html: `<p>The quantity must be greater than 0.</p>`,
+            allowOutsideClick: false,
+            customClass: { popup: 'swal-wide' }
+          });
+          return;
+        }
+      }
+    }
+  }
+
+  // Validate cumulative totals for each commodity across all destinations
+  for (const [commodityName, totalReceived] of Object.entries(commodityTotals)) {
+    const dispatchedQuantity = props.dispatch?.NoBags || 0;
+
+    if (totalReceived < dispatchedQuantity && !remarksMap[commodityName].has('received but not expected quantity')) {
+      Swal.fire({
+        icon: "error",
+        title: "❗Quantity Less Than Expected",
+        html: `<p>The cumulative received quantity for ${commodityName} is less than the dispatched quantity. Please select <strong>'received but not expected quantity'</strong> in the remarks.</p>`,
+        allowOutsideClick: false,
+        customClass: { popup: 'swal-wide' }
+      });
+      return;
+    }
+
+    if (totalReceived > dispatchedQuantity && !remarksMap[commodityName].has('received in excess')) {
+      Swal.fire({
+        icon: "error",
+        title: "❗Quantity Exceeded",
+        html: `<p>The cumulative received quantity for ${commodityName} exceeds the dispatched quantity. Please select <strong>'received in excess'</strong> in the remarks.</p>`,
+        allowOutsideClick: false,
+        customClass: { popup: 'swal-wide' }
+      });
+      return;
+    }
+  }
+
+  // Prepare received commodities for submission
+  for (let destination of destinations) {
+    for (let commodity of destination.commodities) {
+      for (let remark of commodity.remarks) {
+        const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7);
+
+        receivedCommodities.push({
+          Quantity: computedTonnagePerRemark(props.dispatch?.loadingPlan?.commodity?.PackSize, remark.quantity),
+          NoBags: remark.quantity,
+          Comments: remark.Comments,
+          extentofdamage: remark.extentofdamage,
+          Date: new Date().toISOString(),
+          dispatchId: props.dispatch?.id,
+          RecipientId: user.value.id,
+          RefNO: destination.name.replace(/\s+/g, '') + "|" + (props.dispatch?.DeliveryNote || '') + "-" + uniqueId,
+          IsArchived: true,
+          Remarks: remark.remark,
+          FinalDestinationPoint: destination.name,
+          PhysicalDeliveryNote: pdn.value
+        });
       }
     }
   }
@@ -372,7 +469,7 @@ const submitReceipt = async () => {
       text: 'Please wait while the receipt is being created.',
       allowOutsideClick: false,
       didOpen: () => {
-        Swal.showLoading()
+        Swal.showLoading();
       }
     });
 
@@ -389,6 +486,68 @@ const submitReceipt = async () => {
   }
 };
 
+
+
+
+
+const saveProgress = async () => {
+  const receivedCommodities = [];
+
+  for (let destination of destinations) {
+    for (let commodity of destination.commodities) {
+      // Ensure at least one empty remark if none exist
+      if (commodity.remarks.length === 0) {
+        commodity.remarks.push({ remark: '', quantity: 0, Comments: '' });
+      }
+
+      for (let remark of commodity.remarks) {
+        const uniqueId = Date.now().toString() + Math.random().toString(36).substr(2, 7); // Generate a unique ID
+
+        receivedCommodities.push({
+          Quantity: computedTonnagePerRemark(props.dispatch?.loadingPlan?.commodity?.PackSize, remark.quantity),
+          NoBags: remark.quantity,
+          Comments: remark.Comments,
+          Date: new Date().toISOString(),
+          dispatchId: props.dispatch?.id,
+          RecipientId: user.value.id,
+          RefNO: destination.name.replace(/\s+/g, '') + "|" + (props.dispatch?.DeliveryNote || '') + "-" + uniqueId,
+          IsArchived: true,
+          status: 3,
+          Remarks: remark.remark,
+          FinalDestinationPoint: destination.name ?? 'N.A',
+          PhysicalDeliveryNote: pdn.value
+        });
+      }
+    }
+  }
+
+  isLoading.value = true; // Start the loader
+
+  try {
+    emit("draft", receivedCommodities);
+
+    Swal.fire({
+      text: "Receipt saved to drafts",
+      toast: true,
+      position: "top-right",
+      icon: "success",
+      showConfirmButton: false,  // Hide the button
+      timer: 3000,  // Auto close after 3 seconds
+      timerProgressBar: true   // Show a timer progress bar
+    });
+
+    close();
+  } catch (error) {
+    Swal.fire({
+      title: "Drafting Failed",
+      text: `Failed to draft receipt: ${error.message}`,
+      icon: "error",
+      confirmButtonText: "Ok"
+    });
+  } finally {
+    isLoading.value = false; // Stop the loader
+  }
+};
 
 
 

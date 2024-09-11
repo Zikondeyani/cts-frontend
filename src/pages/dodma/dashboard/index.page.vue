@@ -39,7 +39,7 @@
               Lean Season Response Dashboard
             </button>
 
-        
+         
           </div>
         </div>
 
@@ -64,15 +64,16 @@
 
                     <div class="mt-1 flex justify-right gap-x-2 sm:mt-0">
                       <button @click="exportToExcel"
-                        v-if="currentView !== 'dashboard' && currentView !== 'leanSeasonDashboard' && currentView !== 'Donations'"
+                        v-if="currentView !== 'dashboard' && currentView !== 'leanSeasonDashboard'"
                         type="button"
                         class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
                         :class="{ 'active-tab': false }">
                         <DocumentDownloadIcon class="h-5 w-5 mr-2" />
                         Export to Excel
                       </button>
+                      
 
-                      <button @click="takeScreenshot" v-if="currentView !== 'dashboard' && currentView !== 'Donations'"
+                      <button @click="takeScreenshot" v-if="currentView !== 'dashboard'"
                         type="button"
                         class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
                         :class="{ 'active-tab': false }">
@@ -87,6 +88,7 @@
 
             <section ref="commodityTable">
               <!-- Chart and image container -->
+
 
 
               <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
@@ -109,11 +111,15 @@
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+
+
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
+
                         <select id="district" v-model="selectedDistrict"
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Districts</option>
+
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
                           </option>
@@ -194,12 +200,19 @@
               <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
                 <!-- Content for Lean Season Response Dashboard -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+
                   <!-- Aligned images in the center -->
                   <div v-show="screenshotMode"
                     class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5">
                     <div class="flex justify-center items-center">
                       <img class="mr-4 h-20" src="../../../assets/images/images.png" alt="MW-Govt" />
                       <img class="h-20" src="../../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
+                     
+                    </div>
+                    <div class="text-center mt-1 ml-6">
+                      <h1 class="text-lg font-bold text-white">DoDMA Commodity Tracking System</h1>
                     </div>
                   </div>
 
@@ -211,6 +224,17 @@
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+                      <div class="flex flex-col">
+                        <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
+                        <select id="district" v-model="selectedActivity"
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option value="">All Activity</option>
+                          <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
+                            {{ activity.Name }}
+                          </option>
+                        </select>
+                      </div>
+
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
@@ -239,43 +263,88 @@
                       </button>
                     </div>
                   </div>
-               
-                 
 
+
+                  <!-- Dashboard Cards Section -->
+                  <div class="col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <!-- Total Commodities Dispatched -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="flex items-center space-x-2">
+                        <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
+                        <div class="text-[#096eb4] text-sm">Total Tonnage Dispatched</div>
+                      </div>
+                      <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalDispatched }}</div>
+                    </div>
+
+                    <!-- Total Commodities Received -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="flex items-center space-x-2">
+                        <InboxIcon class="w-5 h-5 text-[#096eb4]" />
+                        <div class="text-[#096eb4] text-sm">Total Tonnage Received</div>
+                      </div>
+                      <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalReceived }}</div>
+                    </div>
+
+                    <!-- Total Loading Plans Created -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="flex items-center space-x-2">
+                        <ClipboardListIcon class="w-5 h-5 text-[#096eb4]" />
+                        <div class="text-[#096eb4] text-sm">Total Loading Plans Created</div>
+                      </div>
+                      <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
+                    </div>
+
+                    <!-- % of Dispatches Received -->
+                    <div class="bg-white shadow-lg rounded-lg p-4">
+                      <div class="flex items-center space-x-2">
+                        <ChartBarIcon class="w-5 h-5 text-[#096eb4]" />
+                        <div class="text-[#096eb4] text-sm">% of Dispatches Received</div>
+                      </div>
+                      <div class="text-2xl font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
+                    </div>
+                  </div>
+
+                  <!-- Charts Section -->
                   <div class="mx-3">
-                    <damage-summary-lean v-if="filteredLeanCommodityDispatchData[0]?.commoditySummary?.length > 0"
-                      :commodityDispatchData="filteredLeanCommodityDispatchData" />
+                    <dispatch-summary-leans-two v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
                   <div class="mx-3">
-                    
-                    <damage-summary-leans v-if="filteredLeanCommodityDispatchData.length >  0"
-                      :commodityDispatchData="filteredLeanCommodityDispatchData" />
+                    <stock-summary-lean v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :leanStockSummary="filteredLeanCommodityDispatchData2" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
                   <div class="mx-3">
-                    <stock-summary-lean v-if="filteredLeanStockSummary.length > 0"
-                      :leanStockSummary="filteredLeanStockSummary" />
+                    <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
-
-
+                  
                 </div>
               </div>
+
 
               <!-- Emergency Response Dashboard -->
               <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
                 <!-- Commodity distribution table view -->
                 <commodity-distribution-table :data="filteredCommodityDistributionData"
+                  :screenshotMode="screenshotMode" />
+                <!-- Other components for stats, etc... -->
+              </div>
+
+              <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
+                <!-- Commodity distribution table view -->
+                <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
                   :screenshotMode="screenshotMode" />
                 <!-- Other components for stats, etc... -->
               </div>
@@ -330,12 +399,12 @@
                               <div>
                                 <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
                                 <b>Total Stock Planned:</b> <br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-          summary.totalStockPlanned.toLocaleString() }} MT
+                                  summary.totalStockPlanned.toLocaleString() }} MT
                               </div>
                               <div>
                                 <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
                                 <b> Total Balance: </b><br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-          summary.totalBalance.toLocaleString() }} MT
+                                  summary.totalBalance.toLocaleString() }} MT
                               </div>
                             </div>
                           </div>
@@ -469,6 +538,9 @@ import distributionByDistrict from '../../../components/pages/charts/distributio
 import distributionPercentage from '../../../components/pages/charts/distributionPercentage.vue'; // Adjust path as needed
 import damageSummaryLean from '../../../components/pages/charts/damageSummaryLean.vue'; // Adjust path as needed
 import damageSummaryLeans from '../../../components/pages/charts/damageSummaryLeans.vue'; // Adjust path as needed
+import dispatchSummaryLeans from '../../../components/pages/charts/dispatchSummaryLean.vue'; // Adjust path as needed
+import dispatchSummaryLeansTwo from '../../../components/pages/charts/dispatchSummaryLean2.vue'; // Adjust path as needed
+
 
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 
@@ -483,13 +555,16 @@ import { useInstructedDispatchesStore } from "../../../stores/instructedDispatch
 import { useinstructionstore } from "../../../stores/instructions.store";
 
 import { usereceiptstore } from "../../../stores/receipt.store";
-import { usedonationstore } from "../../../stores/donation.store";
 
 import { usedistrictstore } from "../../../stores/districts.store";
+
+import { useactivitiestore } from "../../../stores/activity.store";
+
 import { useDisasterstore } from "../../../stores/disaster.store";
 import { usecommoditiestore } from "../../../stores/commodity.store";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";
 import CommodityDistributionTable from './CommodityDistributionTable.vue';
+import CommodityDistributionTableLean from './CommodityDistributionTableLean.vue';
 
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
@@ -526,13 +601,12 @@ import {
   DocumentDuplicateIcon,
   CollectionIcon,
   IdentificationIcon,
-  DocumentTextIcon,
   OfficeBuildingIcon,
   DocumentIcon,
-  ClipboardListIcon,
   ExclamationCircleIcon,
   ExclamationIcon,
   ArrowUpIcon,
+  DocumentTextIcon, InboxIcon, ClipboardListIcon,
   ArrowDownIcon
 } from "@heroicons/vue/outline";
 
@@ -541,6 +615,8 @@ const screenshotMode = ref(false);
 // Example data structure for maize distribution
 const commodityDistributionData = ref([]);
 const commodityDispatchData = ref([]);
+
+const commodityDispatchData2 = ref([]);
 const commodityEmergencyDispatchData = ref([]);
 
 const currentView = ref('dashboard'); // The initial view can be 'dashboard' or 'charts'
@@ -552,15 +628,19 @@ const toggleView = (view) => {
 const showTooltip = ref(false);
 
 const districtstore = usedistrictstore();
+
+const activitystore = useactivitiestore();
+
 const commoditystore = usecommoditiestore();
 
-const donationstore = usedonationstore();
 
 const disasterStore = useDisasterstore();
 const commoditytypestore = usecommoditytypestore();
 
 const receivedcommoditiesstore = useReceivedCommoditiesStore();
 const districts = reactive([]);
+
+const activities = reactive([]);
 const disasters = reactive([]);
 const commodities = reactive([]);
 const commodityTypes = reactive([]);
@@ -656,7 +736,6 @@ let catalogueCount = ref(0);
 const users = reactive([]);
 const dispaches = reactive([]);
 
-const donations = reactive([]);
 const isLoading = ref(false);
 
 const loadingPlanSummary = reactive([]);
@@ -664,22 +743,25 @@ const loadingPlanSummary = reactive([]);
 const leanStockSummary = ref([]);
 
 let userCount = ref(0);
-let bookingCount = ref(0);
 const newRequisitionsCount = ref(0);
 const receiptcount = ref(0)
 const dispatchcount = ref(0)
-
+const loadingplansCount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
   try {
     const data = await requisitionStore.getCommodityDistributionSummary();
     const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
+    const dispatchdata2 = await dispatchesStore.getExtendedDispatchSummary();
+
     const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
     commodityDispatchData.value.length = 0
     commodityEmergencyDispatchData.value.length = 0
     leanStockSummary.value = [...leanstocks]
     commodityDispatchData.value.push({ ...dispatchdata })
+
+    commodityDispatchData2.value.push({ ...dispatchdata2 })
     commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
     commodityDistributionData.value = [...data];
   } catch (error) {
@@ -687,20 +769,19 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
-  
+  getActivities();
   getCommodities();
   getDisasters();
   getDistricts();
-  getDonations();
-  getCatalogue();
+  getLoadingPlans();
+  getdispatchSummary();
   getUsers();
-  getBookings();
   getDispatches();
   getReceipts();
   getDispatchesCount();
   getLoadingPlansPending();
   getloadingplansSummary();
-  getdispatchSummary();
+
   getloadingplansSummaryByCommodity();
   getInstructions();
   getRequisitions();
@@ -729,19 +810,6 @@ const getDisasters = async () => {
     });
 };
 
-const getDonations = async () => {
-  donationstore
-    .get()
-    .then(result => {
-      donations.length = 0; //empty array
-      donations.push(...result);
-    })
-    .catch(error => {
-      console.error("Failed to load donations:", error);
-    })
-    .finally(() => {
-    });
-};
 
 const getCommodities = async () => {
   commoditystore
@@ -763,9 +831,25 @@ const getDistricts = async () => {
     .then(result => {
       districts.length = 0; //empty array
       districts.push(...result);
+
     })
     .catch(error => {
       console.error("Failed to load districts:", error);
+    })
+    .finally(() => {
+    });
+};
+
+const getActivities = async () => {
+  activitystore
+    .get()
+    .then(result => {
+      activities.length = 0; //empty array
+      activities.push(...result);
+
+    })
+    .catch(error => {
+      console.error("Failed to load activities:", error);
     })
     .finally(() => {
     });
@@ -776,7 +860,7 @@ const getInstructions = async () => {
     .get()
     .then((result) => {
       instructions.length = 0;
-      instructions.push(...result.filter(item => !item.IsApproved));
+      instructions.push(...result.filter(item => item.IsApproved == false));
       newInstructionsCount.value = instructions.length;
     })
     .catch(error => {
@@ -852,6 +936,7 @@ const getLoadingPlans = async () => {
       const sortedDispatches = [...result].sort((a, b) => new Date(b.createdon) - new Date(a.createdon));
       loadingplans.length = 0;
       loadingplans.push(...sortedDispatches);
+      loadingplansCount.value = loadingplans.length
     })
 }
 
@@ -859,7 +944,7 @@ const pendingplans = ref(0)
 const totalBalance = ref(0)
 const totalStockPlanned = ref("")
 const dispatchPercentageFormated = ref("")
-const totalDispatched = ref("")
+const totalDispatched = ref(0)
 const totalReceived = ref("")
 const receivedPercentageFormated = ref("")
 const receivedPercentage = ref("")
@@ -872,17 +957,16 @@ const getLoadingPlansPending = async () => {
       pendingplans.value = result.count
     })
 }
-
-/* const getdispatchSummary = async () => {
-  dispatchStore
+const getdispatchSummary = async () => {
+  dispatchesStore
     .getdispatchSummary()
     .then(result => {
       totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
-      totalReceived.value = result.totalReceived
+      totalReceived.value = result.totalReceived.toLocaleString() + " MT"
       receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
       receivedPercentage.value = result.dispatchPercentage.toFixed(2)
     })
-} */
+}
 
 const getloadingplansSummary = async () => {
   loadingPlanStore
@@ -912,48 +996,7 @@ const getUsers = async () => {
     });
 };
 
-const getBookings = async () => {
-  bookingStore.count().then((result) => {
-    bookingCount.value = result.count;
-  });
 
-  bookingStore.getbookingsClean().then((result) => {
-    bookings.length = 0;
-    bookings.push(...result);
-  });
-};
-
-const createReport = async (model) => {
-  isLoading.value = true;
-  model.userId = user.value.id
-  if (model.StartDate) {
-    model.StartDate = moment(model.StartDate).toISOString();
-  }
-  if (model.EndDate) {
-    model.EndDate = moment(model.EndDate).toISOString();
-  }
-
-  loadingPlanStore
-    .create(model)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Created a new loading plan successfully",
-        icon: "success",
-        confirmButtonText: "Ok"
-      });
-
-      $router.push('/dodma/loadingplans');
-    })
-    .catch(error => {
-      console.error("Failed to create loading plan:", error);
-    })
-    .finally(() => {
-      isLoading.value = false;
-      getDispatches();
-      getLoadingPlans();
-    });
-};
 
 const formatDate = (date) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -1066,6 +1109,8 @@ const damagedStockStatsEmergency = computed(() => {
 
 // Filters
 const selectedDistrict = ref('');
+
+const selectedActivity = ref('');
 const selectedCommodity = ref('');
 const selectedDisaster = ref('');
 const selectedDateFrom = ref('');
@@ -1074,6 +1119,7 @@ const selectedDateTo = ref('');
 // Reset filters
 const resetFilters = () => {
   selectedDistrict.value = '';
+  selectedActivity.value = ''
   selectedCommodity.value = '';
   selectedDisaster.value = '';
   selectedDateFrom.value = '';
@@ -1083,6 +1129,8 @@ const resetFilters = () => {
 // Filtered data for Emergency Response Dashboard
 const filteredCommodityDistributionData = computed(() => {
   return commodityDistributionData.value.filter(item => {
+
+
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
     const matchDisaster = !selectedDisaster.value || item.disaster === selectedDisaster.value;
@@ -1095,17 +1143,46 @@ const filteredCommodityDistributionData = computed(() => {
 // Filtered data for Lean Season Response Dashboard
 const filteredLeanCommodityDispatchData = computed(() => {
   return commodityDispatchData.value.filter(item => {
+
+
+    const matchActivity = !selectedActivity.value || item.summary.some(summaryItem => summaryItem.activity === selectedActivity.value);
     const matchDistrict = !selectedDistrict.value || item.summary.some(summaryItem => summaryItem.district === selectedDistrict.value);
     const matchCommodity = !selectedCommodity.value || item.summary.some(summaryItem => summaryItem.commodity === selectedCommodity.value);
-    return matchDistrict && matchCommodity;
+    return matchDistrict && matchCommodity && matchActivity;
+  });
+});
+
+
+
+const flattenedData = computed(() => {
+    if (!commodityDispatchData2.value || commodityDispatchData2.value.length === 0) {
+        return []; // Return an empty array if data is not available
+    }
+
+    // Assume props.data is an array with a single object containing numerically indexed keys
+    const [dataObj] = commodityDispatchData2.value; // Extract the first object (your data)
+    return Object.values(dataObj); // Convert the object into an array of values
+});
+
+const filteredLeanCommodityDispatchData2 = computed(() => {
+  return flattenedData.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+  
+    return matchActivity && matchCommodity && matchDistrict;
   });
 });
 
 const filteredLeanStockSummary = computed(() => {
   return leanStockSummary.value.filter(item => {
     const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
+    const matchDistrict = !selectedDistrict.value || item.commodityName == selectedDistrict.value;
+    const matchActivity = !selectedActivity.value || item.commodityName == selectedActivity.value;
 
-    return matchCommodity;
+    return matchCommodity && matchActivity && matchDistrict;
   });
 });
 </script>

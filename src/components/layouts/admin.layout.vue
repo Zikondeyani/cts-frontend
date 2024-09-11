@@ -20,7 +20,7 @@
           <span class="font-bold text-white mx-4 hidden lg:block">DODMA CTS | Admin
             <span class="text-xs font-normal">(v2.0)</span>
           </span>
-        
+
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | Admin
@@ -28,18 +28,30 @@
         </span>
         <!-- Navigation Items for Desktop -->
         <div class="flex flex-col lg:flex-row lg:space-x-4 mt-2 lg:mt-0 w-full lg:w-auto hidden lg:flex">
-          <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href" class="block lg:inline-block mt-2 lg:mt-0">
-            <a :class="itemClasses(item)" :aria-current="item.current ? 'page' : undefined">
+          <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href">
+            <a :class="[
+              item.current ? 'bg-white text-black' : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
+              'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+            ]" :aria-current="item.current ? 'page' : undefined">
               {{ item.name }}
+              <div v-if="item.name === 'Reversals' && newReversalCount > 0" class="relative ml-2 mx-4">
+                <span
+                  class="absolute -top-3 -right-3 flex items-center justify-center px-1 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full">
+                  {{ newReversalCount }}
+                </span>
+              </div>
             </a>
           </router-link>
           <!-- Dropdown for the rest of the items -->
           <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0">
-            <button @click="toggleDropdown" @mouseenter="toggleDropdown" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
+            <button @click="toggleDropdown" @mouseenter="toggleDropdown"
+              class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
             </button>
-            <div v-if="isDropdownOpen" @mouseleave="closeDropdown" @focusout="closeDropdown" class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
-              <router-link v-for="item in remainingItems" :key="item.name" :to="item.href" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+            <div v-if="isDropdownOpen" @mouseleave="closeDropdown" @focusout="closeDropdown"
+              class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
+              <router-link v-for="item in remainingItems" :key="item.name" :to="item.href"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                 {{ item.name }}
               </router-link>
             </div>
@@ -49,30 +61,36 @@
         <div class="relative ml-5 hidden lg:block">
           <Menu as="div" class="flex-shrink-0 relative">
             <div>
-              <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+              <MenuButton
+                class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
                 <span class="sr-only">Open user menu</span>
                 <span class="lowercase m-2 text-white"> {{ user?.username.replace(/\./g, ' ') }} </span>
-                <span style="background-color:gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+                <span style="background-color:gray"
+                  class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                   {{ user?.username.match(/\b(\w)/g).join("") }}
                 </span>
               </MenuButton>
             </div>
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                  <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                    {{ item.name }}
-                  </a>
+                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                  {{ item.name }}
+                </a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                    About System
-                  </button>
+                <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                  About System
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onSignout" :class="menuItemClasses(active, true)">
-                    Sign out
-                  </button>
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
+                  Sign out
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -82,7 +100,8 @@
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="lg:hidden">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <router-link v-for="item in navItems"  @click="toggleMobileMenu()" :key="item.name" :to="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
+          <router-link v-for="item in navItems" @click="toggleMobileMenu()" :key="item.name" :to="item.href"
+            class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
             {{ item.name }}
           </router-link>
         </div>
@@ -91,30 +110,36 @@
       <div class="relative mt-4 block lg:hidden w-full">
         <Menu as="div" class="flex-shrink-0 relative">
           <div class="flex justify-end">
-            <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+            <MenuButton
+              class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
               <span class="sr-only">Open user menu</span>
               <span class="lowercase m-2 text-white"> {{ user?.username.replace(/\./g, ' ') }} </span>
-              <span style="background-color:gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+              <span style="background-color:gray"
+                class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                 {{ user?.username.match(/\b(\w)/g).join("") }}
               </span>
             </MenuButton>
           </div>
-          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-            <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+          <transition enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95">
+            <MenuItems
+              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
               <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                  {{ item.name }}
-                </a>
+              <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                {{ item.name }}
+              </a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                  About System
-                </button>
+              <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                About System
+              </button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button @click="onSignout" :class="menuItemClasses(active, true)">
-                  Sign out
-                </button>
+              <button @click="onSignout" :class="menuItemClasses(active, true)">
+                Sign out
+              </button>
               </MenuItem>
             </MenuItems>
           </transition>
@@ -144,6 +169,10 @@
 import { inject, ref, watch, reactive, onMounted, computed, toRefs, onBeforeUnmount } from "vue";
 import { useSessionStore } from "../../stores/session.store";
 import { useRouter } from "vue-router";
+import { usereceiptstore } from "../../stores/receipt.store";
+import { useInstructedReceiptsStore } from "../../stores/instructedReceipts.store";
+
+import eventBus from '../../services/events/eventbus';
 import {
   Dialog,
   DialogOverlay,
@@ -182,6 +211,8 @@ import {
   SelectorIcon,
 } from "@heroicons/vue/solid";
 
+const newReversalCount = ref(0);
+
 //DECLARATIONS
 const system = reactive({
   name: process.env.VUE_APP_NAME,
@@ -200,12 +231,20 @@ const role = ref(sessionStore.getRole);
 const signOutTimeout = ref(null);
 
 const isDropdownOpen = ref(false);
-import { saveDataOffline, getDataOffline,clearDataOffline } from '@/services/localbase';
+import { saveDataOffline, getDataOffline, clearDataOffline } from '@/services/localbase';
 
+
+
+const receiptStore = usereceiptstore();
+const receipts = reactive([]);
+
+const instructedreceiptStore = useInstructedReceiptsStore();
+
+const instructedreceipts = reactive([]);
 
 const onAbout = async () => {
-   $router.push({ path: "/admin/about-system" })
-  
+  $router.push({ path: "/admin/about-system" })
+
 };
 
 const menuItemClasses = (active, isButton = false) => [
@@ -216,6 +255,56 @@ const menuItemClasses = (active, isButton = false) => [
 
 
 const isMobileMenuOpen = ref(false)
+
+const updateCounts = () => {
+
+  newReversalCount.value = receipts.length + instructedreceipts.length;
+
+
+}
+const getInstructedReceipts = async () => {
+  instructedreceiptStore
+    .get()
+    .then((result) => {
+      // Clear the existing array
+      instructedreceipts.length = 0;
+
+
+
+      // Push the filtered instructions into the array
+      instructedreceipts.push(...result.filter(item => item.status == 4));
+   
+
+      updateCounts()
+      // Update the count of new instructions
+
+    })
+
+};
+
+const getReceipts = async () => {
+  receiptStore
+    .groupedbydeliverynote()
+    .then((result) => {
+      // Clear the existing array
+      receipts.length = 0;
+
+
+      const filteredReceipts = result.filter(receipt =>
+        receipt.receipts?.some(r => r.status == 4
+        )
+      );
+
+      // Push the filtered instructions into the array
+      receipts.push(...filteredReceipts);
+
+
+      updateCounts()
+      // Update the count of new instructions
+
+    })
+
+};
 
 
 // Methods
@@ -245,24 +334,41 @@ function gotoSystemsettings() {
 }
 
 //MOUNTED
-onMounted(() => {
-  
+onMounted(async () => {
+
   startSignOutTimer();
-  
+
   addEventListeners();
- });
+
+  await getReceipts();
+
+
+  await getInstructedReceipts();
+
+
+  eventBus.on('reversalTriggered', async (reversalId) => {
+    // Update the notification count
+
+    await getInstructedReceipts();
+    await getReceipts();
+    updateCounts()
+    addEventListeners();
+  });
+
+});
 //WAT
 function navigation() {
   let navList = [
     { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
-  /*   { name: "Plan & Dispatch", href: "/admin/dispatch-management", icon: AdjustmentsIcon, current: false },
-   */ /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
+    /*   { name: "Plan & Dispatch", href: "/admin/dispatch-management", icon: AdjustmentsIcon, current: false },
+     */ /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
     { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
     { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
   */  /*  { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
- */
+    */
     { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
     { name: "System", href: "/admin/system", icon: AdjustmentsIcon, current: false },
+    { name: "Reversals", href: "/admin/reversals", icon: XIcon, current: false },
 
 
   ];
@@ -365,6 +471,8 @@ const removeEventListeners = () => {
 
 
 onBeforeUnmount(() => {
+  
+  eventBus.off('reversalTriggered');
   clearSignOutTimer();
   removeEventListeners();
 });

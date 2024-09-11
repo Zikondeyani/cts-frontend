@@ -291,7 +291,7 @@ const createReport = async (model) => {
 };
 </script>
 
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

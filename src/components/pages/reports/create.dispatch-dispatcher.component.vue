@@ -64,7 +64,8 @@
                       <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Date</label>
 
                       <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        :max="new Date().toISOString().split('T')[0]" />
 
                     </div>
 
@@ -94,6 +95,16 @@
 
 
                     <div class="col-span-6 sm:col-span-3">
+                      <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
+                        Phone #</label>
+
+                      <input type="text" name="PhoneNumber" required v-model="dispatch.PhoneNumber" id="PhoneNumber"
+                        autocomplete="PhoneNumber"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    </div>
+
+
+                    <div class="col-span-6 sm:col-span-3">
                       <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck
                         Number</label>
 
@@ -110,10 +121,13 @@
                         class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">
                         Reset
                       </button>
+                   
+
                       <button @click="submitDispatch()"
-                        class="ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-400 focus:outline-none focus:border-blue-400 focus:ring focus:ring-blue-200 active:bg-blue-400 transition ease-in-out duration-150">
-                        Submit
-                      </button>
+                      class="inline-flex ml-3 items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <CheckCircleIcon class="h-5 w-5 mr-1" />
+                      Submit Dispatch
+                    </button>
                     </div>
                   </div>
 
@@ -198,6 +212,9 @@ import { usedriverstore } from "../../../stores/driver.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 import { useSessionStore } from "../../../stores/session.store";
 
+
+import { XIcon, DocumentTextIcon, SaveIcon, CheckCircleIcon } from "@heroicons/vue/outline";
+
 const $router = useRouter();
 const driverstore = usedriverstore();
 const dispatchstore = useDispatcherStore();
@@ -224,8 +241,8 @@ const fetchDrivers = async () => {
   drivers.value = await driverstore.get();
 };
 
-onMounted(() => { 
-  fetchDrivers(); 
+onMounted(() => {
+  fetchDrivers();
   generateUniqueDeliveryNote();
 });
 

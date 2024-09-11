@@ -487,7 +487,11 @@ const getRequisitions = async () => {
     .get()
     .then((result) => {
       requisitions.length = 0;
-      requisitions.push(...result.filter(item => item.IsArchived == false || item.IsArchived == null || item.status !== 3));
+      requisitions.push(
+        ...result.filter(
+          item => (item.IsArchived === false || item.IsArchived === null) && item.status !== 3
+        )
+      );
       newRequisitionsCount.value = requisitions.length;
       updateNotifications();
     })

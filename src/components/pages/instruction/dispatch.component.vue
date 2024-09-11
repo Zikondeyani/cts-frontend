@@ -3,8 +3,8 @@
     <button @click="openDialog" class="
         inline-flex
         items-center
-        px-3
-        py-2
+        px-2
+        py-1
         text-sm
         font-medium
         text-green-600
@@ -15,20 +15,17 @@
         border-gray-200
         hover:bg-gray-100
       ">
-      <!-- Heroicon PlusCircle (Create Instruction) -->
-      <TruckIcon class="h-5 w-5 mr-1" />
+      <TruckIcon class="h-4 w-4 mr-1" />
       Create Dispatch
     </button>
     <TransitionRoot as="template" :show="open">
       <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="open = false" static>
-        <div class="flex items-start justify-center min-h-screen pt-4 px-4 pb-2 text-center sm:block sm:p-0">
-          <!-- Background overlay -->
+        <div class="flex items-center justify-center min-h-screen p-4 text-center sm:block sm:p-0">
           <TransitionChild as="template" v-if="open" enter="ease-out duration-300" enter-from="opacity-0"
             enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
             <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </TransitionChild>
 
-          <!-- Modal content -->
           <TransitionChild as="template" enter="ease-out duration-300"
             enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
@@ -36,174 +33,135 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
 
             <div
-              class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-start sm:my-8 sm:max-w-4xl sm:w-full">
-              <div
-                class="modal-header flex flex-shrink-0 items-center justify-between p-3 border-b border-gray-200 rounded-t-md bg-white">
-                <h5 class="text-md font-medium leading-normal text-gray-800 mb-1" id="formModalLabel">
+              class="inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-4xl sm:w-full">
+              <div class="flex items-center justify-between p-2 border-b border-gray-200 bg-white">
+                <h5 class="text-md font-medium text-gray-800">
                   Create Dispatch for Instruction (<b>ID: {{ props.rowId }} </b>)
                 </h5>
-                <button type="button"
-                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
-                  @click="open = false">
+                <button type="button" @click="open = false" class="p-1 text-black">
                   <XIcon class="h-4 w-4" />
                 </button>
               </div>
               <form @submit.prevent="onSubmit" :validation-schema="CreateRequisitionSchema">
-                <div class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
-                  <div class="container mx-auto px-4 py-6">
-                    <div class="flex gap-8"> <!-- Increased gap between panels -->
-                      <!-- Left: Instructions Panel -->
-                      <div class="flex-1 bg-white rounded-table p-4">
-                        <h3 class="text-xl font-semibold mb-4">Instruction Details</h3>
-                        <p class="mb-4"><strong>Purpose:</strong> {{ instruction.Purpose }}</p>
-                        <p class="mb-4"><strong>Vehicle Reg #:</strong> {{ instruction.VehicleRegNo }}</p>
-                        <p class="mb-4"><strong>Driver Name:</strong> {{ instruction.DriverName }}</p>
-                        <p class="mb-4"><strong>Warehouse (From):</strong> <br> {{ instruction.warehouses?.map(warehouse =>
+                <div class="px-2 mx-5 pb-2">
+                  <!-- Top: Instructions Panel -->
+                  <div class="bg-white p-2 mb-4">
+                    <h3 class="text-lg font-semibold mb-2">Instruction Details</h3>
+                    <p class="mb-2"><strong>Purpose:</strong> {{ instruction.Purpose }}</p>
+                    <p class="mb-2"><strong>Warehouse (From):</strong> {{ instruction.warehouses?.map(warehouse =>
                       warehouse?.name).join(', ') }}</p>
-                        <p class="mb-4"><strong>District (To):</strong> {{ instruction.district.Name }}</p>
-                        <p class="mb-4"><strong>Transporter:</strong> {{ instruction.transporter.Name }}</p>
+                    <p class="mb-2"><strong>District (To):</strong> {{ instruction.district.Name }}</p>
+                    <p class="mb-2"><strong>Transporter:</strong> {{ instruction.transporter.Name }}</p>
 
-                        <!-- Table for Goods List -->
-                        <h3 class="text-lg font-semibold text-blue-500 mb-3">List of Items Required: </h3>
-                        <div>
-                          <table class="min-w-full bg-white border border-0 rounded-lg">
-                            <thead class="bg-blue-100">
-                              <tr>
-                                <th
-                                  class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                                  #</th>
-                                <th
-                                  class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                                  Commodity</th>
-                                <th
-                                  class="py-2 px-4 text-left text-xs font-medium text-gray-700 uppercase tracking-wider border-b">
-                                  Quantity</th>
-                                
-                              </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                              <tr v-for="(item, index) in commodities" :key="index" class="hover:bg-gray-100">
-                                <td class="py-2 px-2 border-b">{{ index + 1 }}</td>
-                                <td class="py-2 px-3 border-b">{{ item.commodity.Name }}</td>
-                                <td class="py-2 px-3 border-b">{{ item.Quantity }} {{  item.commodity.Unit == "Kg" ? "MT": "Units" }} ({{item.NoBags}} {{item.commodity.Container_type}})</td>
-                            
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+                    <!-- Table for Goods List -->
+                    <h3 class="text-lg font-semibold text-blue-500 mb-2">List of Items Required:</h3>
+                    <table class="min-w-full bg-white border border-0 rounded-lg">
+                      <thead class="bg-blue-100">
+                        <tr>
+                          <th class="py-1 px-2 text-left text-xs font-medium text-gray-700 uppercase border-b">#</th>
+                          <th class="py-1 px-2 text-left text-xs font-medium text-gray-700 uppercase border-b">Commodity
+                          </th>
+                          <th class="py-1 px-2 text-left text-xs font-medium text-gray-700 uppercase border-b">Quantity
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200">
+                        <tr v-for="(item, index) in commodities" :key="index" class="hover:bg-gray-100">
+                          <td class="py-1 px-1 border-b">{{ index + 1 }}</td>
+                          <td class="py-1 px-2 border-b">{{ item.commodity.Name }}</td>
+                          <td class="py-1 px-2 border-b">{{ item.Quantity }} {{ item.commodity.Unit == "Kg" ? "MT" :
+                            "Units" }} ({{ item.NoBags }} {{ item.commodity.Container_type }})</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
 
-                      <!-- Vertical Divider (Gray) -->
-                      <div class="w-px bg-gray-100"></div>
+                  <!-- Bottom: Dispatch Form -->
+                  <div class="bg-white p-2 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-2">Dispatch Form</h3>
 
-                      <!-- Right: Dispatch Form -->
-                      <div class="flex-1 bg-white p-4 rounded-table">
-                        <h3 class="text-xl font-semibold mb-3">Dispatch Form</h3>
+                    <!-- Form Inputs -->
+                    <label for="deliveryNote" class="block font-medium">Delivery Note:</label>
+                    <input type="text" id="deliveryNote" v-model="DeliveryNote"
+                      class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" readonly>
 
-                        <!-- Form Inputs -->
-                        <label for="deliveryNote" class="block font-medium">Delivery Note:</label>
-                        <input type="text" id="deliveryNote" v-model="DeliveryNote"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly>
+                    <label for="finalDestination" class="block font-medium mt-2">Final Destination Point:</label>
+                    <input type="text" id="finalDestination" v-model="FinalDestinationPoint"
+                      class="mt-1 block w-full shadow-sm border-gray-300 rounded-md">
 
-                        <label for="finalDestination" class="block font-medium mt-3">Final Destination Point:</label>
-                        <input type="text" id="finalDestination" v-model="FinalDestinationPoint"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    <!-- Relief Items Form -->
+                    <div class="mt-2">
+                      <div class="space-y-2">
+                        <!-- Loop to Add Multiple Relief Items -->
+                        <div v-for="(item, index) in reliefItems" :key="index"
+                          class="grid grid-cols-2 gap-2 border-t-2 border-gray-200 pt-2 mt-2">
+                          <div>
+                            <label class="block text-sm font-bold text-gray-700">Commodity</label>
+                            <select v-model="item.commodityId" @change="validateCommodity(index)"
+                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md">
+                              <option value="" disabled>Commodity</option>
+                              <option
+                                v-for="comm in commodityInventories.filter(comm => instruction.warehouses.some(wh => wh.id === comm.warehouseId))"
+                                :key="comm" :value="comm">
+                                {{ comm.commodity.Name }} (Batch: {{ comm.BatchNumber }})
+                              </option>
+                            </select>
+                            <p v-if="item.error" class="text-red-500 text-xs italic mt-1">{{ item.error }}</p>
+                          </div>
 
-                        <!-- Relief Items Form -->
-                        <div class="overflow-hidden sm:rounded-md mt-3">
-                          <div class="bg-white">
-                            <div class="space-y-3">
-                              <!-- Loop to Add Multiple Relief Items -->
-                              <div v-for="(item, index) in reliefItems" :key="index"
-                                class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-center border-t-2 border-gray-200 pt-4 mt-4">
+                          <div>
+                            <label class="block text-sm font-bold text-gray-700">Qty <span v-if="item.commodityId">({{
+                              item.commodityId?.commodity?.Container_type }})</span></label>
+                            <input type="number" v-model="item.Quantity"
+                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Qty" />
+                          </div>
 
-                                <div class="col-span-1">
-                                  <label class="block text-sm font-bold text-gray-700">Commodity</label>
-                                  <select v-model="item.commodityId" @change="validateCommodity(index)"
-                                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    <option value="" disabled>Commodity</option>
-                                    <option
-                                      v-for="comm in commodityInventories.filter(comm => instruction.warehouses.some(wh => wh.id === comm.warehouseId))"
-                                      :key="comm" :value="comm">
-                                      {{ comm.commodity.Name }} ( Batch : {{ comm.BatchNumber }})
-                                    </option>
-                                  </select>
-                                  <p v-if="item.error" class="text-red-500 text-xs italic pt-1">{{ item.error }}</p>
-                                </div>
+                          <div>
+                            <label class="block text-sm font-bold text-gray-700">Truck</label>
+                            <input type="text" v-model="item.TruckNumber"
+                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Truck #" />
+                          </div>
 
-                                <div class="col-span-1">
-                                  <label class="block text-sm font-bold text-gray-700">
-                                    Qty
-                                    <span v-if="item.commodityId">
-                                      
-                                      ({{ item.commodityId?.commodity?.Container_type }})
-                                    </span>
-                                  </label>
-                                  <input type="number" v-model="item.Quantity"
-                                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Qty" />
-                                </div>
+                          <div>
+                            <label class="block text-sm font-bold text-gray-700">Phone</label>
+                            <input type="text" v-model="item.PhoneNumber"
+                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Phone #" />
+                          </div>
 
-                                <div class="col-span-1">
-                                  <label class="block text-sm font-bold text-gray-700">
-                                    Truck
-                                  </label>
-                                  <input type="text" v-model="item.TruckNumber"
-                                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Truck #" />
-                                </div>
-
-                                <div class="col-span-1">
-                                  <label class="block text-sm font-bold text-gray-700">
-                                    Driver Name
-                                  </label>
-                                  <input type="text" v-model="item.DriverName"
-                                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Driver Name" />
-                                </div>
-
-                                <div class="col-span-1">
-                                  <label class="block text-sm font-bold text-gray-700">
-                                    License
-                                  </label>
-                                  <input type="text" v-model="item.DriverLicense"
-                                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="License" />
-                                </div>
-
-                                <!-- Remove Item Button -->
-                                <div class="col-span-1 flex justify-end">
-                                  <button @click="removeItem(item.id)" type="button"
-                                    class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                    <MinusCircleIcon class="h-5 w-5" />
-                                  </button>
-                                </div>
-                              </div>
-
-                              <!-- Button to Add New Item -->
-                              <button type="button" @click="addNewItem"
-                                class="mt-1 px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
-                                + Add Relief Item
-                              </button>
-                            </div>
+                          <div class="flex items-left justify-left">
+                            <button @click="removeItem(item.id)" type="button"
+                              class="ml-2 p-1 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">
+                              <MinusCircleIcon class="h-4 w-4" />
+                            </button>
                           </div>
                         </div>
 
+                        <div class="flex justify-end">
+                          <button @click.prevent="addNewItem"
+                            class="inline-flex px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-blue-500 bg-white hover:bg-gray-100">
+                            + Add Item
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-               
 
-                <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-                  <button @click="closeDialog"
-                    class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">Close</button>
-                  <button type="submit"
-                    class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
-                    <CheckCircleIcon class="h-5 w-5 mr-1" />
-                    Create Dispatch
+                <!-- Footer Buttons -->
+                <div class="flex items-center justify-end bg-gray-50 px-4 py-3 border-t border-gray-200 rounded-b-md">
+                  <button type="button" @click="open = false"
+                    class="inline-flex px-4 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 hover:bg-gray-100">
+                    Cancel
                   </button>
+                
+
+                  <button type="submit"
+                      class="inline-flex ml-3 items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      <CheckCircleIcon class="h-5 w-5 mr-1" />
+                      Submit Dispatch
+                    </button>
                 </div>
+
               </form>
             </div>
           </TransitionChild>
@@ -356,17 +314,17 @@ const generateUniqueDeliveryNote = () => {
 const validateCommodity = (index) => {
   const selectedCommodity = reliefItems.value[index].commodityId;
   const isDuplicate = reliefItems.value.some((item, idx) => item.commodityId === selectedCommodity && idx !== index);
-//  reliefItems.value[index].error = isDuplicate ? "Commodity already added. Please select another." : "";
+  //  reliefItems.value[index].error = isDuplicate ? "Commodity already added. Please select another." : "";
 };
 
 // Relief Items List
 const reliefItems = ref([
-  { id: 1, commodityId: '', Quantity: '', DriverLicense: '', TruckNumber: '', DriverName: '', error: '' }
+  { id: 1, commodityId: '', Quantity: '', DriverLicense: '', TruckNumber: '', PhoneNumber: '', DriverName: '', error: '' }
 ]);
 
 // Add New Relief Item
 const addNewItem = () => {
-  reliefItems.value.push({ id: reliefItems.value.length + 1, commodityId: '', Quantity: '', DriverLicense: '', TruckNumber: '', DriverName: '', error: '' });
+  reliefItems.value.push({ id: reliefItems.value.length + 1, commodityId: '', Quantity: '', DriverLicense: '', TruckNumber: '', PhoneNumber: '', DriverName: '', error: '' });
 };
 
 // Remove Relief Item
@@ -381,8 +339,8 @@ const getTransporters = async () => {
       transporters.length = 0; //empty array
       transporters.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const getWarehouses = async () => {
@@ -392,8 +350,8 @@ const getWarehouses = async () => {
       warehouses.length = 0; //empty array
       warehouses.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const getRequisition = async () => {
@@ -403,8 +361,8 @@ const getRequisition = async () => {
       requisitions.length = 0; //empty array
       requisitions.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const getDistricts = async () => {
@@ -414,8 +372,8 @@ const getDistricts = async () => {
       districts.length = 0; //empty array
       districts.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const getDisasters = async () => {
@@ -425,8 +383,8 @@ const getDisasters = async () => {
       disasters.length = 0; //empty array
       disasters.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const getActivities = async () => {
@@ -436,8 +394,8 @@ const getActivities = async () => {
       activities.length = 0; //empty array
       activities.push(...result);
     })
-    .catch(error => {})
-    .finally(() => {});
+    .catch(error => { })
+    .finally(() => { });
 };
 
 const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));

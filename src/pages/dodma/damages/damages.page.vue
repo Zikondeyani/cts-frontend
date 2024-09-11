@@ -178,19 +178,20 @@ const generateExcel = () => {
 
   const dataToExport = damages;
 
-
   const flattenedData = dataToExport.flatMap(damage => 
+
     damage.lossTypes.map(lossType => ({
       Commodity: damage.commodity,
       'Loading Plan #': damage.loadingPlanNumber,
-       "REF NO": lossType.RefNO,
+      "REF NO": lossType.RefNO,
       District: damage.district,
       "Transporter": damage.transporter,
-      "FDP": lossType.FinalDestinationPoint,
       "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
-      "Quantity Damaged (MT)": lossType.totalQuantity.toFixed(2),
+      "Quantity Damaged (MT)": lossType.totalQuantity.toFixed(2),  
+      "FDP": lossType.FinalDestinationPoint,
       "Type of Loss": lossType.typeOfLoss,
-      "Percentage Damaged (%)": lossType.damagePercentage,
+      "Extent of damage": lossType.extentOfLoss,
+      "Percentage Damaged (%)": lossType.damagePercentage.toFixed(2),
       "Comments": lossType.comments,
     }))
   );

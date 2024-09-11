@@ -63,12 +63,16 @@
                   <!-- Left: Instructions Panel -->
                   <div class="flex-1 bg-white rounded-table">
                     <h3 class="text-xl font-semibold mb-4">Instruction Details</h3>
+                    
                     <p class="mb-4"><strong>Purpose:</strong> {{ instruction.Purpose }}</p>
                     <p class="mb-4"><strong>Instruction:</strong> {{ instruction?.Remarks }}</p>
                     <p class="mb-4"><strong>Warehouse(s) (From):</strong> {{ instruction.warehouses?.map(warehouse =>
                       warehouse?.name).join(', ') }}</p>
                     <p class="mb-4"><strong>District (To):</strong> {{ instruction.district?.Name }}</p>
                     <p class="mb-4"><strong>Transporter:</strong> {{ instruction.transporter?.Name }}</p>
+                    
+                    <p class="mb-4"><strong>Instruction By:</strong> {{ instruction?.user?.username.replace(/\./g, ' ')  }}</p>
+                 
                     <!--  <p class="mb-4" v-if="instruction.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ instruction.RejectionComment }}</p>
  -->
                     <!-- Table for Goods List -->

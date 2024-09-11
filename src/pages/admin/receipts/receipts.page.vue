@@ -19,12 +19,14 @@
           Export Data
         </button>
       </div>
+
+
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="receipts" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
@@ -45,10 +47,6 @@
               </button>
 
 
-              <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
-                <TrashIcon class="h-5 w-5 inline-block mr-1" />
-                Delete
-              </button>
 
             </span>
           </template>
@@ -92,12 +90,13 @@ import ReceiptViewDialog from "../../../components/pages/dispatches/view.receipt
 import EditReceiptDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
 
 
+import * as XLSX from 'xlsx';
+
 
 import createListingForm from "../../../components/pages/catalogue/create.component.vue";
 //SCHEMA//AND//STORES
 import { useListingStore } from "../../../stores/catalogue.store";
 
-import * as XLSX from 'xlsx';
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -141,7 +140,7 @@ const columns = ref([
     label: "Date",
     hidden: false,
     field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
-    sortable: true,
+   sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
     tdClass: "capitalize"
@@ -151,7 +150,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >D.N: ${row.dispatch.DeliveryNote !== undefined ? row.dispatch.DeliveryNote : "N/A"}</span><br>`
+    field: row => `<span >D.N: ${row.dispatch?.DeliveryNote !== undefined ? row.dispatch?.DeliveryNote : "N/A"}</span><br>`
       +
       `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
     sortable: true,
@@ -163,19 +162,13 @@ const columns = ref([
 
   {
     label: "Quantity",
-    field: row => {
-      const expectedQuantity = row.dispatch.Quantity ? `${row.dispatch.Quantity} MT` : "Unknown";
-      const receivedQuantity = row.Quantity ? `${row.Quantity} MT` : "Unknown";
-      return `
-      <span class="from-color">Expected: ${expectedQuantity}</span><br>
-      <span class="to-color">Received: ${receivedQuantity}</span>`;
-    },
+    field: row => `
+    <span class="by-color"> ${row.Quantity + " MT" || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
-
 
 
   {
@@ -192,6 +185,7 @@ const columns = ref([
 
 
 const selectedDispatch = ref(null);
+
 
 
 const selectedReceipt = ref(null);
@@ -342,7 +336,7 @@ const deleteItem = async (id) => {
 
 </script>
 
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

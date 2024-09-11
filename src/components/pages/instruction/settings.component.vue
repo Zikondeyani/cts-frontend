@@ -23,37 +23,41 @@
 
 
 
-                  <div class="col-span-12 sm:col-span-12">
-                    <label for="user-role" class="block text-sm font-bold text-gray-700">
+                  <div class="col-span-12 sm:col-span-12 mb-2">
+                    <div class="bg-gray-50 p-4 rounded-md">
+            
+                    <p class="text-gray-700">Draw Down From: {{ selectedWarehouses?.map(warehouse => warehouse?.Name).join(', ') }}</p>
+              </div>
+             
+                    <label for="user-role"  class="block text-sm font-medium text-gray-700">
                       Select Warehouse</label>
-                    <select id="role" name="warehouseId" v-model="warehouseId" autocomplete="role-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="warehouse in warehouses" :key="warehouseId" :value="warehouseId" class="uppercase">
-                        {{ warehouse.Name }}
-                      </option>
-                    </select>
-                    <p class="text-red-500 text-xs italic pt-1">
-                      {{ warehouseError }}
-                    </p>
-                  </div>
+                    <multiselect v-model="selectedWarehouseIds" tag-placeholder="Add this as new warehouse"
+                      placeholder="Search or reselect a warehouses to draw from" label="Name" track-by="id" :options="warehouses"
+                      :multiple="true" :taggable="true" @tag="addWarehouse"></multiselect>
 
+                    
+                  </div>
+                  <hr>
                   <div class="col-span-12 sm:col-span-12">
                     <label for="user-role" class="block text-sm font-medium text-gray-700">
                       Select Transporter</label>
+
+
                     <select id="role" name="warehouseId" v-model="transporterId" autocomplete="role-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="transporter in transporters" :key="transporterId" :value="transporterId"
+                      <option v-for="transporter in transporters" :key="transporter.id" :value="transporter.id"
                         class="uppercase">
                         {{ transporter.Name }}
                       </option>
                     </select>
+
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ transporterError }}
                     </p>
                   </div>
 
 
-                 <!--  <div class="col-span-12 sm:col-span-12">
+                  <!--  <div class="col-span-12 sm:col-span-12">
                     <label for="user-role" class="block text-sm font-bold text-gray-700">
                       Select Districts</label>
                     <select id="role" name="districtId" v-model="districtId" autocomplete="role-name"
@@ -67,7 +71,7 @@
                     </p>
                   </div> -->
 
-                  <div class="col-span-12 sm:col-span-12">
+                  <!--      <div class="col-span-12 sm:col-span-12">
                     <label for="DriverName" class="block text-sm font-bold text-gray-700">Driver Name</label>
                     <input type="text" Name="DriverName" id="DriverName" v-model="DriverName" autocomplete="DriverName"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -75,7 +79,7 @@
                       {{ DriverNameError }}
                     </p>
                   </div>
-
+ -->
 
                   <div class="col-span-12 sm:col-span-12">
                     <label for="Purpose" class="block text-sm font-bold text-gray-700">Purpose</label>
@@ -86,7 +90,7 @@
                     </p>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-12">
+                  <!--    <div class="col-span-12 sm:col-span-12">
                     <label for="VehicleRegNo" class="block text-sm font-bold text-gray-700">Vehicle Reg #</label>
                     <input type="text" Name="VehicleRegNo" id="VehicleRegNo" v-model="VehicleRegNo"
                       autocomplete="VehicleRegNo"
@@ -95,29 +99,29 @@
                       {{ VehicleRegNoError }}
                     </p>
                   </div>
-
+ -->
 
                   <div class="col-span-12 sm:col-span-12">
-                      <label for="remarks" class="block text-sm font-bold text-gray-700">
-                        Instruction
-                      </label>
+                    <label for="remarks" class="block text-sm font-bold text-gray-700">
+                      Instruction
+                    </label>
 
-                      <!-- Textarea for Remarks -->
-                      <textarea id="remarks" v-model="Remarks" rows="4" placeholder="Add your instruction here..."
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
+                    <!-- Textarea for Remarks -->
+                    <textarea id="remarks" v-model="Remarks" rows="4" placeholder="Add your instruction here..."
+                      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
 
-                      <!-- Error message -->
-                      <p class="text-red-500 text-xs italic pt-1">{{ remarksError }}</p>
-                    </div>
+                    <!-- Error message -->
+                    <p class="text-red-500 text-xs italic pt-1">{{ remarksError }}</p>
+                  </div>
 
 
                 </div>
 
               </div>
-              <div class="px-4 py-3 text-right sm:px-6">
-                <button type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                  Update
+             
+              <div class="mt-6 text-right">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                  <CheckIcon class="w-5 h-5 mr-2" aria-hidden="true" />Submit Update
                 </button>
               </div>
             </div>
@@ -143,6 +147,8 @@ import { usecommodityinventoriestore } from "../../../stores/commodityinventorie
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { usetransporterstore } from "../../../stores/transporter.store";
 import { usedistrictstore } from "../../../stores/districts.store";
+import Multiselect from 'vue-multiselect'
+import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckIcon, CheckCircleIcon } from "@heroicons/vue/solid";
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -189,8 +195,8 @@ const { meta } = useForm({
   // },
 });
 ///FIELDS
-const { value: warehouseId, errorMessage: warehouseError } =
-  useField("warehouseId");
+const { value: warehouseIds, errorMessage: warehouseError } =
+  useField("warehouseIds");
 
 const { value: transporterId, errorMessage: transporterError } =
   useField("transporterId");
@@ -205,7 +211,7 @@ const { value: Purpose, errorMessage: PurposeError } =
 const { value: VehicleRegNo, errorMessage: VehicleRegNoError } =
   useField("VehicleRegNo");
 
-  const { value: Remarks, errorMessage: RemarksError } =
+const { value: Remarks, errorMessage: RemarksError } =
   useField("Remarks");
 
 const commodityName = ref("")
@@ -216,39 +222,69 @@ const warehouseName = ref("")
 
 // });
 
+const selectedWarehouses = ref([]); // Store selected warehouse objects
+const selectedWarehouseIds = ref([]); // Store selected warehouse IDs as numbers
+
+
+
+// Watch for changes in selectedWarehouseIds to update selectedWarehouses
+// Watch the selectedWarehouseIds to see changes
+
+watch(selectedWarehouseIds, (newSelection) => {
+  selectedWarehouses.value = warehouses.filter(warehouse =>
+    newSelection.includes(warehouse.id));
+});
+
+watch([transporterId, selectedWarehouseIds], () => {
+  console.log('Transporter ID:', transporterId.value);
+  console.log('Selected Warehouse IDs:', selectedWarehouseIds.value);
+});
+
+
+const addWarehouse = (newTag) => {
+  const tag = {
+    name: newTag,
+    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+  }
+  this.options.push(tag)
+  this.value.push(tag)
+}
+
 const toggle = ref(false);
 //MOUNTED
 onMounted(() => {
-  getWarehouses()
+  if (model.value) {
+    Remarks.value = model.value.Remarks || '';
+    Purpose.value = model.value.Purpose || '';
+    transporterId.value = model.value.transporterId || null;
 
-  getTransporters()
+    // Initialize warehouses by matching IDs with existing warehouse objects
+    if (model.value.warehouseIds && warehouses.length > 0) {
+      selectedWarehouseIds.value = model.value.warehouseIds;
+      selectedWarehouses.value = warehouses.filter(warehouse =>
+        model.value.warehouseIds.includes(warehouse.id));
+    }
+  }
 
-  getDistricts()
-  //Assign
-
-  Remarks.value = model.value.Remarks
-  DriverName.value = model.value.DriverName
-  Purpose.value = model.value.Purpose
-  warehouseId.value= model.value.warehouseId,
-  districtId.value = model.value.districtId,
-  VehicleRegNo.value = model.value.VehicleRegNo
-  warehouseName.value = model.value.warehouse?.Name
+  getWarehouses(); // Populate warehouses
+  getTransporters(); // Populate transporters
 });
+
 //FUNCTIONS
 const onSubmit = useSubmitForm((values, actions) => {
+  // Extract the IDs from selected warehouse objects
+  const warehouseIdNumbers = selectedWarehouseIds.value.map(warehouse => warehouse.id);
 
   let newValues = {
     id: model.value.id,
-    warehouseId: warehouseId.value,
-    
-    districtId: districtId.value,
+    warehouseIds: warehouseIdNumbers, // Store only the IDs
     transporterId: transporterId.value,
-    DriverName: DriverName.value
+    Purpose: Purpose.value,
+    Remarks: Remarks.value,
   };
 
-  emit("update", newValues);
+ emit("update", newValues); // Emit the updated data
 });
-
 const getTransporters = async () => {
   isLoading.value = true;
   TransporterStore
@@ -291,15 +327,20 @@ const getDistricts = async () => {
 
 const getWarehouses = async () => {
   isLoading.value = true;
-  WarehouseStore
-    .get()
-    .then((result) => {
-      warehouses.push(...result);
+  WarehouseStore.get()
+    .then(result => {
+      warehouses.push(...result.filter(item => item.organisationId == 2));
+
+      // Once warehouses are loaded, set the selected warehouses
+      if (model.value?.warehouseIds) {
+        selectedWarehouses.value = warehouses.filter(warehouse =>
+          model.value.warehouseIds.includes(warehouse.id));
+      }
     })
-    .catch((error) => {
+    .catch(error => {
       Swal.fire({
         title: "Failed",
-        text: "failed to get warehouses error (" + error + ")",
+        text: `Failed to get warehouses error (${error})`,
         icon: "error",
         confirmButtonText: "Ok",
       });

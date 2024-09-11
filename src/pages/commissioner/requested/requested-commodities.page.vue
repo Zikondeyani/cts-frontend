@@ -25,8 +25,8 @@
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="requested" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
         </vue-good-table>
       </div>
@@ -86,9 +86,8 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span class="${colorMap[row.commodity] || 'text-black'}">Commodity: ${row.commodity}</span><br>` + `<span>Disaster: ${row.disaster}</span><br>` +
-      `<span>District: ${row.district}</span><br>` +
-      `<span>Disaster Date: ${row.disasterDate}</span><br>`,
+    field: row => `<span class="${colorMap[row.commodity] || 'text-black'}">Commodity: ${row.commodity}</span><br>` + `<span>Disaster: ${row.disaster} |  ${row.disasterDate}</span><br>` +
+      `<span>District: ${row.district}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true,
@@ -124,7 +123,7 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
- 
+
   {
     label: "Percentage (%)",
     field: row => row.percentage + '%',

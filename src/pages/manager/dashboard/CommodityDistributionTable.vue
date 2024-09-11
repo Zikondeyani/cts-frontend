@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-x-auto relative">
         <div class="mb-4 mt-4">Commodity Distribution Update</div>
-        <div class="absolute top-0 right-0 p-4 flex items-center"  :class="{'hidden': screenshotMode}">
+        <div class="absolute top-0 right-0 p-4 flex items-center" :class="{ 'hidden': screenshotMode }">
             <!-- District Selector -->
             <span class="mr-3 font-bold">District:</span>
             <select v-model="selectedDistrict"
@@ -25,7 +25,7 @@
                 class="ml-2 mb-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Reset Filters
             </button>
-         
+
         </div>
         <table class="min-w-full divide-y divide-gray-200 mt-8">
             <thead class="bg-gray-50">
@@ -88,7 +88,7 @@
 
         </table>
         <!-- Pagination Controls -->
-        <div class="flex justify-center mt-4" :class="{'hidden': screenshotMode}">
+        <div class="flex justify-center mt-4" :class="{ 'hidden': screenshotMode }">
             <button @click="prevPage" :disabled="currentPage <= 1"
                 class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronLeftIcon class="w-5 h-5 mr-2" />
@@ -102,13 +102,13 @@
             </button>
 
             <span class="mr-2 font-medium mt-2">Rows per page:</span>
-                <select v-model="pageSize" class="border-gray-300 rounded-md">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="40">40</option>
-                    <option value="100">100</option>
-                </select>
+            <select v-model="pageSize" class="border-gray-300 rounded-md">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="40">40</option>
+                <option value="100">100</option>
+            </select>
         </div>
     </div>
 </template>

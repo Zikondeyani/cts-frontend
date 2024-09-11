@@ -120,28 +120,8 @@ onMounted(() => {
             }
           },
           datalabels: {
-            color: function (context) {
-              const value = context.dataset.data[context.dataIndex];
-              return value > 0 ? '#666' : 'rgba(0,0,0,0)'; // Gray text for non-zero values, transparent for zero values
-            },
-            backgroundColor: '#fff', // White background
-            borderColor: '#ccc', // Gray border color
-            borderWidth: 1, // Border width (adjust as needed)
-            borderRadius: 10, // Border radius to make it round
-            formatter: (value, context) => {
-              return value > 0 ? `${value}MT` : null; // Display percentage for non-zero values, null for zero values
-            },
-            font: {
-              weight: 'bold',
-              size: 12
-            },
-            align: 'center',
-            anchor: 'center',
-            padding: {
-              top: 2,
-              bottom: 2
-            }
-          }
+          display: false, // Completely hide datalabels
+        },
         },
         scales: {
           y: {
