@@ -47,9 +47,9 @@
           </router-link> -->
           <!--  <create-requisition-form v-on:create="createInstruction" />
  -->
-          <create-requisition-form v-on:create="createRequisition" :commodities="commodities" />
+          <!-- <create-requisition-form v-on:create="createRequisition" :commodities="commodities" />
 
-
+ -->
         </div>
       </div>
       <!-- table  -->
@@ -87,19 +87,19 @@
                     View
                   </button>
                   <!-- Conditionally show Edit button if status is 'In progress' -->
-                  <button v-if="!props.row.IsArchived && props.row.status == 3"
+                 <!--  <button v-if="!props.row.IsArchived && props.row.status == 3"
                     @click.prevent="editRequisition(props.row)"
                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-500 hover:text-blue-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
                     <PencilIcon class="h-5 w-5 mr-1" />
                     Edit
-                  </button>
+                  </button> -->
 
-                  <button v-if="!props.row.IsArchived && props.row.status == 3"
+                  <!-- <button v-if="!props.row.IsArchived && props.row.status == 3"
                     @click.prevent="deleteRequisition(props.row)"
                     class="inline-flex items-center px-3 py-2 text-sm font-medium text-red-500 hover:text-red-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100">
                     <TrashIcon class="h-5 w-5 mr-1" />
                     Delete
-                  </button>
+                  </button> -->
 
 
                 </div>

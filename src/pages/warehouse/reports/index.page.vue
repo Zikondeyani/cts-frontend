@@ -22,9 +22,9 @@
             <a href="#user-relief"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-relief" data-bs-toggle="pill" data-bs-target="#user-relief" role="tab"
-              aria-controls="user-relief" aria-selected="true">Stock Position</a>
+              aria-controls="user-relief" aria-selected="true">Warehouse Stock Position</a>
           </li>
-          <li class="nav-item mr-1" role="presentation">
+      <!--     <li class="nav-item mr-1" role="presentation">
             <a href="#user-settings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
               id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
@@ -36,7 +36,7 @@
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
               id="tabs-user-lean" data-bs-toggle="pill" data-bs-target="#user-lean" role="tab"
               aria-controls="user-settings" aria-selected="false">Lean Season Dispatch Reports</a>
-          </li>
+          </li> -->
 
 
         </ul>
@@ -45,7 +45,7 @@
             aria-labelledby="tabs-user-relief">
             <user-relief :data="warehousesinventory" v-on:update="updateOrCreateReliefItems" />
           </div>
-          <div class="tab-pane fade" id="user-settings" role="tabpanel" aria-labelledby="tabs-user-settings">
+          <!-- <div class="tab-pane fade" id="user-settings" role="tabpanel" aria-labelledby="tabs-user-settings">
 
             <commodity-distribution-table :data="commodityDistributionData" :screenshotMode="screenshotMode" />
 
@@ -54,7 +54,7 @@
 
             <user-lean :screenshotMode="screenshotMode" />
 
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -154,7 +154,7 @@ const getWarehouseInventory = async () => {
   warehouseStore
     .inventorydetails()
     .then((result) => {
-      warehousesinventory.push(...result.filter(item => item.warehouse.includes('DODMA')))
+      warehousesinventory.push(...result.filter(item => item.district == user.value.district))
     })
     .catch((error) => {
       Swal.fire({

@@ -20,7 +20,7 @@
                     </select>
                 </div>
 
-                <div class="flex flex-col">
+              <!--   <div class="flex flex-col">
                     <label for="warehouse" class="text-sm font-medium text-gray-700 mb-2">Warehouse</label>
                     <select id="warehouse" v-model="selectedWarehouse"
                         class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -29,7 +29,7 @@
                             {{ warehouse.Name }}
                         </option>
                     </select>
-                </div>
+                </div> -->
 
                 <div class="flex flex-col w-40">
                     <label for="commodity" class="text-sm font-medium text-gray-700 mb-2">Commodity</label>
@@ -74,7 +74,7 @@
                     <!-- Export Dropdown Button on the right -->
                     <div class="relative inline-block text-left mx-4">
                         <button @click.prevent="exportToExcel"
-                            class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-gray-500 text-white text-md font-medium hover:bg-gray-600 focus:outline-none"
+                            class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-green-500 text-white text-md font-medium hover:bg-green-600 focus:outline-none"
                             id="menu-button" aria-expanded="true" aria-haspopup="true">
                             Export To Excel
                         </button>
@@ -200,8 +200,7 @@ const selectedExpiryDateRange = ref('');
 const totalPages = computed(() => Math.ceil(props.data.length / pageSize.value));
 
 const filteredData = computed(() => props.data.filter(item => {
-    return (!selectedWarehouse.value || item.warehouse === selectedWarehouse.value) &&
-        (!selectedDistrict.value || item.district === selectedDistrict.value) &&
+    return    (!selectedDistrict.value || item.district === selectedDistrict.value) &&   
         (!selectedCommodity.value || item.commodity === selectedCommodity.value) &&
         (!selectedCommodityType.value || item.commodityType === selectedCommodityType.value) &&
         (!selectedExpiryDateRange.value || filterByExpiryDate(item.expiryDate));

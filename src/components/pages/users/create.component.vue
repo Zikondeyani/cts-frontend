@@ -91,7 +91,7 @@
                       </p>
                     </div>
 
-                    <div class="col-span-6 sm:col-span-4" v-if="roleId == 'ADMIN3' || roleId == 'ADMIN4' || roleId == 'ADMIN8' || roleId == 'ADMIN6'">
+                    <div class="col-span-6 sm:col-span-4" v-if="roleId == 'ADMIN3' || roleId == 'ADMIN4' || roleId == 'ADMIN8' || roleId == 'ADMIN6' || roleId == 'ADMIN7'">
                       <label for="user-district" class="block text-sm font-medium text-gray-700">Select District</label>
                       <select id="district" name="district" v-model="district" autocomplete="district-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">

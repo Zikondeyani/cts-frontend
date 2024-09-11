@@ -31,7 +31,7 @@
             @mouseover="keepDropdownVisible(option.label)" @mouseleave="maybeHideDropdown(option.label)"
             class="dropdown-menu">
          
-            <router-link to="/field/dispatch-management"
+            <router-link to="/district/dispatch-management"
               class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
               Dispatches
             </router-link>
@@ -50,12 +50,12 @@ import { TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon, TemplateIco
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/district/dashboard", current: false },
   { name: "Dispatch Management", href: "#", current: true },
 ];
 const options = ref([
-  { label: 'Lean Season Response', icon: TemplateIcon, path: '/field/dispatch-management', showDropdown: false },
-  { label: 'Emergency Response', icon: LightningBoltIcon, path: '/field/dispatches/emergency' },
+  { label: 'Lean Season Response', icon: TemplateIcon, path: '/district/dispatch-management', showDropdown: false },
+  { label: 'Emergency Response', icon: LightningBoltIcon, path: '/district/dispatches/emergency' },
  /*  { label: 'Donation Management', icon: HeartIcon, path: '/dodma/donations' },
   */ // ... other options as needed
 ]);
