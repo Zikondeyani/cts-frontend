@@ -43,7 +43,7 @@
                 <div class="px-4 py-5 bg-white sm:p-6">
                   <div class="grid grid-cols-6 gap-2">
 
-                    <div class="col-span-12 sm:col-span-12">
+                   <!--  <div class="col-span-12 sm:col-span-12">
                       <label for="batch" class="block text-sm font-medium text-gray-700">Disaster Name</label>
                       <input type="text" v-model="name" Name="name" id="name" autocomplete="off"
                         placeholder="Disaster Name"
@@ -51,7 +51,7 @@
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
-                    </div>
+                    </div> -->
 
 
                     <div class="col-span-12 sm:col-span-12">

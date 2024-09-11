@@ -1,157 +1,110 @@
 <template>
-  <main class="space-y-4">
-    <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-      <div class="md:grid md:grid-cols-3 md:gap-6">
+  <main class="space-y-6">
+    <div class="bg-white shadow-lg px-6 py-8 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Header Section -->
         <div class="md:col-span-1">
-          <h3 class="text-lg font-medium leading-6 text-gray-900 capitalize">
-            Relief Items
-          </h3>
-          <p class="mt-1 text-sm text-gray-500">
-            Add relief materials for the instruction.
-          </p>
+          <h3 class="text-lg font-semibold text-gray-900">Relief Items</h3>
+          <p class="mt-2 text-sm text-gray-500">Add relief materials for the instruction below.</p>
         </div>
-        <div class="mt-5 md:mt-0 md:col-span-2">
+        
+        <!-- Form Section -->
+        <div class="md:col-span-2">
           <form @submit="onSubmit">
-            <div class="overflow-hidden sm:rounded-md">
-              <div class="px-4 py-5 bg-white sm:p-6">
-                <div class="space-y-4">
-                  <span class="text-gray-700 mb-3">Draw Down From: {{ model.warehouses?.map(warehouse =>
-                    warehouse?.name).join(', ') }}</span>
-
-                  <div class="mt-6">
-                    <span class="text-gray-700 mb-5" v-if="model.IsRejected">Comments (If Rejected): {{
-                      model?.RejectionComment }}</span>
-
-                    <h3 class="text-lg font-bold leading-6 text-gray-900 capitalize mt-5">Summary of Requested
-                      Commodities
-                    </h3>
-                    <table class="min-w-full divide-y divide-gray-200 mt-2">
-                      <thead class="bg-gray-100">
-                        <tr>
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Commodity
-                          </th>
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Requested Quantity
-                          </th>
-
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Requested Quantity By Storage Type
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="item in model.requisition?.requestedCommodities" :key="item.id">
-
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.commodity?.Name }}
-                            <!-- <span v-if="item.commodity" class="text-green-800 text-xs font-light">
-                              ( {{ calculateTotalQuantity(item.commodity, model?.warehouse?.id) }}
-                              {{ item.commodity?.Unit === "Kg" ? "MT" : "Units" }} Available)
-                            </span> -->
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.Quantity }} {{ item.commodity?.Unit == "Kg" ? " MT" : item.commodity?.Unit }}
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.NoBags }} {{ item.commodity?.Container_type }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <hr>
-                  </div>
-
-                  <div class="mt-6">
-                    <h3 class="text-lg font-bold leading-6 text-gray-900 capitalize">Commodities Assigned
-                    </h3>
-
-                    <table class="min-w-full divide-y divide-gray-200 mt-2">
-                      <thead class="bg-gray-100">
-                        <tr>
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Commodity
-                          </th>
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Assigned Quantity
-                          </th>
-                          <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                            Assigned Quantity By Storage Type
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="item in instructedCommodityItems" :key="item.id">
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.commodity?.Name }}
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.Quantity }} {{ item.commodity?.Unit == "Kg" ? " MT" : item.commodity?.Unit }}
-                          </td>
-                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ item.NoBags }} {{ item.commodity?.Container_type }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <hr>
-                  </div>
-                  <!-- Loop to Add Multiple Relief Items -->
-                  <div v-for="(item, index) in reliefItems" :key="index" class="flex space-x-4 items-center">
-                    <div class="flex-1">
-                      <label class="block text-sm font-bold text-gray-700">Commodity</label>
-                      <select v-model="item.commodityId"
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
-                        <option value="" disabled>Select a commodity</option>
-                        <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
-                          {{ commodity.Name }}
-                        </option>
-                      </select>
-                      <!-- Display Error Message if the Commodity is Duplicated -->
-                      <!--    <span class="text-md text-red-500 font-italic text-xs" v-if="item.commodityId">
-                        {{ availableBalance == 0 ? "" : availableBalance }}</span>
-                   -->
-                    </div>
-
-                    <div class="flex-1">
-                      <label class="block text-sm font-bold text-gray-700">Quantity <span class="text-sm text-gray-600"
-                          v-if="item.commodityId">({{ getCommodityName(item.commodityId) }})</span>
-                      </label>
-                      <input type="number" v-model.number="item.Quantity"
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
-                        placeholder="Quantity" />
-                    </div>
-
-                    <!-- Remove Item Button -->
-
-                    <button @click="removeItem(item.id)" type="button"
-                      class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                      <MinusCircleIcon class="h-5 w-5" />
-                    </button>
-                  </div>
-
-                  <!-- Button to Add New Item -->
-                  <button type="button" @click="addNewItem"
-                    class="mt-2 px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
-                    + Add Relief Item
-                  </button>
-                </div>
-
-
+            <div class="space-y-6">
+              <!-- Warehouse Information -->
+              <div class="bg-gray-50 p-4 rounded-md">
+                <p class="text-gray-700">Draw Down From: {{ model.warehouses?.map(warehouse => warehouse?.name).join(', ') }}</p>
+                <span class="text-sm text-red-600" v-if="availableBalance">{{ availableBalance }}</span>
+              </div>
+              
+              <!-- Requested Commodities -->
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">Summary of Requested Commodities</h3>
+                <table class="min-w-full mt-4 border border-gray-200 rounded-md">
+                  <thead class="bg-gray-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Commodity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Requested Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Storage Type</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white">
+                    <tr v-for="item in model.requisition?.requestedCommodities" :key="item.id" class="border-t">
+                      <td class="px-4 py-2">{{ item.commodity?.Name }}</td>
+                      <td class="px-4 py-2">{{ item.Quantity }} {{ item.commodity?.Unit === "Kg" ? "MT" : "Units" }}</td>
+                      <td class="px-4 py-2">{{ item.NoBags }} {{ item.commodity?.Container_type }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Assigned Commodities -->
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">Commodities Assigned</h3>
+                <table class="min-w-full mt-4 border border-gray-200 rounded-md">
+                  <thead class="bg-gray-100">
+                    <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Commodity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Assigned Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-600">Storage Type</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white">
+                    <tr v-for="item in instructedCommodityItems" :key="item.id" class="border-t">
+                      <td class="px-4 py-2">{{ item.commodity?.Name }}</td>
+                      <td class="px-4 py-2">{{ item.Quantity }} {{ item.commodity?.Unit === "Kg" ? "MT" : "Units" }}</td>
+                      <td class="px-4 py-2">{{ item.NoBags }} {{ item.commodity?.Container_type }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
+              <!-- Dynamic Relief Item Input -->
+              <div v-for="(item, index) in reliefItems" :key="index" class="flex space-x-4 items-center">
+                <!-- Commodity Selection -->
+                <div class="flex-1">
+                  <label class="block text-sm font-bold text-gray-700">Commodity</label>
+                  <select v-model="item.commodityId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="" disabled>Select a commodity</option>
+                    <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
+                      {{ commodity.Name }}
+                    </option>
+                  </select>
+                </div>
+                
+                <!-- Warehouse Selection -->
+                <div class="flex-1">
+                  <label class="block text-sm font-bold text-gray-700">Warehouse</label>
+                  <select v-model="item.warehouseId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="" disabled>Select a warehouse</option>
+                    <option v-for="warehouse in model.warehouses" :key="warehouse.id" :value="warehouse.id">
+                      {{ warehouse.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Quantity Input -->
+                <div class="flex-1">
+                  <label class="block text-sm font-bold text-gray-700">Quantity (bags)</label>
+                  <input type="number" v-model.number="item.Quantity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                </div>
+
+                <!-- Remove Item Button -->
+                <button @click="removeItem(item.id, index)" type="button" class="text-red-600 mt-6">
+                  <MinusCircleIcon class="h-5 w-5" />
+                </button>
+              </div>
+
+              <!-- Add Item Button -->
+              <button type="button" @click="addNewItem" class="mt-4 inline-flex items-center px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
+                + Add Relief Item
+              </button>
+              
               <!-- Submit Button -->
-              <div class="px-4 py-3 text-right sm:px-6">
-                <button type="submit"
-                  class="inline-flex items-center justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ease-in-out">
-                  <CheckIcon class="w-5 h-5 mr-2" aria-hidden="true" />
-                  Submit Update
+              <div class="mt-6 text-right">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                  <CheckIcon class="w-5 h-5 mr-2" aria-hidden="true" />Submit Update
                 </button>
               </div>
             </div>
@@ -161,7 +114,6 @@
     </div>
   </main>
 </template>
-
 <script setup>
 import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -241,8 +193,14 @@ const { meta } = useForm({
 
 
 const reliefItems = reactive([
-  { commodityId: "", Quantity: 0, error: "", id: "" }
+  { commodityId: "", Quantity: 0, error: "", id: "", warehouseIdId: ""}
 ]);
+
+
+watch(reliefItems, (newItems) => {
+  newItems.forEach((item, index) => validateCommodity(index));
+}, { deep: true });
+
 
 
 const getCommodityName = (commodityId) => {
@@ -256,13 +214,115 @@ const getCommodityPackSize = (commodityId) => {
 };
 
 // Method to Add New Relief Item
+// Method to Add New Relief Item
 const addNewItem = () => {
-  reliefItems.push({ commodityId: "", Quantity: 0, error: "" });
+  // Check if there are items in the array
+  if (reliefItems.length === 0) {
+    // Directly add the first item if the array is empty
+    reliefItems.push({ commodityId: "", warehouseId: "", Quantity: 0, error: "" });
+    return;
+  }
+
+  // Check for duplicates
+  const lastItem = reliefItems[reliefItems.length - 1];
+  const hasDuplicate = reliefItems.some(item => 
+    item !== lastItem && 
+    item.commodityId === lastItem.commodityId && 
+    item.warehouseId === lastItem.warehouseId
+  );
+
+  if (hasDuplicate) {
+ 
+    Swal.fire({
+        text: 'Item with this commodity and warehouse already exists!',
+        icon: 'error',
+        toast: true,
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+   
+    return;
+  }
+
+  // Check if the last item has all required fields filled
+  if (lastItem.commodityId && lastItem.warehouseId && lastItem.Quantity > 0) {
+    reliefItems.push({ commodityId: "", warehouseId: "", Quantity: 0, error: "" });
+  } else {
+
+ 
+    Swal.fire({
+        text: 'Quantities can not be zero!, please check.',
+        icon: 'error',
+        toast: true,
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+   
+  }
+
+  if (lastItem.commodityId && lastItem.warehouseId) {
+    const availableInventory = commodityinventories.find(
+      inv => inv.commodityId === lastItem.commodityId && inv.warehouseId === lastItem.warehouseId
+    );
+
+    if (!availableInventory || availableInventory.Quantity <= 0) {
+  
+      Swal.fire({
+        text: `No stock available for the selected commodity in the chosen warehouse.`,
+        icon: 'error',
+        toast: true,
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+
+    }
+  }
 };
 
+
+// Method to validate the inventory for each item
+
+const validateCommodity = (index) => {
+  const item = reliefItems[index];
+  const selectedCommodity = item.commodityId;
+  const selectedWarehouseId = item.warehouseId;
+
+  if (selectedCommodity && selectedWarehouseId) {
+    const matchingInventory = commodityinventories.find(
+      (inventory) => inventory.commodityId === selectedCommodity && inventory.warehouseId === selectedWarehouseId
+    );
+
+    if (matchingInventory) {
+      availableBalance.value = `${matchingInventory.Quantity} MT Available at warehouse selected`;
+      item.error = matchingInventory.Quantity > 0 ? "" : "No stock available";
+    } else {
+      availableBalance.value = "Not Available";
+      item.error = "No stock available";
+    }
+  } else {
+    availableBalance.value = "Select Commodity and Warehouse";
+    item.error = "";
+  }
+};
 // Method to Remove a Relief Item
-const removeItem = async (index) => {
-  // Ask for user confirmation
+const removeItem = async (id, index) => {
+  const item = reliefItems[index];  // Access the item by index, not id
+
+  if (!item?.id) {
+    // If item.id is undefined, just remove the item from the reliefItems array
+    reliefItems.splice(index, 1);
+    return;
+  }
+
+  // Ask for user confirmation if the item has an API record (i.e., has an ID)
   const result = await Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -276,8 +336,8 @@ const removeItem = async (index) => {
 
   if (result.isConfirmed) {
     try {
-      // Attempt to remove the item
-      await instructedCommodityStore.remove(index);
+      // Remove the item via API request if it has an id
+      await instructedCommodityStore.remove(item.id);  // Ensure correct API call
       await getReliefItems(); // Refresh the relief items list
 
       // Notify the user of successful deletion
@@ -287,7 +347,6 @@ const removeItem = async (index) => {
         icon: "success",
       });
     } catch (error) {
-      // Handle any errors that occur during the removal process
       Swal.fire({
         title: "Failed",
         text: `Failed to delete the item (${error.message})`,
@@ -300,28 +359,8 @@ const removeItem = async (index) => {
 
 
 
-// Check if a Commodity is Duplicated
-const validateCommodity = (index) => {
-  const selectedCommodity = reliefItems[index].commodityId;
-  const warehouseId = model.value.warehouse.id
-  const warehouseName = model.value.warehouse.Name
-
-  if (selectedCommodity && warehouseId) {
-    // Find the corresponding inventory record based on the selection
-    const matchingInventory = commodityinventories.find(
-      (inventory) => inventory.commodityId === selectedCommodity && inventory.warehouseId === warehouseId
-    );
-
-    // Update the available balance if a matching inventory record is found
-    availableBalance.value = matchingInventory ? `${matchingInventory.Quantity} MT Available at ` + warehouseName : 'Not Available';
-  } else {
-    availableBalance.value = 'Select Commodity';
-  }
 
 
-  const isDuplicate = reliefItems.some((item, idx) => item.commodityId === selectedCommodity && idx !== index);
-  reliefItems[index].error = isDuplicate ? "Commodity already added. Please select another." : "";
-};
 
 const toggle = ref(false);
 //MOUNTED
@@ -393,30 +432,111 @@ const computedTonnagePerRemark = ((packsize, bags) => {
 
 //FUNCTIONS
 const onSubmit = useSubmitForm(async (values, actions) => {
-  // Get the instructionId from the route parameters
-  updateInstruction()
+  let hasError = false;
+  let duplicateError = false;
+  let noStockError = false;
+  let zeroQuantityError = false; // New flag for zero quantity
+
+  // Collect all commodity and warehouse combinations
+  const uniqueCombinations = new Set();
+
+  // Validate inventory and check for errors
+  reliefItems.forEach((item, index) => {
+    validateCommodity(index);
+
+    // Check for zero quantity
+    if (item.Quantity <= 0) {
+      zeroQuantityError = true;
+      item.error = 'Quantity must be greater than zero';
+    }
+
+    // Check for duplicate commodity from the same warehouse
+    const combinationKey = `${item.commodityId}-${item.warehouseId}`;
+    if (uniqueCombinations.has(combinationKey)) {
+      duplicateError = true;
+      item.error = 'Duplicate entry for this commodity and warehouse combination';
+    } else {
+      uniqueCombinations.add(combinationKey);
+    }
+
+    // Check for stock availability
+    if (item.error) {
+      hasError = true;
+    } else if (!commodityinventories.find(inv => inv.commodityId === item.commodityId && inv.warehouseId === item.warehouseId && inv.Quantity > 0)) {
+      noStockError = true;
+      item.error = 'No stock available';
+    }
+  });
+
+  // Show appropriate alert if validation fails
+  if (zeroQuantityError) {
+    Swal.fire({
+      text: `All commodities must have a quantity greater than zero.`,
+      icon: 'error',
+      toast: true,
+      position: 'top-right',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  if (duplicateError) {
+    Swal.fire({
+      text: `You have added the same commodity from the same warehouse more than once.`,
+      icon: 'error',
+      toast: true,
+      position: 'top-right',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  if (noStockError) {
+    Swal.fire({
+      text: `Some of the commodities do not have stock available.`,
+      icon: 'error',
+      toast: true,
+      position: 'top-right',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  if (hasError) {
+    Swal.fire({
+      text: `Please resolve all errors before submitting.`,
+      icon: 'error',
+      toast: true,
+      position: 'top-right',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  // Update instruction
+  updateInstruction();
   const instructionId = parseInt($route.params.id);
-
-  // Check if the existing `reliefItems` loaded during `onMounted` is populated
-  let itemsToSubmit = reliefItems.length > 0 ? reliefItems : [{ commodityId: "", Quantity: 0, NoBags, error: "" }];
-
-
-  // Ensure each item has the correct instructionId
-  const newValues = itemsToSubmit.map(item => ({
-    ...item, // Spread existing properties
-    instructionId, // Add the instructionId to each object
+  const newValues = reliefItems.map(item => ({
+    ...item,
+    instructionId,
     NoBags: item.Quantity,
     Quantity: computedTonnagePerRemark(getCommodityPackSize(item.commodityId), item.Quantity)
   }));
 
-  // Remove any `error` fields before submission
-  const cleanedValues = newValues.map(({ error, ...cleanedItem }) => cleanedItem);
-
-  emit("update", cleanedValues);
-  await getReliefItems(); // Refresh the relief items list
-
-
+  // Emit update event
+  emit("update", newValues);
+  await getReliefItems();  
 });
+
+
 
 
 const instructedCommodityItems = ref([])
@@ -436,6 +556,7 @@ const getReliefItems = async () => {
     // Push filtered items into the reactive `reliefItems` array
     reliefItems.splice(0, reliefItems.length, ...filteredItems.map(item => ({
       commodityId: item.commodityId,
+      warehouseId: item.warehouseId,
       Quantity: item.NoBags,
       instructionId: instructionId,
       id: item.id

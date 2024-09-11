@@ -128,15 +128,16 @@
                   </div>
                   <div>
                     <h3 class="text-lg font-semibold mb-2">Requisition Information</h3>
-                    <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.name }}</p>
-                    <p><strong>Activity:</strong> {{ selectedRequisition?.activity.Name }}</p>
+                    <p><strong>Disaster:</strong> {{ selectedRequisition?.disaster.type }} | {{ selectedRequisition?.disaster.date_of_occurrence }}</p>
                     <p><strong>District:</strong> {{ selectedRequisition?.district.Name }}</p>
+                    <p><strong>Requestor:</strong> {{ selectedRequisition?.Requester?.username.replace(/\./g, ' ')  }}</p>
+                 
                     <p><strong>Affected TAs:</strong> {{ selectedRequisition?.AffectedAreas }}</p>
                     
-                    <p><strong>Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
+                    <p><strong># of Affected GVHs:</strong> {{ selectedRequisition?.gvhs }}</p>
 
-                    <p><strong>Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
-                    <p><strong>Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
+                    <p><strong># of Affected Villages:</strong> {{ selectedRequisition?.villages_affected }}</p>
+                    <p><strong># of Affected Households:</strong> {{ selectedRequisition?.AffectedHouseholds }}</p>
                   </div>
                   <!-- Requested Commodities Table -->
                   <div class="mt-4">
@@ -261,9 +262,8 @@ const columns = ref([
     label: "Details",
     field: (row) => {
       // Combine the disaster and activity names with proper formatting
-      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster?.name}</span>`;
-      const activityFormatted = `<span style="color: green;">Activity: ${row.activity?.Name}</span>`;
-      return `${disasterFormatted}<br/>${activityFormatted}`;
+      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster?.type} |  ${row.disaster?.date_of_occurrence}</span>`;
+      return `${disasterFormatted}<br/>`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -363,10 +363,7 @@ const getRequisitions = async () => {
       //   requisitions.push(...result);
       // }
       requisitions.length = 0; //empty array
-      requisitions.push(...result.filter(item => !item.IsArchived));
-
-
-      requisitions.sort((a, b) => new Date(b.CreatedOn) - new Date(a.CreatedOn));
+      requisitions.push(...result.filter(item => !item.IsArchived && item.status !== 3));
       requisitions.reverse()
     })
     .catch(error => {

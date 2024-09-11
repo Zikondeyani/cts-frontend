@@ -23,21 +23,23 @@
                   <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
                 </div>
 
-                <h2 class="text-center text-2xl font-semibold text-gray-800"> Goods Delivery Note</h2>
-
+                <h2 class="text-center text-2xl font-semibold text-gray-800"> Emergency Response Goods Recieve Note</h2>
+                <h2 class="text-center text-lg font-bold text-gray-800 mb-6">          {{ receipt.instructedDispatch?.instruction?.district?.Name }}
+                </h2>
+                          
                 <!-- Form Section -->
                 <div class="mt-4">
                   <div class="grid grid-cols-2 gap-4">
                    
                     <div>
-                      <label class="block text-sm font-bold text-gray-700">Deliver Note No:</label>
+                      <label class="block text-sm font-bold text-gray-700">System Delivery Note No:</label>
                       <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.DeliveryNote }}</p>
                     </div>
+                   
                     <div>
-                      <label class="block text-sm font-bold text-gray-700">Date:</label>
-                      <p class="text-sm text-gray-600">{{ moment(receipt.CreatedOn).format("DD-MM-YYYY") }}</p>
+                      <label class="block text-sm font-bold text-gray-700">PhysicalDelivery Note No:</label>
+                      <p class="text-sm text-gray-600">{{ receipt?.receivedCommodities[0]?.PhysicalDeliveryNote }}</p>
                     </div>
-                 
                  
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Purpose:</label>
@@ -45,20 +47,19 @@
                         {{ receipt.instructedDispatch?.instruction?.Purpose }}
                       </p>
                     </div>
-                    <div>
-                      <label class="block text-sm font-bold text-gray-700">Destination:</label>
-                      <p class="text-sm text-gray-600">
-                        {{ receipt.instructedDispatch?.instruction?.district?.Name }}
-                      </p>
-                    </div>
+                 
 
+                    <div>
+                      <label class="block text-sm font-bold text-gray-700">Created On:</label>
+                      <p class="text-sm text-gray-600">{{ moment(receipt.CreatedOn).format("DD-MM-YYYY") }}</p>
+                    </div>
                   
                   </div>
                 </div>
 
                 <!-- Goods List Section -->
                 <div class="mt-6">
-                  <h3 class="text-lg font-semibold text-gray-700">Goods List</h3>
+                  <h3 class="text-lg font-semibold text-gray-700">Condition of received commodity</h3>
                   <table class="min-w-full mt-2 bg-white">
                     <thead>
                       <tr class="w-full bg-gray-200">
@@ -77,7 +78,7 @@
                          <td class="border px-4 py-2">{{ item.TruckNumber }}</td>
                        
                         <td class="border px-4 py-2">{{ item?.commodity?.Name }}</td>
-                        <td class="border px-4 py-2">{{ item?.Remarks }}</td>
+                        <td class="border px-4 py-2">{{ item?.Remarks }} <span  v-if="item?.Remarks =='other'"> ({{ item?.Comments  }} )</span></td>
                         <td class="border px-4 py-2">
                           {{ item?.Quantity }} {{ item.commodity.Unit == "Kg" ? "MT" : item.commodity.Unit }} ({{item.NoBags}} {{item.commodity.Container_type}})
                         </td>
@@ -86,8 +87,12 @@
                   </table>
                 </div>
 
+                <div class="text-center mb-4 mt-4">
+                  <img src="../../../assets/received.jpg" alt="Department Logo" class="w-20 mx-auto mb-2">
+
+                </div>
                 <!-- Approvals Section -->
-                <div class="mt-6">
+                <div class="mt-2">
                   <h3 class="text-lg font-semibold text-gray-700">Approvals</h3>
                   <div class="grid grid-cols-3 gap-4 mt-2">
                     <div>

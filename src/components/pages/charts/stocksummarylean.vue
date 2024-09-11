@@ -1,139 +1,164 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 Chart.register(...registerables, ChartDataLabels);
 
 const props = defineProps({
   leanStockSummary: Array,
 });
 
-const barChartRef = ref(null);
-
-// Predefined set of contrasting colors
-const colors = [
-  '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
-  '#E6E6E6', '#B3B3B3', '#666666', '#FF3333', '#33FF33', '#3333FF',
-];
+const pieChartRef = ref(null);
+const expanded = ref(false); // To toggle between showing all or limited data
+const showModal = ref(false); // To control the visibility of the modal
+const limit = ref(4); // Number of districts to show initially
+let chartInstance = null;
 
 const processedPieChartData = computed(() => {
-  const commodities = props.leanStockSummary.map(item => item.commodityName);
-  const totalStockPlanned = props.leanStockSummary.reduce((acc, item) => acc + item.totalStockPlanned, 0).toFixed(2);
+  const dataToShow = expanded.value
+    ? props.leanStockSummary
+    : props.leanStockSummary.slice(0, limit.value);
 
-  const distributionPercentages = props.leanStockSummary.map(item => (item.totalStockPlanned / totalStockPlanned * 100).toFixed(2));
+  const labels = dataToShow.map(item => item.district);
+  const receiptCompletionData = dataToShow.map(item => item.receiptCompletion );
+  const dispatchCompletionData = dataToShow.map(item => item.dispatchCompletion);
 
   return {
-    labels: commodities,
-    datasets: [{
-      label: 'Stock Planned Percentage',
-      data: distributionPercentages,
-      backgroundColor: commodities.map((_, index) => colors[index % colors.length]), // Use the predefined colors
-      hoverOffset: 4
-    }]
+    labels,
+    datasets: [
+      {
+        label: 'Receipt Completion(%)',
+        data: receiptCompletionData ,
+        backgroundColor: ['#42a5f5', '#1e88e5', '#1565c0', '#0d47a1'],
+      }
+    ],
   };
 });
 
-const processedBarChartData = computed(() => {
-  const commodities = props.leanStockSummary.map(item => item.commodityName);
-  const totalBalances = props.leanStockSummary.map(item => item.totalBalance);
+function renderChart() {
+  const pieCtx = pieChartRef.value.getContext('2d');
 
-  return {
-    labels: commodities,
-    datasets: [{
-      label: 'Total Tonnage pending receipt',
-      data: totalBalances,
-      backgroundColor: commodities.map((_, index) => colors[index % colors.length]), // Use the predefined colors
-    }]
-  };
-});
+  if (chartInstance) {
+    chartInstance.destroy();
+  }
 
-const processedLineChartData = computed(() => {
-  const commodities = props.leanStockSummary.map(item => item.commodityName);
-  const dispatchPercentages = props.leanStockSummary.map(item => item.dispatchPercentage.toFixed(2));
-
-  return {
-    labels: commodities,
-    datasets: [{
-      label: 'Dispatch Percentage',
-      data: dispatchPercentages,
-      borderColor: commodities.map(() => `hsla(${190 + Math.random() * 20}, 70%, 60%, 0.6)`), // More varied colors
-      fill: false
-    }]
-  };
-});
-
-onMounted(() => {
-  const barCtx = barChartRef.value.getContext('2d');
-  new Chart(barCtx, {
-    type: 'bar',
-    data: processedBarChartData.value,
+  chartInstance = new Chart(pieCtx, {
+    type: 'pie',
+    data: processedPieChartData.value,
     options: {
       responsive: true,
-      animation: false, // Disable animation
       plugins: {
         legend: {
           position: 'top',
           labels: {
-            padding: 20,
             font: {
-              size: 14
-            }
-          }
+              size: 16,
+            },
+            padding: 20,
+          },
         },
         title: {
           display: true,
-          text: 'Total Balance Pending Receipt (MT)',
+          text: 'Completion Rates by District',
           font: {
-            size: 16
+            size: 18,
           },
           padding: {
-            top: 10,
-            bottom: 30
-          }
+            top: 20,
+            bottom: 30,
+          },
         },
         datalabels: {
-          color: function (context) {
-            const value = context.dataset.data[context.dataIndex];
-            return value > 0 ? '#666' : 'rgba(0,0,0,0)'; // Gray text for non-zero values, transparent for zero values
-          },
-          backgroundColor: '#fff', // White background
-          borderColor: '#ccc', // Gray border color
-          borderWidth: 1, // Border width (adjust as needed)
-          borderRadius: 10, // Border radius to make it round
-          formatter: (value, context) => {
-            return value > 0 ? `${value}MT` : null; // Display percentage for non-zero values, null for zero values
-          },
-          font: {
-            weight: 'bold',
-            size: 12
-          },
-          align: 'center',
-          anchor: 'center',
-          padding: {
-            top: 2,
-            bottom: 2
-          }
-        }
-
+          display: false, // Completely hide datalabels
+        },
+        
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) {
-              return value + ' MT';
-            }
-          },
-          suggestedMax: Math.max(...processedBarChartData.value.datasets.flatMap(dataset => dataset.data)) + 1000
-        }
+      layout: {
+        padding: {
+          left: 20,
+          right: 20,
+          top: 20,
+          bottom: 20,
+        },
       },
-    }
+    },
   });
+}
+
+onMounted(() => {
+  renderChart();
 });
+
+watch([expanded, props.leanStockSummary], () => {
+  renderChart();
+});
+
+function toggleModal() {
+  showModal.value = !showModal.value;
+}
 </script>
 
 <template>
   <div>
-    <canvas ref="barChartRef" style="width: 100%; height: 350px;"></canvas>
+    <canvas ref="pieChartRef" style="width: 100%; height: 550px;"></canvas>
+    <button @click="expanded = !expanded" >
+      {{ expanded ? 'Show Less' : 'Show All' }}
+    </button>
+  
+ 
   </div>
 </template>
+
+<style scoped>
+.toggle-button {
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  color: white;
+  background-color: #007bff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.toggle-button:nth-of-type(1) {
+  background-color: #28a745;
+}
+
+.toggle-button:nth-of-type(2) {
+  background-color: #007bff;
+}
+
+.modal {
+  display: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>

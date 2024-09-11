@@ -384,7 +384,7 @@ function navigation() {
     { name: "Instructions", href: "/dispatcher/instruction-management", icon: CollectionIcon, current: false },
     { name: "Project Management", href: "/dispatcher/project-management", icon: IdentificationIcon, current: false },
     { name: "Reports", href: "/dispatcher/report-management", icon: DocumentTextIcon, current: false },
-    { name: "Receipts", href: "/dispatcher/receipt-management", icon: DocumentDuplicateIcon, current: false },
+    { name: "Dispatches", href: "/dispatcher/dispatch-management", icon: DocumentDuplicateIcon, current: false },
 
   ];
 

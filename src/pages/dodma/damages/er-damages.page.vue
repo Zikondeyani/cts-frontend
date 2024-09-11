@@ -161,7 +161,8 @@ const generateExcel = (data) => {
       "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
       "Quantity Damaged (MT)": details.totalQuantity.toFixed(2),
       "Type of Loss": lossType,  
-      "FDP": details.FinalDestinationPoint,   
+      "Extent of damage": details.extentOfLoss, 
+      "FDP": details.FinalDestinationPoint,
       "REF NO": details.RefNO,
       "Percentage Damaged (%)": details.damagePercentage.toFixed(2),
       "Comments": damage.comments || '',
@@ -175,7 +176,6 @@ const generateExcel = (data) => {
   // Export the workbook
   XLSX.writeFile(wb, 'Emergency-losses.xlsx');
 };
-
 
 
 

@@ -20,6 +20,9 @@ export default class ReceiptsService {
                           "include": [
                             {
                               "relation": "district"
+                            },
+                            {
+                              "relation": "commodity"
                             }
                           ]
                         }
@@ -63,7 +66,10 @@ export default class ReceiptsService {
                       "include": [
                         {
                           "relation": "district"
-                        }
+                        },
+                            {
+                              "relation": "commodity"
+                            }
                       ]
                     }
                   }

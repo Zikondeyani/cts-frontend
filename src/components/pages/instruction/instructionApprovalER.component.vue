@@ -62,13 +62,17 @@
                   <div class="flex-1 bg-white rounded-table">
                     <h3 class="text-xl font-semibold mb-4">Loading Plan Details</h3>
                     <p class="mb-4"><strong>Loading Plan Number:</strong> {{ emergencyResponseInstructions.LoadingPlanNumber }}</p>
+            
+                    <p class="mb-4"><strong>Loading Plan Number:</strong> {{ emergencyResponseInstructions.LoadingPlanNumber }}</p>
                     <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.Quantity }} {{ emergencyResponseInstructions?.commodity?.commodityTypeId == 1 ? " MT" : " Units" }}</p>
                     <p class="mb-4"><strong>Start Date:</strong> {{ formatDate(emergencyResponseInstructions.StartDate) }}</p>
                     <p class="mb-4"><strong>End Date:</strong> {{ formatDate(emergencyResponseInstructions.EndDate) }}</p>
                     <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouse.Name }}</p>
                     <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district.Name }}</p>
                     <p class="mb-4"><strong>Transporter:</strong> {{ emergencyResponseInstructions.transporter.Name }}</p>
-                 <!--    <p class="mb-4" v-if="emergencyResponseInstructions.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ emergencyResponseInstructions?.RejectionComment }}</p>
+                    <p class="mb-4"><strong>Instruction By:</strong> {{ emergencyResponseInstructions?.user?.username.replace(/\./g, ' ')  }}</p>
+                 
+                    <!--    <p class="mb-4" v-if="emergencyResponseInstructions.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ emergencyResponseInstructions?.RejectionComment }}</p>
                  -->  </div>
                 </div>
 

@@ -330,7 +330,7 @@ const deleteItem = async (id) => {
 
 </script>
 
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

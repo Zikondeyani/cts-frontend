@@ -29,11 +29,11 @@
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
 
-              <button @click="openEditDialog(props.row)" v-if="props.row.Dispatcher?.email == user.email"
+            <!--   <button @click="openEditDialog(props.row)" v-if="props.row.Dispatcher?.email == user.email"
                 class="text-green-500 hover:text-green-700 transition duration-300">
                 <PencilIcon class="h-5 w-5 inline-block mr-1" />
                 Edit
-              </button>
+              </button> -->
 
               <!-- Delete Button with Trash Icon -->
               <button @click="deleteItem(props.row.id)" v-if="props.row.IsArchived == false &&

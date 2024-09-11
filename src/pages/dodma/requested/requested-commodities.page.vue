@@ -86,9 +86,8 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span class="${colorMap[row.commodity] || 'text-black'}">Commodity: ${row.commodity}</span><br>` + `<span>Disaster: ${row.disaster}</span><br>` +
-      `<span>District: ${row.district}</span><br>` +
-      `<span>Disaster Date: ${row.disasterDate}</span><br>`,
+    field: row => `<span class="${colorMap[row.commodity] || 'text-black'}">Commodity: ${row.commodity}</span><br>` + `<span>Disaster: ${row.disaster} |  ${row.disasterDate}</span><br>` +
+      `<span>District: ${row.district}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true,
@@ -166,6 +165,7 @@ const getrequested = async () => {
     .then(result => {
       requested.length = 0;
       let sorteddata = result.reverse();
+
       requested.push(...sorteddata);
     })
     .finally(() => {

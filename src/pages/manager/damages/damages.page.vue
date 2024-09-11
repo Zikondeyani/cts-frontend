@@ -158,7 +158,7 @@ const columns = ref([
       } else {
         colorClass = 'bg-red-100 text-red-800';
       }
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage}%</span>`;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colorClass}">${row.damagePercentage.toFixed(2)}%</span>`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -169,7 +169,6 @@ const columns = ref([
 ]);
 
 
-
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Lean-season-losses';
@@ -178,19 +177,20 @@ const generateExcel = () => {
 
   const dataToExport = damages;
 
+  const flattenedData = dataToExport.flatMap(damage => 
 
-  const flattenedData = dataToExport.flatMap(damage =>
     damage.lossTypes.map(lossType => ({
       Commodity: damage.commodity,
-      'Loading Plan #': damage.loadingPlanNumber, 
+      'Loading Plan #': damage.loadingPlanNumber,
       "REF NO": lossType.RefNO,
       District: damage.district,
       "Transporter": damage.transporter,
+      "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
+      "Quantity Damaged (MT)": lossType.totalQuantity.toFixed(2),  
       "FDP": lossType.FinalDestinationPoint,
-      "Quantity Dispatched (MT)": damage.originQuantity,
-      "Quantity Damaged (MT)": lossType.totalQuantity,
       "Type of Loss": lossType.typeOfLoss,
-      "Percentage Damaged (%)": lossType.damagePercentage,
+      "Extent of damage": lossType.extentOfLoss,
+      "Percentage Damaged (%)": lossType.damagePercentage.toFixed(2),
       "Comments": lossType.comments,
     }))
   );
@@ -202,7 +202,6 @@ const generateExcel = () => {
   // Export the workbook
   XLSX.writeFile(wb, 'Lean-season-losses.xlsx');
 };
-
 
 
 
@@ -227,8 +226,8 @@ const getdamages = async () => {
       // }
       damages.length = 0; //empty array
       let sorteddata = result.summary.reverse()
-
-      damages.push(...sorteddata.filter(item => item.typeOfLoss !== ""));
+  
+      damages.push(...sorteddata.filter(item => item.typeOfLoss !== "" ));
 
 
     })

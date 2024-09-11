@@ -424,6 +424,7 @@ const generateExcel = () => {
     Quantity: plan.Quantity,
     Balance: plan.Balance,
     StartDate: plan.StartDate,
+    "ATC NUMBER": plan.ATCNumber,
     EndDate: plan.EndDate,
     "Commodity": plan.commodity?.Name,
     "From": plan.warehouse?.Name,

@@ -155,7 +155,7 @@
                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                   <button type="submit" style="background-color: #096eb4;"
                     class="`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
-                    Save
+                    Create Instruction
                   </button>
                 </div>
               </form>
@@ -225,14 +225,13 @@ const commodityinventories = reactive([])
 
 const selectedWarehouseIds = ref([]);
 const selectedWarehouses = ref([]);
-
-
+const transporterId = ref("")
 
 
 // Watch for changes in selectedWarehouseIds to update selectedWarehouses
 // Watch the selectedWarehouseIds to see changes
 watch(selectedWarehouseIds, (newSelection) => {
-   selectedWarehouses.value = newSelection.map(warehouse => warehouse.id);
+  selectedWarehouses.value = newSelection.map(warehouse => warehouse.id);
 });
 const addWarehouse = (newTag) => {
   const tag = {
@@ -326,13 +325,13 @@ const { meta } = useForm({
 const { value: AffectedHouseholds, errorMessage: AffectedHouseholdsError } = useField("AffectedHouseholds")
 const { value: disasterId, errorMessage: disasterError } = useField("disasterId");
 const { value: activityId, errorMessage: activityError } = useField("activityId");
-const { value: transporterId, errorMessage: transporterError } = useField("transporterId");
-const { value: warehouseIds, errorMessage: warehouseError } = useField("warehouseIds");
-const { value: Remarks, errorMessage: remarksError } = useField("Remarks");
-const { value: Purpose, errorMessage: PurposeError } = useField("Purpose");
+const transporterError = ref("");
+const warehouseError = ref("");
+const remarksError = ref("");
+const PurposeError = ref("");
 const { value: VehicleRegNo, errorMessage: VRnoError } = useField("VehicleRegNo");
 const { value: DriverName, errorMessage: DriverNameError } = useField("DriverName");
-
+const Remarks  = ref("")
 
 
 //MOUNTED
@@ -449,6 +448,31 @@ const getActivities = async () => {
 const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
+  // Manually validate each field
+  const isValidTransporter = transporterId.value !== '' ;
+  const isValidPurpose = Purpose.value !== '';
+  const isValidRemarks = Remarks.value !== '';
+  const isValidWarehouse = selectedWarehouses.value.length > 0;
+
+  // Check if all fields are valid
+  if (!isValidTransporter || !isValidPurpose || !isValidRemarks || !isValidWarehouse) {
+    // If any field is invalid, show an error message or handle accordingly
+    if (!isValidTransporter) {
+      transporterError.value = "Please select a transporter.";
+    }
+    if (!isValidPurpose) {
+      PurposeError.value = "Purpose is required.";
+    }
+    if (!isValidRemarks) {
+      remarksError.value = "Remarks are required.";
+    }
+    if (!isValidWarehouse) {
+      warehouseError.value = "At least one warehouse must be selected.";
+    }
+    return; // Prevent form submission
+  }
+
+  // Proceed with form submission if all fields are valid
   let model = {
     warehouseIds: selectedWarehouses.value,
     districtId: props.district?.id,
@@ -462,9 +486,10 @@ const onSubmit = useSubmitForm((values, actions) => {
     UpdatedOn: currentDate.value,
     CreatedOn: currentDate.value
   };
+
   emit("create", model);
   open.value = false;
-  actions.resetForm();
+  actions.resetForm(); // Reset the form after successful submission
 });
 
 

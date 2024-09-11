@@ -33,51 +33,87 @@
         </span>
         <!-- Navigation Items for Desktop -->
         <div class="flex flex-col lg:flex-row lg:space-x-4 mt-2 lg:mt-0 w-full lg:w-auto hidden lg:flex">
-          <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href" class="block lg:inline-block mt-2 lg:mt-0">
+          <router-link v-for="item in firstFiveItems" :key="item.name" :to="item.href"
+            class="block lg:inline-block mt-2 lg:mt-0">
             <a :class="itemClasses(item)" :aria-current="item.current ? 'page' : undefined">
               {{ item.name }}
             </a>
           </router-link>
           <!-- Dropdown for the rest of the items -->
           <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0">
-            <button @click="toggleDropdown" @mouseenter="toggleDropdown" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
+            <button @click="toggleDropdown" @mouseenter="toggleDropdown"
+              class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
             </button>
-            <div v-if="isDropdownOpen" @mouseleave="closeDropdown" @focusout="closeDropdown" class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
-              <router-link v-for="item in remainingItems" :key="item.name" :to="item.href" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+            <div v-if="isDropdownOpen" @mouseleave="closeDropdown" @focusout="closeDropdown"
+              class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
+              <router-link v-for="item in remainingItems" :key="item.name" :to="item.href"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                 {{ item.name }}
               </router-link>
             </div>
           </div>
         </div>
+
+        <!-- Notification Button -->
+        <div class="relative hidden lg:block">
+          <button @click="toggleNotifications"
+            class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
+            <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
+            <span v-if="notificationsCount > 0"
+              class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
+              {{ notificationsCount }}
+            </span>
+          </button>
+          <div v-if="isNotificationsOpen" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10"
+            @mouseleave="toggleNotifications">
+            <div class="py-2 px-4 text-xs text-gray-700">
+              <p v-if="notifications.length === 0">No new notifications</p>
+              <ul v-else>
+                <li v-for="(notification, index) in notifications" :key="index" class="py-1 border-b border-gray-200">
+                  <router-link :to="notification.href" class="text-blue-500 hover:underline">
+                    {{ notification.message }}
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <!-- User Menu for Desktop -->
         <div class="relative ml-5 hidden lg:block">
           <Menu as="div" class="flex-shrink-0 relative">
             <div>
-              <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+              <MenuButton
+                class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
                 <span class="sr-only">Open user menu</span>
                 <span class="lowercase m-2 text-white"> {{ user?.username.replace(/\./g, ' ') }} </span>
-                <span style="background-color:gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+                <span style="background-color:gray"
+                  class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                   {{ user?.username.match(/\b(\w)/g).join("") }}
                 </span>
               </MenuButton>
             </div>
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                  <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                    {{ item.name }}
-                  </a>
+                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                  {{ item.name }}
+                </a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                    About System
-                  </button>
+                <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                  About System
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onSignout" :class="menuItemClasses(active, true)">
-                    Sign out
-                  </button>
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
+                  Sign out
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -87,7 +123,8 @@
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="lg:hidden">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <router-link v-for="item in navItems" :key="item.name" @click="toggleMobileMenu()" :to="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
+          <router-link v-for="item in navItems" :key="item.name" @click="toggleMobileMenu()" :to="item.href"
+            class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
             {{ item.name }}
           </router-link>
         </div>
@@ -96,30 +133,36 @@
       <div class="relative mt-4 block lg:hidden w-full">
         <Menu as="div" class="flex-shrink-0 relative">
           <div class="flex justify-end">
-            <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+            <MenuButton
+              class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
               <span class="sr-only">Open user menu</span>
               <span class="lowercase m-2 text-white"> {{ user?.username.replace(/\./g, ' ') }} </span>
-              <span style="background-color:gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+              <span style="background-color:gray"
+                class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                 {{ user?.username.match(/\b(\w)/g).join("") }}
               </span>
             </MenuButton>
           </div>
-          <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-            <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+          <transition enter-active-class="transition ease-out duration-100"
+            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+            leave-to-class="transform opacity-0 scale-95">
+            <MenuItems
+              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
               <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                  {{ item.name }}
-                </a>
+              <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                {{ item.name }}
+              </a>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                  About System
-                </button>
+              <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                About System
+              </button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button @click="onSignout" :class="menuItemClasses(active, true)">
-                  Sign out
-                </button>
+              <button @click="onSignout" :class="menuItemClasses(active, true)">
+                Sign out
+              </button>
               </MenuItem>
             </MenuItems>
           </transition>
@@ -148,7 +191,10 @@ import { inject, ref, watch, reactive, onMounted, computed, toRefs, onBeforeUnmo
 import { useSessionStore } from "../../stores/session.store";
 import { useRouter } from "vue-router";
 import { useInstructedDispatchesStore } from "../../stores/instructedDispatches.store";
+
+import { useDispatcherStore } from "../../stores/dispatch.store";
 import { saveDataOffline, getDataOffline, clearDataOffline } from '@/services/localbase';
+import eventBus from '../../services/events/eventbus';
 
 import {
   Dialog,
@@ -169,6 +215,7 @@ import {
   MenuIcon,
   ClipboardListIcon,
   ExclamationIcon,
+  BellIcon,
   MenuAlt1Icon,
   ViewListIcon,
   UsersIcon,
@@ -192,6 +239,8 @@ import {
 } from "@heroicons/vue/solid";
 
 const getDispatchStore = useInstructedDispatchesStore();
+
+const getLeanDispatchStore = useDispatcherStore();
 const signOutTimeout = ref(null);
 
 const newDispatchCount = ref(0);
@@ -213,6 +262,22 @@ const role = ref(sessionStore.getRole);
 
 const isDropdownOpen = ref(false);
 
+
+const newLeanSeasonCount = ref(0);
+
+const newEmerCount = ref(0);
+
+const notificationsCount = computed(() => notifications.value.length);
+const isNotificationsOpen = ref(false);
+
+const toggleNotifications = () => {
+  isNotificationsOpen.value = !isNotificationsOpen.value;
+};
+
+
+const notifications = ref([
+]);
+
 const menuItemClasses = (active, isButton = false) => [
   active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
   'block px-4 py-2 text-sm',
@@ -223,6 +288,34 @@ const onAbout = async () => {
   $router.push({ path: "/field/about-system" })
 
 };
+
+
+
+const updateNotifications = () => {
+  notifications.value = [];
+  if (newLeanSeasonCount.value > 0) {
+    notifications.value.push({
+      message: `Lean Season Dispatches(${newLeanSeasonCount.value})`,
+      href: "/field/dispatch-management"
+    });
+  }
+
+  if (newEmerCount.value > 0) {
+    notifications.value.push({
+      message: `Emergency Response Dispatches (${newEmerCount.value})`,
+      href: "/field/dispatches/emergency"
+    });
+  }
+
+  console.log('Updated Notifications:', notifications.value);
+
+
+};
+
+
+
+
+
 
 const iconClasses = (item) => [
   item.current ? "text-gray-500" : "text-white group-hover:text-white",
@@ -258,23 +351,72 @@ const toggleMobileMenu = () => {
 }
 
 //FUNCTIONS
+
+
+const expectedDispatchCount = ref(0)
+const expectedDispatches = reactive([])
 const getDispatches = async () => {
-  getDispatchStore
-    .get()
-    .then((result) => {
-      // Clear the existing array
-      dispaches.length = 0;
+  try {
+    const result = await getDispatchStore.get();
+    dispaches.length = 0;
+    dispaches.push(...result.filter(item => !item.IsArchived && item.instruction.district?.Name == user.value.district && item.IsArchived == false));
+    newDispatchCount.value = dispaches.length;
+
+
+    newEmerCount.value = 0
+    newEmerCount.value = newDispatchCount.value;
+    updateNotifications(); // Call this after updating counts
+  } catch (error) {
+    console.error('Error fetching dispatches:', error);
+  }
+};
+
+const getExpectedLeanDispatches = async () => {
+  try {
+    const result = await getLeanDispatchStore.expected(user.value.district);
 
 
 
-      // Push the filtered instructions into the array
-      dispaches.push(...result.filter(item => !item.IsArchived && item.instruction.district?.Name == user.value.district && item.IsArchived == false));
+    expectedDispatchCount.value = result.length;
+    expectedDispatches.length = 0;
+    let sorteddata = result.reverse();
+    expectedDispatches.push(...sorteddata);
+    newLeanSeasonCount.value = 0
+
+    newLeanSeasonCount.value = expectedDispatches.length;
 
 
-      // Update the count of new instructions
-      newDispatchCount.value = dispaches.length;
-    })
+    updateNotifications(); // Call this after updating counts
+  } catch (error) {
+    console.error('Error fetching expected lean season dispatches:', error);
+  }
+};
 
+const getExpectedDispatches = async () => {
+
+  try {
+    const result = await getDispatchStore.get();
+
+
+    // Sort dispatches by `createdOn` date
+    const sortedDispatches = [...result].sort((a, b) => new Date(b.createdon) - new Date(a.createdon));
+
+    dispaches.length = 0; // Clear existing dispatches
+    const reversedData = sortedDispatches.reverse();
+
+    // Filter and map the dispatches
+    const filteredDispatches = reversedData
+      .filter(item => !item.IsArchived && item.instruction.district?.Name === user.value.district)
+
+    // Update dispatches with the mapped data
+    dispaches.push(...filteredDispatches);
+    newEmerCount.value = dispaches.length;
+
+
+
+  } catch (error) {
+    console.error('Error fetching dispatches:', error);
+  }
 };
 
 
@@ -283,19 +425,38 @@ onMounted(async () => {
   startSignOutTimer();
   addEventListeners();
   await fetchUser();
-  getDispatches();
+  await getExpectedDispatches();
+  await getExpectedLeanDispatches();
+  await getDispatches();
+  eventBus.on('leaseasonDispatchesArchived', async () => {
+    // Update the notification count
+    await getDispatches();
+    await getExpectedLeanDispatches();
+    await getExpectedDispatches();
+  });
+
+  eventBus.on('emergencyDispatchesArchived', async () => {
+    await getDispatches();
+    await getExpectedDispatches();
+
+    await updateNotifications()
+  });
 });
 
 
 
 onBeforeUnmount(() => {
+
+  eventBus.off('leaseasonDispatchesArchived');
+
+  eventBus.off('emergencyDispatchesArchived');
   clearSignOutTimer();
   removeEventListeners();
 });
 
 const user = ref(null);
 const fetchUser = async () => {
-  
+
   try {
     const offlineUserData = await getDataOffline("user");
     if (offlineUserData.length > 0) {
@@ -318,15 +479,16 @@ function navigation() {
      { name: "Requisitions", href: "/warehouse/requisition-management", icon: IdentificationIcon, current: false },
      { name: "Project Management", href: "/warehouse/project-management", icon: IdentificationIcon, current: false },
    */  /*  { name: "Dispatches", href: "/field/dispatch-management", icon: AdjustmentsIcon, current: false },
-    */
-    { name: "Project Management", href: "/field/project-management", icon: IdentificationIcon, current: false },
+        */
 
     { name: "Disasters", href: "/field/emergency-management", icon: ExclamationIcon, current: false },
 
+    { name: "Dispatches", href: "/field/project-management", icon: IdentificationIcon, current: false },
+
     { name: "Receipts", href: "/field/receipts", icon: DocumentDuplicateIcon, current: false },
 
-  /*   { name: "Reports", href: "/field/report-management", icon: DocumentTextIcon, current: false },
- */
+    /*   { name: "Reports", href: "/field/report-management", icon: DocumentTextIcon, current: false },
+   */
   ];
 
 
@@ -361,8 +523,8 @@ const open = ref(false);
 //FUNCTIONS
 
 const navItems = computed(() => navigation());
-const firstFiveItems = computed(() => navItems.value.slice(0, 4));
-const remainingItems = computed(() => navItems.value.slice(4));
+const firstFiveItems = computed(() => navItems.value.slice(0, 3));
+const remainingItems = computed(() => navItems.value.slice(3));
 
 const itemClasses = (item) => [
   item.current ? 'bg-white text-black' : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
@@ -426,6 +588,12 @@ const removeEventListeners = () => {
 };
 
 
+watch([newLeanSeasonCount, newEmerCount], ([newLeanCount, newEmerCount]) => {
+  console.log(`Lean: ${newLeanCount}, Emergency: ${newEmerCount}`);
+  updateNotifications();
+});
+
+
 </script>
 
 <style>
@@ -433,18 +601,23 @@ const removeEventListeners = () => {
   .lg\:w-auto {
     width: 100%;
   }
+
   .lg\:mt-0 {
     margin-top: 0;
   }
+
   .lg\:inline-block {
     display: block;
   }
+
   .lg\:flex-row {
     flex-direction: column;
   }
+
   .lg\:space-x-4 {
     space-x: 0;
   }
+
   .lg\:col-span-12 {
     grid-column: span 12 / span 12;
   }
