@@ -111,6 +111,22 @@ export const useDispatcherStore = defineStore({
         });
     },
 
+    async getExtendedDispatchSummaryWFP2() {
+      return await dispatcherService
+        .getExtendedDispatchSummaryWFP2()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
 
     async getExtendedDispatchSummaryDodma() {
       return await dispatcherService
@@ -128,9 +144,10 @@ export const useDispatcherStore = defineStore({
         });
     },
 
-    async getExtendedDispatchSummaryDodma() {
+ 
+     async getExtendedDispatchSummaryDodma2() {
       return await dispatcherService
-        .getExtendedDispatchSummaryDodma()
+        .getExtendedDispatchSummaryDodma2()
         .then((result) => {
 
           return result;
@@ -143,6 +160,7 @@ export const useDispatcherStore = defineStore({
           }
         });
     },
+
 
     async getdispatchSummary() {
       return await dispatcherService
@@ -160,6 +178,22 @@ export const useDispatcherStore = defineStore({
         });
     },
 
+
+    async getdispatchSummary2() {
+      return await dispatcherService
+        .getExtendedDispatchSummary2()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
 
 

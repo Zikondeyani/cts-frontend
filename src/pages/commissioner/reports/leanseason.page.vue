@@ -2,7 +2,7 @@
   <main class="min-h-screen">
     <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
-    <span class="text-white font-bold">Lean Season Loading Plan Reports</span>
+    <span class="text-white font-bold">Lean Season & Emergency Assistance Loading Plan Reports</span>
 
     <div class="container mx-auto">
 

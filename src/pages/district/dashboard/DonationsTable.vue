@@ -46,9 +46,9 @@
           <tr v-for="(row, index) in filteredData" :key="index">
             <td class="px-6 py-4 whitespace-nowrap">{{ row.GoodsReceiveNote }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ row.Date }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ row.district.Name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ row.warehouse.Name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap">{{ row.organisation.Name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ row.district?.Name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ row.warehouse?.Name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">{{ row.organisation?.Name }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button @click="viewDetails(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 View Details
@@ -97,9 +97,9 @@
                     <p class="text-sm text-gray-500">Goods Receive Note: {{ selectedRow.GoodsReceiveNote }}</p>
                     <p class="text-sm text-gray-500">Truck Number: {{ selectedRow.TruckNumber }}</p>
                     <p class="text-sm text-gray-500">Date: {{ selectedRow.Date }}</p>
-                    <p class="text-sm text-gray-500">District: {{ selectedRow.district.Name }}</p>
-                    <p class="text-sm text-gray-500">Warehouse: {{ selectedRow.warehouse.Name }}</p>
-                    <p class="text-sm text-gray-500">Donor: {{ selectedRow.organisation.Name }}</p>
+                    <p class="text-sm text-gray-500">District: {{ selectedRow.district?.Name }}</p>
+                    <p class="text-sm text-gray-500">Warehouse: {{ selectedRow.warehouse?.Name }}</p>
+                    <p class="text-sm text-gray-500">Donor: {{ selectedRow.organisation?.Name }}</p>
                     <h4 class="text-md leading-6 font-medium text-gray-900 mt-4">Donated Commodities</h4>
                     <ul class="list-disc list-inside">
                        <li v-for="(commodity, index) in selectedRow.donatedCommodities" :key="index" class="text-sm text-gray-500">

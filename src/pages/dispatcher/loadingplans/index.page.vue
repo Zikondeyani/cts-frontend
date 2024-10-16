@@ -173,7 +173,7 @@ const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/dispatcher/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
-  { name: "Lean Season Response", href: "#", current: true },
+  { name: "Lean Season Response & Emergency Assistance", href: "#", current: true },
 
 ];
 
