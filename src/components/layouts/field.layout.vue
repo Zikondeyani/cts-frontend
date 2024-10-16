@@ -111,6 +111,13 @@
                 </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
+                <router-link to="/field/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
                 </button>
@@ -159,6 +166,13 @@
                 About System
               </button>
               </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <router-link to="/field/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
+                </MenuItem>
               <MenuItem v-slot="{ active }">
               <button @click="onSignout" :class="menuItemClasses(active, true)">
                 Sign out

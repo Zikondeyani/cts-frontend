@@ -25,27 +25,98 @@
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
         <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          <template #table-actions> </template>
+          :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
+          <!-- Custom Table Actions -->
+          <template #table-actions>
+            <!-- You can add custom actions here like export buttons, etc. -->
+          </template>
+
+          <!-- Custom Table Row Template -->
           <template #table-row="props">
-            <div v-if="props.column.label == 'Options'" class="flex space-x-2">
+            <div v-if="props.column.label === 'Options'" class="flex items-center space-x-3">
+              <!-- Dispatch Button when balance is greater than 0 -->
               <template v-if="props.row.Balance > 0">
                 <button type="button" @click="openDispatchDialog(props.row)"
-                  class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+                  class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                   <TruckIcon class="h-5 w-5 mr-2" />
                   Dispatch
                 </button>
               </template>
+
+              <!-- Completed Badge when balance is 0 -->
               <template v-else>
                 <span
-                  class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Completed
                 </span>
               </template>
+
+              <!-- Show Recent Dispatches Button -->
+              <button type="button" @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
+                class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150">
+                <EyeIcon class="h-5 w-5 mr-2" />
+                Recent Dispatches
+              </button>
             </div>
           </template>
         </vue-good-table>
+
+        <!-- Recent Dispatches Modal -->
+   
+        <template v-if="isRecentDispatchesOpen">
+  <div id="content">
+    <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">Recent Dispatches</h3>
+        </div>
+
+        <div class="overflow-auto max-h-96">
+          <table class="min-w-full table-auto border-collapse">
+            <thead>
+              <tr class="bg-blue-100">
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Delivery Note</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ATC #</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Dispatcher</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Qty (MT)</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">FDP</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Created</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Driver (Truck #)</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Received</th> <!-- New column -->
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DeliveryNote }}</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.atc }}</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.dispatcher?.username?.replace(/\./g, ' ') }}</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.Quantity }} MT</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.FinalDestinationPoint }}</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch.CreatedOn).format('MMMM Do YYYY, h:mm a') }}</td>
+                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DriverName }} ({{ dispatch.TruckNumber }})</td>
+                <td class="px-4 py-2 text-sm text-gray-900">
+                  <span 
+                    class="inline-block w-3 h-3 rounded-full" 
+                    :class="dispatch.received ? 'bg-green-500' : 'bg-red-500'">
+                  </span>
+                </td> <!-- Received status with dot -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-end mt-4">
+          <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0" 
+            class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
+          <button type="button" id="closeButton"
+            class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            @click="closeRecentDispatches">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 
         <!-- Edit Loading Plan Dialog -->
         <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
@@ -67,7 +138,8 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  PencilIcon, TrashIcon, TruckIcon
+  PencilIcon, TrashIcon, TruckIcon,
+  EyeIcon
 } from "@heroicons/vue/solid";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
@@ -93,6 +165,10 @@ const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
 //VARIABLES
+
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/dispatcher/dashboard", current: false },
@@ -128,12 +204,14 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
-  
+
   {
     label: "Details",
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">TP: ${row.transporter?.Name}</span> <br>`
+      +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold  bg-gray-100 text-gray-800">ATC #: ${row.ATCNumber}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -143,8 +221,8 @@ const columns = ref([
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance?.toFixed(2) !== null ? row.Balance?.toFixed(2) + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -160,6 +238,37 @@ const columns = ref([
 const isEditDialogOpen = ref(false);
 
 const selectedLoadingPlan = ref(null);
+
+
+const isRecentDispatchesOpen = ref(false);
+const recentDispatches = ref([]);
+
+// Methods to Open/Close the Modal
+const openRecentDispatches = async (id, atc) => {
+  isRecentDispatchesOpen.value = true;
+  await fetchRecentDispatches(id, atc);
+};
+
+const closeRecentDispatches = () => {
+  isRecentDispatchesOpen.value = false;
+};
+
+// Fetch Recent Dispatches
+const fetchRecentDispatches = async (id, atc) => {
+  try {
+    const result = await loadingPlanStore.getloadingplansDispatchesById(id);
+
+    // Assign data to recentDispatches, including the atc parameter
+    recentDispatches.value = result.map(dispatch => ({
+      ...dispatch,
+      atc, // Add the atc to each dispatch object
+    }));
+
+  } catch (error) {
+    console.error('Failed to fetch recent dispatches:', error);
+  }
+};
+
 
 // Function to open the edit dialog
 const openEditDialog = (loadingPlan) => {
@@ -207,23 +316,31 @@ const getLoadingplans = async () => {
   try {
     const result = await loadingPlanStore.get();
 
-    // Filter out loading plans without districtId and projectId
-    const filteredLoadingPlans = result;
+    // Check if user district is national or null
+    const isNationalOrNull = !user.value.district || user.value.district === 'National';
 
-    // Reverse the order of the filtered results
-    const reversedFilteredLoadingPlans = filteredLoadingPlans.reverse();
+    // Separate loading plans that are not closed (isClosed == false) and the rest
+    const openLoadingPlans = result.filter(plan => plan.isClosed === false);
+    const closedLoadingPlans = result.filter(plan => plan.isClosed === true);
 
-    // Empty the loadingplans array and then push the reversed and filtered results
+    // Combine the open loading plans first, then the closed ones
+    const sortedLoadingPlans = [...openLoadingPlans, ...closedLoadingPlans];
+
+    // Filter based on user district if not national or null
+    const filteredLoadingPlans = isNationalOrNull
+      ? sortedLoadingPlans.filter(item => item.IsApproved === true) // For national or null, include approved only
+      : sortedLoadingPlans.filter(item => item.IsApproved === true && item.district.Name === user.value.district  && item.IsDivertedLoad == true); // For specific district, include approved and match district
+
+    // Clear the loadingplans array and then push the sorted results
     loadingplans.length = 0;
-
-   // const filterByDistrict = reversedFilteredLoadingPlans.filter(plan => (plan.district?.Name == user.value.district) && plan.IsApproved);
-
     loadingplans.push(...filteredLoadingPlans);
+
+    // Emit event after updating loading plans
     eventBus.emit('loadingplanArchived', result.id);
-   
+
   } catch (error) {
     // Handle any errors that occur during the get, filter, or reverse
-    console.error('Failed to fetch, filter, and reverse loading plans:', error);
+    console.error('Failed to fetch, filter, and sort loading plans:', error);
   } finally {
     isLoading.value = false;
   }
@@ -243,6 +360,8 @@ const generateExcel = () => {
     Balance: plan.Balance,
     StartDate: plan.StartDate,
     EndDate: plan.EndDate,
+
+    "ATC #": plan.ATCNumber,
     "Commodity": plan.commodity?.Name,
     "From": plan.warehouse?.Name,
     "Transporter Name": plan.transporter?.Name,
@@ -289,9 +408,97 @@ const createReport = async (model) => {
       getLoadingplans();
     });
 };
+
+
+
+// Function to print the instruction details
+
+const printPDF = () => {
+  // Select the modal content
+  const modalContent = document.querySelector("#content");
+
+  if (modalContent) {
+    // Clone the modal content
+    const printContent = modalContent.cloneNode(true);
+
+    // Remove the print and close buttons from the cloned content
+    const printButton = printContent.querySelector("#printButton");
+    const closeButton = printContent.querySelector("#closeButton");
+    if (printButton) printButton.remove();
+    if (closeButton) closeButton.remove();
+
+    // Create a new div for the custom title
+    const titleDiv = document.createElement("div");
+    titleDiv.innerHTML = `
+      <h2 style="text-align: center; font-family: Arial, sans-serif; margin-top: 20px;">
+        DODMA COMMODITY TRACKING SYSTEM
+      </h2>`;
+
+    // Insert the custom title at the beginning of the modal content
+    printContent.insertBefore(titleDiv, printContent.firstChild);
+
+    // Create a print window
+    const printWindow = window.open("", "_self"); // "_self" keeps it on the same page
+
+    // Set the document title to "dispatches" for a default file name when saving
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Recent Dispatches</title> <!-- Default file name -->
+          <style>
+            body { font-family: Aptos, sans-serif; margin: 15px; }
+            .modal { display: block; position: relative; }
+          </style>
+        </head>
+        <body>${printContent.innerHTML}</body>
+      </html>
+    `);
+
+    // Close the document for printing
+    printWindow.document.close();
+    printWindow.focus();
+
+    // Trigger print
+    printWindow.print();
+
+    window.location.reload(); // Reloads the page after the print or cancel action
+ 
+  } else {
+    console.error("Modal content not found!");
+  }
+};
+
+
+
+
+
+
 </script>
 
 <style scoped>
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #content,
+  #content * {
+    visibility: visible;
+  }
+
+  #content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

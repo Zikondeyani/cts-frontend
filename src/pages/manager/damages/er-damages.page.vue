@@ -111,9 +111,9 @@ const columns = ref([
   {
     label: "Status",
 
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity.toFixed(2)}MT</span><br>`
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity}MT</span><br>`
       +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantity.toFixed(2)}MT</span><br>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantity}MT</span><br>`,
 
     sortable: true,
     firstSortType: "asc",
@@ -176,8 +176,6 @@ const generateExcel = (data) => {
   // Export the workbook
   XLSX.writeFile(wb, 'Emergency-losses.xlsx');
 };
-
-
 
 
 

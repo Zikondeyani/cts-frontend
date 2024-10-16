@@ -12,6 +12,10 @@
         DoDMA Commodity Tracking System
         <span class="text-sm font-normal">(v2.0)</span>
       </h2>
+      <h2 class="mt-6 text-3xl font-extrabold text-white" v-if="system.mode == 'TRAINING'">
+      
+        <span class="text-sm font-normal">({{system.mode}})</span>
+      </h2>
     </div>
 
     <!-- Right Section (Sign In Form) -->
@@ -128,6 +132,7 @@ import { usetransporterstore } from "../../stores/transporter.store";
 const system = reactive({
   name: process.env.VUE_APP_NAME,
   short: process.env.VUE_APP_SHORT_NAME,
+  mode: process.env.VUE_APP_MODE,
   version: process.env.VUE_APP_VERSION,
 });
 const $router = useRouter();

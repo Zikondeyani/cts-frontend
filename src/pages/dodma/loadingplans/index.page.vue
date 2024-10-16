@@ -60,19 +60,19 @@
                   </span>
                 </div>
                 <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
-                  <button @click="openEditDialog(props.row)" v-if="props.row.Balance > 0"
+                  <button @click="openEditDialog(props.row)"
                     class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
                     Edit 
                   </button>
 
-                  <button @click="openAttachmentDialog(props.row)" v-if="props.row.Balance > 0"
+                  <button @click="openAttachmentDialog(props.row)"
                     class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0">
                     <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
                     Attachments
                   </button>
 
-                  <button v-if="props.row.Balance > 0" @click="deleteItem(props.row.id)"
+                  <button  @click="deleteItem(props.row.id)"
                     class="text-red-500 hover:text-red-700 transition duration-300">
                     <TrashIcon class="h-5 w-5 inline-block mr-1" />
                     Delete
@@ -183,8 +183,8 @@ const columns = ref([
   {
     label: "Details",
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">TP: ${row.transporter?.Name}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -194,8 +194,8 @@ const columns = ref([
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity.toFixed(2)} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity.toFixed(2)} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML

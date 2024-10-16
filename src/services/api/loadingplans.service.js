@@ -1,5 +1,6 @@
 import axios from "axios";
 const resource = process.env.VUE_APP_ROOT_API + "/loading-plans";
+const resource2 = process.env.VUE_APP_ROOT_API + "/warehouse-loadings";
 
 export default class LoadingPlanService {
   get(id) {
@@ -53,6 +54,81 @@ export default class LoadingPlanService {
     }
   }
 
+
+  getLoadings(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource2 +
+          `?filter={}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+
+
+
+  getWarehouseLoad() {
+   
+      return axios
+        .get(
+          resource + '/dispatch-sum',
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+   
+  }
+
   getloadingplansClean(id) {
     if (id == null) {
       return axios
@@ -102,6 +178,158 @@ export default class LoadingPlanService {
     }
   }
 
+
+
+
+
+  getloadingplansByATC(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource + "/loading-plans-by-ATC",
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+
+  getloadingplansDispatchesStats() {
+    return axios
+      .get(
+        resource + "/status-summary-stats",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+  getloadingplansDispatchesReminders() {
+    return axios
+      .get(
+        resource + "/status-summary",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+
+  getloadingplansDispatchesRemindersSendMail() {
+    return axios
+      .get(
+        resource + "/status-summary?sendEmail=true",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+  
+
+  getloadingplansDispatchesById(id) {
+    return axios
+      .get(
+        resource + "/" + id + "/dispatches",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
 
 
   getloadingplansPending(id) {
@@ -298,6 +526,28 @@ export default class LoadingPlanService {
           }
         });
     }
+  }
+
+  
+
+  createWarehouseLoad(data) {
+    return axios
+      .post(resource + '/warehouse', data, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
   }
 
 

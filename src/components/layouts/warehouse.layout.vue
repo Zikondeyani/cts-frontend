@@ -52,7 +52,7 @@
 
 
 
-          <div class="relative">
+     <!--      <div class="relative">
             <button @click="toggleDropdown" @mouseenter="toggleDropdown"
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
@@ -69,7 +69,7 @@
               </router-link>
             </div>
           </div>
-
+ -->
         
         </div>
         <!-- Notification Button -->
@@ -116,6 +116,13 @@
                   <button @click="onAbout()" :class="menuItemClasses(active, true)">
                     About System
                   </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                <router-link to="/warehouse/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button @click="onSignout" :class="menuItemClasses(active, true)">
@@ -178,6 +185,13 @@
                   <button @click="onAbout()" :class="menuItemClasses(active, true)">
                     About System
                   </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                <router-link to="/warehouse/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button @click="onSignout" :class="menuItemClasses(active, true)">
@@ -374,11 +388,12 @@ const updateNotifications = () => {
 function navigation() {
   let navList = [
     { name: "Home", href: "/warehouse/dashboard", icon: HomeIcon, current: false },
-    { name: "Instructions", href: "/warehouse/instruction-management", icon: CollectionIcon, current: false },
-    { name: "Warehouse management", href: "/warehouse/warehouse-management", icon: IdentificationIcon, current: false },
-    { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
+  /*   { name: "Instructions", href: "/warehouse/instruction-management", icon: CollectionIcon, current: false },
+   */  { name: "Warehouse management", href: "/warehouse/warehouse-management", icon: IdentificationIcon, current: false },
+   { name: "Loading Plans (LSR)", href: "/warehouse/loadingplans", icon: IdentificationIcon, current: false },
+   /*   { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
     { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
-
+ */
   ];
 
   const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
@@ -481,13 +496,10 @@ const getInstructions = async () => {
 
 const getLoadingPlans = async () => {
   try {
-    const result = await loadingStore.get();
+    const result = await loadingStore.getLoadings();
     loadingplans.length = 0;
     loadingplans.push(
-      ...result.filter(item =>
-        (item.district.Name == user.value.district) && (
-          !item.IsArchived) && item.IsApproved && (item.Balance > 0)
-      )
+      ...result
     );
     newLoadingPlanCount.value = loadingplans.length;
     updateNotifications()

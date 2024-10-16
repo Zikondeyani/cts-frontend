@@ -11,8 +11,30 @@ export const useloadingplanstore = defineStore({
 
   },
   actions: {
+
+    
+
+    async getLoadings() {
+      return await loadingplansService.getLoadings().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
     async get() {
       return await loadingplansService.get().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
+    async getWarehouseLoad() {
+      return await loadingplansService.getWarehouseLoad().then((result) => {
         if (result) {
           var response = result;
           return response
@@ -32,6 +54,44 @@ export const useloadingplanstore = defineStore({
     },
 
 
+    async getloadingplansDispatchesStats(){
+      return await loadingplansService.getloadingplansDispatchesStats().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+    async getloadingplansDispatchesReminders() {
+      return await loadingplansService.getloadingplansDispatchesReminders().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+    async getloadingplansDispatchesRemindersSendMail() {
+      return await loadingplansService.getloadingplansDispatchesRemindersSendMail().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
+    async getloadingplansDispatchesById(id) {
+      return await loadingplansService.getloadingplansDispatchesById(id).then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
     async getloadingplansSummary() {
       return await loadingplansService.getloadingplansSummary().then((result) => {
         if (result) {
@@ -41,6 +101,14 @@ export const useloadingplanstore = defineStore({
       });
     },
 
+    async getloadingplansByATC() {
+      return await loadingplansService.getloadingplansByATC().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
 
     async getloadingplansDataSummary() {
       return await loadingplansService.getloadingplansDataSummary().then((result) => {
@@ -109,6 +177,21 @@ export const useloadingplanstore = defineStore({
         });
     },
 
+    async createWarehouseLoad(data) {
+      return await loadingplansService
+        .createWarehouseLoad(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
     async createLoadingPlans(data) {
       return await loadingplansService

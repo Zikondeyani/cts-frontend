@@ -31,7 +31,7 @@
             <i class="fas fa-check-circle mr-2"></i> <!-- Submitted icon -->
             Submitted Receipts
             <span v-if="submittedCount > 0"
-              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center px-3">
               {{ submittedCount }}
             </span>
           </button>

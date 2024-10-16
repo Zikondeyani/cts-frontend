@@ -13,6 +13,8 @@
         </div>
       </div>
 
+
+
       <!-- Main 3 column grid -->
       <div class="grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8 mt-4">
         <!-- Tabs -->
@@ -38,13 +40,13 @@
               <TemplateIcon class="h-5 w-5 mr-2" />
               Lean Season Response Dashboard
             </button>
-
+<!-- 
             <button @click="toggleView('Donations')" type="button"
               class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
               :class="{ 'active-tab': currentView === 'Donations' }">
               <HeartIcon class="h-5 w-5 mr-2" />
               Donations
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -76,6 +78,7 @@
                         <DocumentDownloadIcon class="h-5 w-5 mr-2" />
                         Export to Excel
                       </button>
+
 
                       <button @click="takeScreenshot" v-if="currentView !== 'dashboard' && currentView !== 'Donations'"
                         type="button"
@@ -114,12 +117,22 @@
                     </div>
                   </div>
 
-                  <div class="col-span-3 flex flex-col justify-center items-center text-white">
-                    <div class="text-center mt-1 ml-6">
-                      <h1 class="text-lg font-bold text-black">Emergency Response Dashboard</h1>
-                      <h1 class="text-sm font-bold text-black">(From DoDMA Warehouses)</h1>
+
+
+
+                  <div class="col-span-3 flex flex-col justify-center items-center">
+                    <div class="text-center mt-2">
+                      <h1
+                        class="text-lg font-semibold text-[#096eb4] text-blue-400 bg-white border border-blue-400 rounded-xl px-4 py-2 shadow-xs">
+                        Emergency Response Dashboard
+                        <br>
+                        (From DoDMA Warehouses)
+                      </h1>
+
+                     
                     </div>
                   </div>
+
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
@@ -155,7 +168,7 @@
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Disasters</option>
                           <option v-for="disaster in disasters" :key="disaster.name" :value="disaster.name">
-                            {{ disaster.type }} |   {{ disaster.date_of_occurrence }}
+                            {{ disaster.type }} | {{ disaster.date_of_occurrence }}
                           </option>
                         </select>
                       </div>
@@ -221,14 +234,79 @@
                     <div class="flex justify-center items-center">
                       <img class="mr-4 h-20" src="../../../assets/images/images.png" alt="MW-Govt" />
                       <img class="h-20" src="../../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
+
+                    </div>
+                    <div class="text-center mt-1 ml-6">
+                      <h1 class="text-lg font-bold text-white">DoDMA Commodity Tracking System</h1>
                     </div>
                   </div>
 
-                  <div class="col-span-3 flex flex-col justify-center items-center text-white">
-                    <div class="text-center mt-1 ml-6">
-                      <h1 class="text-lg font-bold text-black">Lean Season Response Dashboard</h1>
+                  <div class="col-span-3 flex flex-col justify-center items-center">
+                    <div class="text-center mt-2">
+                      <h1
+                        class="text-lg font-semibold text-[#096eb4] text-blue-400 bg-white border border-blue-400 rounded-xl px-4 py-2 shadow-xs">
+                        Lean Season Response Dashboard
+                      </h1>
                     </div>
                   </div>
+
+
+
+                  <!-- Dashboard Cards Section -->
+                  <div class="col-span-3">
+                    <div class="border rounded-lg shadow-lg p-4 bg-white relative">
+                      <h2 class="text-lg font-semibold text-[#096eb4] mb-4">Overall Stats</h2>
+                      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- Total Commodities Dispatched -->
+                        <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
+                          <div class="flex items-center space-x-2">
+                            <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
+                            <div class="text-[#096eb4] text-sm">Total Tonnage Dispatched</div>
+                          </div>
+                          <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalDispatched }}</div>
+                        </div>
+
+                        <!-- Total Commodities Received -->
+                        <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
+                          <div class="flex items-center space-x-2">
+                            <InboxIcon class="w-5 h-5 text-[#096eb4]" />
+                            <div class="text-[#096eb4] text-sm">Total Tonnage Received</div>
+                          </div>
+                          <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalReceived }}</div>
+                        </div>
+
+                        <!-- Total Loading Plans Created -->
+                        <router-link to="/manager/loadingplans">
+                          <div
+                            class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
+                            <div class="flex items-center space-x-2">
+                              <ClipboardListIcon class="w-5 h-5 text-[#096eb4]" />
+                              <div class="text-[#096eb4] text-sm">Total Loading Plans Created</div>
+                            </div>
+                            <div class="mt-2">
+                              <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
+                              <div class="text-sm text-gray-600 mt-1">
+                                <span class="font-bold text-[#ff6f61]" v-if="loadingplansCountPending > 0">
+                                  {{ loadingplansCountPending }} <span
+                                    class="font-semibold text-sm text-[#0b8ad8]">Pending Approval</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </router-link>
+
+                        <!-- % of Dispatches Received -->
+                        <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
+                          <div class="flex items-center space-x-2">
+                            <ChartBarIcon class="w-5 h-5 text-[#096eb4]" />
+                            <div class="text-[#096eb4] text-sm">% of Dispatches Received</div>
+                          </div>
+                          <div class="text-2xl font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
 
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
@@ -272,70 +350,32 @@
                     </div>
                   </div>
 
-
-                  <!-- Dashboard Cards Section -->
-                  <div class="col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <!-- Total Commodities Dispatched -->
-                    <div class="bg-white shadow-lg rounded-lg p-4">
-                      <div class="flex items-center space-x-2">
-                        <DocumentTextIcon class="w-5 h-5 text-indigo-500" />
-                        <div class="text-indigo-500 text-sm">Total Tonnage Dispatched</div>
-                      </div>
-                      <div class="text-2xl font-bold text-indigo-700">{{ totalDispatched }}</div>
-                    </div>
-
-                    <!-- Total Commodities Received -->
-                    <div class="bg-white shadow-lg rounded-lg p-4">
-                      <div class="flex items-center space-x-2">
-                        <InboxIcon class="w-5 h-5 text-green-500" />
-                        <div class="text-green-500 text-sm">Total Tonnage Received</div>
-                      </div>
-                      <div class="text-2xl font-bold text-green-700">{{ totalReceived }}</div>
-                    </div>
-
-                    <!-- Total Loading Plans Created -->
-                    <div class="bg-white shadow-lg rounded-lg p-4">
-                      <div class="flex items-center space-x-2">
-                        <ClipboardListIcon class="w-5 h-5 text-yellow-500" />
-                        <div class="text-yellow-500 text-sm">Total Loading Plans Created</div>
-                      </div>
-                      <div class="text-2xl font-bold text-yellow-700">{{ loadingplansCount }}</div>
-                    </div>
-
-                    <!-- % of Dispatches Received -->
-                    <div class="bg-white shadow-lg rounded-lg p-4">
-                      <div class="flex items-center space-x-2">
-                        <ChartBarIcon class="w-5 h-5 text-red-500" />
-                        <div class="text-red-500 text-sm">% of Dispatches Received</div>
-                      </div>
-                      <div class="text-2xl font-bold text-red-700">{{ receivedPercentageFormated }}</div>
-                    </div>
-                  </div>
                   <!-- Charts Section -->
                   <div class="mx-3">
-                    <damage-summary-lean v-if="filteredLeanCommodityDispatchData[0]?.commoditySummary?.length > 0"
-                      :commodityDispatchData="filteredLeanCommodityDispatchData" />
+                    <dispatch-summary-leans-two v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
                   <div class="mx-3">
-                    <damage-summary-leans v-if="filteredLeanCommodityDispatchData.length > 0"
-                      :commodityDispatchData="filteredLeanCommodityDispatchData" />
+                    <stock-summary-lean v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :leanStockSummary="filteredLeanCommodityDispatchData2" :screenshotMode="screenshotMode" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
                   <div class="mx-3">
-                    <stock-summary-lean v-if="filteredLeanStockSummary.length > 0"
-                      :leanStockSummary="filteredLeanStockSummary" />
+                    <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
+
                 </div>
               </div>
 
@@ -347,169 +387,166 @@
                   :screenshotMode="screenshotMode" />
                 <!-- Other components for stats, etc... -->
               </div>
-            </section>
 
-            <div class="bg-gray-100 p-5" v-show="currentView === 'dashboard'">
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <!-- Stats Cards -->
-                <div v-for="stat in stats2" :key="stat.label"
-                  class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
-                  <div>
-                    <div class="flex items-center justify-between">
-                      <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                      <component v-if="stat.label == 'Dispatch Status'"
-                        :is="stat.progress >= 50 ? CheckCircleIcon : ExclamationCircleIcon"
-                        :class="`h-6 w-6 text-${stat.progress >= 50 ? 'green-500' : 'red-500'}`" />
-                      <component v-else :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
-                    </div>
+              <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
 
-                    <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
-                    <div v-if="stat.moreInfo" class="text-sm text-gray-500 mt-4">
-                      <router-link v-if="stat.label == 'Total Required Tonnage (Emergency Response)'"
-                        to="/manager/required-leanseason" class="text-blue-500 hover:underline">
-                        View Details
-                      </router-link>
-                      <router-link v-if="stat.label == 'Total Stocks Planned (Lean Season Response)'"
-                        to="/manager/loadingplans" class="text-blue-500 hover:underline">
-                        View Details
-                      </router-link>
-                      <router-link v-if="stat.label == 'Instructions Pending Approval (Emergency Response)'"
-                        to="/manager/instruction-management" class="text-blue-500 hover:underline">
-                        View Details
-                      </router-link>
+                <div class="bg-gray-100 p-5">
+                  <div class="tabs">
 
-                      <div class="relative flex justify-left mt-3"
-                        v-if="stat.label == 'Total Stocks Planned (Lean Season Response)'">
-                        <!--   <span class="cursor-pointer text-blue-400 text-xs" @mouseover="showTooltip = true"
-                          @mouseleave="showTooltip = false">
-                          <InformationCircleIcon class="h-6 w-6 text-blue-500 inline-block align-middle mr-1" />
-                          <span class="align-middle">More Info</span>
-                        </span> -->
+                    <button @click="currentTab = 'all'"
+                      :class="{ 'tab-button text-white': currentTab === 'all', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'all' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+                      All Reports
 
-                        <div v-if="showTooltip"
-                          class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10">
+                    </button>
+
+                    
+                    <button @click="currentTab = 'DoDMA'"
+                      :class="{ 'tab-button text-white': currentTab === 'DoDMA', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'DoDMA' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+
+                      DoDMA Reports
+
+                    </button>
+
+                    <button @click="currentTab = 'WFP'"
+                      :class="{ 'tab-button text-white': currentTab === 'WFP', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'WFP' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+
+                      WFP Reports
+
+                    </button>
 
 
-                          <div v-for="(summary, index) in loadingPlanSummary" :key="index" class="mb-4 last:mb-0">
-                            <h5 class="font-bold text-lg text-capitalize flex text-gray-600 items-center">
-                              {{ summary.commodityName }}
-                            </h5>
-                            <div class="font-medium text-sm mt-2">
-                              <div>
-                                <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
-                                <b>Total Stock Planned:</b> <br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-                                  summary.totalStockPlanned.toLocaleString() }} MT
-                              </div>
-                              <div>
-                                <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
-                                <b> Total Balance: </b><br> &nbsp; &nbsp; &nbsp; &nbsp;{{
-                                  summary.totalBalance.toLocaleString() }} MT
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div v-if="stat.percentageText" class="mt-4">
-                    <div class="flex items-center justify-between">
-                      <span :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'">{{ stat.percentageText
-                        }}</span>
-                      <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
-                        :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'" />
-                    </div>
-
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                      <div :class="stat.progress >= 50 ? 'bg-green-500' : 'bg-red-500'" class="h-2 rounded-full"
-                        :style="{ width: stat.progress + '%' }"></div>
-                    </div>
                   </div>
 
+                  <div v-show="currentTab === 'all'">
+                    <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
+                      :screenshotMode="screenshotMode" />
+                  </div>
+
+                  <div v-show="currentTab === 'WFP'">
+                    <commodity-distribution-table-lean-WFP :data="filteredLeanCommodityDispatchDataWFP"
+                      :screenshotMode="screenshotMode" />
+                  </div>
+
+
+                  <div v-show="currentTab === 'DoDMA'">
+                    <commodity-distribution-table-lean-DoDMA :data="filteredLeanCommodityDispatchDataDodma"
+                      :screenshotMode="screenshotMode" />
+                  </div>
+
+                  <!-- Other components for stats, etc... -->
                 </div>
-                <!-- Damaged Stock Stats -->
-                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-3">
-                  <div class="text-xl font-bold text-gray-600 mb-1">Stock Loss Statistics</div>
+              </div>
+            </section>
+            <div class="bg-gray-100 p-5" v-show="currentView === 'dashboard'">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
 
-                  <div class="text-sm font-bold text-gray-500 mb-1">Lean Season Response</div>
-                  <div v-if="damagedStockStats.length === 0" class="text-gray-500 text-sm mb-3 font-medium">No Data
-                  </div>
-                  <div v-else>
-                    <div v-for="(stat, index) in damagedStockStats" :key="index"
-                      class="flex items-center justify-between py-2 border-b last:border-b-0">
-                      <div class="flex items-center">
-                        <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
-                        <div>
-                          <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                          <div class="text-sm text-gray-500">
-                            <router-link to="/manager/Lean-season-losses" class="text-blue-500 hover:underline">
-                              View Details
-                            </router-link>
-                          </div>
+                <!-- Loader when data is loading -->
+                <div v-if="isLoading"
+                  class="flex justify-center items-center col-span-2 p-5 bg-white rounded-lg shadow-lg">
+                  <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  <span class="ml-2 text-gray-500">Loading data, please wait...</span>
+                  <span class="ml-2 text-xs italic text-red-500">Make sure your internet is stable.</span>
+                </div>
+
+                <!-- Stats Cards - only show when data is loaded -->
+                <div v-else class="col-span-2 mb-2">
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div v-for="stat in stats2" :key="stat.label"
+                      class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex flex-col justify-between transition-transform duration-300 transform hover:scale-105">
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-3xl font-semibold text-gray-800">{{ stat.value }}</span>
+                          <component v-if="stat.label === 'Total Stocks Planned (Lean Season Response)'"
+                            class="h-8 w-8 text-blue-500">
+                            <TruckIcon class="h-10 w-10 inline-block mr-1" style="color: #248cd6;" />
+                          </component>
+                          <component v-else :is="stat.icon" :class="`h-7 w-7 text-${stat.iconColor}`" />
+                        </div>
+                        <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
+                      </div>
+                      <div v-if="stat.percentageText" class="mt-4">
+                        <div class="flex items-center justify-between">
+                          <span :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'">{{ stat.percentageText
+                            }}</span>
+                          <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
+                            :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'" />
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                          <div :class="stat.progress >= 50 ? 'bg-green-500' : 'bg-red-500'" class="h-2 rounded-full"
+                            :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
-                      <div class="text-lg font-bold text-red-600" v-if="stat.percentage > 100">
+                    </div>
+                  </div>
+                </div>
 
-                        100%
-                        <span style="color: red;">&#9650;</span>
-                        <span
-                          class="absolute left-0 ml-8 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 z-10">
-                          Exceeded allocation
-                        </span>
+                <!-- Damaged Stock Stats - only show when data is loaded -->
+                <div v-if="!isLoading"
+                  class="bg-white border border-gray-200 rounded-lg shadow-lg p-5 col-span-1 md:col-span-2">
+                  <div class="flex items-center mb-4">
+                    <ReceiptRefundIcon class="h-10 w-10 mr-2" style="color: #248cd6;" />
+                    <h3 class="text-xl font-bold text-gray-600">Stock Loss Statistics</h3>
+                  </div>
 
+                  <div class="mb-4">
+                    <div class="text-sm font-bold text-gray-500">Lean Season Response</div>
+                    <div v-if="damagedStockStats.length === 0" class="text-gray-500 text-sm mb-3 font-medium">No Data
+                    </div>
+                    <div v-else>
+                      <div v-for="(stat, index) in damagedStockStats" :key="index"
+                        class="flex items-center justify-between py-2 border-b last:border-b-0">
+                        <div class="flex items-center">
+                          <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
+                          <div>
+                            <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
+                            <router-link to="/manager/Lean-season-losses" class="text-blue-500 hover:underline">View
+                              Details</router-link>
+                          </div>
+                        </div>
+                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                          + '%' }}
+                          <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
+                        </div>
                       </div>
-
-                      <div class="text-lg font-bold text-red-600" v-else>
-
-
-                        {{ stat.percentage }}%</div>
-
                     </div>
                   </div>
 
-                  <div class="text-sm font-bold text-gray-500 mb-4">Emergency Response</div>
-                  <div v-if="damagedStockStatsEmergency.length === 0" class="text-gray-500 text-sm mb-3 font-medium">No
-                    Data</div>
-                  <div v-else>
-                    <div v-for="(stat, index) in damagedStockStatsEmergency" :key="index"
-                      class="flex items-center justify-between py-2 border-b last:border-b-0">
-                      <div class="flex items-center">
-                        <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
-                        <div>
-                          <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                          <div class="text-sm text-gray-500">
-                            <router-link to="/manager/Emergency-season-losses"
-                              class="text-blue-500 hover:underline">
-                              View Details
-                            </router-link>
+                  <div>
+                    <div class="text-sm font-bold text-gray-500">Emergency Response</div>
+                    <div v-if="damagedStockStatsEmergency.length === 0" class="text-gray-500 text-sm mb-3 font-medium">
+                      No Data</div>
+                    <div v-else>
+                      <div v-for="(stat, index) in damagedStockStatsEmergency" :key="index"
+                        class="flex items-center justify-between py-2 border-b last:border-b-0">
+                        <div class="flex items-center">
+                          <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
+                          <div>
+                            <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
+                            <router-link to="/manager/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                              Details</router-link>
                           </div>
                         </div>
+                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                          + '%' }}
+                          <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
+                        </div>
                       </div>
-
-
-                      <div class="text-lg font-bold text-red-600" v-if="stat.percentage > 100">
-
-                        100%
-                        <span style="color: red;">&#9650;</span>
-                        <span
-                          class="absolute left-0 ml-8 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2 z-10">
-                          Exceeded allocation
-                        </span>
-
-                      </div>
-
-                      <div class="text-lg font-bold text-red-600" v-else>
-
-
-                        {{ stat.percentage }}%</div>
-
-
-
                     </div>
                   </div>
                 </div>
 
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>
@@ -537,6 +574,9 @@ import distributionByDistrict from '../../../components/pages/charts/distributio
 import distributionPercentage from '../../../components/pages/charts/distributionPercentage.vue'; // Adjust path as needed
 import damageSummaryLean from '../../../components/pages/charts/damageSummaryLean.vue'; // Adjust path as needed
 import damageSummaryLeans from '../../../components/pages/charts/damageSummaryLeans.vue'; // Adjust path as needed
+import dispatchSummaryLeans from '../../../components/pages/charts/dispatchSummaryLean.vue'; // Adjust path as needed
+import dispatchSummaryLeansTwo from '../../../components/pages/charts/dispatchSummaryLean2.vue'; // Adjust path as needed
+
 
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 
@@ -562,6 +602,14 @@ import { useDisasterstore } from "../../../stores/disaster.store";
 import { usecommoditiestore } from "../../../stores/commodity.store";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";
 import CommodityDistributionTable from './CommodityDistributionTable.vue';
+import CommodityDistributionTableLean from './CommodityDistributionTableLean.vue';
+import CommodityDistributionTableLeanWFP from './CommodityDistributionTableLeanWFP.vue';
+
+import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLeanDodma.vue';
+const commodityDispatchDataWFP = ref([])
+const commodityDispatchDataDoDMA = ref([])
+
+const currentTab = ref('all');
 
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
@@ -612,6 +660,8 @@ const screenshotMode = ref(false);
 // Example data structure for maize distribution
 const commodityDistributionData = ref([]);
 const commodityDispatchData = ref([]);
+
+const commodityDispatchData2 = ref([]);
 const commodityEmergencyDispatchData = ref([]);
 
 const currentView = ref('dashboard'); // The initial view can be 'dashboard' or 'charts'
@@ -746,15 +796,25 @@ const dispatchcount = ref(0)
 const loadingplansCount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
+
+  isLoading.value = true;
   try {
     const data = await requisitionStore.getCommodityDistributionSummary();
     const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
+    const dispatchdata2 = await dispatchesStore.getExtendedDispatchSummary();
+    const dispatchdataWFP = await dispatchesStore.getExtendedDispatchSummaryWFP();
+    
+    const dispatchdataDoDMA = await dispatchesStore.getExtendedDispatchSummaryDodma();
     const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
     commodityDispatchData.value.length = 0
     commodityEmergencyDispatchData.value.length = 0
     leanStockSummary.value = [...leanstocks]
     commodityDispatchData.value.push({ ...dispatchdata })
+    commodityDispatchDataWFP.value.push({ ...dispatchdataWFP })
+    
+    commodityDispatchDataDoDMA.value.push({ ...dispatchdataDoDMA })
+    commodityDispatchData2.value.push({ ...dispatchdata2 })
     commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
     commodityDistributionData.value = [...data];
   } catch (error) {
@@ -936,14 +996,17 @@ const getDispatchesCount = async () => {
   });
 }
 
+const loadingplansCountPending = ref(0)
+
 const getLoadingPlans = async () => {
   loadingPlanStore
-    .get()
+    .getloadingplansByATC()
     .then(result => {
-      const sortedDispatches = [...result].sort((a, b) => new Date(b.createdon) - new Date(a.createdon));
       loadingplans.length = 0;
-      loadingplans.push(...sortedDispatches);
+      loadingplans.push(...result);
       loadingplansCount.value = loadingplans.length
+
+      loadingplansCountPending.value = loadingplans.filter(item => item.isApproved == false).length
     })
 }
 
@@ -968,7 +1031,6 @@ const getdispatchSummary = async () => {
   dispatchesStore
     .getdispatchSummary()
     .then(result => {
-      console.log(result, "d")
       totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
       totalReceived.value = result.totalReceived.toLocaleString() + " MT"
       receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
@@ -1018,6 +1080,19 @@ const totalRequiredTonnage = computed(() => {
 
 const stats2 = ref([
   {
+    label: 'Total Stocks Planned (Lean Season Response)',
+    value: totalStockPlanned,
+    icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormated,
+    textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    moreInfo: true,
+    progress: dispatchPercentage,
+    isProgressPositive: dispatchPercentage >= 50,
+    progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+  },
+  {
     label: 'Total Required Tonnage (Emergency Response)',
     value: totalRequiredTonnage,
     icon: CheckCircleIcon,
@@ -1039,19 +1114,7 @@ const stats2 = ref([
     showProgress: false,
     moreInfo: true,
   },
-  {
-    label: 'Total Stocks Planned (Lean Season Response)',
-    value: totalStockPlanned,
-    icon: dispatchPercentage < 50 ? CheckCircleIcon : ExclamationCircleIcon,
-    iconColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-    percentageText: dispatchPercentageFormated,
-    textColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-    showProgress: true,
-    moreInfo: true,
-    progress: dispatchPercentage,
-    isProgressPositive: dispatchPercentage >= 50,
-    progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
-  },
+
 ]);
 
 const actions = [
@@ -1160,6 +1223,78 @@ const filteredLeanCommodityDispatchData = computed(() => {
   });
 });
 
+
+
+const flattenedData = computed(() => {
+  if (!commodityDispatchData2.value || commodityDispatchData2.value.length === 0) {
+    return []; // Return an empty array if data is not available
+  }
+
+  // Assume props.data is an array with a single object containing numerically indexed keys
+  const [dataObj] = commodityDispatchData2.value; // Extract the first object (your data)
+  return Object.values(dataObj); // Convert the object into an array of values
+});
+
+
+const flattenedDataWFP = computed(() => {
+  if (!commodityDispatchDataWFP.value || commodityDispatchDataWFP.value.length === 0) {
+    return []; // Return an empty array if data is not available
+  }
+
+  // Assume props.data is an array with a single object containing numerically indexed keys
+  const [dataObj] = commodityDispatchDataWFP.value; // Extract the first object (your data)
+  return Object.values(dataObj); // Convert the object into an array of values
+});
+
+
+const flattenedDataDodma = computed(() => {
+  if (!commodityDispatchDataDoDMA.value || commodityDispatchDataDoDMA.value.length === 0) {
+    return []; // Return an empty array if data is not available
+  }
+
+  // Assume props.data is an array with a single object containing numerically indexed keys
+  const [dataObj] = commodityDispatchDataDoDMA.value; // Extract the first object (your data)
+  return Object.values(dataObj); // Convert the object into an array of values
+});
+
+const filteredLeanCommodityDispatchData2 = computed(() => {
+  return flattenedData.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
+
+const filteredLeanCommodityDispatchDataWFP = computed(() => {
+  return flattenedDataWFP.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
+
+const filteredLeanCommodityDispatchDataDodma = computed(() => {
+  return flattenedDataDodma.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
 const filteredLeanStockSummary = computed(() => {
   return leanStockSummary.value.filter(item => {
     const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
@@ -1172,10 +1307,28 @@ const filteredLeanStockSummary = computed(() => {
 </script>
 
 <style scoped>
+.border {
+  border-width: 1px;
+  border-color: rgba(11, 138, 216, 0.2);
+  transition: border-color 0.3s ease;
+}
+
 .tab-button {
   background-color: #248cd6;
   color: white;
   border: none;
+}
+
+
+.tabs {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+
+.tab-button.active {
+  background: gray;
+  color: white;
 }
 
 .active-tab {

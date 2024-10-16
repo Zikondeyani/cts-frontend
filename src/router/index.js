@@ -54,6 +54,13 @@ const routes = [
         path: "/portal/forgot-password",
         component: () => import("../pages/portal/forgot-password.page.vue"),
       },
+
+      
+      {
+        name: "portal-reset-password",
+        path: "/portal/reset-password/:email",
+        component: () => import("../pages/portal/reset-password.page.vue"),
+      },
     ],
   },
 
@@ -146,9 +153,25 @@ const routes = [
       {
         path: "/admin/receipts",
         name: "admin-receipts",
-        component: () => import("../pages/admin/receipts/receipts.page.vue"),
+        component: () => import("../pages/admin/receipts/index.page.vue"),
       },
 
+      {
+        path: "/admin/receipts/emergency",
+        name: "admin-receipts-emergency",
+        component: () => import("../pages/admin/receipts/emergency.receipts.page.vue"),
+      },
+
+      {
+        path: "/admin/receipts/leanseason",
+        name: "admin-receipts-leanseason",
+        component: () => import("../pages/admin/receipts/leanseason.receipts.page.vue"),
+      },
+      {
+        path: "/admin/change-password",
+        name: "admin-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
+      },
       {
         path: "/admin/receipt-management/manage/:id",
         name: "admin-manage-receipt-management",
@@ -281,9 +304,16 @@ const routes = [
         name: "admin-about-system",
         component: () => import("../pages/about/index.page.vue"),
       },
-
-
-
+      {
+        path: "/admin/reminders",
+        name: "admin-reminders",
+        component: () => import("../pages/admin/reminders/reminders.page.vue"),
+      },
+      {
+        path: "/admin/performance-stats",
+        name: "admin-performance-stats",
+        component: () => import("../pages/admin/reports/performance-stats.vue"),
+      },
 
     ],
     beforeEnter: (to, from, next) => {
@@ -331,6 +361,7 @@ const routes = [
         name: "manager-lean-season-damage-management",
         component: () => import("../pages/manager/damages/damages.page.vue"),
       },
+      
 
       {
         path: "/manager/Emergency-season-losses",
@@ -360,6 +391,11 @@ const routes = [
         component: () => import("../pages/manager/instruction/manage.page.vue"),
       },
 
+      {
+        path: "/manager/loadingplans",
+        name: "manager-loadingplans",
+        component: () => import("../pages/manager/loadingplans/index.page.vue"),
+      },
 
       {
         path: "/manager/dispatches",
@@ -435,7 +471,11 @@ const routes = [
         component: () => import("../pages/manager/projects/index.page.vue"),
       },
 
-
+      {
+        path: "/manager/change-password",
+        name: "manager-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
+      },
 
       {
         path: "/manager/report-management",
@@ -482,6 +522,11 @@ const routes = [
         path: "/dispatcher/dashboard",
         name: "dispatcher-dashboard",
         component: () => import("../pages/dispatcher/dashboard/index.page.vue"),
+      },
+      {
+        path: "/dispatcher/change-password",
+        name: "dispatcher-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
       },
       //Users
       {
@@ -566,6 +611,11 @@ const routes = [
         component: () => import("../pages/dispatcher/projects/index.page.vue"),
       },
 
+      {
+        path: "/dispatcher/receipts/",
+        name: "dispatcher-receipts",
+        component: () => import("../pages/dispatcher/receipts/index.page.vue"),
+      },
 
       {
         path: "/dispatcher/receipts/emergency",
@@ -646,6 +696,11 @@ const routes = [
         path: "/warehouse/dashboard",
         name: "warehouse-dashboard",
         component: () => import("../pages/warehouse/dashboard/index.page.vue"),
+      },
+      {
+        path: "/warehouse/change-password",
+        name: "warehouse-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
       },
       {
         path: "/warehouse/donations",
@@ -815,6 +870,13 @@ const routes = [
         name: "dodma-dashboard",
         component: () => import("../pages/dodma/dashboard/index.page.vue"),
       },
+
+      {
+        path: "/dodma/change-password",
+        name: "dodma-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
+      },
+
       //Users
       {
         path: "/dodma/users",
@@ -999,6 +1061,13 @@ const routes = [
         name: "field-dashboard",
         component: () => import("../pages/field/dashboard/index.page.vue"),
       },
+
+      {
+        path: "/field/change-password",
+        name: "field-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
+      },
+
       //Users
       {
         path: "/field/users",
@@ -1327,7 +1396,11 @@ const routes = [
 
 
 
-
+      {
+        path: "/district/change-password",
+        name: "district-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
+      },
 
       {
         path: "/district/system",
@@ -1405,6 +1478,12 @@ const routes = [
         path: "/commissioner/dashboard",
         name: "commissioner-dashboard",
         component: () => import("../pages/commissioner/dashboard/index.page.vue"),
+      },
+
+      {
+        path: "/commissioner/change-password",
+        name: "commissioner-change-password",
+        component: () => import("../components/pages/users/change.password.vue"),
       },
       //Users
       {

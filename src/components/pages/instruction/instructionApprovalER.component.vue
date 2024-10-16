@@ -54,26 +54,24 @@
                   <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
                   <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
                   <h3 class="font-bold text-md mb-2">Loading Plan</h3>
-                
+
                 </div>
                 <!-- Instruction Details -->
                 <div class="flex gap-8">
                   <!-- Left: Instructions Panel -->
                   <div class="flex-1 bg-white rounded-table">
                     <h3 class="text-xl font-semibold mb-4">Loading Plan Details</h3>
-                    <p class="mb-4"><strong>Loading Plan Number:</strong> {{ emergencyResponseInstructions.LoadingPlanNumber }}</p>
-            
-                    <p class="mb-4"><strong>Loading Plan Number:</strong> {{ emergencyResponseInstructions.LoadingPlanNumber }}</p>
-                    <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.Quantity }} {{ emergencyResponseInstructions?.commodity?.commodityTypeId == 1 ? " MT" : " Units" }}</p>
-                    <p class="mb-4"><strong>Start Date:</strong> {{ formatDate(emergencyResponseInstructions.StartDate) }}</p>
-                    <p class="mb-4"><strong>End Date:</strong> {{ formatDate(emergencyResponseInstructions.EndDate) }}</p>
-                    <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouse.Name }}</p>
-                    <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district.Name }}</p>
-                    <p class="mb-4"><strong>Transporter:</strong> {{ emergencyResponseInstructions.transporter.Name }}</p>
-                    <p class="mb-4"><strong>Instruction By:</strong> {{ emergencyResponseInstructions?.user?.username.replace(/\./g, ' ')  }}</p>
-                 
+                    <p class="mb-4"><strong>ATC Number:</strong> {{ emergencyResponseInstructions.ATCNUMBER }}</p>
+
+                    <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.totalQuantity }} MT </p>
+                    <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouseName }}
+                    </p>
+                    <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district }}</p>
+                    <p class="mb-4"><strong>Planned By:</strong> {{ emergencyResponseInstructions?.plannedBy }}</p>
+
                     <!--    <p class="mb-4" v-if="emergencyResponseInstructions.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ emergencyResponseInstructions?.RejectionComment }}</p>
-                 -->  </div>
+                 -->
+                  </div>
                 </div>
 
                 <!-- Comments Section (only show when rejecting) -->
@@ -91,11 +89,11 @@
                     <CheckCircleIcon class="h-5 w-5 mr-1" />
                     Approve Loading Plan
                   </button>
-               <button @click.prevent="startRejection" v-if="!isRejecting"
+                  <button @click.prevent="startRejection" v-if="!isRejecting"
                     class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <XIcon class="h-5 w-5 mr-1" />
                     Reject Loading Plan
-                  </button> 
+                  </button>
                   <button @click="submitRejection" v-if="isRejecting"
                     class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <XIcon class="h-5 w-5 mr-1" />
@@ -207,15 +205,29 @@ const getRequisition = async () => {
   });
 };
 
+
+
 const onSubmit = useSubmitForm((values, actions) => {
+  let approvedBy = user.value.username.replace('.', ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  // Add (d) if the user is delegated
+  if (user.value.isDelegated) {
+    approvedBy += ' (d)';
+  }
+
   let model = {
-    id: props.rowId,
     IsApproved: true,
-    ApprovedBy: user.value.username.replace('.', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    ApprovedBy: approvedBy,
+    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER
   };
+
   emit("create", model);
   open.value = false;
 });
+
 
 const startRejection = () => {
   isRejecting.value = true;
@@ -223,9 +235,9 @@ const startRejection = () => {
 
 const submitRejection = async () => {
   let model = {
-    id: props.rowId, 
     IsRejected: true,
-    RejectionComment: RejectionComment.value
+    RejectionComment: RejectionComment.value,
+    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER
   };
   emit("reject", model);
   isRejecting.value = false;

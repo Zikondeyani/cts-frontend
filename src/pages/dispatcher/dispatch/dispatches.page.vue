@@ -21,29 +21,35 @@
       </div>
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+
         <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
           style="font-weight: bold; color: blue;" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
           <template #table-row="props">
-            <span v-if="props.column.label == 'Options'">
-
-            <!--   <button @click="openEditDialog(props.row)" v-if="props.row.Dispatcher?.email == user.email"
-                class="text-green-500 hover:text-green-700 transition duration-300">
+            <div v-if="props.column.label === 'Options'" class="flex space-x-2">
+              <!-- Edit Button with Pencil Icon -->
+              <button @click="openEditDialog(props.row)" v-if="!props.row.IsArchived && props.row.Dispatcher?.email === user.email"
+                class="flex items-center text-green-500 hover:text-green-700 transition duration-300 ease-in-out">
                 <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                Edit
-              </button> -->
-
-              <!-- Delete Button with Trash Icon -->
-              <button @click="deleteItem(props.row.id)" v-if="props.row.IsArchived == false &&
-      props.row.Dispatcher?.email == user.email" class="text-red-500 hover:text-red-700 transition duration-300">
-                <TrashIcon class="h-5 w-5 inline-block mr-1" />
-                Delete
+                <span>Edit</span>
               </button>
 
-            </span>
+              <!-- Delete Button with Trash Icon -->
+              <button @click="deleteItem(props.row.id)"
+                v-if="!props.row.IsArchived && props.row.Dispatcher?.email === user.email"
+                class="flex items-center text-red-500 hover:text-red-700 transition duration-300 ease-in-out">
+                <TrashIcon class="h-5 w-5 inline-block mr-1" />
+
+                
+                <span>Delete</span>
+              </button>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" v-if="props.row.IsArchived"> Completed</span>
+              
+            </div>
           </template>
+
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
@@ -69,6 +75,8 @@ import {
   ChevronLeftIcon,
   DocumentTextIcon,
   ChevronRightIcon,
+  TrashIcon,
+  PencilIcon
 } from "@heroicons/vue/solid";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
@@ -96,7 +104,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/dispatcher/dashboard", current: false },
   { name: "Dispatches", href: "#", current: true },
 ];
 
@@ -116,7 +124,6 @@ const user = ref(sessionStore.getUser);
 
 
 const columns = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
@@ -124,80 +131,73 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize"
   },
-
-
   {
     label: "Quantity",
     hidden: false,
-    field: row => `
-    <span >${row.NoBags !== null && row.NoBags !== undefined ? row.NoBags + " Bags" : "Not specified"} </span><br>
-    <span >${row.Quantity !== null ? row.Quantity + " MT" : "Pending"}</span>`,
+    field: (row) => `
+      <span class="badge badge-info">${row.NoBags ? row.NoBags + " Bags" : "Not specified"}</span><br>
+      <span class="badge badge-primary">${row.Quantity !== null ? row.Quantity + " MT" : "Pending"}</span>
+    `,
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
+    html: true,
     tdClass: "capitalize"
-  }
-  ,
-
+  },
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >D.N: ${row.DeliveryNote}</span><br>` +
-      `<span>L.P: ${row.loadingPlanId !== null ? row.loadingPlanId : "N/A"}</span><br>`
-      +
-      `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>` +
-      `<span>On: ${moment(row.Date).format("DD/MM/YYYY") !== null ? moment(row.Date).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: (row) => `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">D.N: ${row.DeliveryNote || "N/A"}</span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">ATC #: <strong>${row.loadingPlan?.ATCNumber || "N/A"}</strong></span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">To: ${row.FinalDestinationPoint || "N/A"}</span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">On: ${moment(row.Date).format("DD/MM/YYYY") || "N/A"}</span>
+    `,
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
+    html: true,
     tdClass: "capitalize"
   },
-
   {
     label: "Dispatch Details",
-    field: row => `
-    <span class="from-color">Driver: ${row.DriverName || "Driver Not Specified"}</span><br>
-    <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
-    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
+    field: (row) => `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Driver: ${row.DriverName || "Not Specified"}</span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">Truck: ${row.TruckNumber || "Not Available"}</span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>
+    `,
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
+    html: true,
     tdClass: "capitalize"
   },
-
   {
     label: "Status",
-    field: row => {
+    field: (row) => {
       const today = moment();
       const endDate = moment(row.loadingPlan?.EndDate);
 
       if (row.IsArchived) {
-        return "<span class='text-green-600'>Expensed</span>";
+        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800'>Expensed</span>";
       } else if (!row.IsArchived && endDate.isBefore(today)) {
         const diffDays = today.diff(endDate, 'days');
         if (diffDays <= 3) {
-          return "<span class='text-yellow-600'>Delayed</span>";
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800'>Delayed</span>";
         } else {
-          return "<span class='text-red-600'>Not Delivered</span>";
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Long Overdue</span>";
         }
       } else {
-        return "<span class='text-blue-400'>Pending</span>";
+        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Pending</span>";
       }
     },
     sortable: true,
     firstSortType: "asc",
     html: true,
     tdClass: "capitalize"
-  }
-  ,
-
+  },
   {
     label: "Options",
-    field: row => row,
-    sortable: false
+    field: (row) => row,
+    sortable: false,
   }
-
-
 ]);
 
 

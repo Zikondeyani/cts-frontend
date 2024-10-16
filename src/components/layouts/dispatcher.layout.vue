@@ -23,7 +23,7 @@
           <div class="flex items-center ml-2 hidden lg:flex">
             <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
             <span class="text-white font-medium text-sm">
-              National
+              {{user.district ? user.district : "National"}}
             </span>
           </div>
         </div>
@@ -52,7 +52,7 @@
 
 
 
-          <div class="relative">
+          <div class="relative" v-if="user.district ==null || user.district == 'National'">
             <button @click="toggleDropdown" @mouseenter="toggleDropdown"
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
@@ -118,6 +118,13 @@
                   </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
+                <router-link to="/dispatcher/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
                   <button @click="onSignout" :class="menuItemClasses(active, true)">
                     Sign out
                   </button>
@@ -178,6 +185,13 @@
                   <button @click="onAbout()" :class="menuItemClasses(active, true)">
                     About System
                   </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                <router-link to="/dispatcher/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button @click="onSignout" :class="menuItemClasses(active, true)">
@@ -381,12 +395,29 @@ const updateNotifications = () => {
 function navigation() {
   let navList = [
     { name: "Home", href: "/dispatcher/dashboard", icon: HomeIcon, current: false },
-    { name: "Instructions", href: "/dispatcher/instruction-management", icon: CollectionIcon, current: false },
-    { name: "Project Management", href: "/dispatcher/project-management", icon: IdentificationIcon, current: false },
+    { name: "Loading Plans (LSR)", href: "/dispatcher/loadingplans", icon: IdentificationIcon, current: false },
     { name: "Reports", href: "/dispatcher/report-management", icon: DocumentTextIcon, current: false },
-    { name: "Dispatches", href: "/dispatcher/dispatch-management", icon: DocumentDuplicateIcon, current: false },
-
+    { name: "Dispatches", href: "/dispatcher/dispatches", icon: DocumentDuplicateIcon, current: false },
+    { name: "Receipts", href: "/dispatcher/receipts", icon: DocumentTextIcon, current: false },
   ];
+
+  // Check if user.district is National or null
+  const isNationalOrNull = user.value.district === "National" || user.value.district === null;
+
+  // Remove "Reports", "Dispatches", and "Receipts" if user.district is not National or null
+  if (!isNationalOrNull) {
+    navList = navList.filter(item => 
+      !["Reports", "Dispatches", "Receipts"].includes(item.name)
+    );
+  } else {
+    // Insert "Instructions" after "Home" if user.district is National or null
+    navList.splice(1, 0, { 
+      name: "Instructions",
+      href: "/dispatcher/instruction-management",
+      icon: CollectionIcon,
+      current: false
+    });
+  }
 
   const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
   navList.forEach(navItem => {
@@ -399,6 +430,8 @@ function navigation() {
 
   return navList;
 }
+
+
 
 
 const notificationsCount = computed(() => notifications.value.length);
@@ -490,17 +523,31 @@ const getLoadingPlans = async () => {
   try {
     const result = await loadingStore.get();
     loadingplans.length = 0;
-    loadingplans.push(
-      ...result.filter(item => (
-          !item.IsArchived) && item.IsApproved && (item.Balance > 0)
-      )
-    );
+
+    // Check if the user's district is "National" or null
+    if (user.value.district === "National" || user.value.district === null) {
+      // Fetch all loading plans where they are not archived, approved, and have a balance greater than 0
+      loadingplans.push(
+        ...result.filter(item => (
+          !item.IsArchived && item.IsApproved && item.Balance > 0
+        ))
+      );
+    } else {
+      // Filter loading plans based on the user's district
+      loadingplans.push(
+        ...result.filter(item => (
+          !item.IsArchived && item.IsApproved && item.Balance > 0 && item.district.Name === user.value.district && item.IsDivertedLoad == true
+        ))
+      );
+    }
+
     newLoadingPlanCount.value = loadingplans.length;
-    updateNotifications()
+    updateNotifications();
   } catch (error) {
-    console.error("Error fetching loadingplans:", error);
+    console.error("Error fetching loading plans:", error);
   }
 };
+
 
 
 const startSignOutTimer = () => {

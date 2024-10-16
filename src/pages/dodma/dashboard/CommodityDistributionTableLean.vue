@@ -4,7 +4,7 @@
         <div class="flex justify-between items-center p-4 space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
             <!-- Left-aligned content: Commodity Distribution Update -->
             <div class="mb-4 mt-4 text-left">
-                <span class="font-bold text-xl">Commodity Distribution Update</span>
+                <span class="font-bold text-sm"> Distribution Update</span>
             </div>
             <!-- Right-aligned filters -->
             <div class="flex space-x-4">
@@ -19,6 +19,17 @@
                         </option>
                     </select>
                 </div>
+
+             <!--    <div>
+                    <span class="mr-2 font-bold">Handled By:</span>
+                    <select v-model="selectedHandleBy"
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        <option value="">All Organisations</option>
+                        <option v-for="item in ['WFP', 'DoDMA']" :key="item" :value="item">
+                            {{ item }}
+                        </option>
+                    </select>
+                </div> -->
 
                 <!-- District Selector -->
                 <div>
@@ -49,7 +60,7 @@
                     
                     <button @click="resetFilters"
                         class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
-                        Reset Filters
+                        Reset
                       </button>
 
                       <button @click="exportToExcel"
@@ -165,6 +176,8 @@ const selectedDistrict = ref('');
 const selectedCommodity = ref('');
 const selectedActivity = ref('');
 
+const selectedHandleBy = ref('');
+
 const totalPages = computed(() => Math.ceil(props.data.length / pageSize.value));
 
 const flattenedData = computed(() => {
@@ -188,7 +201,8 @@ const filteredData = computed(() => {
     const filtered = data.filter(item => {
         return (!selectedDistrict.value || item.district === selectedDistrict.value) &&
             (!selectedCommodity.value || item.commodity === selectedCommodity.value) &&
-            (!selectedActivity.value || item.activity === selectedActivity.value);
+            (!selectedActivity.value || item.activity === selectedActivity.value)&&
+            (!selectedHandleBy.value || item.HandledBy === selectedHandleBy.value);
     });
 
     // Apply pagination after filtering
@@ -204,7 +218,7 @@ function exportToExcel() {
         'Dispatched (Mt)': row.totalDispatched,
         'Received (Mt)': row.totalReceived,
         '% Dispatch': row.dispatchCompletion,
-        '% Receipt': row.receiptCompletion,
+        '% Receipt': row.receiptCompletion
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);

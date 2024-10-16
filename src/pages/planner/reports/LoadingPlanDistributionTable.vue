@@ -12,7 +12,7 @@
             <!-- Export Button -->
             <button @click="exportToExcel"
                 class="ml-4 px-4 py-2 bg-green-500 text-white font-medium rounded-md shadow-md hover:bg-green-600">
-                Export To Excel
+                Export
             </button>
         </div>
 

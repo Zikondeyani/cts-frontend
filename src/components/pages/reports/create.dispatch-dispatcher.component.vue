@@ -1,7 +1,8 @@
 <template>
   <TransitionRoot as="template" :show="isOpen">
-    <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
-      <div class="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto flex mt-6 items-center justify-center"
+      @close="closeDialog" static>
+      <div class="flex items-center justify-center min-h-screen px-4 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
           leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
@@ -13,7 +14,7 @@
           leave-from="opacity-100 translate-y-0 sm:scale-100"
           leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
           <div
-            class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-start sm:my-8 sm:max-w-4xl sm:w-full">
+            class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-start sm:max-w-4xl sm:w-full max-h-screen overflow-y-auto">
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="container mx-auto px-4 py-6">
                 <!-- Flex container for the two main sections -->
@@ -21,115 +22,128 @@
 
                   <!-- Left Side: Form for Dispatch Creation -->
                   <div class="flex-grow p-4 bg-white">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">Create a Dispatch</h2>
+                    <h2 class="text-lg font-semibold mb-2 text-blue-400">Create a Dispatch</h2>
 
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Delivery
-                        Note</label>
+                    <h2 class="text-xs font-semibold mb-5 text-blue-400"> System Delivery Note:
+                      {{ dispatch.DeliveryNote }}</h2>
 
-                      <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote"
-                        autocomplete="DeliveryNote" readonly
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
+                      <div>
+                        <label for="FinalDestinationPoint" class="block text-sm font-bold text-gray-700 mb-1">Final
+                          Destination Point</label>
+                        <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint"
+                          id="FinalDestinationPoint"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
+
+                      <div>
+                        <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-1">Number of Bags</label>
+                        <input type="number" name="NoBags" @keypress="validateNumberInput" required
+                          v-model="dispatch.NoBags" id="NoBags"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
+
+                      <div>
+                        <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-1">Tonnage (MT)</label>
+                        <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" readonly
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
+                      </div>
+
+                      <div>
+                        <label for="Date" class="block text-sm font-bold text-gray-700 mb-1">Date</label>
+                        <input type="date" name="Date" v-model="dispatch.Date" id="Date"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          :max="new Date().toISOString().split('T')[0]" />
+                      </div>
+                    </div>
+
+                    <hr class="my-4">
+
+
+                    <h2 class="text-lg font-semibold mb-2 text-blue-400">Driver Details</h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-1">Driver Name</label>
+                        <input type="text" name="DriverName" required v-model="dispatch.DriverName" id="DriverName"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
+
+                      <div>
+                        <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-1">Driver
+                          License</label>
+                        <input type="text" name="DriverLicense" required v-model="dispatch.DriverLicense"
+                          id="DriverLicense"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
+
+                      <div>
+                        <label for="PhoneNumber" class="block text-sm font-bold text-gray-700 mb-1">Driver Phone
+                          #</label>
+                        <input type="text" name="PhoneNumber" required v-model="dispatch.PhoneNumber" id="PhoneNumber"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
+
+                      <div>
+                        <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-1">Truck Number</label>
+                        <input type="text" name="TruckNumber" required v-model="dispatch.TruckNumber" id="TruckNumber"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      </div>
                     </div>
 
 
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="quantity" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Final Destination
-                        Point</label>
+                    <h2 class="text-lg font-semibold mb-1 text-blue-400 mt-2">Other Dispatch Details <p
+                        class="text-xs italic text-gray-400 mb-2">These details are optional</p>
+                    </h2>
 
-                      <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint"
-                        id="FinalDestinationPoint" autocomplete="FinalDestinationPoint"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <!-- Dispatch Status Dropdown -->
+                      <div>
+                        <label for="IsIntransit" class="block text-sm font-bold text-gray-700 mb-1">Dispatch
+                          Type</label>
+                        <select name="IsIntransit" v-model="dispatch.IsIntransit" id="toWarehouse"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option disabled value="">Select dispatch status</option>
+                          <option :value="true">In transit</option>
+                          <option :value="false">Going to FDP</option>
+                        </select>
+                      </div>
+
+                      <!-- To Warehouse Dropdown, only visible when IsIntransit is true -->
+                      <div v-if="dispatch.IsIntransit === true">
+                        <label for="toWarehouse" class="block text-sm font-bold text-gray-700 mb-1">To Warehouse</label>
+                        <select name="toWarehouse" v-model.number="dispatch.warehouseId" id="toWarehouse"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option disabled value="">Select a Warehouse</option>
+                          <option v-for="warehouse in warehoouses" :key="warehouse.id" :value="warehouse.id">{{
+                            warehouse.Name }}</option>
+                        </select>
+
+                      </div>
                     </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of
-                        Bags</label>
-                      <input type="number" name="NoBags" @keypress="validateNumberInput" required
-                        v-model="dispatch.NoBags" id="NoBags" autocomplete="NoBags"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage
-                        (MT)</label>
-                      <input type="number" name="Quantity" :value="computedTonnage" id="Quantity"
-                        autocomplete="Quantity" readonly
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
-                    </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Date</label>
-
-                      <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        :max="new Date().toISOString().split('T')[0]" />
-
-                    </div>
-
-                    <hr>
-                    <h2 class="text-xl font-semibold mb-4  mt-5 text-blue-400 ">Driver Details</h2>
-
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
-                        Name</label>
-
-                      <input type="text" name="DriverName" required v-model="dispatch.DriverName" id="DriverName"
-                        autocomplete="DriverName"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
-                        License</label>
-
-                      <input type="text" name="DriverLicense" required v-model="dispatch.DriverLicense"
-                        id="DriverLicense" autocomplete="DriverLicense"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver
-                        Phone #</label>
-
-                      <input type="text" name="PhoneNumber" required v-model="dispatch.PhoneNumber" id="PhoneNumber"
-                        autocomplete="PhoneNumber"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-
-                    <div class="col-span-6 sm:col-span-3">
-                      <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Truck
-                        Number</label>
-
-                      <input type="text" name="TruckNumber" required v-model="dispatch.TruckNumber" id="TruckNumber"
-                        autocomplete="TruckNumber"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                    </div>
-
-
 
 
                     <div class="flex justify-end mt-4">
                       <button @click="resetDispatch()"
-                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">
+                        class="px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
                         Reset
                       </button>
-                   
-
-                      <button @click="submitDispatch()"
-                      class="inline-flex ml-3 items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      <CheckCircleIcon class="h-5 w-5 mr-1" />
-                      Submit Dispatch
-                    </button>
+                      <button @click="submitDispatch()" :disabled="loading"
+                        class="inline-flex ml-3 items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none">
+                        <CheckCircleIcon class="h-5 w-5 mr-1" />
+                        <span v-if="!loading">Submit Dispatch</span>
+                        <span v-else>
+                          Processing...
+                        </span>
+                      </button>
                     </div>
+
                   </div>
+
 
                   <!-- Vertical divider line -->
                   <div class="hidden sm:block sm:w-px sm:bg-gray-200"></div>
@@ -140,55 +154,67 @@
                       {{ loadingPlan.id }}</h2>
                     <!-- ... Loading Plan Details ... -->
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Created By: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.user?.username?.replace(/\./g, ' ') }}</span>
                     </div>
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Created On: </span>
                       <span class="text-sm text-gray-600"> {{ moment(loadingPlan.createdOn).format("DD/MM/YYYY")
                         }}</span>
                     </div>
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Commodity: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.commodity.Name }}</span>
                     </div>
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Origin: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse.Name }}</span>
                     </div>
 
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Destination: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.district.Name }}</span>
                     </div>
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Transporter: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.transporter.Name }}</span>
                     </div>
 
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Total Quantity: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.Quantity }} MT</span>
                     </div>
 
 
-                    <div class="mb-12">
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Balance: </span>
-                      <span class="text-sm text-gray-600">
-                        {{ (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)) }} MT
+                      <span :class="{
+                        'text-sm text-gray-600': (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) >= 0,
+                        'text-sm text-red-600 font-italic text-italic': (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) < 0
+                      }">
+                        {{
+                          (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) >= -0.9 &&
+                            (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) <= 0 ? '0.00'
+                            : (loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) }} MT <br>
+                      </span>
+
+                      <span v-if="(loadingPlan.Balance - (isNaN(computedTonnage) ? 0 : computedTonnage)).toFixed(2) < 0"
+                        class="text-red-600 text-italic">
+                        * Negative balances are not allowed, please dispatch within the balance available!
                       </span>
                     </div>
+
+
                   </div>
+
                 </div>
               </div>
-
-
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
               <button type="button"
@@ -203,12 +229,13 @@
     </Dialog>
   </TransitionRoot>
 </template>
-
 <script setup>
 import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headlessui/vue';
 import { useRouter } from "vue-router";
 import { inject, ref, reactive, defineEmits, onMounted, watch, computed } from "vue";
 import { usedriverstore } from "../../../stores/driver.store";
+
+import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 import { useSessionStore } from "../../../stores/session.store";
 
@@ -217,8 +244,12 @@ import { XIcon, DocumentTextIcon, SaveIcon, CheckCircleIcon } from "@heroicons/v
 
 const $router = useRouter();
 const driverstore = usedriverstore();
+
+const warehousestore = usewarehousestore();
 const dispatchstore = useDispatcherStore();
 const drivers = ref([]);
+
+const warehoouses = ref([]);
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const moment = inject("moment");
@@ -230,10 +261,9 @@ const props = defineProps({
   loadingPlan: Object
 });
 
-const dispatch = ref({ NoBags: 0 });
+const dispatch = ref({ NoBags: 0, warehouseId: 0, });
 
 const closeDialog = () => {
-  dispatch.value = {};
   emit('close');
 };
 
@@ -241,7 +271,13 @@ const fetchDrivers = async () => {
   drivers.value = await driverstore.get();
 };
 
+
+const fetchWarehouses = async () => {
+  warehoouses.value = await warehousestore.get();
+};
+
 onMounted(() => {
+  fetchWarehouses();
   fetchDrivers();
   generateUniqueDeliveryNote();
 });
@@ -282,7 +318,16 @@ const generateUniqueDeliveryNote = () => {
   dispatch.value.DeliveryNote = `DODMA-LSR-${timestamp}-${uniqueString}`;
 };
 
+const loading = ref(false);
 const submitDispatch = async () => {
+  if (loading.value) return; // Prevent multiple submissions
+  loading.value = true; // Start loader
+
+  // Calculate remaining balance and normalize small negative values to 0
+  const remainingBalance = (parseFloat(props.loadingPlan.Balance.toFixed(2)) ?? 0) - (parseFloat(computedTonnage.value.toFixed(2)) ?? 0);
+  const normalizedBalance = Math.abs(remainingBalance) < 0.01 ? 0 : remainingBalance; // Treat -0.00 as 0
+
+  // Check if the number of bags is zero
   if (dispatch.value.NoBags === 0) {
     Swal.fire({
       title: "Dispatch Denied",
@@ -297,11 +342,55 @@ const submitDispatch = async () => {
         cancelButton: "swal-cancel-button"
       }
     });
+    loading.value = false; // Stop loader
     return;
   }
 
+  // Check if the remaining balance would be negative
+  if (normalizedBalance < 0) {
+    Swal.fire({
+      title: "Insufficient Balance",
+      text: `Unable to create the dispatch. The dispatched quantity exceeds the available balance. Remaining balance: ${props.loadingPlan.Balance} MT.`,
+      icon: "error",
+      confirmButtonText: "Review Details",
+      customClass: {
+        confirmButton: "swal-confirm-button",
+      }
+    });
+    loading.value = false; // Stop loader
+    return;
+  }
+
+  // Show confirmation dialog before submission
+  const confirmResult = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you want to submit this dispatch?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Submit",
+    cancelButtonText: "No, Cancel",
+    customClass: {
+      confirmButton: "swal-confirm-button",
+      cancelButton: "swal-cancel-button"
+    }
+  });
+
+  // If user cancels, stop the process
+  if (!confirmResult.isConfirmed) {
+    loading.value = false; // Stop loader
+    return;
+  }
+
+  // Format date if it's available
   if (dispatch.value.Date) {
     dispatch.value.Date = moment(dispatch.value.Date).toISOString();
+  }
+
+  // Assuming dispatch is your object with the value property
+  if (dispatch.value) {
+    dispatch.value.warehouseId = dispatch.value.warehouseId !== undefined
+      ? parseInt(dispatch.value.warehouseId)
+      : 0;
   }
 
   dispatch.value.DispatcherId = user.value.id;
@@ -309,45 +398,55 @@ const submitDispatch = async () => {
   dispatch.value.Quantity = computedTonnage.value;
 
   try {
+    // Create the dispatch
     const result = await dispatchstore.create(dispatch.value);
+
+    // Emit update event on success
     emit('update');
+
+    // Show success message
     Swal.fire({
       title: "Dispatch Created",
       html: `
-  <p>Your dispatch has been successfully created.</p>
-  <p><strong>Dispatch ID:</strong> ${result.id}</p>
-  <p>You can now track the dispatch status in the loading plans section.</p>
-`,
+        <p>Your dispatch has been successfully created.</p>
+        <p><strong>Dispatch ID:</strong> ${result.id}</p>
+      `,
       icon: "success",
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: "Go to Dispatches",
-      showCancelButton: true,
-      cancelButtonText: "View All Loading Plans",
-      cancelButtonColor: '#aaa',
-    }).then((result) => {
-      closeDialog();
-      if (result.isConfirmed) {
-        closeDialog();
-        $router.push('/dispatcher/dispatches');
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        closeDialog();
-        $router.push('/dispatcher/loadingplans');
-      }
-    });
-  } catch (error) {
-    Swal.fire({
-      title: "Dispatch Denied",
-      text: "Unable to complete the dispatch (" + error + ")",
-      icon: "error",
-      confirmButtonText: "Review Details",
-      cancelButtonText: "Cancel",
-      showCancelButton: true,
-      focusConfirm: false,
+      confirmButtonText: "OK",
       customClass: {
         confirmButton: "swal-confirm-button",
-        cancelButton: "swal-cancel-button"
       }
     });
+
+    // Clear dispatch.value after successful submission
+    dispatch.value = {
+      NoBags: 0,
+      Date: null,
+      DispatcherId: null,
+      loadingPlanId: null,
+      Quantity: null,
+      // Add other properties as needed based on your dispatch object structure
+    };
+
+    closeDialog(); // Close the dialog after success
+    loading.value = false; // Stop loader
+
+  } catch (error) {
+    // Handle errors during dispatch creation
+    Swal.fire({
+      title: "Error",
+      text: "There was an issue creating the dispatch. Please try again.",
+      icon: "error",
+      confirmButtonText: "OK",
+      customClass: {
+        confirmButton: "swal-confirm-button",
+      }
+    });
+  } finally {
+    loading.value = false; // Stop loader
   }
 };
+
+
+
 </script>

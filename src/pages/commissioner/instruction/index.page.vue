@@ -96,7 +96,7 @@
                 <div>
 
                   <span>
-                    <span v-if="props.row.IsApproved"
+                    <span v-if="props.row.isApproved"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                       Approved
                     </span>
@@ -260,7 +260,7 @@ const getInstructions = async () => {
     })
     .catch(error => {
       Swal.fire({
-        title: "User Retrieval Failed",
+        title: "Instruction Retrieval Failed",
         text: "Failed to get instructions (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok"
@@ -276,7 +276,7 @@ const getInstructions = async () => {
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplansStore
-    .get()
+    .getloadingplansByATC()
     .then(result => {
       // for (let i = 0; i < 100; i++) {
       //   instructions.push(...result);
@@ -284,13 +284,13 @@ const getLoadingPlans = async () => {
       emergencyResponseInstructions.length = 0;
 
 
-      emergencyResponseInstructions.push(...result.filter(item => !item.IsApproved && !item.IsRejected));
+      emergencyResponseInstructions.push(...result.filter(item => !item.isApproved && !item.isRejected));
 
 
     })
     .catch(error => {
       Swal.fire({
-        title: "User Retrieval Failed",
+        title: "Instruction Retrieval Failed",
         text: "failed to get Emergency Response Instructions (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok"
@@ -380,57 +380,101 @@ const rejectInstruction = async (newValues) => {
 
 const updateApproval = async (newValues) => {
   isLoading.value = true;
-  loadingplansStore.update(newValues)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Successfully approved loading plan",
-        icon: "success",
-      });
 
-      eventBus.emit('loadingplanArchived', newValues.id);
+  try {
+    // Fetch all loading plans
+    const allLoadingPlans = await loadingplansStore.get();
 
-      getLoadingPlans();
-    })
-    .catch(error => {
-      Swal.fire({
-        title: "Failed",
-        text: "Failed to approve loading plan (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    })
-    .finally(() => {
-      isLoading.value = false;
+    // Filter loading plans where ATCNumber matches newValues.ATCNUMBER
+    const loadingPlans = allLoadingPlans.filter(plan => plan.ATCNumber === newValues.ATCNumber);
+
+    // Check if any loading plans were found
+    if (loadingPlans.length === 0) {
+      throw new Error("No loading plans found with the specified ATCNUMBER.");
+    }
+
+    // Sequentially update each loading plan with the details from newValues
+    for (const loadingPlan of loadingPlans) {
+      console.log("Updating loading plan", loadingPlan);
+      
+      // Create an updated object that includes the loading plan ID and new values
+      const updatedLoadingPlan = { id: loadingPlan.id, ...newValues };
+
+      // Await each update one by one
+      await loadingplansStore.update(updatedLoadingPlan);
+    }
+
+    Swal.fire({
+      title: "Success",
+      text: "Successfully approved loading plans",
+      icon: "success",
     });
+
+    eventBus.emit('loadingplanArchived', newValues.id);
+
+    getLoadingPlans();
+  } catch (error) {
+    Swal.fire({
+      title: "Failed",
+      text: "Failed to approve loading plans (" + error.message + ")",
+      icon: "error",
+      confirmButtonText: "Ok",
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
+
+
 
 const rejectLoadingPlan = async (newValues) => {
   isLoading.value = true;
-  loadingplansStore.update(newValues)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Loading Plan rejected!",
-        icon: "success",
-      });
 
-      eventBus.emit('loadingplanArchived', newValues.id);
+  try {
+    // Fetch all loading plans
+    const allLoadingPlans = await loadingplansStore.get();
 
-      getLoadingPlans();
-    })
-    .catch(error => {
-      Swal.fire({
-        title: "Failed",
-        text: "Failed to approve loading plan (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    })
-    .finally(() => {
-      isLoading.value = false;
+    // Filter loading plans where ATCNumber matches newValues.ATCNUMBER
+    const loadingPlans = allLoadingPlans.filter(plan => plan.ATCNumber === newValues.ATCNumber);
+
+    // Check if any loading plans were found
+    if (loadingPlans.length === 0) {
+      throw new Error("No loading plans found with the specified ATCNUMBER.");
+    }
+
+    // Sequentially reject each loading plan
+    for (const loadingPlan of loadingPlans) {
+      console.log("Rejecting loading plan", loadingPlan);
+      
+      // Create an updated object that includes the loading plan ID and new values for rejection
+      const updatedLoadingPlan = { id: loadingPlan.id, ...newValues };
+
+      // Await the rejection one by one
+      await loadingplansStore.update(updatedLoadingPlan);
+    }
+
+    Swal.fire({
+      title: "Success",
+      text: "Loading Plans rejected!",
+      icon: "success",
     });
+
+    eventBus.emit('loadingplanArchived', newValues.id);
+
+    getLoadingPlans();
+  } catch (error) {
+    Swal.fire({
+      title: "Failed",
+      text: "Failed to reject loading plans (" + error.message + ")",
+      icon: "error",
+      confirmButtonText: "Ok",
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
+
+
 
 const filteredCommodities = (instructionID) => {
   return commodities.filter((item) => item.instructionId === instructionID);
@@ -448,27 +492,35 @@ const columns2 = ref([
   },
   {
     label: "Commodity",
-    field: row => row.commodity?.Name,
+    field: row => row.commodityName,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
+    field: (row) => {
+      const atcNumber = `<span style="color: #096eb4; font-weight: bold;">ATCNUMBER: ${row.ATCNUMBER}</span>`;
+      const district = `<span style="color: green;">District: ${row.district}</span>`;
+      const plannedBy = `<span style="color: #0b8ad8;">Planned By: ${row.plannedBy}</span>`;
+      const date = `<span style="color: #555;">Date: ${new Date(row.date).toLocaleDateString()}</span>`;
+
+      return `${atcNumber}<br/>${district}<br/>${plannedBy}<br/>${date}`;
+    },
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
+    tdClass: "whitespace-normal break-words", // Ensure wrapping and breaking words
+    thClass: "w-1/6", // Set width to 1/6th of the table
+    html: true,
+    tdAttr: { "v-html": true },
   },
+
 
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.totalQuantity.toFixed(2)} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.totalQuantity.toFixed(2)}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -478,7 +530,7 @@ const columns2 = ref([
   {
     label: "Status",
     hidden: false,
-    field: row => row.IsApproved,
+    field: row => row.isApproved,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"

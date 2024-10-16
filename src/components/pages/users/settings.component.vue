@@ -104,7 +104,7 @@
                     </p>
                   </div>
 
-                       <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
+                    <!--    <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
                       <label for="privileges" class="block text-sm font-medium text-gray-700">
                         Account Delegations
                       </label>
@@ -115,7 +115,6 @@
                           <button @click="removeTag(index)" class="ml-1 text-red-500">&times;</button>
                         </span>
 
-                        <!-- Input for adding new tags -->
                         <input type="text" v-model="newDelegate" @keydown.enter.prevent="addTag"
                           placeholder="Add an email address then place enter..."
                           class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
@@ -123,7 +122,7 @@
                         </div>
                         <p class="text-red-500 text-xs italic pt-1">{{ DelegateError }}</p>
                   
-                    </div>
+                    </div> -->
                 </div>
               </div>
               <div class="px-4 py-3 text-right sm:px-6">

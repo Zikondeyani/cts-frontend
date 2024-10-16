@@ -1,16 +1,17 @@
 <template>
-  <main class="">
-    <!--spinner-->
+  <main>
+    <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
 
     <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
+
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Loading Plans
+            Stock In Transit
           </h2>
         </div>
 
@@ -22,272 +23,275 @@
           Export Data
         </button>
       </div>
-      <!-- table  -->
+
+      <!-- Table -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
         <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          <template #table-actions> </template>
+          :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
+          <template #table-actions></template>
           <template #table-row="props">
-            <div v-if="props.column.label == 'Options'" class="flex space-x-2">
-              <template v-if="props.row.Balance > 0">
-                <button type="button" @click="openDispatchDialog(props.row)"
-                  class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
-                  <TruckIcon class="h-5 w-5 mr-2" />
-                  Dispatch
+            <div v-if="props.column.label === 'Options'" class="flex space-x-2">
+              <template v-if="props.row.totalQuantity > 0">
+                <div class="mt-5 flex ml-4 justify-center sm:mt-0">
+
+                  <create-report-form
+                    v-on:create="(reportData) => createReport(reportData, props.row.warehouseId, props.row.atcNumber)" />
+                </div>
+
+                <button type="button" @click="openRecentDispatches(props.row.atcNumber, props.row.warehouseId)"
+                  class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150">
+                  <EyeIcon class="h-5 w-5 mr-2" />
+                  Recent Loadingplans
                 </button>
-              </template>
-              <template v-else>
-                <span
-                  class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                  Completed
-                </span>
               </template>
             </div>
           </template>
+
         </vue-good-table>
 
-        <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
-          v-on:update="reloadPage" />
+        <template v-if="isRecentLoadingPlansOpen">
+          <div id="content">
+            <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+              <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-semibold">Recent LoadingPlans</h3>
+                </div>
 
-        <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
-          @close="closeDispatchDialog" v-on:update="reloadPage" />
+                <div class="overflow-auto max-h-96">
+                  <table class="min-w-full table-auto border-collapse">
+                    <thead>
+                      <tr class="bg-blue-100">
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ATC #</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Handled By</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Qty (MT)</th>
+                        <!-- New column for isClosed status -->
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr v-for="loadingplan in recentLoadingplans" :key="loadingplan.id">
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ loadingplan.ATCNumber }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ loadingplan.HandledBy }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ loadingplan.Quantity }} MT</td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="flex justify-end mt-4">
+                  <button @click="printPDF" id="printButton" v-if="recentLoadingplans.length > 0"
+                    class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
+                  <button type="button" id="closeButton"
+                    class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    @click="closeRecentDispatches">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+
+
+
       </div>
     </div>
   </main>
 </template>
-
 <script setup>
 // import the styles
-
-import { inject, ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, reactive, onMounted, inject } from "vue";
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
+import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
+import * as XLSX from 'xlsx';
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import createReportForm from "../../../components/pages/reports/create.component-warehouse.vue";
 import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  PencilIcon, TrashIcon, TruckIcon
+  PencilIcon, TrashIcon, TruckIcon,
+  EyeIcon
 } from "@heroicons/vue/solid";
-//COMPONENTS
-import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
-import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
-import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
+const moment = inject("moment");
 
-import createReportForm from "../../../components/pages/reports/create.component.vue";
-
-
-import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
-
-
-import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch-dispatcher.component.vue";
-import eventBus from '../../../services/events/eventbus';
+const Swal = inject("Swal");
+// Define your reactive variables and methods
+const isLoading = ref(false);
+const loadingplans = reactive([]);
 
 import { useSessionStore } from "../../../stores/session.store";
-//INJENCTIONS
-const $router = useRouter();
-const moment = inject("moment");
-const Swal = inject("Swal");
-//VARIABLES
-const isLoading = ref(false);
-const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Loading Plans", href: "#", current: true },
-  { name: "Lean Season Response", href: "#", current: true },
-
-];
-
-import { useloadingplanstore } from "../../../stores/loadingplans.store";
-
-import * as XLSX from 'xlsx';
-
-
-const loadingPlanStore = useloadingplanstore();
-const loadingplans = reactive([]);
 
 const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
+// Define breadcrumbs for navigation
+const breadcrumbs = [
+  { name: "Home", href: "/warehouse/dashboard", current: false },
+  { name: "Stock In Transit", href: "#", current: true },
+];
+
+// Load the data from the store
+const loadingPlanStore = useloadingplanstore();
+
+// Table columns definition
 const columns = ref([
-
   {
-    label: "#",
-    field: (row) => row.originalIndex + 1,
+    label: "ATC Number",
+    field: "atcNumber",
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Commodity",
-    field: row => row.commodity?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  
-  {
-    label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
 
+
   {
-    label: "Stocks",
-    hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    label: "Total Quantity (MT)",
+    field: "totalQuantity",
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
     tdClass: "capitalize"
   },
   {
     label: "Options",
-    field: row => row,
+    field: "options",
     sortable: false
   }
 ]);
 
-const isEditDialogOpen = ref(false);
-
-const selectedLoadingPlan = ref(null);
-
-// Function to open the edit dialog
-const openEditDialog = (loadingPlan) => {
-  selectedLoadingPlan.value = loadingPlan;
-  isEditDialogOpen.value = true;
-};
-
-// Function to close the edit dialog
-const closeEditDialog = () => {
-  isEditDialogOpen.value = false;
-};
-
-const isDispatchDialogOpen = ref(false);
-
-// Function to open the edit dialog
-const openDispatchDialog = (loadingPlan) => {
-  selectedLoadingPlan.value = loadingPlan;
-  isDispatchDialogOpen.value = true;
-};
-
-// Function to close the edit dialog
-const closeDispatchDialog = () => {
-  isDispatchDialogOpen.value = false;
-};
-
-//MOUNTED
+// Fetch loading plans from store
 onMounted(() => {
   getLoadingplans();
-  // getLatest()
 });
 
-//FUNCTIONS
-
-const reloadPage = async () => {
-  // Wait for getLoadingplans to complete its data fetching
-  await getLoadingplans();
-
-  // Navigate to the route after the data has been updated
-  $router.push('/warehouse/loadingplans');
-};
-
+// Function to fetch loading plans
 const getLoadingplans = async () => {
   isLoading.value = true;
-
   try {
-    const result = await loadingPlanStore.get();
-
-    // Filter out loading plans without districtId and projectId
-    const filteredLoadingPlans = result.filter(plan => plan.districtId && plan.projectId);
-
-    // Reverse the order of the filtered results
-    const reversedFilteredLoadingPlans = filteredLoadingPlans.reverse();
-
-    // Empty the loadingplans array and then push the reversed and filtered results
+    await loadingPlanStore.getWarehouseLoad();
+    const result = await loadingPlanStore.getLoadings();
     loadingplans.length = 0;
-
-    const filterByDistrict = reversedFilteredLoadingPlans.filter(plan => (plan.district?.Name == user.value.district) && plan.IsApproved);
-
-    loadingplans.push(...filterByDistrict);
-    eventBus.emit('loadingplanArchived', result.id);
-   
+    loadingplans.push(...result);
   } catch (error) {
-    // Handle any errors that occur during the get, filter, or reverse
-    console.error('Failed to fetch, filter, and reverse loading plans:', error);
+    console.error("Failed to fetch loading plans:", error);
   } finally {
     isLoading.value = false;
   }
 };
 
-const generateExcel = () => {
-  const wb = XLSX.utils.book_new();
-  const wsName = 'Loading Plan';
 
-  // Map over the array to flatten each object
-  const flattenedData = loadingplans.reverse().map(plan => ({
-    id: plan.id,
-    CreatedOn: plan.CreatedOn,
-    UpdatedOn: plan.UpdatedOn,
-    LoadingPlanNumber: plan.LoadingPlanNumber,
-    Quantity: plan.Quantity,
-    Balance: plan.Balance,
-    StartDate: plan.StartDate,
-    EndDate: plan.EndDate,
-    "Commodity": plan.commodity?.Name,
-    "From": plan.warehouse?.Name,
-    "Transporter Name": plan.transporter?.Name,
-    "To": plan.district?.Name
-  }));
+const isRecentLoadingPlansOpen = ref(false);
+const recentLoadingplans = ref([]);
 
-  // Create a worksheet from the flattened data array
-  const ws = XLSX.utils.json_to_sheet(flattenedData);
-  XLSX.utils.book_append_sheet(wb, ws, wsName);
-
-  // Export the workbook
-  XLSX.writeFile(wb, 'LoadingPlans.xlsx');
+// Methods to Open/Close the Modal
+const openRecentDispatches = async (id, atc) => {
+  isRecentLoadingPlansOpen.value = true;
+  await fetchRecentDispatches(id, atc);
 };
 
-const createReport = async (model) => {
-  isLoading.value = true;
+const closeRecentDispatches = () => {
+  isRecentLoadingPlansOpen.value = false;
+};
 
-  // Format the StartDate and EndDate using moment.js
-  model.userId = user.value.id;
-  if (model.StartDate) {
-    model.StartDate = moment(model.StartDate).toISOString();
-  }
-  if (model.EndDate) {
-    model.EndDate = moment(model.EndDate).toISOString();
-  }
+// Fetch Recent Dispatches
+const fetchRecentDispatches = async (id, warehouseId) => {
+  try {
+    const result = await loadingPlanStore.get();
 
-  loadingPlanStore
-    .create(model)
-    .then(result => {
+    // Assign data to recentLoadingplans, including the atc parameter
+    recentLoadingplans.value = result.filter(item => item.ATCNumber == id && item.warehouseId == warehouseId && item.IsDivertedLoad == true )
+
+  } catch (error) {
+    console.error('Failed to fetch recent dispatches:', error);
+  }
+};
+
+
+
+const createReport = async (reportData, warehouseId, atcNumber) => {
+  try {
+    isLoading.value = true;
+
+    // Find the selected loading plan by ATC number and warehouse ID
+    const selectedLoadingPlan = loadingplans.find(
+      (plan) => plan.atcNumber === atcNumber && plan.warehouseId === warehouseId
+    );
+
+    if (!selectedLoadingPlan) {
       Swal.fire({
-        title: "Success",
-        text: "Created a new loading plan successfully",
-        icon: "success",
-        confirmButtonText: "Ok"
+        title: 'Error!',
+        text: 'Selected loading plan not found!',
+        icon: 'error',
+        confirmButtonText: 'OK',
       });
-
-      $router.push('/admin/loadingplans'); // Use the router's push method to navigate
-    })
-    .catch(error => {
-      // Handling error
-    })
-    .finally(() => {
       isLoading.value = false;
-      getLoadingplans();
+      return;
+    }
+
+    // Check if the entered quantity exceeds the available total quantity
+    if (reportData.Quantity > selectedLoadingPlan.totalQuantity) {
+      Swal.fire({
+        title: 'Error!',
+        text: `The entered quantity (${reportData.Quantity} MT) exceeds the available total quantity (${selectedLoadingPlan.totalQuantity} MT).`,
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      isLoading.value = false;
+      return;
+    }
+
+    const data = {
+      ...reportData,
+      userId: user.value.id,
+      IsApproved: true,
+      IsDivertedLoad: true,
+      Balance: reportData.Quantity, // Set Quantity to Balance if offline
+      warehouseId: parseInt(warehouseId),   // Include the warehouseId
+      ATCNumber: atcNumber      // Include the ATC number
+    };
+
+    await loadingPlanStore.createWarehouseLoad(data); // Save directly to server
+
+    await getLoadingplans(); // Refresh loading plans after creating report
+
+    // Show success alert
+    Swal.fire({
+      title: 'Success!',
+      text: 'Report created successfully!',
+      icon: 'success',
+      confirmButtonText: 'OK',
     });
+
+  } catch (error) {
+    console.error("Error creating report:", error);
+    // Show an error alert
+    Swal.fire({
+      title: 'Error!',
+      text: 'There was an issue creating the report.',
+      icon: 'error',
+      confirmButtonText: 'OK',
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+
+// Export data as Excel
+const generateExcel = () => {
+  const wb = XLSX.utils.book_new();
+  const wsName = "Loading Plans Summary";
+
+  const flattenedData = loadingplans.map(plan => ({
+    "ATC Number": plan.atcNumber,
+    "Warehouse ID": plan.warehouseId,
+    "Total Dispatches": plan.totalDispatches,
+    "Total Quantity": plan.totalQuantity
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(flattenedData);
+  XLSX.utils.book_append_sheet(wb, ws, wsName);
+  XLSX.writeFile(wb, "LoadingPlansSummary.xlsx");
 };
 </script>
 

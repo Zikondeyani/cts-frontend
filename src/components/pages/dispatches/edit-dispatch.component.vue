@@ -35,7 +35,7 @@
                   <label for="deliverynote" class="block text-sm font-medium text-gray-700">Delivery Note</label>
 
                   <input type="text" name="deliverynote" v-model="Dispatch.DeliveryNote" id="deliverynote"
-                    autocomplete="deliverynote"
+                    autocomplete="deliverynote" readonly
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
@@ -87,6 +87,14 @@
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                 </div>
 
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="DriverPhone" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver Phone
+                    #</label>
+
+                  <input type="text" name="DriverPhone" v-model="Dispatch.PhoneNumber" id="DriverPhone"
+                    autocomplete="DriverPhone"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Driver's
@@ -209,7 +217,7 @@ const commodities = ref([]);
 
 
 const computedTonnage = computed(() => {
-  return Dispatch.value.NoBags * 0.05; // Assuming 1 bag = 0.05 tons
+  return (Dispatch.value.NoBags * 0.05).toFixed(2); // Assuming 1 bag = 0.05 tons
 });
 
 
@@ -226,17 +234,21 @@ const updateDispatch = async () => {
 
     Dispatch.value.IsArchived = false;
 
-    const { Dispatcher, Driver, loadingPlan, originalIndex, vgt_id, NoBags, ...updatedDispatch } = Dispatch.value;
+    const { Dispatcher, Driver, loadingPlan, originalIndex, vgt_id, ...updatedDispatch } = Dispatch.value;
 
     // Now, updatedDispatch is a copy of Dispatch.value without the specified properties
-    await DispatchStore.update(updatedDispatch);
 
+
+    updatedDispatch.Quantity = parseFloat(computedTonnage.value);
+
+
+    await DispatchStore.update(updatedDispatch);
 
     emit('update');
 
     // Show success message
     Swal.fire({
-      title: "Loading Plan Updated",
+      title: "Dispatch Updated",
       html: `
       <p>Dispatch has been successfully updated.</p>
     `,

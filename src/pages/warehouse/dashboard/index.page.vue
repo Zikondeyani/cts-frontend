@@ -57,10 +57,9 @@
                 </div>
               </div>
 
-              <div class="bg-gray-100 p-5">
+             <!--  <div class="bg-gray-100 p-5">
                 <div
                   :class="`grid gap-4 ${user.privileges.includes('Warehouse management') || user.privileges.includes('All') ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2' : 'grid-cols-1'}`">
-                  <!-- Stats Cards -->
                   <div v-for="stat in statsToShow" :key="stat.label"
                     class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
                     <div>
@@ -99,7 +98,7 @@
                   </div>
 
                 </div>
-              </div>
+              </div> -->
             </div>
           </section>
         </div>

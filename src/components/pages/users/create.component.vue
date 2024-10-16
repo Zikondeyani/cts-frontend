@@ -91,7 +91,8 @@
                       </p>
                     </div>
 
-                    <div class="col-span-6 sm:col-span-4" v-if="roleId == 'ADMIN3' || roleId == 'ADMIN4' || roleId == 'ADMIN8' || roleId == 'ADMIN6' || roleId == 'ADMIN7'">
+                    <div class="col-span-6 sm:col-span-4"
+                      v-if="roleId == 'ADMIN8' || roleId == 'ADMIN6' || roleId == 'ADMIN7' || roleId == 'ADMIN5'">
                       <label for="user-district" class="block text-sm font-medium text-gray-700">Select District</label>
                       <select id="district" name="district" v-model="district" autocomplete="district-name"
                         class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -103,7 +104,13 @@
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ districtError }}
                       </p>
+
+                      <!-- Message for ADMIN5 role -->
+                      <p v-if="roleId === 'ADMIN5'" class="text-gray-600 text-xs italic pt-1">
+                        For national dispatchers, you can leave the district blank.
+                      </p>
                     </div>
+
 
                     <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN6'">
                       <label for="privileges" class="block text-sm font-medium text-gray-700">
@@ -128,28 +135,23 @@
 
 
 
-                 
 
-                    <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN9'">
-                      <label for="privileges" class="block text-sm font-medium text-gray-700">
-                        Account Delegations
+
+
+                    <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
+                      <label for="delegated" class="block text-sm font-medium text-gray-700">
+                        Is Delegated?
                       </label>
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
-                        <span v-for="(item, index) in delegations" :key="index"
-                          class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
-                          {{ item }}
-                          <button @click="removeTag(index)" class="ml-1 text-red-500">&times;</button>
-                        </span>
 
-                        <!-- Input for adding new tags -->
-                        <input type="text" v-model="newDelegate" @keydown.enter.prevent="addTag"
-                          placeholder="Add an email address then place enter..."
-                          class="flex-grow focus:ring-gray-500 focus:border-blue-300 border-none shadow-sm sm:text-sm" />
-                        
-                        </div>
-                        <p class="text-red-500 text-xs italic pt-1">{{ DelegateError }}</p>
-                  
+                      <select v-model="isDelegated"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                      </select>
+
+                      <p class="text-red-500 text-xs italic pt-1">{{ DelegateError }}</p>
                     </div>
+
                   </div>
 
                   <div class="grid grid-cols-6 gap-6 mt-3">
@@ -260,13 +262,13 @@ onMounted(() => {
 //FUNCTIONS
 
 const props = defineProps({
-    users: Array,
+  users: Array,
 });
 
 const delegations = ref([]); // Array of tags (places)
 const newDelegate = ref(''); // Input value for new tags
 const DelegateError = ref(''); // Error message (if applicable)
-
+const isDelegated = ref(false)
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Methods
 function addTag() {
@@ -313,7 +315,7 @@ const onSubmit = useSubmitForm((values, actions) => {
     roleId: roleId.value,
     district: district.value,
     privileges: privileges.value.join(),
-    delegations: delegations.value.join()
+    isDelegated: isDelegated.value == 'false' ? false : true
   };
   emit("create", model);
   open.value = false;
@@ -325,7 +327,7 @@ const getRoles = async () => {
   roleStore
     .get()
     .then((result) => {
-        roles.push(...result);
+      roles.push(...result);
     })
     .catch((error) => {
       // Handle error
