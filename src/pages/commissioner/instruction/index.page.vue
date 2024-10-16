@@ -22,7 +22,7 @@
       <!-- Tabs -->
       <div class="tabs">
         <button @click="currentTab = 'leanSeason'" class="rounded-md" :class="{ active: currentTab === 'leanSeason' }">
-          Lean Season Instructions
+          Lean Season  & Emergency Assistance Instructions
           <span v-if="emergencyResponseInstructions.length > 0" class="badge badge-red">{{
             emergencyResponseInstructions.length }}</span>
         </button>

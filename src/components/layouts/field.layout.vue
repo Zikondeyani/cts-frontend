@@ -309,7 +309,7 @@ const updateNotifications = () => {
   notifications.value = [];
   if (newLeanSeasonCount.value > 0) {
     notifications.value.push({
-      message: `Lean Season Dispatches(${newLeanSeasonCount.value})`,
+      message: `Lean Season & Emergency Assistance Dispatches(${newLeanSeasonCount.value})`,
       href: "/field/dispatch-management"
     });
   }

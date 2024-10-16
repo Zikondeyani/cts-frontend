@@ -384,7 +384,7 @@ const updateNotifications = () => {
 
   if (newLoadingPlanCount.value > 0) {
     notifications.value.push({
-      message: `Lean Season Loading Plans (${newLoadingPlanCount.value})`,
+      message: `Lean Season & Emergency Assistance Loading Plans (${newLoadingPlanCount.value})`,
       href: "/dispatcher/loadingplans"
     });
 
@@ -395,7 +395,7 @@ const updateNotifications = () => {
 function navigation() {
   let navList = [
     { name: "Home", href: "/dispatcher/dashboard", icon: HomeIcon, current: false },
-    { name: "Loading Plans (LSR)", href: "/dispatcher/loadingplans", icon: IdentificationIcon, current: false },
+    { name: "Loading Plans", href: "/dispatcher/loadingplans", icon: IdentificationIcon, current: false },
     { name: "Reports", href: "/dispatcher/report-management", icon: DocumentTextIcon, current: false },
     { name: "Dispatches", href: "/dispatcher/dispatches", icon: DocumentDuplicateIcon, current: false },
     { name: "Receipts", href: "/dispatcher/receipts", icon: DocumentTextIcon, current: false },

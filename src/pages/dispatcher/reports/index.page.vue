@@ -22,13 +22,13 @@
             <a href="#user-loadings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-loadings" data-bs-toggle="pill" data-bs-target="#user-loadings" role="tab"
-              aria-controls="user-loadings" aria-selected="true">Lean Season Delivery Reports</a>
+              aria-controls="user-loadings" aria-selected="true">Lean Season & Emergency Assistance  Delivery Reports</a>
           </li>
           <li class="nav-item mr-1" role="presentation">
             <a href="#user-lean"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
               id="tabs-user-lean" data-bs-toggle="pill" data-bs-target="#user-lean" role="tab"
-              aria-controls="user-lean" aria-selected="false">Lean Season Dispatch Reports</a>
+              aria-controls="user-lean" aria-selected="false">Lean Season & Emergency Assistance Dispatch Reports</a>
           </li>
 
           <li class="nav-item mr-1" role="presentation">
@@ -47,7 +47,6 @@
        
        
         </ul>
-
         <!-- Tab content -->
         <div class="tab-content" id="tabs-user-options">
           <div class="tab-pane fade mt-3" id="user-relief" role="tabpanel"

@@ -14,12 +14,7 @@
 
 
 
-        <button type="button"
-          class="tab-button active-tab font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
-          @click="navigateToLeanSeasonLoadingPlans">
-          <TemplateIcon class="h-5 w-5 mr-2" />
-          Manage Lean Season Dispatches
-        </button>
+      
 
       </div>
 
@@ -95,7 +90,7 @@
                         View Details
                       </router-link>
 
-                      <router-link v-if="stat.label == 'Pending Loading Plans (Lean Season Response)'"
+                      <router-link v-if="stat.label == 'Pending Loading Plans (Lean Season Response & Emergency Assistance)'"
                         to="/dispatcher/loadingplans" class="text-blue-500 hover:underline">
                         View Details
                       </router-link>
@@ -472,7 +467,7 @@ const stats = ref([
     showProgress: false
   },
   {
-    label: 'Pending Loading Plans (Lean Season Response)',
+    label: 'Pending Loading Plans (Lean Season Response & Emergency Assistance)',
     value: newLoadingPlanCount,
     icon: DocumentIcon,
     iconColor: 'gray-400',

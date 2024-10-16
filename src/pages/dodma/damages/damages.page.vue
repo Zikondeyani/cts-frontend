@@ -10,7 +10,7 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Lean Season Commodity Losses
+            Lean Season & Emergency Assistance Commodity Losses
           </h2>
         </div>
         <button type="button"
@@ -68,7 +68,7 @@ const Swal = inject("Swal");
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/dodma/dashboard", current: false },
-  { name: "Lean Season Losses", href: "#", current: true },
+  { name: "Lean Season & Emergency Assistance Losses", href: "#", current: true },
 ];
 
 

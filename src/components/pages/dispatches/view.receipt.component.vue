@@ -29,7 +29,7 @@
                   <div class="text-center mb-4">
                     <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
                     <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
-                    <h2 class="text-center text-2xl font-semibold text-gray-800">Lean Season Response Goods Receive
+                    <h2 class="text-center text-2xl font-semibold text-gray-800"> Goods Receive
                       Note
                     </h2>
                     <h2 class="text-center text-lg font-bold text-gray-800 mb-6"> {{

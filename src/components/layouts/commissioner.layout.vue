@@ -335,7 +335,7 @@ const updateNotifications = () => {
 
   if (newLoadingplanCount.value > 0) {
     notifications.value.push({
-      message: `Lean Season Instructions (${newLoadingplanCount.value})`,
+      message: `Lean Season & Emergency Assistance Instructions (${newLoadingplanCount.value})`,
       href: "/commissioner/instruction-management"
     });
 
@@ -443,6 +443,7 @@ const getLoadingPlans = async () => {
       // Push the filtered instructions into the array
       loadingplans.push(...result.filter(item => !item.isApproved));
 
+      
 
       // Update the count of new instructions
       newLoadingplanCount.value = loadingplans.length;

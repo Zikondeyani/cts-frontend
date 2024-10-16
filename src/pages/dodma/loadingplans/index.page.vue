@@ -148,9 +148,9 @@ const moment = inject("moment");
 const Swal = inject("Swal");
 //VARIABLES
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/dodma/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
-  { name: "Lean Season Response", href: "#", current: true },
+  { name: "Lean Season Response & Emergency Assistance", href: "#", current: true },
 ];
 
 

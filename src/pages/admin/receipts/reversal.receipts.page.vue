@@ -25,7 +25,7 @@
               :class="{ 'tab-button text-white': activeTab === 'lean', 'bg-white text-blue-800 border border-blue-800': activeTab !== 'lean' }"
               class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
               <i class="fas fa-file-alt mr-2"></i> <!-- Draft icon -->
-              Lean Season Receipts
+              Lean Season & Emergency Assistance Receipts
               <span v-if="leanCount > 0"
                 class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
                 {{ leanCount }}

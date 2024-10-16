@@ -100,7 +100,7 @@
                   <div class="flex justify-center mb-4">
                     <button class="tab-button" :class="{ 'active-tab': activeTab === 'lean' }"
                       @click="activeTab = 'lean'">
-                      Lean Season
+                      Lean Season  & Emergency Assistance
                       <span v-if="leanSeasonCount > 0" class="badge badge-red">{{ leanSeasonCount }}</span>
 
                     </button>

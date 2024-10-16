@@ -41,7 +41,7 @@
               Lean Season Response Dashboard
             </button>
 
-
+        
           </div>
         </div>
 
@@ -66,7 +66,7 @@
 
                     <div class="mt-1 flex justify-right gap-x-2 sm:mt-0">
                       <button @click="exportToExcel"
-                        v-if="currentView !== 'dashboard' && currentView !== 'leanSeasonDashboard' && currentView !== 'Donations'"
+                        v-if="currentView !== 'dashboard' && currentView !== 'leanSeasonDashboard' && currentView !== 'Donations' && currentView !== 'charts'"
                         type="button"
                         class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
                         :class="{ 'active-tab': false }">
@@ -91,6 +91,16 @@
             <section ref="commodityTable">
               <!-- Chart and image container -->
 
+              <div class="bg-gray-100 p-5" v-show="currentView === 'Donations'">
+
+                <div class="bg-gray-100 p-5">
+                  <!-- Commodity distribution table view -->
+                  <donations-table :data="donations" :screenshotMode="screenshotMode" />
+                  <!-- Other components for stats, etc... -->
+                </div>
+              </div>
+
+
               <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <!-- Aligned images in the center -->
@@ -110,16 +120,31 @@
                       <h1
                         class="text-lg font-semibold text-[#096eb4] text-blue-400 bg-white border border-blue-400 rounded-xl px-4 py-2 shadow-xs">
                         Emergency Response Dashboard
-                        <br>
-                        (From DoDMA Warehouses)
+
                       </h1>
 
+
+                    </div>
+                    <!-- Tabs -->
+                    <div class="flex justify-center mt-6 space-x-4" :class="{ 'hidden': screenshotMode }">
+
+                      <button class="tab-button2" :class="{ 'active-tab': activeTab === 'emergency' }"
+                        @click="setActiveTab('emergency')">
+                        Emergency Assistance
+                      </button>
+                      <button class="tab-button2" :class="{ 'active-tab': activeTab === 'district' }"
+                        @click="setActiveTab('district')">
+                        District Requisitions
+                      </button>
 
                     </div>
                   </div>
 
 
-                  <div class="col-span-3 flex flex-col justify-center items-center mt-2">
+
+
+                  <div class="col-span-3 flex flex-col justify-center items-center mt-2"
+                    v-if="activeTab === 'district'">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
 
 
@@ -177,7 +202,7 @@
                     </div>
                   </div>
                   <!-- Instance of chart components -->
-                  <div class="mx-3">
+                  <div class="mx-3" v-if="activeTab === 'district'">
                     <distribution-by-commodity v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
 
@@ -187,7 +212,7 @@
                     </div>
                   </div>
 
-                  <div class="mx-3">
+                  <div class="mx-3" v-if="activeTab === 'district'">
                     <distribution-by-district v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
@@ -195,7 +220,7 @@
                       No Data
                     </div>
                   </div>
-                  <div class="mx-3">
+                  <div class="mx-3" v-if="activeTab === 'district'">
                     <distribution-percentage v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
@@ -203,6 +228,13 @@
                       No Data
                     </div>
                   </div>
+
+
+                  <div class="col-span-3 flex flex-col justify-center items-center mt-2"
+                    v-if="activeTab !== 'district'">
+
+                  </div>
+
                 </div>
               </div>
 
@@ -261,22 +293,24 @@
                         </div>
 
                         <!-- Total Loading Plans Created -->
-                        <div
-                          class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
-                          <div class="flex items-center space-x-2">
-                            <ClipboardListIcon class="w-5 h-5 text-[#096eb4]" />
-                            <div class="text-[#096eb4] text-sm">Total Loading Plans Created</div>
-                          </div>
-                          <div class="mt-2">
-                            <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
-                            <div class="text-sm text-gray-600 mt-1">
-                              <span class="font-bold text-[#ff6f61]" v-if="loadingplansCountPending > 0">
-                                {{ loadingplansCountPending }} <span
-                                  class="font-semibold text-sm text-[#0b8ad8]">Pending Approval</span>
-                              </span>
+                        <router-link to="/dodma/loadingplans">
+                          <div
+                            class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
+                            <div class="flex items-center space-x-2">
+                              <ClipboardListIcon class="w-5 h-5 text-[#096eb4]" />
+                              <div class="text-[#096eb4] text-sm">Total Loading Plans Created</div>
+                            </div>
+                            <div class="mt-2">
+                              <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
+                              <div class="text-sm text-gray-600 mt-1">
+                                <span class="font-bold text-[#ff6f61]" v-if="loadingplansCountPending > 0">
+                                  {{ loadingplansCountPending }} <span
+                                    class="font-semibold text-sm text-[#0b8ad8]">Pending Approval</span>
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </router-link>
 
                         <!-- % of Dispatches Received -->
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
@@ -362,15 +396,99 @@
                 </div>
               </div>
 
+              <div class="bg-gray-100 p-2" v-show="activeTab !== 'district' && currentView === 'charts'">
+                <!-- Content for Lean Season Response Dashboard -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+
+              
+                  <div class="col-span-3 flex flex-col justify-center items-center mt-2">
+                    <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+                      <div class="flex flex-col">
+                        <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
+                        <select id="district" v-model="selectedActivity"
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option value="">All Activity</option>
+                          <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
+                            {{ activity.Name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="flex flex-col">
+                        <label for="district" class="text-sm font-medium text-gray-700">District</label>
+                        <select id="district" v-model="selectedDistrict"
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option value="">All Districts</option>
+                          <option v-for="district in districts" :key="district.Name" :value="district.Name">
+                            {{ district.Name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="flex flex-col">
+                        <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
+                        <select id="commodity" v-model="selectedCommodity"
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <option value="">All Commodities</option>
+                          <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
+                            {{ commodity.Name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <button @click="resetFilters"
+                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Charts Section -->
+                  <div class="mx-3">
+                    <dispatch-summary-leans-two-two v-if="filteredLeanCommodityDispatchData22.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData22" />
+                    <div v-else
+                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      No Data
+                    </div>
+                  </div>
+                  <div class="mx-3">
+                    <stock-summary-lean-two v-if="filteredLeanCommodityDispatchData22.length > 0"
+                      :leanStockSummary="filteredLeanCommodityDispatchData22" :screenshotMode="screenshotMode" />
+                    <div v-else
+                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      No Data
+                    </div>
+                  </div>
+                  <div class="mx-3">
+                    <dispatch-summary-leans-three v-if="filteredLeanCommodityDispatchData22.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData22" />
+                    <div v-else
+                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      No Data
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
 
               <!-- Emergency Response Dashboard -->
-              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
+              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'" v-if="activeTab === 'district'">
                 <!-- Commodity distribution table view -->
                 <commodity-distribution-table :data="filteredCommodityDistributionData"
                   :screenshotMode="screenshotMode" />
                 <!-- Other components for stats, etc... -->
               </div>
 
+              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'" v-if="activeTab !== 'district'">
+                <!-- Commodity distribution table view -->
+                <commodity-distribution-table-lean-two :data="filteredLeanCommodityDispatchData22"
+                  :screenshotMode="screenshotMode" />
+                <!-- Other components for stats, etc... -->
+              </div>
               <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
 
                 <div class="bg-gray-100 p-5">
@@ -407,6 +525,8 @@
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
                       :screenshotMode="screenshotMode" />
                   </div>
+
+
 
                   <div v-show="currentTab === 'WFP'">
                     <commodity-distribution-table-lean-WFP :data="filteredLeanCommodityDispatchDataWFP"
@@ -479,7 +599,7 @@
                   </div>
 
                   <div class="mb-4">
-                    <div class="text-sm font-bold text-gray-500">Lean Season Response</div>
+                    <div class="text-sm font-bold text-gray-500">Lean Season Response & Emergency Assistance</div>
                     <div v-if="damagedStockStats.length === 0" class="text-gray-500 text-sm mb-3 font-medium">No Data
                     </div>
                     <div v-else>
@@ -489,7 +609,8 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/dodma/Lean-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/dodma/Lean-season-losses"
+                              class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
@@ -541,7 +662,6 @@ import { inject, ref, watch, reactive, onMounted, toRefs, computed, toRaw } from
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
 
-
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { saveAs } from 'file-saver';
@@ -558,10 +678,14 @@ import distributionPercentage from '../../../components/pages/charts/distributio
 import damageSummaryLean from '../../../components/pages/charts/damageSummaryLean.vue'; // Adjust path as needed
 import damageSummaryLeans from '../../../components/pages/charts/damageSummaryLeans.vue'; // Adjust path as needed
 import dispatchSummaryLeans from '../../../components/pages/charts/dispatchSummaryLean.vue'; // Adjust path as needed
+import dispatchSummaryLeansThree from '../../../components/pages/charts/dispatchSummaryLean3.vue'; // Adjust path as needed
+
 import dispatchSummaryLeansTwo from '../../../components/pages/charts/dispatchSummaryLean2.vue'; // Adjust path as needed
+import dispatchSummaryLeansTwoTwo from '../../../components/pages/charts/dispatchSummaryLean22.vue'; // Adjust path as needed
 
 
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
+import stockSummaryLeanTwo from '../../../components/pages/charts/stocksummarylean2.vue'; // Adjust path as needed
 
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
@@ -585,6 +709,8 @@ import { usecommoditiestore } from "../../../stores/commodity.store";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";
 import CommodityDistributionTable from './CommodityDistributionTable.vue';
 import CommodityDistributionTableLean from './CommodityDistributionTableLean.vue';
+
+import CommodityDistributionTableLeanTwo from './CommodityDistributionTableLean2.vue';
 import CommodityDistributionTableLeanWFP from './CommodityDistributionTableLeanWFP.vue';
 
 import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLeanDodma.vue';
@@ -592,7 +718,13 @@ const commodityDispatchDataWFP = ref([])
 const commodityDispatchDataDoDMA = ref([])
 
 const currentTab = ref('all');
+// Active tab state
+const activeTab = ref('emergency'); // Default tab is 'emergency'
 
+// Function to switch tabs
+const setActiveTab = (tab) => {
+  activeTab.value = tab;
+};
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 import {
   Menu,
@@ -614,7 +746,6 @@ import {
   BadgeCheckIcon,
   DocumentDownloadIcon,
   CameraIcon,
-  BrokenHeartIcon,
   BellIcon,
   CashIcon,
   CheckCircleIcon,
@@ -645,6 +776,8 @@ const commodityDistributionData = ref([]);
 const commodityDispatchData = ref([]);
 
 const commodityDispatchData2 = ref([]);
+
+const commodityDispatchData22 = ref([]);
 const commodityEmergencyDispatchData = ref([]);
 
 const currentView = ref('dashboard'); // The initial view can be 'dashboard' or 'charts'
@@ -785,6 +918,8 @@ onMounted(async () => {
     const data = await requisitionStore.getCommodityDistributionSummary();
     const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
     const dispatchdata2 = await dispatchesStore.getExtendedDispatchSummary();
+
+    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
     const dispatchdataWFP = await dispatchesStore.getExtendedDispatchSummaryWFP();
 
     const dispatchdataDoDMA = await dispatchesStore.getExtendedDispatchSummaryDodma();
@@ -798,6 +933,8 @@ onMounted(async () => {
 
     commodityDispatchDataDoDMA.value.push({ ...dispatchdataDoDMA })
     commodityDispatchData2.value.push({ ...dispatchdata2 })
+
+    commodityDispatchData22.value.push({ ...dispatchdata22 })
     commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
     commodityDistributionData.value = [...data];
   } catch (error) {
@@ -992,7 +1129,6 @@ const getLoadingPlans = async () => {
       loadingplansCountPending.value = loadingplans.filter(item => item.isApproved == false).length
     })
 }
-
 
 const pendingplans = ref(0)
 const totalBalance = ref(0)
@@ -1220,6 +1356,17 @@ const flattenedData = computed(() => {
 });
 
 
+const flattenedData2 = computed(() => {
+  if (!commodityDispatchData22.value || commodityDispatchData22.value.length === 0) {
+    return []; // Return an empty array if data is not available
+  }
+
+  // Assume props.data is an array with a single object containing numerically indexed keys
+  const [dataObj] = commodityDispatchData22.value; // Extract the first object (your data)
+  return Object.values(dataObj); // Convert the object into an array of values
+});
+
+
 const flattenedDataWFP = computed(() => {
   if (!commodityDispatchDataWFP.value || commodityDispatchDataWFP.value.length === 0) {
     return []; // Return an empty array if data is not available
@@ -1243,6 +1390,19 @@ const flattenedDataDodma = computed(() => {
 
 const filteredLeanCommodityDispatchData2 = computed(() => {
   return flattenedData.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
+
+const filteredLeanCommodityDispatchData22 = computed(() => {
+  return flattenedData2.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
@@ -1291,6 +1451,28 @@ const filteredLeanStockSummary = computed(() => {
 </script>
 
 <style scoped>
+.tab-button2 {
+  background-color: white;
+  color: #3498db;
+  /* Blue text color */
+  border: 1px solid #3498db;
+  padding: 10px 20px;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.tab-button2:hover {
+  background-color: #3498db;
+  /* Light blue hover background */
+  color: #eaf4fb;
+  /* Blue text color */
+
+}
+
+
+
 .border {
   border-width: 1px;
   border-color: rgba(11, 138, 216, 0.2);

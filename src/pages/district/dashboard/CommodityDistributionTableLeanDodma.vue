@@ -20,7 +20,7 @@
                     </select>
                 </div>
 
-             <!--    <div>
+              <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
                     <select v-model="selectedHandleBy"
                         class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -90,6 +90,10 @@
                     </th>
                     <th scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Handled By
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Dispatched (Mt)
                     </th>
                     <th scope="col"
@@ -111,10 +115,12 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.district }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.tonnageAllocation.toFixed(2) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.handledby }}</td>
+                  
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalDispatched.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion }}%</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ row.receiptCompletion }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ row.receiptCompletion?.toFixed(2) }}%</td>
                 </tr>
             </tbody>
         </table>
@@ -218,7 +224,8 @@ function exportToExcel() {
         'Dispatched (Mt)': row.totalDispatched,
         'Received (Mt)': row.totalReceived,
         '% Dispatch': row.dispatchCompletion,
-        '% Receipt': row.receiptCompletion
+        '% Receipt': row.receiptCompletion,    
+        'Handled By': "DoDMA",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
