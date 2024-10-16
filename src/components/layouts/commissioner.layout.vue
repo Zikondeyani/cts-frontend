@@ -37,7 +37,7 @@
               <div v-if="item.name === 'Instructions' && newInstructionsCount > 0" class="relative ml-2 mx-4">
                 <span
                   class="absolute -top-3 -right-3 flex items-center justify-center px-1 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full">
-                  {{ newInstructionsCount }}
+                  //{{ newInstructionsCount }}
                 </span>
               </div>
             </a>
@@ -114,6 +114,13 @@
                 </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
+                <router-link to="/commissioner/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
                 </button>
@@ -183,6 +190,13 @@
                 <button @click="onAbout()" :class="menuItemClasses(active, true)">
                   About System
                 </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                <router-link to="/commissioner/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
@@ -420,14 +434,14 @@ const getInstructions = async () => {
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplanStore
-    .get()
+    .getloadingplansByATC()
     .then((result) => {
       // Clear the existing array
       loadingplans.length = 0;
 
 
       // Push the filtered instructions into the array
-      loadingplans.push(...result.filter(item => !item.IsApproved && (item.Balance > 0)));
+      loadingplans.push(...result.filter(item => !item.isApproved));
 
 
       // Update the count of new instructions

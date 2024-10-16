@@ -129,6 +129,12 @@ const columns = ref([
     firstSortType: "asc"
   },
   {
+    label: "District",
+    field: row => row.district,
+    sortable: true,
+    firstSortType: "asc"
+  },
+  {
     label: "Role",
     hidden: false,
     field: row =>

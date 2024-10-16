@@ -24,36 +24,37 @@
                 </div>
 
                 <h2 class="text-center text-2xl font-semibold text-gray-800"> Emergency Response Goods Recieve Note</h2>
-                <h2 class="text-center text-lg font-bold text-gray-800 mb-6">          {{ receipt.instructedDispatch?.instruction?.district?.Name }}
+                <h2 class="text-center text-lg font-bold text-gray-800 mb-6"> {{
+                  receipt.instructedDispatch?.instruction?.district?.Name }}
                 </h2>
-                          
+
                 <!-- Form Section -->
                 <div class="mt-4">
                   <div class="grid grid-cols-2 gap-4">
-                   
+
                     <div>
                       <label class="block text-sm font-bold text-gray-700">System Delivery Note No:</label>
                       <p class="text-sm text-gray-600">{{ receipt.instructedDispatch?.DeliveryNote }}</p>
                     </div>
-                   
+
                     <div>
                       <label class="block text-sm font-bold text-gray-700">PhysicalDelivery Note No:</label>
                       <p class="text-sm text-gray-600">{{ receipt?.receivedCommodities[0]?.PhysicalDeliveryNote }}</p>
                     </div>
-                 
+
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Purpose:</label>
                       <p class="text-sm text-gray-600">
                         {{ receipt.instructedDispatch?.instruction?.Purpose }}
                       </p>
                     </div>
-                 
+
 
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Created On:</label>
                       <p class="text-sm text-gray-600">{{ moment(receipt.CreatedOn).format("DD-MM-YYYY") }}</p>
                     </div>
-                  
+
                   </div>
                 </div>
 
@@ -63,9 +64,9 @@
                   <table class="min-w-full mt-2 bg-white">
                     <thead>
                       <tr class="w-full bg-gray-200">
-                         <th class="px-4 py-2">FDP</th>
-                         <th class="px-4 py-2">Truck #</th>
-                       
+                        <th class="px-4 py-2">FDP</th>
+                        <th class="px-4 py-2">Truck #</th>
+
                         <th class="px-4 py-2">Commodity</th>
                         <th class="px-4 py-2">Condition</th>
                         <th class="px-4 py-2">Qty</th>
@@ -73,14 +74,16 @@
                     </thead>
                     <tbody>
                       <tr v-for="item in receipt?.receivedCommodities" :key="item" class="w-full text-center">
-                       
-                         <td class="border px-4 py-2">{{ item.FinalDestinationPoint }}</td>
-                         <td class="border px-4 py-2">{{ item.TruckNumber }}</td>
-                       
+
+                        <td class="border px-4 py-2">{{ item.FinalDestinationPoint }}</td>
+                        <td class="border px-4 py-2">{{ item.TruckNumber }}</td>
+
                         <td class="border px-4 py-2">{{ item?.commodity?.Name }}</td>
-                        <td class="border px-4 py-2">{{ item?.Remarks }} <span  v-if="item?.Remarks =='other'"> ({{ item?.Comments  }} )</span></td>
+                        <td class="border px-4 py-2">{{ item?.Remarks }} <span v-if="item?.Remarks == 'other'"> ({{
+                          item?.Comments }} )</span></td>
                         <td class="border px-4 py-2">
-                          {{ item?.Quantity }} {{ item.commodity.Unit == "Kg" ? "MT" : item.commodity.Unit }} ({{item.NoBags}} {{item.commodity.Container_type}})
+                          {{ item?.Quantity }} {{ item.commodity.Unit == "Kg" ? "MT" : item.commodity.Unit }}
+                          ({{ item.NoBags }} {{ item.commodity.Container_type }})
                         </td>
                       </tr>
                     </tbody>
@@ -98,27 +101,36 @@
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Dispatched By:</label>
                       <p class="text-sm text-gray-600">
-                        {{ receipt.instructedDispatch?.Dispatcher?.firstname }} {{
-                          receipt.instructedDispatch?.Dispatcher?.lastname }}
+                        {{ receipt.instructedDispatch?.Dispatcher?.firstname }}
+                        {{ receipt.instructedDispatch?.Dispatcher?.lastname }}
                       </p>
                     </div>
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Authorized By:</label>
                       <p class="text-sm text-gray-600">
-                        {{ receipt.instructedDispatch?.instruction?.ApprovedBy }}
+                        <!-- Check for (d) and conditionally render the text -->
+                        <span v-if="receipt.instructedDispatch?.instruction?.ApprovedBy.includes('(d)')">
+                          {{ receipt.instructedDispatch?.instruction?.ApprovedBy.replace(' (d)', '') }}
+                          <br>
+                          <em class="text-xs text-gray-500">on behalf of the DODMA commissioner</em>
+                        </span>
+                        <span v-else>
+                          {{ receipt.instructedDispatch?.instruction?.ApprovedBy }}
+                          <br>
+                          <em class="text-xs text-gray-500">The DODMA commissioner</em>
+
+                        </span>
                       </p>
                     </div>
                     <div>
                       <label class="block text-sm font-bold text-gray-700">Received By:</label>
-                      <p class="text-sm text-gray-600">
-                        {{ receipt.Recipient?.firstname }}
-
-                        {{ receipt.Recipient?.lastname }}
+                      <p class="text-xs text-gray-500">
+                        {{ receipt.Recipient?.firstname }} {{ receipt.Recipient?.lastname }}
                       </p>
                     </div>
-                  
                   </div>
                 </div>
+
               </div>
             </div>
 

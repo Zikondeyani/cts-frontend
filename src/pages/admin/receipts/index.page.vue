@@ -45,12 +45,12 @@ import {
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/manager/dashboard", current: false },
+  { name: "Home", href: "/admin/dashboard", current: false },
   { name: "Receipt Management", href: "#", current: true },
 ];
 const options = ref([
-  { label: 'Lean Season Response Receipts', icon: TemplateIcon, path: '/field/receipts/leanseason' },
-  { label: 'Emergency Response Receipts', icon: LightningBoltIcon, path: '/field/receipts/emergency' },
+  { label: 'Lean Season Response Receipts', icon: TemplateIcon, path: '/admin/receipts/leanseason' },
+  { label: 'Emergency Response Receipts', icon: LightningBoltIcon, path: '/admin/receipts/emergency' },
 
 ]);
 </script>

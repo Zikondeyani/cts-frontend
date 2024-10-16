@@ -17,7 +17,8 @@
             leave-from="opacity-100 translate-y-0 sm:scale-100"
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <div
-              class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:align-middle sm:w-full max-w-4xl">
+              class="inline-block align-middle bg-white rounded-lg text-left shadow-xl transform transition-all sm:align-middle sm:w-full max-w-4xl"
+              :class="{'max-h-screen overflow-y-auto': true}">
               <!-- Modal Header -->
               <div class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
                 <h5 class="text-lg font-bold text-gray-800">Lean Season Response Dispatch</h5>
@@ -34,6 +35,7 @@
                   <p class="mb-4"><strong>System Delivery Note:</strong> {{ dispatch.DeliveryNote }}</p>
                   <p class="mb-4"><strong>Target FDP:</strong> {{ dispatch?.FinalDestinationPoint }}</p>
                   <p class="mb-4"><strong>Driver Phone #:</strong> {{ dispatch?.PhoneNumber }}</p>
+                  <p class="mb-4"><strong>ATC Number:</strong> {{ dispatch?.loadingPlan?.ATCNumber }}</p>
 
 
                   <div class="mb-6">

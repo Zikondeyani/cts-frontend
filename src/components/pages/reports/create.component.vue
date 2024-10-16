@@ -78,6 +78,18 @@
 
                   </div>
 
+                  <div class="col-span-3 sm:col-span-3">
+                    <label for="Handled By" class="block text-sm text-gray-700 font-bold">To Be Handled By</label>
+                    <select id="HandledBy" name="HandledBy" required v-model="reports.HandledBy"
+                      autocomplete="HandledBy-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="item in ['WFP', 'DoDMA']" :key="item" :value="item" class="uppercase">
+                        {{ item }}
+                      </option>
+                    </select>
+                  </div>
+
+
                 </div>
 
                 <div class="grid grid-cols-6 gap-2 mt-2">
@@ -136,7 +148,7 @@
                       </option>
                     </select> 
                   </div>
- -->
+                  -->
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
@@ -169,11 +181,20 @@
                   </div>
 
                 </div>
+
+                <div class="grid grid-cols-6 gap-2 mt-2">
+
+
+
+
+               
+
+                </div>
               </div>
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                 <button @click="onSubmit"
-                class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <CheckIcon class="h-5 w-5 mr-2" />
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <CheckIcon class="h-5 w-5 mr-2" />
                   Submit Loading Plan
                 </button>
               </div>
@@ -278,7 +299,7 @@ const onSubmit = () => {
   // Validate that all fields are populated
   if (!reports.value.activityId || !reports.value.transporterId || !reports.value.commodityId ||
     !reports.value.Quantity || !reports.value.warehouseId || !reports.value.districtId ||
-    !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate) {
+    !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate ) {
     Swal.fire({
       icon: 'error',
       title: 'Error',

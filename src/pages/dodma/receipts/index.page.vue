@@ -44,7 +44,7 @@ import {
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/manager/dashboard", current: false },
+  { name: "Home", href: "/warehouse/dashboard", current: false },
   { name: "Receipt Management", href: "#", current: true },
 ];
 const options = ref([
@@ -52,7 +52,7 @@ const options = ref([
   { label: 'Instructed Dispatches', icon: TruckIcon, path: '/instructed-dispatches' },
   { label: 'Instructed Commodities', icon: ArchiveIcon, path: '/instructed-commodities' },
   { label: 'Instructed Receipts', icon: ReceiptRefundIcon, path: '/instructed-receipts' },
-  */ { label: 'Receipts', icon: ClipboardIcon, path: '/manager/receipts' },
+  */ { label: 'Receipts', icon: ClipboardIcon, path: '/warehouse/receipts' },
 ]);
 </script>
 

@@ -46,6 +46,37 @@ export const useDispatcherStore = defineStore({
         });
     },
 
+    async getdispatchSummaryTime() {
+      return await dispatcherService
+        .getdispatchSummaryTime()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+    async getdispatchPerfomance() {
+      return await dispatcherService
+        .getdispatchPerfomance()
+        .then((result) => {
+       
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
     async getExtendedDispatchSummary() {
       return await dispatcherService
@@ -63,6 +94,55 @@ export const useDispatcherStore = defineStore({
         });
     },
 
+
+    async getExtendedDispatchSummaryWFP() {
+      return await dispatcherService
+        .getExtendedDispatchSummaryWFP()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
+    async getExtendedDispatchSummaryDodma() {
+      return await dispatcherService
+        .getExtendedDispatchSummaryDodma()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+    async getExtendedDispatchSummaryDodma() {
+      return await dispatcherService
+        .getExtendedDispatchSummaryDodma()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
     async getdispatchSummary() {
       return await dispatcherService

@@ -47,9 +47,12 @@ import {
   ArchiveIcon,
   FolderIcon,
   MailIcon,
+  BellIcon,
+  ChartBarIcon,
   MapIcon,
   ScaleIcon
 } from "@heroicons/vue/outline";
+import { DocumentIcon } from '@heroicons/vue/solid';
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
@@ -63,6 +66,10 @@ const optionGroups = ref([
       { label: 'Organisations', icon: OfficeBuildingIcon, path: '/admin/organisations' },
       { label: 'User Roles', icon: UserGroupIcon, path: '/admin/userroles' },
       { label: 'Users', icon: UserIcon, path: '/admin/users' },
+      { label: 'Performance Stats', icon: ChartBarIcon, path: '/admin/performance-stats' }, // Change to ChartBarIcon
+  
+      { label: 'Reminders', icon: BellIcon, path: '/admin/reminders' }, // Change to BellIcon
+     
     ],
   },
  
@@ -78,6 +85,8 @@ const optionGroups = ref([
     
       { label: 'Commodities', icon: MapIcon, path: '/admin/commodity-management' },
       { label: 'Commodity Types', icon: ScaleIcon, path: '/admin/commodity-types' },
+      { label: 'Receipts', icon: DocumentIcon, path: '/admin/receipts' },
+   
     ],
   },
   {

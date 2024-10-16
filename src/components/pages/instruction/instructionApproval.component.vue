@@ -252,15 +252,26 @@ const getRequisition = async () => {
 };
 
 const onSubmit = useSubmitForm((values, actions) => {
+  let approvedBy = user.value.username.replace('.', ' ')
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+
+  // Add (d) if the user is delegated
+  if (user.value.isDelegated) {
+    approvedBy += ' (d)';
+  }
+
   let model = {
     id: props.rowId,
     IsApproved: true,
-    ApprovedBy: user.value.username.replace('.', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    ApprovedBy: approvedBy
   };
   
   emit("create", model);
   open.value = false;
 });
+
 
 const startRejection = () => {
   isRejecting.value = true;

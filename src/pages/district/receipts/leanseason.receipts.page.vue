@@ -26,16 +26,17 @@
         <div class="flex flex-wrap">
           <button @click="activeTab = 'submitted'"
             :class="{ 'tab-button text-white': activeTab === 'submitted', 'bg-white text-blue-800 border border-blue-800': activeTab !== 'submitted' }"
-            style="background-color: #248cd6;" class="relative flex items-center mr-1 py-2 px-4 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            style="background-color: #248cd6;"
+            class="relative flex items-center mr-1 py-2 px-4 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
             <i class="fas fa-check-circle mr-2"></i> <!-- Submitted icon -->
             Submitted Receipts
             <span v-if="submittedCount > 0"
-              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center px-3">
               {{ submittedCount }}
             </span>
           </button>
 
-        <!--   <button @click="activeTab = 'draft'"
+          <!--   <button @click="activeTab = 'draft'"
             :class="{ 'bg-blue-500 text-white': activeTab === 'draft', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'draft' }"
             class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
             <i class="fas fa-file-alt mr-2"></i> 
@@ -75,14 +76,16 @@
               </button>
 
 
-             <!--  <button @click="requestReversal(props.row)" v-if="props.row.receipts[0].status !== 4"
+              <button @click="requestReversal(props.row)" v-if="props.row.receipts[0].status !== 4"
                 class="text-orange-500 hover:text-orange-700 transition duration-300  ml-2 mr-2">
                 <XIcon class="h-5 w-5 inline-block" />
                 Request Reversal
               </button>
-            
-              <span v-else class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 ml-1" >   <span > submitted for reversal</span>
-            </span> -->
+
+              <span v-else
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 ml-1">
+                <span> submitted for reversal</span>
+              </span>
               <!-- 
               <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
@@ -234,28 +237,74 @@ const columns = ref([
   ,
 
   {
-    label: "Details",
+    label: "Delivery Note",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${row.deliveryNote !== undefined ? row.deliveryNote : "N/A"}</span><br>`,
+    field: row => {
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const physicalDeliveryNote = row.receipts.length > 0 ? row.receipts[0].PhysicalDeliveryNote : "N/A";
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800" >
+              D.N: ${physicalDeliveryNote}
+            </span><br>`;
+    },
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
     tdClass: "capitalize"
-  },
+  }
+  ,
 
   {
-    label: "Dispatcher",
+    label: "District",
+    hidden: false,
     field: row => {
-      return `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"> ${row.dispatcher}</span><br>`;
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const District = row.district;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-yellow-100 text-yellow-800" > ${District}
+            </span><br>`;
     },
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
-  },
+    html: true, // Important for rendering HTML
 
+    tdClass: "capitalize"
+  }
+  ,
+
+  {
+    label: "ATC #",
+    hidden: false,
+    field: row => {
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const physicalDeliveryNote = row.atcNumber;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-orange-100 text-orange-800" > ${physicalDeliveryNote}
+            </span><br>`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+
+    tdClass: "capitalize"
+  }
+  ,
+
+  {
+    label: "Received By",
+    hidden: false,
+    field: row => {
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const physicalDeliveryNote =  row.recipient;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800" >
+             ${physicalDeliveryNote}
+            </span><br>`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+
+    tdClass: "capitalize"
+  }
+  ,
 
 
   {
@@ -348,7 +397,7 @@ const requestReversal = async (row) => {
     // Process the reversal request here
 
     for (const item of row.receipts) {
-      await receiptStore.update({ id: item.id, ReversalComments: reason, status : 4, ReverserDistrict: user.value.district, ReversedBy: user?.value.username.replace(/\./g, ' ') });
+      await receiptStore.update({ id: item.id, ReversalComments: reason, status: 4, ReverserDistrict: user.value.district, ReversedBy: user?.value.username.replace(/\./g, ' ') });
     }
 
     Swal.fire({
@@ -460,9 +509,8 @@ const getReceipts = async () => {
 
     // Filter receipts based on the current user's district and exclude those with status 3
     const filteredReceipts = allReceipts.filter(receipt =>
-      receipt.receipts?.some(r =>
-        r.dispatch?.loadingPlan?.district?.Name === user.value.district && r.status !== 3 && !r.IsDeleted
-      )
+      receipt.district === user.value.district
+
     );
 
     // Update the receipts array with the filtered results

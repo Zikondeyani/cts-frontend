@@ -140,7 +140,7 @@ const columns = ref([
   {
     label: "Transporter",
     field: row => `
-    <span class="by-color"> ${row.transporter + " MT" || "Unknown"}</span>`,
+    <span class="by-color"> ${row.transporter || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -167,6 +167,7 @@ const columns = ref([
   },
 
 ]);
+
 
 
 const generateExcel = () => {
@@ -202,6 +203,7 @@ const generateExcel = () => {
   // Export the workbook
   XLSX.writeFile(wb, 'Lean-season-losses.xlsx');
 };
+
 
 
 

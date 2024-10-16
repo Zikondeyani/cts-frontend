@@ -76,7 +76,7 @@
                         <button @click.prevent="exportToExcel"
                             class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-gray-500 text-white text-md font-medium hover:bg-gray-600 focus:outline-none"
                             id="menu-button" aria-expanded="true" aria-haspopup="true">
-                            Export To Excel
+                            Export
                         </button>
                     </div>
                 </div>

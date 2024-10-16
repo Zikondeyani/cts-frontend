@@ -19,10 +19,23 @@
         <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300" id="tabs-menu"
           role="tablist">
           <li class="nav-item mr-1" role="presentation">
-            <a href="#user-relief"
+            <a href="#user-loadings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
+              id="tabs-user-loadings" data-bs-toggle="pill" data-bs-target="#user-loadings" role="tab"
+              aria-controls="user-loadings" aria-selected="true">Lean Season Delivery Reports</a>
+          </li>
+          <li class="nav-item mr-1" role="presentation">
+            <a href="#user-lean"
+              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
+              id="tabs-user-lean" data-bs-toggle="pill" data-bs-target="#user-lean" role="tab"
+              aria-controls="user-lean" aria-selected="false">Lean Season Dispatch Reports</a>
+          </li>
+
+          <li class="nav-item mr-1" role="presentation">
+            <a href="#user-relief"
+              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
               id="tabs-user-relief" data-bs-toggle="pill" data-bs-target="#user-relief" role="tab"
-              aria-controls="user-relief" aria-selected="true">Stock Position</a>
+              aria-controls="user-relief" aria-selected="false">Stock Position</a>
           </li>
           <li class="nav-item mr-1" role="presentation">
             <a href="#user-settings"
@@ -31,45 +44,27 @@
               aria-controls="user-settings" aria-selected="false">Commodity Distribution Report</a>
           </li>
 
-          <li class="nav-item mr-1" role="presentation">
-            <a href="#user-lean"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-lean" data-bs-toggle="pill" data-bs-target="#user-lean" role="tab"
-              aria-controls="user-settings" aria-selected="false">Lean Season Dispatch Reports</a>
-          </li>
-
-
-          <li class="nav-item mr-1" role="presentation">
-            <a href="#user-loadings"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-loadings" data-bs-toggle="pill" data-bs-target="#user-loadings" role="tab"
-              aria-controls="user-loadings" aria-selected="false">Lean Season Delivery Reports</a>
-          </li>
-
+       
+       
         </ul>
+
+        <!-- Tab content -->
         <div class="tab-content" id="tabs-user-options">
-          <div class="tab-pane fade show active mt-3" id="user-relief" role="tabpanel"
+          <div class="tab-pane fade mt-3" id="user-relief" role="tabpanel"
             aria-labelledby="tabs-user-relief">
             <user-relief :data="warehousesinventory" v-on:update="updateOrCreateReliefItems" />
           </div>
           <div class="tab-pane fade" id="user-settings" role="tabpanel" aria-labelledby="tabs-user-settings">
-
             <commodity-distribution-table :data="commodityDistributionData" :screenshotMode="screenshotMode" />
-
           </div>
 
-          <div class="tab-pane fade" id="user-loadings" role="tabpanel" aria-labelledby="tabs-user-loadings">
-
-            <loading-plan-distribution-table :data="loadingplansdata" :screenshotMode="screenshotMode" />
-
+          <div class="tab-pane fade show active" id="user-loadings" role="tabpanel" aria-labelledby="tabs-user-loadings">
+            <loading-plan-distribution-table :data="loadingplansdata" :screenshotMode="screenshotMode" :dispatchdata="dispatchesdata" />
           </div>
 
           <div class="tab-pane fade" id="user-lean" role="tabpanel" aria-labelledby="tabs-user-lean">
-
             <user-lean :screenshotMode="screenshotMode" />
-
           </div>
-
         </div>
       </div>
     </div>
@@ -103,12 +98,14 @@ import { useInstructedCommoditiesStore } from "../../../stores/instructedCommodi
 import { useinstructionstore } from "../../../stores/instructions.store";
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import { useDispatcherStore } from "../../../stores/dispatch.store";
 
 import { usewarehousestore } from "../../../stores/warehouse.store";
 const requisitionStore = userequisitionstore();
 
 const loadingplanStore = useloadingplanstore();
 
+const dispatchStore = useDispatcherStore();
 //INJENCTIONS
 const $router = useRouter();
 const $route = useRoute();
@@ -141,6 +138,7 @@ const instructedCommodities = reactive([]);
 const warehousesinventory = reactive([])
 const commodityDistributionData = ref([])
 const loadingplansdata = ref([])
+const dispatchesdata = ref([])
 
 
 //MOUNTED
@@ -155,6 +153,9 @@ onMounted(async () => {
 
     const loadingplandata = await loadingplanStore.getloadingplansDataSummary();
     loadingplansdata.value = [...loadingplandata];
+
+    const dispatchdata = await dispatchStore.getdispatchSummaryTime();
+    dispatchesdata.value = [...dispatchdata];
 
   } catch (error) {
     console.error("Failed to load commodity data:", error);

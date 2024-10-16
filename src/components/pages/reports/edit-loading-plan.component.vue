@@ -144,6 +144,16 @@
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
 
                 </div>
+
+                <div class="col-span-6">
+                  <label for="reasonForUpdate" class="block text-sm font-bold text-gray-700 mb-2">
+                    Reason for Update
+                  </label>
+                  <textarea name="reasonForUpdate" v-model="loadingPlan.UpdatedReason" id="reasonForUpdate" rows="4"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Enter the reason for this update...">
+    </textarea>
+                </div>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -241,9 +251,22 @@ watch(() => props.loadingPlan, (newVal) => {
   originalQuantity.value = newVal.Quantity; // Update the original quantity when loadingPlan changes
 });
 
-// Methods
+
+
 const updateLoadingPlan = async () => {
   try {
+    // Ensure update reason is provided
+    if (!loadingPlan.value.UpdatedReason || loadingPlan.value.UpdatedReason.trim() === '') {
+      await Swal.fire({
+        title: "Update Reason Required",
+        text: "Please provide a reason for this update.",
+        icon: "warning",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
+
     loadingPlan.value.UpdatedOn = new Date();
 
     const {
@@ -255,7 +278,7 @@ const updateLoadingPlan = async () => {
     updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
 
     // Calculate the new balance
-    updatedLoadingPlan.Balance = (updatedLoadingPlan.Quantity - originalQuantity.value ) + loadingPlan.value.Balance;
+    updatedLoadingPlan.Balance = (updatedLoadingPlan.Quantity - originalQuantity.value) + loadingPlan.value.Balance;
 
     // Check for negative balance
     if (updatedLoadingPlan.Balance < 0) {
@@ -297,6 +320,7 @@ const updateLoadingPlan = async () => {
     } else {
       await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
       emit('update');
+
       Swal.fire({
         title: "Loading Plan Updated",
         html: `<p>Your loading plan has been successfully updated.</p>`,

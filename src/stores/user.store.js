@@ -122,6 +122,67 @@ export const useUserStore = defineStore({
         });
     },
 
+
+    async changepassnew(data) {
+      return await userService
+        .changepasswordnew(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            case 409:
+              throw new Error("password change failed ");
+              break;
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+    async forgotpassword(data) {
+      return await userService
+        .forgotpassword(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            case 409:
+              throw new Error("password reset failed ");
+              break;
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
+    
+    async resetpassword(data) {
+      return await userService
+        .resetpassword(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            case 409:
+              throw new Error("password reset failed ");
+              break;
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
     async remove(id) {
       return await userService
         .remove(id)

@@ -34,7 +34,7 @@
 
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="transporter" class="block text-sm font-medium text-gray-700">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
                     Select Transporter</label>
                   <select id="transporter" name="transporter" v-model="loadingPlan.transporterId"
                     autocomplete="transporter-name"
@@ -51,7 +51,7 @@
 
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="transporter" class="block text-sm font-medium text-gray-700">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
                     Select Commodity</label>
                   <select id="commodity" name="commodity" v-model="loadingPlan.commodityId"
                     autocomplete="commodity-name"
@@ -67,7 +67,7 @@
 
               <div class="grid grid-cols-6 gap-2">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity (MT)</label>
+                  <label for="quantity" class="block text-sm font-bold text-gray-700">Quantity</label>
 
                   <input type="number" name="quantity" v-model="loadingPlan.Quantity" id="reportFrom"
                     autocomplete="quantity"
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
+                  <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
                   <select id="warehouse" name="warehouse" v-model="loadingPlan.warehouseId"
                     autocomplete="warehouse-name"
@@ -91,7 +91,7 @@
 
               <div class="grid grid-cols-6 gap-2">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="destination-district" class="block text-sm font-medium text-gray-700">Destination
+                  <label for="destination-district" class="block text-sm font-bold text-gray-700">Destination
                     District</label>
 
                   <select id="destination" name="destination" v-model="loadingPlan.districtId"
@@ -103,22 +103,24 @@
                   </select>
                 </div>
 
-                <div class="col-span-6 sm:col-span-3">
-                  <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
 
-                  <select id="project" name="project" v-model="loadingPlan.projectId" autocomplete="project-name"
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="transporter" class="block text-sm font-bold text-gray-700">
+                    Select Activity</label>
+                  <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
                     class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                    <option v-for="project in projects" :key="project" :value="project.id" class="uppercase">
-                      {{ project.Name }}
+                    <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                      {{ activity.Name }}
                     </option>
                   </select>
+
                 </div>
               </div>
 
               <div class="grid grid-cols-6 gap-2 mt-3">
                 <div class="col-span-3 sm:col-span-3">
                   <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
-                    ATC NUMBER <span class="text-red-500">(optional)</span>
+                    ATC NUMBER
                   </label>
                   <input type="text" name="ATCNumber" v-model="loadingPlan.ATCNumber" id="ATCNumber"
                     autocomplete="ATCNumber"
@@ -126,7 +128,7 @@
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
-                  <label for="project" class="block text-sm font-medium text-gray-700">Start Date</label>
+                  <label for="project" class="block text-sm font-bold text-gray-700">Start Date</label>
 
 
 
@@ -136,7 +138,7 @@
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
-                  <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
+                  <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
 
                   <input type="date" name="End Date" v-model="formattedEndDate" id="End Date" autocomplete="End Date"
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
@@ -145,8 +147,8 @@
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <button @click="updateLoadingPlan" style="background-color: #329ce7;" type="button"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+              <button @click="updateLoadingPlan" style="background-color: #329ce7;"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 Save
               </button>
             </div>
@@ -169,10 +171,8 @@ import AttachDocumentsDialog from "../../../components/pages/reports/attach-docu
 
 import { saveDataOffline, getDataOffline, getOfflineLoadingPlans, removeDataOffline, updateDataOffline } from '@/services/localbase';
 import { checkOnlineStatus } from '@/services/utils/network';
+import eventBus from '../../../services/events/eventbus';
 
-import { useRouter } from "vue-router";
-
-const $router = useRouter();
 const Swal = inject("Swal");
 const moment = inject("moment");
 import { useRoleStore } from "../../../stores/role.store";
@@ -185,7 +185,6 @@ import { usetransporterstore } from "../../../stores/transporter.store";
 import { useprojectstore } from "../../../stores/project.store";
 import { useactivitiestore } from "../../../stores/activity.store";
 import { useSessionStore } from "../../../stores/session.store";
-import eventBus from '../../../services/events/eventbus';
 
 
 const roleStore = useRoleStore();
@@ -235,18 +234,24 @@ const loadingPlanStore = useloadingplanstore();
 const transporterStore = usetransporterstore();
 const commoditiesstore = usecommoditiestore();
 const commodities = ref([]);
+const originalQuantity = ref(loadingPlan.value.Quantity); // Store the original quantity
 
+// Watch for changes to update the original quantity when loadingPlan changes
+watch(() => props.loadingPlan, (newVal) => {
+  loadingPlan.value = { ...newVal };
+  originalQuantity.value = newVal.Quantity; // Update the original quantity when loadingPlan changes
+});
 
 // Methods
 const updateLoadingPlan = async () => {
   try {
     loadingPlan.value.UpdatedOn = new Date();
-    const { commodity, district, transporter, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, dispatches, ApprovedBy, IsApproved, RejectionComment, ...updatedLoadingPlan } = loadingPlan.value;
+    const { commodity, district, transporter, activity, warehouse, user, originalIndex, vgt_id, IsActive, IsArchived, activityId, NoBags, dispatches, ApprovedBy, IsApproved, RejectionComment, ...updatedLoadingPlan } = loadingPlan.value;
     updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
     updatedLoadingPlan.IsRejected = false;
     updatedLoadingPlan.IsApproved = false;
     updatedLoadingPlan.Balance = updatedLoadingPlan.Quantity;
-    if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.projectId == null) {
+  /*   if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.activityId == null) {
       await Swal.fire({
         title: "Missing Information",
         text: "Please select both a district and a project before updating.",
@@ -255,15 +260,15 @@ const updateLoadingPlan = async () => {
         confirmButtonText: "Ok"
       });
       return;
-    }
+    } */
 
     const isOnline = await checkOnlineStatus(); // Check online status
 
     if (!isOnline) {
       await updateDataOffline('loading-plans', updatedLoadingPlan.key, updatedLoadingPlan); // Update locally
       Swal.fire({
-        title: "Loading Plan Updated (Offline)",
-        html: `<p>Your loading plan has been updated locally (offline mode).</p>`,
+        title: "Loading Plan Updated",
+        html: `<p>Your loading plan has been updated locally.</p>`,
         icon: "success",
         confirmButtonColor: '#3085d6',
         confirmButtonText: "View All Rejected Loading Plans",
@@ -272,20 +277,20 @@ const updateLoadingPlan = async () => {
 
       emit('close');
       emit('update');
-   
- 
+
+
     } else {
       await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
       Swal.fire({
-        title: "Loading Plan Updated (Online)",
-        html: `<p>Your loading plan has been successfully updated online.</p>`,
+        title: "Loading Plan Updated",
+        html: `<p>Your loading plan has been successfully updated.</p>`,
         icon: "success",
         confirmButtonColor: '#3085d6',
         confirmButtonText: "View All Rejected Loading Plans",
       });
       eventBus.emit('requisitionArchived', updatedLoadingPlan.id);
       emit('update');
-   
+
 
     }
 
@@ -301,6 +306,8 @@ const updateLoadingPlan = async () => {
     });
   }
 };
+
+
 
 
 // Fetch data for dropdowns

@@ -7,6 +7,7 @@ Chart.register(...registerables, ChartDataLabels);
 
 const props = defineProps({
   leanStockSummary: Array,
+  screenshotMode: Boolean,
 });
 
 const pieChartRef = ref(null);
@@ -48,6 +49,7 @@ function renderChart() {
     data: processedPieChartData.value,
     options: {
       responsive: true,
+      aspectRatio: 1, // Set aspect ratio to 1:1 for a larger chart
       plugins: {
         legend: {
           position: 'top',
@@ -60,9 +62,9 @@ function renderChart() {
         },
         title: {
           display: true,
-          text: 'Completion Rates by District',
+          text: 'Receipt Completion Rates by District',
           font: {
-            size: 18,
+            size: 17,
           },
           padding: {
             top: 20,
@@ -72,7 +74,6 @@ function renderChart() {
         datalabels: {
           display: false, // Completely hide datalabels
         },
-        
       },
       layout: {
         padding: {
@@ -101,12 +102,11 @@ function toggleModal() {
 
 <template>
   <div>
-    <canvas ref="pieChartRef" style="width: 100%; height: 550px;"></canvas>
-    <button @click="expanded = !expanded" >
+    <!-- Increase the height of the canvas to make the pie chart larger -->
+    <canvas ref="pieChartRef" style="width: 100%; height: 800px;"></canvas>
+    <button @click="expanded = !expanded" :class="{ 'hidden': screenshotMode }" >
       {{ expanded ? 'Show Less' : 'Show All' }}
     </button>
-  
- 
   </div>
 </template>
 

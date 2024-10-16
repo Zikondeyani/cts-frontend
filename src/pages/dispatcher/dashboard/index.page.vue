@@ -51,13 +51,13 @@
                   <div class="mt-1 flex justify-center sm:mt-0">
                     <LocationMarkerIcon class="h-5 w-5 text-gray mr-2" />
                     <span class="text-gray font-medium text-sm">
-                      National
+                      {{user.district ? user.district : "National" }}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-gray-100 p-5">
+              <div class="bg-gray-100 p-5" v-if="user.district == 'National' || user.district == null">
                 <div
                   class="grid gap-4">
                   <!-- Stats Cards -->

@@ -15,7 +15,7 @@
         </div>
 
 
-       <!--  <div class="mt-5 flex mr-4 justify-center sm:mt-0">
+        <!--  <div class="mt-5 flex mr-4 justify-center sm:mt-0">
           <create-report-form v-on:create="createReport" />
         </div> -->
         <!-- Export Data Button -->
@@ -37,6 +37,42 @@
           style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
           styleClass="vgt-table striped" compactMode>
 
+
+          <template #table-actions> </template>
+
+          <template #table-row="props">
+
+            <span v-if="props.column.label == 'Approval'">
+
+              <div class="flex space-x-2">
+
+                <!-- Create Instruction Button -->
+
+
+                <div>
+                  <div v-if="props.row.IsApproved">
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                      Approved
+                    </span>
+                  </div>
+                  <div v-else>
+                  
+
+                    <span
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                      Not Approved
+                    </span>
+                  </div>
+                </div>
+
+
+
+              </div>
+            </span>
+          </template>
+
+
         </vue-good-table>
 
         <!-- Edit Loading Plan Dialog -->
@@ -47,6 +83,7 @@
           @close="closeDispatchDialog" v-on:update="reloadPage" />
 
 
+
       </div>
 
     </div>
@@ -55,6 +92,8 @@
 
 <script setup>
 // import the styles
+import eventBus from '../../../services/events/eventbus';
+
 
 import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -82,6 +121,7 @@ import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loadin
 
 
 import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch.component.vue";
+import createApprovalLoadingplan from '../../../components/pages/instruction/instructionApprovalER.component.vue';
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -131,26 +171,58 @@ const columns = ref([
     label: "Details",
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span> <br>`
+      +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">ATC #: ${row.ATCNumber}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
-
   {
     label: "Stocks",
-    hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-lg font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>`,
     sortable: true,
     firstSortType: "asc",
-    html: true, // Important for rendering HTML
+    html: true,
     tdClass: "capitalize"
+  },
+  // Status column
+  {
+    label: "Status",
+    field: row => {
+      const currentDate = new Date();
+      const endDate = new Date(row.EndDate);
+      const startDate = new Date(row.StartDate);
+
+      if (row.Balance !== 0 && currentDate > endDate) {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">Extremely Delayed</span>`;
+      } else if (row.Balance > 0 && currentDate <= endDate && currentDate >= startDate) {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pending</span>`;
+      } else if (row.Balance === 0) {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Completed</span>`;
+      } else if (row.Balance > 0 && currentDate > endDate) {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">Delayed</span>`;
+      }
+      return '';
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true,
+    tdClass: "capitalize"
+  },
+  // Approve/Disapprove column
+
+  {
+    label: "Approval",
+    field: row => row,
+    sortable: false,
+    thClass: "w-1/6", // Set width to 1/6th of the table
   }
 
-
 ]);
+
+
 
 const isEditDialogOpen = ref(false);
 
@@ -195,9 +267,63 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/dodma/loadingplans');
+  $router.push('/commissioner/loadingplans');
 }
 
+
+const updateApproval = async (newValues) => {
+  isLoading.value = true;
+  loadingPlanStore.update(newValues)
+    .then(result => {
+      Swal.fire({
+        title: "Success",
+        text: "Successfully approved loading plan",
+        icon: "success",
+      });
+
+      eventBus.emit('loadingplanArchived', newValues.id);
+
+      getLoadingplans();
+    })
+    .catch(error => {
+      Swal.fire({
+        title: "Failed",
+        text: "Failed to approve loading plan (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
+const rejectLoadingPlan = async (newValues) => {
+  isLoading.value = true;
+  loadingPlanStore.update(newValues)
+    .then(result => {
+      Swal.fire({
+        title: "Success",
+        text: "Loading Plan rejected!",
+        icon: "success",
+      });
+
+      eventBus.emit('loadingplanArchived', newValues.id);
+
+      getLoadingPlans();
+    })
+    .catch(error => {
+      Swal.fire({
+        title: "Failed",
+        text: "Failed to approve loading plan (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
 
 const getLoadingplans = async () => {
   isLoading.value = true;
@@ -234,6 +360,8 @@ const generateExcel = () => {
     Balance: plan.Balance,
     StartDate: plan.StartDate,
     EndDate: plan.EndDate,
+    
+    "ATC #": plan.ATCNumber,
     "Commodity": plan.commodity?.Name,
     "From": plan.warehouse?.Name,
     "Transporter Name": plan.transporter?.Name,

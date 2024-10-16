@@ -1,6 +1,6 @@
 <template>
   <main class="">
-    <!--spinner-->
+    <!-- spinner -->
     <spinner-widget v-bind:open="isLoading" />
 
     <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
@@ -20,11 +20,40 @@
         </button>
       </div>
 
+      <!-- Tabs -->
 
-      <!-- table  -->
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-        <vue-good-table :columns="columns" :rows="receipts" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: blue;" :pagination-options="{
+
+      <div class="my-4 border-b border-gray-300">
+        <div class="flex flex-wrap">
+          <button @click="activeTab = 'submitted'"
+            :class="{ 'text-white': activeTab === 'submitted', 'bg-white text-blue-800 border border-blue-800': activeTab !== 'submitted' }"
+            style="background-color: #248cd6;" class="relative flex items-center mr-1 py-2 px-4 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <i class="fas fa-check-circle mr-2"></i> <!-- Submitted icon -->
+            Submitted Receipts
+            <span v-if="submittedCount > 0"
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center px-3">
+              {{ submittedCount }}
+            </span>
+          </button>
+
+          <!-- <button @click="activeTab = 'draft'"
+            :class="{ 'bg-blue-500 text-white': activeTab === 'draft', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'draft' }"
+            class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <i class="fas fa-file-alt mr-2"></i>
+            Draft Receipts
+            <span v-if="draftCount > 0"
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+              {{ draftCount }}
+            </span>
+          </button> -->
+
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table bg-white">
+        <vue-good-table v-if="activeTab == 'submitted'" :columns="columns" :rows="receipts"
+          :search-options="{ enabled: true }" style="font-weight: bold; color: blue;" :pagination-options="{
             enabled: true,
           }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
           <template #table-actions> </template>
@@ -48,6 +77,43 @@
 
 
 
+
+            </span>
+          </template>
+        </vue-good-table>
+
+
+        <vue-good-table v-if="activeTab == 'draft'" :columns="columns2" :rows="draftreceipts"
+          :search-options="{ enabled: true }" style="font-weight: bold; color: blue;" :pagination-options="{
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+          <template #table-actions> </template>
+          <template #table-row="props">
+            <span v-if="props.column.label == 'Options'">
+
+              <!-- Edit Button with Pencil Icon -->
+              <!-- <button @click="openEditDialog(props.row)"
+                class="text-green-500 hover:text-green-700 transition duration-300">
+                <PencilIcon class="h-5 w-5 inline-block mr-1" />
+                Edit
+              </button> -->
+
+              <!-- Delete Button with Trash Icon -->
+
+              <button @click="openDispatchDialog(props.row)"
+                class="text-blue-400 hover:text-blue-300 transition duration-300">
+                <PencilIcon class="h-5 w-5 mr-3 inline-block mx-3" />
+
+                Edit
+              </button>
+
+              <button @click="openDispatchDialog(props.row)"
+                class="text-blue-400 hover:text-blue-300 transition duration-300">
+                <EyeIcon class="h-5 w-5 inline-block ml-4 mr-1" />
+                View Receipt
+              </button>
+
+
             </span>
           </template>
         </vue-good-table>
@@ -61,7 +127,6 @@
 
         <ReceiptViewDialog :isOpen="isReceiptDialogOpen" :receipt="selectedReceipt" @close="closeReceiptDialog"
           v-on:update="reloadPage" />
-
       </div>
     </div>
   </main>
@@ -77,6 +142,8 @@ import {
   ChevronLeftIcon,
   DocumentTextIcon,
   EyeIcon,
+  XIcon,
+  PencilIcon,
   ChevronRightIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
@@ -97,6 +164,7 @@ import createListingForm from "../../../components/pages/catalogue/create.compon
 //SCHEMA//AND//STORES
 import { useListingStore } from "../../../stores/catalogue.store";
 
+const activeTab = ref('submitted');
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -106,9 +174,9 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/warehouse/dashboard", current: false },
+  { name: "Home", href: "/field/dashboard", current: false },
   { name: "Receipts", href: "#", current: true },
-    { name: "Emergency Response", href: "#", current: true },
+  { name: "Emergency Response", href: "#", current: true },
 
 ];
 
@@ -141,8 +209,8 @@ const columns = ref([
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.CreatedOn).format("DD/MM/YYYY") !== null ? moment(row.CreatedOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
-   sortable: true,
+    field: row => moment(row.CreatedOn).format("DD/MM/YYYY"),
+    sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
     tdClass: "capitalize"
@@ -163,9 +231,64 @@ const columns = ref([
   },
 
   {
-    label: "Truck Number",
+    label: "Target FDP",
     field: row => `
-    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"> ${row.instructedDispatch?.TruckNumber || "Unknown"}</span>`,
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"> ${row.instructedDispatch?.FinalDestinationPoint || "Unknown"}</span>`,
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // This is important to render HTML
+    tdClass: "capitalize"
+  },
+
+
+  {
+    label: "Options",
+    field: row => row,
+    sortable: false
+  }
+
+
+]);
+
+const columns2 = ref([
+
+  {
+    label: "#",
+    field: (row) => row.originalIndex + 1,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
+
+
+  {
+    label: "Date",
+    hidden: false,
+    field: row => moment(row.CreatedOn).format("DD/MM/YYYY"),
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+    tdClass: "capitalize"
+  }
+  ,
+
+  {
+    label: "Details",
+    hidden: false,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${row.instructedDispatch?.DeliveryNote !== undefined ? row.instructedDispatch?.DeliveryNote : "N/A"}</span><br>`
+      +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">To: ${row.instructedDispatch?.FinalDestinationPoint !== null ? row.instructedDispatch?.FinalDestinationPoint : "N/A"}</span><br>`,
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+
+    tdClass: "capitalize"
+  },
+
+  {
+    label: "Target FDP",
+    field: row => `
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"> ${row.instructedDispatch?.FinalDestinationPoint || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -183,15 +306,56 @@ const columns = ref([
 ]);
 
 
+const draftCount = ref(0);
+const submittedCount = ref(0);
 
 
 
 const selectedDispatch = ref(null);
 
-
+const updateCounts = () => {
+  draftCount.value = draftreceipts.filter(r => r.status == 3).length;
+  submittedCount.value = receipts.filter(r => r.status !== 3).length;
+};
 
 const selectedReceipt = ref(null);
 
+const requestReversal = async (row) => {
+
+  const { value: reason } = await Swal.fire({
+    title: 'Request Reversal',
+    text: 'Are you sure you want to request a reversal? Please provide a reason:',
+    input: 'textarea',
+    inputLabel: 'Reason',
+    inputPlaceholder: 'Enter the reason for reversal here...',
+    showCancelButton: true,
+    confirmButtonText: 'Submit Request',
+    cancelButtonText: 'Cancel',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to provide a reason!';
+      }
+    }
+  });
+
+  if (reason) {
+    // Process the reversal request here
+
+    await receiptStore.update({ id: row.id, ReversalComments: reason, status: 4, ReverserDistrict: user?.value.district, ReversedBy: user?.value.username.replace(/\./g, ' ')});
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Reversal Request Submitted',
+      text: `Reversal request has been submitted successfully.`,
+      timer: 3000,
+      timerProgressBar: true,
+      toast: true,
+      position: 'top-right',
+      showConfirmButton: false,
+    });
+    getReceipts();
+  }
+};
 
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
@@ -257,7 +421,7 @@ const closeReceiptDialog = () => {
 };
 
 
-
+const draftreceipts = reactive([])
 
 //MOUNTED
 onMounted(() => {
@@ -279,7 +443,8 @@ const getReceipts = async () => {
       receipts.length = 0; //empty array
       let sorteddata = result.reverse()
       receipts.push(...sorteddata);
-
+      draftreceipts.push(...sorteddata);
+      updateCounts()
 
     })
 
@@ -336,7 +501,7 @@ const deleteItem = async (id) => {
 
 </script>
 
-<style>
+<style scoped>
 .rounded-table {
   border-radius: 10px;
   /* Adjust the radius as needed */

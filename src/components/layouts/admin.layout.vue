@@ -88,6 +88,15 @@
                 </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
+                <router-link to="/admin/change-password" :class="menuItemClasses(active, true)">
+                  <button @click="onAbout()">
+                    Change Password
+                  </button>
+                </router-link>
+                </MenuItem>
+
+
+                <MenuItem v-slot="{ active }">
                 <button @click="onSignout" :class="menuItemClasses(active, true)">
                   Sign out
                 </button>
@@ -95,6 +104,8 @@
               </MenuItems>
             </transition>
           </Menu>
+
+
         </div>
       </div>
       <!-- Mobile Menu -->
@@ -136,6 +147,14 @@
                 About System
               </button>
               </MenuItem>
+              <MenuItem v-slot="{ active }">
+              <router-link to="/admin/change-password" :class="menuItemClasses(active, true)">
+                <button @click="onAbout()">
+                  Change Password
+                </button>
+              </router-link>
+              </MenuItem>
+
               <MenuItem v-slot="{ active }">
               <button @click="onSignout" :class="menuItemClasses(active, true)">
                 Sign out
@@ -234,6 +253,15 @@ const isDropdownOpen = ref(false);
 import { saveDataOffline, getDataOffline, clearDataOffline } from '@/services/localbase';
 
 
+const isopen = ref(false);
+const openPasswordDialog = ref(false);
+
+// Method to open the dialog
+const showChangePasswordDialog = () => {
+  isopen.value = true;
+};
+
+
 
 const receiptStore = usereceiptstore();
 const receipts = reactive([]);
@@ -273,7 +301,7 @@ const getInstructedReceipts = async () => {
 
       // Push the filtered instructions into the array
       instructedreceipts.push(...result.filter(item => item.status == 4));
-   
+
 
       updateCounts()
       // Update the count of new instructions
@@ -362,10 +390,10 @@ function navigation() {
     { name: "Home", href: "/admin/dashboard", icon: HomeIcon, current: false },
     /*   { name: "Plan & Dispatch", href: "/admin/dispatch-management", icon: AdjustmentsIcon, current: false },
      */ /*  { name: "Commodities", href: "/admin/commodity-tracking", icon: CollectionIcon, current: false },
-    { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
-    { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
-  */  /*  { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
-    */
+  { name: "Requisitions", href: "/admin/requisition-management", icon: IdentificationIcon, current: false },
+  { name: "Project Management", href: "/admin/project-management", icon: IdentificationIcon, current: false },
+*/  /*  { name: "Receipts", href: "/admin/receipt-management", icon: DocumentDuplicateIcon, current: false },
+         */
     { name: "Reports", href: "/admin/report-management", icon: DocumentDuplicateIcon, current: false },
     { name: "System", href: "/admin/system", icon: AdjustmentsIcon, current: false },
     { name: "Reversals", href: "/admin/reversals", icon: XIcon, current: false },
@@ -471,7 +499,7 @@ const removeEventListeners = () => {
 
 
 onBeforeUnmount(() => {
-  
+
   eventBus.off('reversalTriggered');
   clearSignOutTimer();
   removeEventListeners();

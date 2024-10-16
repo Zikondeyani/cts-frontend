@@ -116,14 +116,13 @@
                 </div>
               </div>
               <div v-if="activeTab === 'lean'">
+
                 <vue-good-table :columns="columns" :rows="expectedDispatches" :search-options="{ enabled: true }"
                   style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                   styleClass="vgt-table striped" compactMode>
                   <template #table-actions> </template>
                   <template #table-row="props">
                     <span v-if="props.column.label == 'Options'">
-
-
 
 
                       <button @click="openDispatchDialog(props.row)"
@@ -329,7 +328,6 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
-
   {
     label: "Quantity",
     hidden: false,
@@ -339,8 +337,7 @@ const columns = ref([
     firstSortType: "asc",
     html: true, // Important for rendering HTML
     tdClass: "capitalize"
-  }
-  ,
+  },
 
   {
     label: "Details",
@@ -359,7 +356,9 @@ const columns = ref([
     field: row => `
     <span class="from-color">Driver: ${row.DriverName || "Driver Not Specified"}</span><br>
     <span class="to-color">Truck: ${row.TruckNumber || "Not Available"}</span><br>
-    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>`,
+    <span class="by-color">By: ${row.Dispatcher?.username.replace(/\./g, ' ') || "Unknown"}</span>
+    <br>
+    <span class="by-color">ATC No: ${row.loadingPlan?.ATCNumber}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -369,20 +368,19 @@ const columns = ref([
   {
     label: "Status",
     field: row => {
-      const today = moment();
-      const endDate = moment(row.loadingPlan?.EndDate);
+      const today = moment().startOf('day'); // Start of today
+      const createdOn = moment(row.Date).startOf('day'); // Start of the created date
 
-      if (row.IsArchived) {
-        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800'>Expensed</span>";
-      } else if (!row.IsArchived && endDate.isBefore(today)) {
-        const diffDays = today.diff(endDate, 'days');
-        if (diffDays <= 3) {
-          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed</span>";
-        } else {
-          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Not Delivered</span>";
-        }
-      } else {
+      if (createdOn.isSame(today)) {
+        // If CreatedOn is today, show "Pending"
         return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800'>Pending</span>";
+      } else if (createdOn.isBefore(today)) {
+        const diffDays = today.diff(createdOn, 'days');
+        if (diffDays <= 3) {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed Receipt</span>";
+        } else {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Long overdue</span>";
+        }
       }
     },
     sortable: true,
@@ -398,8 +396,8 @@ const columns = ref([
     sortable: false
   }
 
-
 ]);
+
 
 
 const columns2 = ref([
@@ -438,20 +436,19 @@ const columns2 = ref([
   {
     label: "Status",
     field: row => {
-      const today = moment();
-      const endDate = moment(row.loadingPlan?.EndDate);
+      const today = moment().startOf('day'); // Start of today
+      const createdOn = moment(row.createdOn).startOf('day'); // Start of the created date
 
-      if (row.IsArchived) {
-        return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800'>Expensed</span>";
-      } else if (!row.IsArchived && endDate.isBefore(today)) {
-        const diffDays = today.diff(endDate, 'days');
-        if (diffDays <= 3) {
-          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed</span>";
-        } else {
-          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Not Delivered</span>";
-        }
-      } else {
+      if (createdOn.isSame(today)) {
+        // If CreatedOn is today, show "Pending"
         return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800'>Pending</span>";
+      } else if (createdOn.isBefore(today)) {
+        const diffDays = today.diff(createdOn, 'days');
+        if (diffDays <= 3) {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed Receipt</span>";
+        } else {
+          return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Long overdue</span>";
+        }
       }
     },
     sortable: true,
@@ -741,7 +738,7 @@ const createReceipts = async (item) => {
   // Wait for all promises to complete
   await recieptStore.create(item);
 
-  
+
 
   getExpectedDispatches();
 
@@ -828,7 +825,7 @@ const getExpectedDispatches = async () => {
       expectedDispatches.length = 0; //empty array
 
       let sorteddata = result.reverse();
-      expectedDispatches.push(...sorteddata);
+      expectedDispatches.push(...sorteddata.filter(item => item.IsIntransit == false));
 
 
     })

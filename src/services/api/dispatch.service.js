@@ -99,12 +99,92 @@ export default class DispatcherService {
   }
 
 
-  
+
 
   getExtendedDispatchSummary(id) {
     if (id == null) {
       return axios
         .get(resource + '/dispatch-summary', {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+  getExtendedDispatchSummaryWFP(id) {
+    if (id == null) {
+      return axios
+        .get(resource + '/filtered-summary', {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(resource + `/` + id, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+  getExtendedDispatchSummaryDodma(id) {
+    if (id == null) {
+      return axios
+        .get(resource + '/filtered-summary/dodma', {
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-type": "Application/json",
@@ -210,9 +290,57 @@ export default class DispatcherService {
   }
 
 
+  getdispatchPerfomance() {
+    return axios
+      .get(resource + '/performance-stats', {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+
+        console.log(response, "JDKDKDKDKK")
+     
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+  getdispatchSummaryTime() {
+    return axios
+      .get(resource + '/dispatch-summary-time', {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
   getdispatchDamageSummary() {
-     return axios
-        .get(resource + '/damaged-summary' + `?filter={"include": [
+    return axios
+      .get(resource + '/damaged-summary' + `?filter={"include": [
         {
           "relation": "loadingPlan",
           "scope": {
@@ -244,22 +372,22 @@ export default class DispatcherService {
           }
         }
         , "Dispatcher"]}`, {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        })
-        .then((response) => {
-          var result = response.data;
-          return result;
-        })
-        .catch((error) => {
-          if (error.response) {
-            throw error.response.data.error;
-          }
-        });
-    
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
   }
 
 

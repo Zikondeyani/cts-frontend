@@ -10,10 +10,9 @@ const props = defineProps({
 
 const barChartRef = ref(null);
 
-
 const processedBarChartData = computed(() => {
   if (props.commodityDispatchData.length === 0) {
-    return { datasets: [] }; // Return an empty dataset if no flattened data
+    return { datasets: [] };
   }
 
   const districts = [...new Set(props.commodityDispatchData.map(item => item.district))];
@@ -25,7 +24,7 @@ const processedBarChartData = computed(() => {
 
   const receiptData = districts.map(district => {
     const data = props.commodityDispatchData.find(item => item.district === district);
-    return data ? data.receiptCompletion : 0;
+    return data ? Math.min(data.receiptCompletion, 100) : 0; // Ensure no value exceeds 100%
   });
 
   return {
@@ -34,13 +33,13 @@ const processedBarChartData = computed(() => {
       {
         label: 'Dispatch Completion (%)',
         data: dispatchData,
-        backgroundColor: '#096eb4', // Primary shade of blue for dispatched
+        backgroundColor: '#096eb4', // Solid blue for dispatch
         stack: 'stack1'
       },
       {
         label: 'Receipt Completion (%)',
         data: receiptData,
-        backgroundColor: '#0b8ad8', // Lighter shade of blue for received
+        backgroundColor: 'rgba(11, 138, 216, 0.6)', // Semi-transparent blue for receipt
         stack: 'stack1'
       }
     ]
@@ -83,7 +82,7 @@ onMounted(() => {
           }
         },
         datalabels: {
-          display: false, // Completely hide datalabels
+          display: false, // Hide datalabels
         },
       },
       scales: {
@@ -101,8 +100,9 @@ onMounted(() => {
             text: 'Completion (%)'
           },
           beginAtZero: true,
+          max: 100, // Cap the y-axis at 100%
           ticks: {
-            callback: (value) => `${value}%` // Display percentage on y-axis
+            callback: (value) => `${value}%`, // Display percentage on y-axis
           }
         }
       }
