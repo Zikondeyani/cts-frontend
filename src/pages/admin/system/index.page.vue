@@ -46,13 +46,15 @@ import {
   KeyIcon,
   ArchiveIcon,
   FolderIcon,
+  
+  TruckIcon,
   MailIcon,
   BellIcon,
   ChartBarIcon,
   MapIcon,
   ScaleIcon
 } from "@heroicons/vue/outline";
-import { DocumentIcon } from '@heroicons/vue/solid';
+import { DocumentIcon, DocumentTextIcon } from '@heroicons/vue/solid';
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
@@ -82,10 +84,11 @@ const optionGroups = ref([
       
     { label: 'Stock Register', icon: ClipboardListIcon, path: '/admin/stock-management' },
     { label: 'Warehouses', icon: OfficeBuildingIcon, path: '/admin/warehouse-management' },
-    
+    { label: 'Transporters', icon: TruckIcon, path: '/admin/transporter-management' },
+   
       { label: 'Commodities', icon: MapIcon, path: '/admin/commodity-management' },
       { label: 'Commodity Types', icon: ScaleIcon, path: '/admin/commodity-types' },
-      { label: 'Receipts', icon: DocumentIcon, path: '/admin/receipts' },
+      { label: 'Receipts', icon: DocumentTextIcon, path: '/admin/receipts' },
    
     ],
   },

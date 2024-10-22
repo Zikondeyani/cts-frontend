@@ -279,6 +279,85 @@ export default class LoadingPlanService {
 
 
 
+  getloadingplansNoDispatches() {
+    return axios
+      .get(
+        resource + "/no-dispatches",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+  getloadingplansNoReceipts() {
+    return axios
+      .get(
+        resource + "/no-receipts",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+  getloadingplansUnapproved() {
+    return axios
+      .get(
+        resource + "/unapproved",
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+
+  }
+
+
+
   getloadingplansDispatchesRemindersSendMail() {
     return axios
       .get(

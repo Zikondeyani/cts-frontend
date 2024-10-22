@@ -250,6 +250,20 @@ const routes = [
       },
 
 
+      
+      {
+        path: "/admin/transporter-management",
+        name: "admin-transporter-management",
+        component: () => import("../pages/admin/transporters/index.page.vue"),
+      },
+
+
+      {
+        path: "/admin/transporter-management/manage/:id",
+        name: "admin-manage-transporter",
+        component: () => import("../pages/admin/transporters/manage.page.vue"),
+      },
+
 
       {
         path: "/admin/commodity-types",
