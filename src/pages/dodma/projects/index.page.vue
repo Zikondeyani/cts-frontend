@@ -37,7 +37,7 @@
 
           <!-- Dropdown for Lean Season Response -->
           <div 
-            v-if="option.label === 'Lean Season Response'" 
+            v-if="option.label.includes('Lean Season Response')" 
             v-show="option.showDropdown"
             @mouseover="keepDropdownVisible(option.label)" 
             @mouseleave="maybeHideDropdown(option.label)"

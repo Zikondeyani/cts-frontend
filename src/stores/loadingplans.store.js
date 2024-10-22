@@ -12,7 +12,7 @@ export const useloadingplanstore = defineStore({
   },
   actions: {
 
-    
+
 
     async getLoadings() {
       return await loadingplansService.getLoadings().then((result) => {
@@ -54,7 +54,7 @@ export const useloadingplanstore = defineStore({
     },
 
 
-    async getloadingplansDispatchesStats(){
+    async getloadingplansDispatchesStats() {
       return await loadingplansService.getloadingplansDispatchesStats().then((result) => {
         if (result) {
           var response = result;
@@ -71,6 +71,37 @@ export const useloadingplanstore = defineStore({
         }
       });
     },
+
+
+    async getloadingplansNoReceipts() {
+      return await loadingplansService.getloadingplansNoReceipts().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
+    async getloadingplansUnapproved() {
+      return await loadingplansService.getloadingplansUnapproved().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+    async getloadingplansNoDispatches() {
+      return await loadingplansService.getloadingplansNoDispatches().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
 
     async getloadingplansDispatchesRemindersSendMail() {
       return await loadingplansService.getloadingplansDispatchesRemindersSendMail().then((result) => {
@@ -119,7 +150,7 @@ export const useloadingplanstore = defineStore({
       });
     },
 
-    
+
 
 
     async getloadingplansSummaryByCommodity() {
@@ -273,7 +304,7 @@ export const useloadingplanstore = defineStore({
     },
 
 
-    
+
     async removeWithComments(data) {
       return await loadingplansService
         .removeWithComments(data)

@@ -136,6 +136,7 @@
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
                                     <option value="received but damaged">Received but damaged</option>
+                                    <option value="missing">Missing</option>                                
                                     <option value="received in excess">Received in excess</option>
                                     <option value="received but not expected quantity">Received but not at the
                                       expected quantity</option>

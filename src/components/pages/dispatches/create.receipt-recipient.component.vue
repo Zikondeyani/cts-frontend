@@ -130,6 +130,7 @@
                                     class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
+                                    <option value="missing">Missing</option>                                                       
                                     <option value="received but damaged">Received but damaged</option>
                                     <option value="received in excess">Received in excess</option>
                                     <option value="received but not expected quantity">Received but not at the expected

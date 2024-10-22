@@ -187,7 +187,7 @@
 
 
 
-               
+
 
                 </div>
               </div>
@@ -299,7 +299,7 @@ const onSubmit = () => {
   // Validate that all fields are populated
   if (!reports.value.activityId || !reports.value.transporterId || !reports.value.commodityId ||
     !reports.value.Quantity || !reports.value.warehouseId || !reports.value.districtId ||
-    !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate ) {
+    !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -352,82 +352,101 @@ const getWarehouses = async () => {
   warehouseStore
     .get()
     .then(result => {
+      warehouses.length = 0; // empty array
 
-      warehouses.length = 0; //empty array
-      warehouses.push(...result);
+      // Sort alphabetically by 'name' before pushing to warehouses
+      const sortedWarehouses = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      warehouses.push(...sortedWarehouses);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
+
 
 
 const getCommodities = async () => {
   commoditiesstore
     .get()
     .then(result => {
+      commodities.length = 0; // empty array
 
-      commodities.length = 0; //empty array
-      commodities.push(...result);
+      // Sort alphabetically by 'name' before pushing to commodities
+      const sortedCommodities = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      commodities.push(...sortedCommodities);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
+
 
 
 const getActivities = async () => {
   activitiestore
     .get()
     .then(result => {
+      activities.length = 0; // empty array
 
-      activities.length = 0; //empty array
-      activities.push(...result);
+      // Sort alphabetically by 'name' before pushing to activities
+      const sortedActivities = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      activities.push(...sortedActivities);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
+
 
 const getDistricts = async () => {
   districtstore
     .get()
     .then(result => {
+      districts.length = 0; // empty array
 
-      districts.length = 0; //empty array
-      districts.push(...result);
+      // Sort alphabetically by 'name' before pushing to districts
+      const sortedDistricts = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      districts.push(...sortedDistricts);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
+
 
 
 const getProjects = async () => {
   projectstore
     .get()
     .then(result => {
+      projects.length = 0; // empty array
 
-      projects.length = 0; //empty array
-      projects.push(...result);
+      // Sort alphabetically by 'name' before pushing to projects
+      const sortedProjects = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      projects.push(...sortedProjects);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
 
@@ -435,15 +454,18 @@ const getTransporters = async () => {
   transporterStore
     .get()
     .then(result => {
+      transporters.length = 0; // empty array
 
-      transporters.length = 0; //empty array
-      transporters.push(...result);
+      // Sort alphabetically by 'name' before pushing to transporters
+      const sortedTransporters = result.sort((a, b) => a.Name.localeCompare(b.Name));
 
+      transporters.push(...sortedTransporters);
     })
     .catch(error => {
-
+      // Handle error
     })
     .finally(() => {
+      // Optional cleanup or final actions
     });
 };
 
