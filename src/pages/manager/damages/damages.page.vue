@@ -67,7 +67,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/dodma/dashboard", current: false },
+  { name: "Home", href: "/manager/dashboard", current: false },
   { name: "Lean Season & Emergency Assistance Losses", href: "#", current: true },
 ];
 
@@ -111,7 +111,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >L.P#: ${row.loadingPlanNumber}</span><br>`
+    field: row => `<span >ATC#: ${row.atcNumber}</span><br>`
       +
       `<span>District: ${row.district}</span><br>`,
     sortable: true,
@@ -127,7 +127,7 @@ const columns = ref([
 
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity}MT</span><br>`
       +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Damaged: ${row.totalQuantityAll}MT</span><br>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Loss: ${row.totalQuantityAll.toFixed(2)}MT</span><br>`,
 
     sortable: true,
     firstSortType: "asc",
@@ -140,7 +140,7 @@ const columns = ref([
   {
     label: "Transporter",
     field: row => `
-    <span class="by-color"> ${row.transporter || "Unknown"}</span>`,
+    <span class="by-color"> ${row.transporter  || "Unknown"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
@@ -179,29 +179,36 @@ const generateExcel = () => {
   const dataToExport = damages;
 
   const flattenedData = dataToExport.flatMap(damage => 
+  damage.lossTypes.map(lossType => {
+    // Calculate the percentage loss
+    const percentageLoss = damage.originQuantity > 0 
+      ? (lossType.totalQuantity / damage.originQuantity) * 100 
+      : 0; // Avoid division by zero
 
-    damage.lossTypes.map(lossType => ({
+    return {
       Commodity: damage.commodity,
-      'Loading Plan #': damage.loadingPlanNumber,
+      'ATC #': damage.atcNumber,
       "REF NO": lossType.RefNO,
       District: damage.district,
-      "Transporter": damage.transporter,
+      Transporter: damage.transporter,
       "Quantity Dispatched (MT)": damage.originQuantity.toFixed(2),
-      "Quantity Damaged (MT)": lossType.totalQuantity.toFixed(2),  
-      "FDP": lossType.FinalDestinationPoint,
+      "Quantity Lost (MT)": lossType.totalQuantity.toFixed(2),
+      FDP: lossType.FinalDestinationPoint,
       "Type of Loss": lossType.typeOfLoss,
-      "Extent of damage": lossType.extentOfLoss,
-      "Percentage Damaged (%)": lossType.damagePercentage.toFixed(2),
-      "Comments": lossType.comments,
-    }))
-  );
+      "Extent of loss": lossType.extentOfLoss,
+      "Percentage loss (%)": percentageLoss.toFixed(2), // Use calculated percentage
+      Comments: lossType.comments,
+    };
+  })
+);
+
 
 
 
   const ws = XLSX.utils.json_to_sheet(flattenedData);
   XLSX.utils.book_append_sheet(wb, ws, wsName);
   // Export the workbook
-  XLSX.writeFile(wb, 'Lean-season-losses.xlsx');
+  XLSX.writeFile(wb, 'CTS-losses-stats.xlsx');
 };
 
 
