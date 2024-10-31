@@ -734,16 +734,10 @@ const createReceipt = async (originalModel) => {
 
 
 const createReceipts = async (item) => {
-
   // Wait for all promises to complete
   await recieptStore.create(item);
-
-
-
   getExpectedDispatches();
-
   getDispatches();
-
   eventBus.emit('leaseasonDispatchesArchived');
   eventBus.emit('emergencyDispatchesArchived');
 

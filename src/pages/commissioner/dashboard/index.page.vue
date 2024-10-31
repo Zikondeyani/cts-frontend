@@ -210,7 +210,6 @@
                   <div class="mx-3" v-if="activeTab === 'district'">
                     <distribution-by-commodity v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
-
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg mt-4">
                       No Data
@@ -278,12 +277,21 @@
                   <div class="col-span-3">
                     <div class="border rounded-lg shadow-lg p-4 bg-white relative">
                       <h2 class="text-lg font-semibold text-[#096eb4] mb-4">Overall Stats</h2>
-                      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <!-- Total Commodities Dispatched -->
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
-                            <div class="text-[#096eb4] text-sm">Total Tonnage Dispatched</div>
+                            <div class="text-[#096eb4] text-sm"> Tonnage Planned</div>
+                          </div>
+                          <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalStockPlanned }}</div>
+                        </div>
+
+
+                        <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
+                          <div class="flex items-center space-x-2">
+                            <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
+                            <div class="text-[#096eb4] text-sm"> Tonnage Dispatched</div>
                           </div>
                           <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalDispatched }}</div>
                         </div>
@@ -292,7 +300,7 @@
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <InboxIcon class="w-5 h-5 text-[#096eb4]" />
-                            <div class="text-[#096eb4] text-sm">Total Tonnage Received</div>
+                            <div class="text-[#096eb4] text-sm"> Tonnage Received</div>
                           </div>
                           <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalReceived }}</div>
                         </div>
@@ -303,7 +311,7 @@
                             class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
                             <div class="flex items-center space-x-2">
                               <ClipboardListIcon class="w-5 h-5 text-[#096eb4]" />
-                              <div class="text-[#096eb4] text-sm">Total Loading Plans Created</div>
+                              <div class="text-[#096eb4] text-sm"> Loading Plans Created</div>
                             </div>
                             <div class="mt-2">
                               <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
@@ -323,7 +331,7 @@
                             <ChartBarIcon class="w-5 h-5 text-[#096eb4]" />
                             <div class="text-[#096eb4] text-sm">% of Dispatches Received</div>
                           </div>
-                          <div class="text-2xl font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
+                          <div class="text-lg mt-3 font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
                         </div>
                       </div>
                     </div>
@@ -415,7 +423,7 @@
                         <select id="district" v-model="selectedActivity"
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Activity</option>
-                          <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
+                          <option v-for="activity in activitiesLsr" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
                           </option>
                         </select>
@@ -1033,20 +1041,25 @@ const getDistricts = async () => {
     });
 };
 
+const activitiesLsr = reactive([])
 const getActivities = async () => {
   activitystore
     .get()
     .then(result => {
-      activities.length = 0; //empty array
-      activities.push(...result);
+      activities.length = 0; // empty array
+      activities.push(
+        ...result.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+      );
 
+      activitiesLsr.push(
+        ...result.filter(activity => !activity.Name.toLowerCase().includes("lsr"))
+      );
     })
     .catch(error => {
       console.error("Failed to load activities:", error);
-    })
-    .finally(() => {
     });
 };
+
 
 const getInstructions = async () => {
   instructionsStore

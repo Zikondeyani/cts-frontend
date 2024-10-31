@@ -20,7 +20,7 @@
         <!-- Tabs -->
         <div class="lg:col-span-3">
           <div class="flex justify-center space-x-4 mb-4">
-       
+
 
             <button @click="toggleView('charts')" type="button"
               class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
@@ -36,7 +36,7 @@
               Lean Season Response Dashboard
             </button>
 
-        
+
           </div>
         </div>
 
@@ -342,7 +342,7 @@
 
 
 
-              
+
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
                       <div class="flex flex-col">
@@ -350,7 +350,7 @@
                         <select id="district" v-model="selectedActivity"
                           class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option value="">All Activity</option>
-                          <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
+                          <option v-for="activity in activitiesLsr" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
                           </option>
                         </select>
@@ -969,20 +969,25 @@ const getDistricts = async () => {
     });
 };
 
+const activitiesLsr = reactive([])
 const getActivities = async () => {
   activitystore
     .get()
     .then(result => {
-      activities.length = 0; //empty array
-      activities.push(...result);
+      activities.length = 0; // empty array
+      activities.push(
+        ...result.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+      );
 
+      activitiesLsr.push(
+        ...result.filter(activity => !activity.Name.toLowerCase().includes("lsr"))
+      );
     })
     .catch(error => {
       console.error("Failed to load activities:", error);
-    })
-    .finally(() => {
     });
 };
+
 
 const getInstructions = async () => {
   instructionsStore
@@ -1264,7 +1269,7 @@ const filteredCommodityDistributionData = computed(() => {
   return commodityDistributionData.value.filter(item => {
 
 
-    const matchDistrict =  user.value.district;
+    const matchDistrict = user.value.district;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
     const matchDisaster = !selectedDisaster.value || item.disaster === selectedDisaster.value;
     const matchDate = (!selectedDateFrom.value || moment(item.date_of_occurrence).isSameOrAfter(selectedDateFrom.value)) &&
@@ -1338,7 +1343,7 @@ const filteredLeanCommodityDispatchData2 = computed(() => {
     const matchDistrict = item.district == user.value.district;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
-  
+
     return matchActivity && matchCommodity && matchDistrict;
   });
 });
