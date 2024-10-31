@@ -156,6 +156,10 @@ function prevPage() {
 }
 
 const exportToExcel = () => {
+    const today = moment();
+    const lastWeekStart = today.clone().subtract(1, 'weeks').startOf('isoWeek');
+    const monthStart = today.clone().startOf('month');
+
     // Function to filter dispatch data
     const filterDispatchData = (data, startDate, endDate) => {
         return data.map(item => ({
@@ -166,35 +170,20 @@ const exportToExcel = () => {
             'Total Dispatched (Mt)': parseFloat(item.totalDispatched || 0).toFixed(2),
             'Total Received (Mt)': parseFloat(item.totalReceived || 0).toFixed(2),
             'Dispatched Today (Mt)': parseFloat(item.dispatchedToday || 0).toFixed(2),
-            'Last Week Dispatched (Mt)': parseFloat(item.lastWeekDispatched || 0).toFixed(2),
+          /*   'Last Week Dispatched (Mt)': parseFloat(item.lastWeekDispatched || 0).toFixed(2),
             'Month Dispatched (Mt)': parseFloat(item.monthDispatched || 0).toFixed(2),
-            'Remaining Tonnage (Mt)': parseFloat(item.remainingTonnage || 0).toFixed(2),
+          */   'Remaining Tonnage (Mt)': parseFloat(item.remainingTonnage || 0).toFixed(2),
             'Dispatch Completion (%)': item.dispatchCompletion || '0',
             'Receipt Completion (%)': item.receiptCompletion || '0',
         }));
     };
 
-    // Get today's date and last week's date
-    const today = moment.utc().startOf('day');
-    const lastWeekStart = today.clone().subtract(7, 'days').startOf('day');
-    const monthStart = today.clone().startOf('month');
+    // Prepare data for each sheet with validation for empty datasets
+    const todayData = props.dispatchdata ? filterDispatchData(props.dispatchdata.filter(item => item.dispatchedToday > 0)) : [];
+    const lastWeekData = props.dispatchdata ? filterDispatchData(props.dispatchdata.filter(item => item.lastWeekDispatched > 0 && moment().isBetween(lastWeekStart, today, null, '[]'))) : [];
+    const monthData = props.dispatchdata ? filterDispatchData(props.dispatchdata.filter(item => item.monthDispatched > 0 && moment().isBetween(monthStart, today, null, '[]'))) : [];
 
-    // Prepare the datasets for the respective sheets
-    const todayData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.dispatchedToday > 0;
-    }));
-
-    const lastWeekData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.lastWeekDispatched > 0 && moment().isBetween(lastWeekStart, today, null, '[]');
-    }));
-
-    const monthData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.monthDispatched > 0 && moment().isBetween(monthStart, today, null, '[]');
-    }));
-
-    // Existing data for export
     const dataForExport = filteredData.value.map(item => ({
-        'Loading Plan': item.loadingPlan?.LoadingPlanNumber || 'N/A',
         'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
         'District': item.district || 'N/A',
         'Activity': item.activity || 'N/A',
@@ -203,45 +192,89 @@ const exportToExcel = () => {
         'Total Dispatched (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.totalDispatched || 0), 0).toFixed(2),
         'Total Received (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.receiptStats?.totalReceived || 0), 0).toFixed(2),
         'Balance (Mt)': parseFloat(item.loadingPlan?.Balance || 0).toFixed(2),
-        'Delivery Notes': item.dispatches.map(dispatch => dispatch?.deliveryNote || 'N/A').join(', '),
+        'Delivery Notes': item.dispatches.flatMap(dispatch => dispatch?.receiptStats?.physicalDeliveryNotes || []).map(note => note.physicalDeliveryNote || 'N/A').join(', '),
+        'Transported By': item.loadingPlan?.HandledBy || 'N/A'
     }));
 
+    // New datasets for additional sheets
+    // Receipt by FDP Data
+    // Receipt by FDP Data
+    const receiptByFDPData = filteredData.value.flatMap(item =>
+        item.dispatches.flatMap(dispatch =>
+            (dispatch.receiptStats && dispatch.receiptStats.physicalDeliveryNotes || []).map(note => ({
+                'District': item.district || 'N/A',
+                'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
+                'Commodity': item.commodity || 'N/A',
+                'Activity': item.activity || 'N/A',
+                'Received (Mt)': dispatch.receiptStats?.totalReceived || 0,
+                'FDP': note.finalDestination || 'N/A',
+                'Physical Delivery Note': note.physicalDeliveryNote || 'N/A',
+                'Recipient Name': dispatch.recipientName || 'N/A',
+                'Transported By': dispatch.HandledBy || 'N/A'
+            }))
+        )
+    );
+
+
+    // Dispatched per Transporter Data
+    const dispatchedPerTransporterData = filteredData.value.map(item => ({
+        'District': item.district || 'N/A',
+        'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
+        'Transporter': item.transporter || 'N/A',
+        'Commodity': item.commodity || 'N/A',
+        'Activity': item.activity || 'N/A',
+        'Handled By': item.loadingPlan?.HandledBy || 'N/A',
+        'Total Transported (Mt)': item.dispatches.reduce((sum, dispatch) =>
+            sum + (dispatch.totalDispatched || 0), 0).toFixed(2) || 0,
+    }));
+
+
+
+    const dispatchedPerWarehouseData = filteredData.value
+        .map(item => ({
+            'Warehouse Name': item.warehouse || 'N/A', // Assuming you have warehouse names in your dataset
+            'Commodity': item.commodity || 'N/A',
+            'Activity': item.activity || 'N/A',
+            'Tonnage Drawn (Mt)': item.dispatches.reduce((sum, dispatch) => sum + (dispatch.totalDispatched || 0), 0).toFixed(2) || 0,
+            'District Distributed': item.district || 'N/A',
+            'ATC Number': item.loadingPlan?.ATCNumber || 'N/A' // Include ATC Number
+        }))
+        .filter(item => parseFloat(item['Tonnage Drawn (Mt)']) > 0); // Filter out entries with tonnage drawn of 0
+
+   
     // Create a new workbook and add sheets
     const workbook = XLSX.utils.book_new();
 
     // Helper function to apply styles to a worksheet
     const applyStyles = (worksheet, headers) => {
-        // Apply header styles
         const headerStyle = {
             fill: {
                 patternType: 'solid',
-                fgColor: { rgb: '096EB4' }, // Custom blue background for headers
+                fgColor: { rgb: '096EB4' },
             },
             font: {
                 bold: true,
-                color: { rgb: 'FFFFFF' }, // White font color for headers
+                color: { rgb: 'FFFFFF' },
             },
         };
 
         const contentStyle = {
             fill: {
                 patternType: 'solid',
-                fgColor: { rgb: 'D9E7F1' }, // Light shade of blue for content
+                fgColor: { rgb: 'D9E7F1' },
             },
             font: {
-                color: { rgb: '000000' }, // Black font color for content
+                color: { rgb: '000000' },
             },
         };
 
-        // Apply styles to headers
         headers.forEach((header, index) => {
             const cellAddress = XLSX.utils.encode_cell({ r: 0, c: index });
             worksheet[cellAddress].s = headerStyle;
         });
 
-        // Apply styles to content
         const rows = worksheet['!ref'].split(':');
-        const startRow = parseInt(rows[0].replace(/[A-Z]/g, '')) + 1; // Start after headers
+        const startRow = parseInt(rows[0].replace(/[A-Z]/g, '')) + 1;
         const endRow = parseInt(rows[1].replace(/[A-Z]/g, ''));
 
         for (let r = startRow; r <= endRow; r++) {
@@ -259,23 +292,44 @@ const exportToExcel = () => {
     XLSX.utils.book_append_sheet(workbook, mainWorksheet, 'Loading Plans Report');
     applyStyles(mainWorksheet, Object.keys(dataForExport[0]));
 
-    // Add the new sheets for Today, Last Week, and This Month
+    // Add the new sheets for Today, Last Week, This Month, Receipt by FDP, Dispatched per Transporter, and Dispatched per Warehouse
     if (todayData.length > 0) {
         const todayWorksheet = XLSX.utils.json_to_sheet(todayData);
-        XLSX.utils.book_append_sheet(workbook, todayWorksheet, 'As of Today');
+        XLSX.utils.book_append_sheet(workbook, todayWorksheet, 'Received As of Today');
         applyStyles(todayWorksheet, Object.keys(todayData[0]));
     }
 
     if (lastWeekData.length > 0) {
         const lastWeekWorksheet = XLSX.utils.json_to_sheet(lastWeekData);
-        XLSX.utils.book_append_sheet(workbook, lastWeekWorksheet, 'As of Last Week');
+        XLSX.utils.book_append_sheet(workbook, lastWeekWorksheet, 'Received As of Last Week');
         applyStyles(lastWeekWorksheet, Object.keys(lastWeekData[0]));
     }
 
     if (monthData.length > 0) {
         const monthWorksheet = XLSX.utils.json_to_sheet(monthData);
-        XLSX.utils.book_append_sheet(workbook, monthWorksheet, 'As of This Month');
+        XLSX.utils.book_append_sheet(workbook, monthWorksheet, 'Received As of This Month');
         applyStyles(monthWorksheet, Object.keys(monthData[0]));
+    }
+
+    // Receipt by FDP Sheet
+    if (receiptByFDPData.length > 0) {
+        const receiptByFDPWorksheet = XLSX.utils.json_to_sheet(receiptByFDPData);
+        XLSX.utils.book_append_sheet(workbook, receiptByFDPWorksheet, 'Receipt by FDP');
+        applyStyles(receiptByFDPWorksheet, Object.keys(receiptByFDPData[0]));
+    }
+
+    // Dispatched per Transporter Sheet
+    if (dispatchedPerTransporterData.length > 0) {
+        const dispatchedPerTransporterWorksheet = XLSX.utils.json_to_sheet(dispatchedPerTransporterData);
+        XLSX.utils.book_append_sheet(workbook, dispatchedPerTransporterWorksheet, 'Dispatched per Transporter');
+        applyStyles(dispatchedPerTransporterWorksheet, Object.keys(dispatchedPerTransporterData[0]));
+    }
+
+    // Dispatched per Warehouse Sheet
+    if (dispatchedPerWarehouseData.length > 0) {
+        const dispatchedPerWarehouseWorksheet = XLSX.utils.json_to_sheet(dispatchedPerWarehouseData);
+        XLSX.utils.book_append_sheet(workbook, dispatchedPerWarehouseWorksheet, 'Dispatched per Warehouse');
+        applyStyles(dispatchedPerWarehouseWorksheet, Object.keys(dispatchedPerWarehouseData[0]));
     }
 
     // Write the workbook and save
@@ -287,6 +341,7 @@ const exportToExcel = () => {
         console.error('Error exporting to Excel:', error);
     }
 };
+
 
 
 </script>

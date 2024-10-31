@@ -31,6 +31,7 @@ const Swal = inject("Swal");
 
 // Function to handle sending reminders based on the 'reminder' prop
 const sendReminder = async () => {
+  console.log(props.reminder, "ssjj")
   try {
     if (props.reminder === 'noDispatches') {
       await reminderStore.getloadingplansNoDispatches();
@@ -45,7 +46,7 @@ const sendReminder = async () => {
       throw new Error('Invalid reminder type');
     }
   } catch (error) {
-    showErrorMessage('Failed to send reminders. Please try again.');
+    showErrorMessage('Failed to send reminders. Please try again.'+ JSON.stringify(error));
   }
 };
 

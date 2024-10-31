@@ -415,16 +415,19 @@ const submitReceipt = async () => {
   for (const [commodityName, totalReceived] of Object.entries(commodityTotals)) {
     const dispatchedQuantity = props.dispatch?.NoBags || 0;
 
-    if (totalReceived < dispatchedQuantity && !remarksMap[commodityName].has('received but not expected quantity')) {
+    if (totalReceived < dispatchedQuantity &&
+        !remarksMap[commodityName].has('received but not expected quantity') &&
+        !remarksMap[commodityName].has('missing')) {
       Swal.fire({
         icon: "error",
         title: "❗Quantity Less Than Expected",
-        html: `<p>The cumulative received quantity for ${commodityName} is less than the dispatched quantity. Please select <strong>'received but not expected quantity'</strong> in the remarks.</p>`,
+        html: `<p>The cumulative received quantity for ${commodityName} is less than the dispatched quantity. Please select either <strong>'received but not expected quantity'</strong> or <strong>'missing'</strong> in the remarks.</p>`,
         allowOutsideClick: false,
         customClass: { popup: 'swal-wide' }
       });
       return;
     }
+
 
     if (totalReceived > dispatchedQuantity && !remarksMap[commodityName].has('received in excess')) {
       Swal.fire({

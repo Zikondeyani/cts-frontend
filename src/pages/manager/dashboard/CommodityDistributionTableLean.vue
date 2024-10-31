@@ -251,11 +251,14 @@ function resetFilters() {
 }
 
 const getActivities = async () => {
-    let activitydata = await activitystore.get()
-    activities.length = 0
-    activities.push(...activitydata)
-    return activities
-}
+    let activitydata = await activitystore.get();
+    activities.length = 0;
+    activities.push(
+        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+    );
+    return activities;
+};
+
 
 const getCommodities = async () => {
     let commoditydata = await commoditystore.get()
