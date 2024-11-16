@@ -415,7 +415,7 @@
 
 
 
-              
+
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
                       <div class="flex flex-col">
@@ -535,6 +535,17 @@
                   </div>
 
                   <div v-show="currentTab === 'all'">
+
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredDataAll"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
+
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
                       :screenshotMode="screenshotMode" />
                   </div>
@@ -542,12 +553,33 @@
 
 
                   <div v-show="currentTab === 'WFP'">
+
+
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredData"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
+
                     <commodity-distribution-table-lean-WFP :data="filteredLeanCommodityDispatchDataWFP"
                       :screenshotMode="screenshotMode" />
                   </div>
 
 
                   <div v-show="currentTab === 'DoDMA'">
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredDataDodma"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
                     <commodity-distribution-table-lean-DoDMA :data="filteredLeanCommodityDispatchDataDodma"
                       :screenshotMode="screenshotMode" />
                   </div>
@@ -844,37 +876,6 @@ const takeScreenshot = () => {
   }, 300);
 };
 
-const columns = ref([
-  {
-    label: "#",
-    field: (row) => row.originalIndex + 1,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Destination District",
-    field: row => row.instruction?.district?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-]);
-
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 const requisitionsStore = userequisitionstore();
@@ -919,6 +920,7 @@ const loadingPlanSummary = reactive([]);
 
 const leanStockSummary = ref([]);
 
+const selectedFilter = ref("all");
 let userCount = ref(0);
 const newRequisitionsCount = ref(0);
 const receiptcount = ref(0)
@@ -929,24 +931,20 @@ onMounted(async () => {
 
   isLoading.value = true;
   try {
+    await fetchFilteredData()
+    await fetchFilteredDataAll()
+    await fetchFilteredDataDodma()
     const data = await requisitionStore.getCommodityDistributionSummary();
     const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
-    const dispatchdata2 = await dispatchesStore.getExtendedDispatchSummary();
 
-    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
-    const dispatchdataWFP = await dispatchesStore.getExtendedDispatchSummaryWFP();
 
-    const dispatchdataDoDMA = await dispatchesStore.getExtendedDispatchSummaryDodma();
     const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
     commodityDispatchData.value.length = 0
     commodityEmergencyDispatchData.value.length = 0
     leanStockSummary.value = [...leanstocks]
     commodityDispatchData.value.push({ ...dispatchdata })
-    commodityDispatchDataWFP.value.push({ ...dispatchdataWFP })
-
-    commodityDispatchDataDoDMA.value.push({ ...dispatchdataDoDMA })
-    commodityDispatchData2.value.push({ ...dispatchdata2 })
+    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
 
     commodityDispatchData22.value.push({ ...dispatchdata22 })
     commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
@@ -975,11 +973,41 @@ onMounted(async () => {
   getRequisitions();
 });
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
+
+const fetchFilteredData = async () => {
+  try {
+    const data = await dispatchesStore.getExtendedDispatchSummaryWFP(selectedFilter.value || null);
+    commodityDispatchDataWFP.value = data;
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
 };
+
+
+const fetchFilteredDataAll = async () => {
+  try {
+    const data = await dispatchesStore.getExtendedDispatchSummary(selectedFilter.value || null);
+
+    commodityDispatchData2.value = data;
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
+};
+
+
+const fetchFilteredDataDodma = async () => {
+  try {
+
+    const data = await dispatchesStore.getExtendedDispatchSummaryDodma(selectedFilter.value || null);;
+
+    commodityDispatchDataDoDMA.value = data
+
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
+};
+
+
 
 const instructions = reactive([])
 const newInstructionsCount = ref(0)
@@ -1256,26 +1284,6 @@ const stats2 = ref([
 
 ]);
 
-const actions = [
-  {
-    icon: IdentificationIcon,
-    name: "Catalogue",
-    href: "/admin/catalogue",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all service catalogue",
-  },
-  {
-    icon: OfficeBuildingIcon,
-    name: "Enquiries",
-    href: "/admin/bookings",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all Enquiries made to services",
-  },
-];
-
-const dispatchstatus = ref(0)
 
 const colors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
 
@@ -1350,29 +1358,7 @@ const filteredCommodityDistributionData = computed(() => {
   });
 });
 
-// Filtered data for Lean Season Response Dashboard
-const filteredLeanCommodityDispatchData = computed(() => {
-  return commodityDispatchData.value.filter(item => {
 
-
-    const matchActivity = !selectedActivity.value || item.summary.some(summaryItem => summaryItem.activity === selectedActivity.value);
-    const matchDistrict = !selectedDistrict.value || item.summary.some(summaryItem => summaryItem.district === selectedDistrict.value);
-    const matchCommodity = !selectedCommodity.value || item.summary.some(summaryItem => summaryItem.commodity === selectedCommodity.value);
-    return matchDistrict && matchCommodity && matchActivity;
-  });
-});
-
-
-
-const flattenedData = computed(() => {
-  if (!commodityDispatchData2.value || commodityDispatchData2.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchData2.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
 
 
 const flattenedData2 = computed(() => {
@@ -1386,29 +1372,10 @@ const flattenedData2 = computed(() => {
 });
 
 
-const flattenedDataWFP = computed(() => {
-  if (!commodityDispatchDataWFP.value || commodityDispatchDataWFP.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
 
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataWFP.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
-
-
-const flattenedDataDodma = computed(() => {
-  if (!commodityDispatchDataDoDMA.value || commodityDispatchDataDoDMA.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataDoDMA.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
 
 const filteredLeanCommodityDispatchData2 = computed(() => {
-  return flattenedData.value.filter(item => {
+  return commodityDispatchData2.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
@@ -1434,12 +1401,15 @@ const filteredLeanCommodityDispatchData22 = computed(() => {
 
 
 const filteredLeanCommodityDispatchDataWFP = computed(() => {
-  return flattenedDataWFP.value.filter(item => {
+
+
+  return commodityDispatchDataWFP.value.filter(item => {
+
+
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
-
 
     return matchActivity && matchCommodity && matchDistrict;
   });
@@ -1447,7 +1417,7 @@ const filteredLeanCommodityDispatchDataWFP = computed(() => {
 
 
 const filteredLeanCommodityDispatchDataDodma = computed(() => {
-  return flattenedDataDodma.value.filter(item => {
+  return commodityDispatchDataDoDMA.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;

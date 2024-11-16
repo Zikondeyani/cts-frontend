@@ -108,7 +108,7 @@
                         <select name="IsIntransit" v-model="dispatch.IsIntransit" id="toWarehouse"
                           class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                           <option disabled value="">Select dispatch status</option>
-                          <option :value="true">In transit</option>
+                          <option :value="true">Going to warehouse</option>
                           <option :value="false">Going to FDP</option>
                         </select>
                       </div>

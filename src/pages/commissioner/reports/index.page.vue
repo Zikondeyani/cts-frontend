@@ -59,7 +59,9 @@
           </div>
 
           <div class="tab-pane fade show active" id="user-loadings" role="tabpanel" aria-labelledby="tabs-user-loadings">
-            <loading-plan-distribution-table :data="loadingplansdata" :screenshotMode="screenshotMode" :dispatchdata="dispatchesdata" />
+            <loading-plan-distribution-table :data="loadingplansdata" 
+            :dispatchesdataSummary="dispatchesdataSummary"
+            :screenshotMode="screenshotMode" :dispatchdata="dispatchesdata" />
           </div>
 
           <div class="tab-pane fade" id="user-lean" role="tabpanel" aria-labelledby="tabs-user-lean">
@@ -139,6 +141,7 @@ const warehousesinventory = reactive([])
 const commodityDistributionData = ref([])
 const loadingplansdata = ref([])
 const dispatchesdata = ref([])
+const dispatchesdataSummary = ref([])
 
 
 //MOUNTED
@@ -156,7 +159,10 @@ onMounted(async () => {
 
     const dispatchdata = await dispatchStore.getdispatchSummaryTime();
     dispatchesdata.value = [...dispatchdata];
+    const dispatchdataSummary = await dispatchStore.getdispatchSummary();
+    dispatchesdataSummary.value = [...dispatchdataSummary.unsummarizedDispatches];
 
+  
   } catch (error) {
     console.error("Failed to load commodity data:", error);
   } finally {

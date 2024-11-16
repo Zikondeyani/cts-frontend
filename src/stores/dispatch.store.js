@@ -28,8 +28,7 @@ export const useDispatcherStore = defineStore({
 
 
 
-    
-
+  
     async getdispatchDamageSummary() {
       return await dispatcherService
         .getdispatchDamageSummary()
@@ -78,9 +77,9 @@ export const useDispatcherStore = defineStore({
         });
     },
 
-    async getExtendedDispatchSummary() {
+    async getExtendedDispatchSummary(filter) {
       return await dispatcherService
-        .getExtendedDispatchSummary()
+        .getExtendedDispatchSummary(filter)
         .then((result) => {
 
           return result;
@@ -95,9 +94,9 @@ export const useDispatcherStore = defineStore({
     },
 
 
-    async getExtendedDispatchSummaryWFP() {
+    async getExtendedDispatchSummaryWFP(filter) {
       return await dispatcherService
-        .getExtendedDispatchSummaryWFP()
+        .getExtendedDispatchSummaryWFP(filter)
         .then((result) => {
 
           return result;
@@ -128,9 +127,9 @@ export const useDispatcherStore = defineStore({
     },
 
 
-    async getExtendedDispatchSummaryDodma() {
+    async getExtendedDispatchSummaryDodma(filter) {
       return await dispatcherService
-        .getExtendedDispatchSummaryDodma()
+        .getExtendedDispatchSummaryDodma(filter)
         .then((result) => {
 
           return result;

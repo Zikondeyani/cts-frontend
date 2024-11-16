@@ -20,7 +20,6 @@
         </button>
       </div>
 
-
       <!-- table  -->
       <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
         <vue-good-table :columns="columns" :rows="damages" :search-options="{ enabled: true }"
@@ -113,7 +112,8 @@ const columns = ref([
     hidden: false,
     field: row => `<span >ATC#: ${row.atcNumber}</span><br>`
       +
-      `<span>District: ${row.district}</span><br>`,
+      `<span>District: ${row.district}</span><br>`+
+      `<span>Truck #: ${row.truckNumber}</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML

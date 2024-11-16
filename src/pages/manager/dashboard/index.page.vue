@@ -531,6 +531,16 @@
                   </div>
 
                   <div v-show="currentTab === 'all'">
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredDataAll"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
+
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
                       :screenshotMode="screenshotMode" />
                   </div>
@@ -538,12 +548,30 @@
 
 
                   <div v-show="currentTab === 'WFP'">
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredData"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
                     <commodity-distribution-table-lean-WFP :data="filteredLeanCommodityDispatchDataWFP"
                       :screenshotMode="screenshotMode" />
                   </div>
 
 
                   <div v-show="currentTab === 'DoDMA'">
+                     <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <select v-model="selectedFilter" @change="fetchFilteredDataDodma"
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option value="all">All</option>
+                      <option value="today">Today</option>
+                      <option value="yesterday">Yesterday</option>
+                      <option value="thisWeek">This Week</option>
+                      <option value="lastMonth">Last Month</option>
+                    </select>
                     <commodity-distribution-table-lean-DoDMA :data="filteredLeanCommodityDispatchDataDodma"
                       :screenshotMode="screenshotMode" />
                   </div>
@@ -726,6 +754,7 @@ import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLea
 const commodityDispatchDataWFP = ref([])
 const commodityDispatchDataDoDMA = ref([])
 
+const selectedFilter = ref("all");
 const currentTab = ref('all');
 // Active tab state
 const activeTab = ref('emergency'); // Default tab is 'emergency'
@@ -922,59 +951,85 @@ const loadingplansCount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
 
-  isLoading.value = true;
-  try {
-    const data = await requisitionStore.getCommodityDistributionSummary();
-    const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
-    const dispatchdata2 = await dispatchesStore.getExtendedDispatchSummary();
+isLoading.value = true;
+try {
+  await fetchFilteredData()
+  await fetchFilteredDataAll()
+  await fetchFilteredDataDodma()
+  const data = await requisitionStore.getCommodityDistributionSummary();
+  const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
 
-    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
-    const dispatchdataWFP = await dispatchesStore.getExtendedDispatchSummaryWFP();
 
-    const dispatchdataDoDMA = await dispatchesStore.getExtendedDispatchSummaryDodma();
-    const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
-    const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
-    commodityDispatchData.value.length = 0
-    commodityEmergencyDispatchData.value.length = 0
-    leanStockSummary.value = [...leanstocks]
-    commodityDispatchData.value.push({ ...dispatchdata })
-    commodityDispatchDataWFP.value.push({ ...dispatchdataWFP })
+  const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
+  const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
+  commodityDispatchData.value.length = 0
+  commodityEmergencyDispatchData.value.length = 0
+  leanStockSummary.value = [...leanstocks]
+  commodityDispatchData.value.push({ ...dispatchdata })
+  const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
 
-    commodityDispatchDataDoDMA.value.push({ ...dispatchdataDoDMA })
-    commodityDispatchData2.value.push({ ...dispatchdata2 })
+  commodityDispatchData22.value.push({ ...dispatchdata22 })
+  commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
+  commodityDistributionData.value = [...data];
+} catch (error) {
+  console.error("Failed to load commodity data:", error);
+} finally {
+  isLoading.value = false;
+}
+getActivities();
+getCommodities();
+getDisasters();
+getDistricts();
+getDonations();
+getLoadingPlans();
+getdispatchSummary();
+getUsers();
+getDispatches();
+getReceipts();
+getDispatchesCount();
+getLoadingPlansPending();
+getloadingplansSummary();
 
-    commodityDispatchData22.value.push({ ...dispatchdata22 })
-    commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
-    commodityDistributionData.value = [...data];
-  } catch (error) {
-    console.error("Failed to load commodity data:", error);
-  } finally {
-    isLoading.value = false;
-  }
-  getActivities();
-  getCommodities();
-  getDisasters();
-  getDistricts();
-  getDonations();
-  getLoadingPlans();
-  getdispatchSummary();
-  getUsers();
-  getDispatches();
-  getReceipts();
-  getDispatchesCount();
-  getLoadingPlansPending();
-  getloadingplansSummary();
-
-  getloadingplansSummaryByCommodity();
-  getInstructions();
-  getRequisitions();
+getloadingplansSummaryByCommodity();
+getInstructions();
+getRequisitions();
 });
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
+
+
+const fetchFilteredData = async () => {
+  try {
+    const data = await dispatchesStore.getExtendedDispatchSummaryWFP(selectedFilter.value || null);
+    commodityDispatchDataWFP.value = data;
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
 };
+
+
+const fetchFilteredDataAll = async () => {
+  try {
+    const data = await dispatchesStore.getExtendedDispatchSummary(selectedFilter.value || null);
+
+    commodityDispatchData2.value = data;
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
+};
+
+
+const fetchFilteredDataDodma = async () => {
+  try {
+
+    const data = await dispatchesStore.getExtendedDispatchSummaryDodma(selectedFilter.value || null);;
+
+    commodityDispatchDataDoDMA.value = data
+
+  } catch (error) {
+    console.error("Error fetching filtered dispatch data:", error);
+  }
+};
+
 
 const instructions = reactive([])
 const newInstructionsCount = ref(0)
@@ -1402,17 +1457,6 @@ const flattenedDataDodma = computed(() => {
   return Object.values(dataObj); // Convert the object into an array of values
 });
 
-const filteredLeanCommodityDispatchData2 = computed(() => {
-  return flattenedData.value.filter(item => {
-
-    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
-    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
-    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
-
-
-    return matchActivity && matchCommodity && matchDistrict;
-  });
-});
 
 
 const filteredLeanCommodityDispatchData22 = computed(() => {
@@ -1427,9 +1471,21 @@ const filteredLeanCommodityDispatchData22 = computed(() => {
   });
 });
 
+const filteredLeanCommodityDispatchData2 = computed(() => {
+  return commodityDispatchData2.value.filter(item => {
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
+
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
 
 const filteredLeanCommodityDispatchDataWFP = computed(() => {
-  return flattenedDataWFP.value.filter(item => {
+  return commodityDispatchDataWFP.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
@@ -1442,7 +1498,7 @@ const filteredLeanCommodityDispatchDataWFP = computed(() => {
 
 
 const filteredLeanCommodityDispatchDataDodma = computed(() => {
-  return flattenedDataDodma.value.filter(item => {
+  return commodityDispatchDataDoDMA.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
@@ -1453,15 +1509,7 @@ const filteredLeanCommodityDispatchDataDodma = computed(() => {
   });
 });
 
-const filteredLeanStockSummary = computed(() => {
-  return leanStockSummary.value.filter(item => {
-    const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
-    const matchDistrict = !selectedDistrict.value || item.commodityName == selectedDistrict.value;
-    const matchActivity = !selectedActivity.value || item.commodityName == selectedActivity.value;
 
-    return matchCommodity && matchActivity && matchDistrict;
-  });
-});
 </script>
 
 <style scoped>

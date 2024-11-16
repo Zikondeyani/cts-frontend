@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-x-auto relative">
         <!-- Filters section with proper padding and positioning -->
-        <div class="flex justify-between items-center p-4 space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+        <div class="flex justify-between items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
             <!-- Left-aligned content: Commodity Distribution Update -->
             <div class="mb-4 mt-4 text-left">
                 <span class="font-bold text-sm"> Distribution Update</span>
@@ -186,15 +186,6 @@ const selectedHandleBy = ref('');
 
 const totalPages = computed(() => Math.ceil(props.data.length / pageSize.value));
 
-const flattenedData = computed(() => {
-    if (!props.data || props.data.length === 0) {
-        return []; // Return an empty array if data is not available
-    }
-
-    // Assume props.data is an array with a single object containing numerically indexed keys
-    const [dataObj] = props.data; // Extract the first object (your data)
-    return Object.values(dataObj); // Convert the object into an array of values
-});
 
 
 const filteredData = computed(() => {
