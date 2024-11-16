@@ -105,6 +105,8 @@ const props = defineProps({
     data: Array,
     dispatchdata: Array,
     screenshotMode: Boolean,
+    
+    dispatchesdataSummary: Array
 });
 
 const searchQuery = ref('');
@@ -156,137 +158,74 @@ function prevPage() {
 }
 
 const exportToExcel = () => {
-    // Function to filter dispatch data
-    const filterDispatchData = (data, startDate, endDate) => {
-        return data.map(item => ({
+
+const dataForExport = filteredData.value.map(item => ({
+    'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
+    'District': item.district || 'N/A',
+    'Activity': item.activity || 'N/A',
+    'Transporter': item.transporter || 'N/A',
+    'Quantity (Mt)': parseFloat(item.loadingPlan?.Quantity || 0).toFixed(2),
+    'Total Dispatched (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.totalDispatched || 0), 0).toFixed(2),
+    'Total Received (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.receiptStats?.totalReceived || 0), 0).toFixed(2),
+    'Balance (Mt)': parseFloat(item.loadingPlan?.Balance || 0).toFixed(2),
+    'Delivery Notes': item.dispatches.flatMap(dispatch => dispatch?.receiptStats?.physicalDeliveryNotes || []).map(note => note.physicalDeliveryNote || 'N/A').join(', '),
+    'Transported By': item.loadingPlan?.HandledBy || 'N/A'
+}));
+
+// Additional datasets for other sheets (Receipt by FDP, Dispatched per Transporter, etc.)
+const receiptByFDPData = filteredData.value.flatMap(item =>
+    item.dispatches.flatMap(dispatch =>
+        (dispatch.receiptStats?.physicalDeliveryNotes || []).map(note => ({
             'District': item.district || 'N/A',
-            'Activity': item.activity || 'N/A',
-            'Commodity': item.commodity || 'N/A',
-            'Tonnage Allocation (Mt)': parseFloat(item.tonnageAllocation || 0).toFixed(2),
-            'Total Dispatched (Mt)': parseFloat(item.totalDispatched || 0).toFixed(2),
-            'Total Received (Mt)': parseFloat(item.totalReceived || 0).toFixed(2),
-            'Dispatched Today (Mt)': parseFloat(item.dispatchedToday || 0).toFixed(2),
-            'Last Week Dispatched (Mt)': parseFloat(item.lastWeekDispatched || 0).toFixed(2),
-            'Month Dispatched (Mt)': parseFloat(item.monthDispatched || 0).toFixed(2),
-            'Remaining Tonnage (Mt)': parseFloat(item.remainingTonnage || 0).toFixed(2),
-            'Dispatch Completion (%)': item.dispatchCompletion || '0',
-            'Receipt Completion (%)': item.receiptCompletion || '0',
-        }));
-    };
+            'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
+            'Received (Mt)': dispatch.receiptStats?.totalReceived || 0,
+            'FDP': note.finalDestination || 'N/A',
+            'Physical Delivery Note': note.physicalDeliveryNote || 'N/A',
+            'Recipient Name': dispatch.recipientName || 'N/A',
+        }))
+    )
+);
 
-    // Get today's date and last week's date
-    const today = moment.utc().startOf('day');
-    const lastWeekStart = today.clone().subtract(7, 'days').startOf('day');
-    const monthStart = today.clone().startOf('month');
+const dispatchedPerTransporterData = filteredData.value.map(item => ({
+    'District': item.district || 'N/A',
+    'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
+    'Transporter': item.transporter || 'N/A',
+    'Total Transported (Mt)': item.dispatches.reduce((sum, dispatch) => sum + (dispatch.totalDispatched || 0), 0).toFixed(2) || 0,
+}));
 
-    // Prepare the datasets for the respective sheets
-    const todayData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.dispatchedToday > 0;
-    }));
-
-    const lastWeekData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.lastWeekDispatched > 0 && moment().isBetween(lastWeekStart, today, null, '[]');
-    }));
-
-    const monthData = filterDispatchData(props.dispatchdata.filter(item => {
-        return item.monthDispatched > 0 && moment().isBetween(monthStart, today, null, '[]');
-    }));
-
-    // Existing data for export
-    const dataForExport = filteredData.value.map(item => ({
-        'Loading Plan': item.loadingPlan?.LoadingPlanNumber || 'N/A',
+const dispatchedPerWarehouseData = filteredData.value
+    .map(item => ({
+        'Warehouse Name': item.warehouse || 'N/A',
+        'Tonnage Drawn (Mt)': item.dispatches.reduce((sum, dispatch) => sum + (dispatch.totalDispatched || 0), 0).toFixed(2) || 0,
+        'District Distributed': item.district || 'N/A',
         'ATC Number': item.loadingPlan?.ATCNumber || 'N/A',
-        'District': item.district || 'N/A',
-        'Activity': item.activity || 'N/A',
-        'Transporter': item.transporter || 'N/A',
-        'Quantity (Mt)': parseFloat(item.loadingPlan?.Quantity || 0).toFixed(2),
-        'Total Dispatched (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.totalDispatched || 0), 0).toFixed(2),
-        'Total Received (Mt)': item.dispatches.reduce((sum, dispatch) => sum + parseFloat(dispatch?.receiptStats?.totalReceived || 0), 0).toFixed(2),
-        'Balance (Mt)': parseFloat(item.loadingPlan?.Balance || 0).toFixed(2),
-        'Delivery Notes': item.dispatches.map(dispatch => dispatch?.deliveryNote || 'N/A').join(', '),
-    }));
+    }))
+    .filter(item => parseFloat(item['Tonnage Drawn (Mt)']) > 0);
 
-    // Create a new workbook and add sheets
-    const workbook = XLSX.utils.book_new();
+// Dispatches by Date Sheet
+const dispatchesByDateData = props.dispatchesdataSummary.map(item => ({
+    'Date': moment(item.dispatchdate).format('YYYY-MM-DD') || 'N/A',
+    'District': item.district || 'N/A',
+    'Transporter': item.transporter || 'N/A',
+    'Commodity': item.commodity || 'N/A',
+    'Total Dispatched (Mt)': item.quantity || 0,
+    'FDP': item.fdp,
+    'ATC #': item.atcnumber,
+    'Handled By': item.handledby,
+}));
 
-    // Helper function to apply styles to a worksheet
-    const applyStyles = (worksheet, headers) => {
-        // Apply header styles
-        const headerStyle = {
-            fill: {
-                patternType: 'solid',
-                fgColor: { rgb: '096EB4' }, // Custom blue background for headers
-            },
-            font: {
-                bold: true,
-                color: { rgb: 'FFFFFF' }, // White font color for headers
-            },
-        };
+// Create a new workbook and add sheets
+const workbook = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(dataForExport), 'Summary');
+XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(receiptByFDPData), 'Receipt by FDP');
+XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(dispatchedPerTransporterData), 'Dispatched per Transporter');
+XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(dispatchedPerWarehouseData), 'Dispatched per Warehouse');
+XLSX.utils.book_append_sheet(workbook, XLSX.utils.json_to_sheet(dispatchesByDateData), 'Dispatches by Date'); // New sheet
 
-        const contentStyle = {
-            fill: {
-                patternType: 'solid',
-                fgColor: { rgb: 'D9E7F1' }, // Light shade of blue for content
-            },
-            font: {
-                color: { rgb: '000000' }, // Black font color for content
-            },
-        };
-
-        // Apply styles to headers
-        headers.forEach((header, index) => {
-            const cellAddress = XLSX.utils.encode_cell({ r: 0, c: index });
-            worksheet[cellAddress].s = headerStyle;
-        });
-
-        // Apply styles to content
-        const rows = worksheet['!ref'].split(':');
-        const startRow = parseInt(rows[0].replace(/[A-Z]/g, '')) + 1; // Start after headers
-        const endRow = parseInt(rows[1].replace(/[A-Z]/g, ''));
-
-        for (let r = startRow; r <= endRow; r++) {
-            for (let c = 0; c < headers.length; c++) {
-                const cellAddress = XLSX.utils.encode_cell({ r: r, c: c });
-                if (worksheet[cellAddress]) {
-                    worksheet[cellAddress].s = contentStyle;
-                }
-            }
-        }
-    };
-
-    // Add the existing data sheet
-    const mainWorksheet = XLSX.utils.json_to_sheet(dataForExport);
-    XLSX.utils.book_append_sheet(workbook, mainWorksheet, 'Loading Plans Report');
-    applyStyles(mainWorksheet, Object.keys(dataForExport[0]));
-
-    // Add the new sheets for Today, Last Week, and This Month
-    if (todayData.length > 0) {
-        const todayWorksheet = XLSX.utils.json_to_sheet(todayData);
-        XLSX.utils.book_append_sheet(workbook, todayWorksheet, 'As of Today');
-        applyStyles(todayWorksheet, Object.keys(todayData[0]));
-    }
-
-    if (lastWeekData.length > 0) {
-        const lastWeekWorksheet = XLSX.utils.json_to_sheet(lastWeekData);
-        XLSX.utils.book_append_sheet(workbook, lastWeekWorksheet, 'As of Last Week');
-        applyStyles(lastWeekWorksheet, Object.keys(lastWeekData[0]));
-    }
-
-    if (monthData.length > 0) {
-        const monthWorksheet = XLSX.utils.json_to_sheet(monthData);
-        XLSX.utils.book_append_sheet(workbook, monthWorksheet, 'As of This Month');
-        applyStyles(monthWorksheet, Object.keys(monthData[0]));
-    }
-
-    // Write the workbook and save
-    try {
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-        saveAs(data, 'LoadingPlansReport.xlsx');
-    } catch (error) {
-        console.error('Error exporting to Excel:', error);
-    }
+// Export workbook
+XLSX.writeFile(workbook, `Loading_Plans_and_Dispatch_Summary_Report_${moment().format('YYYY-MM-DD')}.xlsx`);
 };
+
 
 
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-x-auto relative">
         <!-- Filters section with proper padding and positioning -->
-        <div class="flex justify-between items-center p-4 space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
+        <div class="flex justify-between items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
             <!-- Left-aligned content: Commodity Distribution Update -->
             <div class="mb-4 mt-4 text-left">
                 <span class="font-bold text-sm"> Distribution Update</span>

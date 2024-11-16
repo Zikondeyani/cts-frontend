@@ -171,7 +171,7 @@ const getCommodities = async () => {
 const getDistricts = async () => {
     let districtsdata = await districtstore.get()
     districts.length = 0
-    districts.push(...districtsdata)
+    districts.push(...districtsdata.slice().sort((a, b) => a.Name.localeCompare(b.Name)))
     return districts
 }
 </script>

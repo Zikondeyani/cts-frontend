@@ -632,7 +632,7 @@ const stats = ref([
     iconColor: 'blue-500',
     percentageText: null,
     
-    href: '/admin/warehouses'
+    href: '/admin/warehouse-management'
   },
   {
     label: 'Transporters',
