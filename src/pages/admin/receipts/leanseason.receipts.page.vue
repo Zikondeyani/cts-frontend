@@ -187,7 +187,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/admin/dashboard", current: false },
   { name: "Receipts", href: "#", current: true },
   { name: "Lean Season Response", href: "#", current: true },
 ];
@@ -255,6 +255,23 @@ const columns = ref([
   ,
 
   {
+    label: "District",
+    hidden: false,
+    field: row => {
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const District = row.district;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-yellow-100 text-yellow-800" > ${District}
+            </span><br>`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+
+    tdClass: "capitalize"
+  }
+  ,
+
+  {
     label: "ATC #",
     hidden: false,
     field: row => {
@@ -272,17 +289,22 @@ const columns = ref([
   ,
 
   {
-    label: "Dispatcher",
+    label: "Received By",
+    hidden: false,
     field: row => {
-      return `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"> ${row.dispatcher}</span><br>`;
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const physicalDeliveryNote =  row.recipient;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800" >
+             ${physicalDeliveryNote}
+            </span><br>`;
     },
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
-  },
+    html: true, // Important for rendering HTML
 
+    tdClass: "capitalize"
+  }
+  ,
 
 
   {
@@ -293,6 +315,7 @@ const columns = ref([
 
 
 ]);
+
 
 
 const columns2 = ref([
@@ -566,7 +589,7 @@ const draftLeanReceipt = async (originalModel) => {
     await getReceiptsClean();
 
     // Redirect to the receipts page
-    $router.push({ path: '/field/receipts/leanseason' });
+    $router.push({ path: '/admin/receipts/leanseason' });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",
@@ -601,7 +624,7 @@ const createLeanReceipt = async (originalModel) => {
       confirmButtonText: "Ok"
     });
     await getReceipts()
-    $router.push({ path: '/field/receipts/leanseason' });
+    $router.push({ path: '/admin/receipts/leanseason' });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",

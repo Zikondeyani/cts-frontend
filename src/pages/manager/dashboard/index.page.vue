@@ -41,7 +41,7 @@
               Lean Season Response Dashboard
             </button>
 
-        
+
           </div>
         </div>
 
@@ -411,7 +411,7 @@
 
 
 
-              
+
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
                       <div class="flex flex-col">
@@ -527,7 +527,20 @@
 
                     </button>
 
+                    <button @click="currentTab = 'Allo'"
+                      :class="{ 'tab-button text-white': currentTab === 'Allo', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'Allo' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
 
+                      Allocation Trends
+
+                    </button>
+
+
+                  </div>
+                  <div v-show="currentTab === 'Allo'">
+
+                    <allocation-trends :allocationData="filteredLeanCommodityDispatchData2"
+                      :screenshotMode="screenshotMode" />
                   </div>
 
                   <div v-show="currentTab === 'all'">
@@ -563,7 +576,7 @@
 
 
                   <div v-show="currentTab === 'DoDMA'">
-                     <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
                     <select v-model="selectedFilter" @change="fetchFilteredDataDodma"
                       class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
                       <option value="all">All</option>
@@ -646,15 +659,14 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/manager/Lean-season-losses"
-                              class="text-blue-500 hover:underline">View
+                            <router-link to="/manager/Lean-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -670,14 +682,15 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/manager/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/manager/Emergency-season-losses"
+                              class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -749,6 +762,7 @@ import CommodityDistributionTableLean from './CommodityDistributionTableLean.vue
 
 import CommodityDistributionTableLeanTwo from './CommodityDistributionTableLean2.vue';
 import CommodityDistributionTableLeanWFP from './CommodityDistributionTableLeanWFP.vue';
+import allocationTrends from '../../../components/pages/charts/allocation_trends.vue'; // Adjust path as needed
 
 import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLeanDodma.vue';
 const commodityDispatchDataWFP = ref([])
@@ -951,48 +965,48 @@ const loadingplansCount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
 
-isLoading.value = true;
-try {
-  await fetchFilteredData()
-  await fetchFilteredDataAll()
-  await fetchFilteredDataDodma()
-  const data = await requisitionStore.getCommodityDistributionSummary();
-  const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
+  isLoading.value = true;
+  try {
+    await fetchFilteredData()
+    await fetchFilteredDataAll()
+    await fetchFilteredDataDodma()
+    const data = await requisitionStore.getCommodityDistributionSummary();
+    const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
 
 
-  const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
-  const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
-  commodityDispatchData.value.length = 0
-  commodityEmergencyDispatchData.value.length = 0
-  leanStockSummary.value = [...leanstocks]
-  commodityDispatchData.value.push({ ...dispatchdata })
-  const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
+    const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
+    const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
+    commodityDispatchData.value.length = 0
+    commodityEmergencyDispatchData.value.length = 0
+    leanStockSummary.value = [...leanstocks]
+    commodityDispatchData.value.push({ ...dispatchdata })
+    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
 
-  commodityDispatchData22.value.push({ ...dispatchdata22 })
-  commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
-  commodityDistributionData.value = [...data];
-} catch (error) {
-  console.error("Failed to load commodity data:", error);
-} finally {
-  isLoading.value = false;
-}
-getActivities();
-getCommodities();
-getDisasters();
-getDistricts();
-getDonations();
-getLoadingPlans();
-getdispatchSummary();
-getUsers();
-getDispatches();
-getReceipts();
-getDispatchesCount();
-getLoadingPlansPending();
-getloadingplansSummary();
+    commodityDispatchData22.value.push({ ...dispatchdata22 })
+    commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
+    commodityDistributionData.value = [...data];
+  } catch (error) {
+    console.error("Failed to load commodity data:", error);
+  } finally {
+    isLoading.value = false;
+  }
+  getActivities();
+  getCommodities();
+  getDisasters();
+  getDistricts();
+  getDonations();
+  getLoadingPlans();
+  getdispatchSummary();
+  getUsers();
+  getDispatches();
+  getReceipts();
+  getDispatchesCount();
+  getLoadingPlansPending();
+  getloadingplansSummary();
 
-getloadingplansSummaryByCommodity();
-getInstructions();
-getRequisitions();
+  getloadingplansSummaryByCommodity();
+  getInstructions();
+  getRequisitions();
 });
 
 

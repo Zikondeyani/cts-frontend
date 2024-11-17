@@ -53,11 +53,30 @@
                         class="border border-gray-300 rounded-md mt-2 max-h-48 overflow-y-auto">
                         <li v-for="commodity in filteredCommodities" :key="commodity.id"
                           @click="selectCommodity(commodity)" class="cursor-pointer p-2 hover:bg-gray-200">{{
-        commodity.Name }}
+                          commodity.Name }}
                         </li>
                       </ul>
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ commodityError }}
+                      </p>
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="activity-search" class="block text-sm font-medium text-gray-700">
+                        Select Activity
+                      </label>
+                      <input type="text" id="activity-search" v-model="activitySearch" placeholder="Search activity"
+                        @input="filterActivities"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      <ul v-if="filteredActivities.length"
+                        class="border border-gray-300 rounded-md mt-2 max-h-48 overflow-y-auto">
+                        <li v-for="activity in filteredActivities" :key="activity.id" @click="selectActivity(activity)"
+                          class="cursor-pointer p-2 hover:bg-gray-200">{{
+                          activity.Name }}
+                        </li>
+                      </ul>
+                      <p class="text-red-500 text-xs italic pt-1">
+                        {{ activityError }}
                       </p>
                     </div>
 
@@ -72,7 +91,7 @@
                         class="border border-gray-300 rounded-md mt-2 max-h-48 overflow-y-auto">
                         <li v-for="warehouse in filteredWarehouses" :key="warehouse.id"
                           @click="selectWarehouse(warehouse)" class="cursor-pointer p-2 hover:bg-gray-200">{{
-        warehouse.Name }}
+                          warehouse.Name }}
                         </li>
                       </ul>
                       <p class="text-red-500 text-xs italic pt-1">
@@ -154,6 +173,7 @@ import { usecommoditiestore } from "../../../stores/commodity.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "../../../stores/session.store";
 
+import { useactivitiestore } from "../../../stores/activity.store";
 // INJECTIONS
 const $router = useRouter();
 const moment = inject("moment");
@@ -166,17 +186,25 @@ const roleStore = useRoleStore();
 const userStore = useUserStore();
 const districtstore = usedistrictstore();
 const commodityStore = usecommoditiestore();
+
+const activityStore = useactivitiestore();
 const warehouseStore = usewarehousestore();
 const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
 const commodities = reactive([]);
 const warehouses = reactive([]);
+const activities = reactive([]);
 
 // SEARCH
 const commoditySearch = ref("");
+
+const activitySearch = ref("");
 const filteredCommodities = ref([]);
 const selectedCommodity = ref(null);
+
+const filteredActivities = ref([]);
+const selectedActivity = ref(null);
 
 const warehouseSearch = ref("");
 const filteredWarehouses = ref([]);
@@ -200,14 +228,29 @@ const { value: warehouseId, errorMessage: warehouseIdError } = useField("warehou
 const { value: Quantity, errorMessage: quantityError } = useField("Quantity");
 const { value: ExpiryDate, errorMessage: ExpiryDateError } = useField("ExpiryDate");
 const { value: BatchNumber, errorMessage: BatchNumberError } = useField("BatchNumber");
+const { value: activityId, errorMessage: ActivityError } = useField("activityId");
 
 // MOUNTED
 onMounted(() => {
   getCommodities();
   getWarehouses();
+  getActivities();
 });
 
 // FUNCTIONS
+
+const getActivities = async () => {
+  activityStore.get()
+    .then(result => {
+      activities.length = 0; // Empty array
+      activities.push(...result);
+    })
+    .catch(error => {
+      console.error("Error fetching activities:", error);
+    });
+};
+
+
 const getWarehouses = async () => {
   warehouseStore.get()
     .then(result => {
@@ -237,11 +280,26 @@ const filterCommodities = () => {
   );
 };
 
+const filterActivities = () => {
+  const search = activitySearch.value.toLowerCase();
+  filteredActivities.value = activities.filter(activity =>
+    activity.Name.toLowerCase().includes(search)
+  );
+};
+
+
 const selectCommodity = (commodity) => {
   selectedCommodity.value = commodity;
   commodityId.value = commodity.id;
   commoditySearch.value = commodity.Name;
   filteredCommodities.value = [];
+};
+
+const selectActivity = (activity) => {
+  selectedActivity.value = activity;
+  activityId.value = activity.id;
+  activitySearch.value = activity.Name;
+  filteredActivities.value = [];
 };
 
 const filterWarehouses = () => {
@@ -263,6 +321,7 @@ const onSubmit = useSubmitForm((values, actions) => {
     Quantity: Quantity.value,
     ExpiryDate: ExpiryDate.value,
     commodityId: commodityId.value,
+    activityId: activityId.value,
     warehouseId: warehouseId.value,
     BatchNumber: BatchNumber.value,
     userId: user.value.id

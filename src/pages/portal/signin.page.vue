@@ -325,11 +325,11 @@ const onSubmit = useSubmitForm((values, actions) => {
       }
       else if (result.role === 'planner') {
         // Specific redirection for warehouse officer
-        $router.push({ path: '/dodma' });
+        $router.push({ path: '/planner' });
       }
       else if (result.role === 'recipient') {
         // Specific redirection for warehouse officer
-        $router.push({ path: '/field' });
+        $router.push({ path: '/receipient' });
       }
 
       else if (result.role === 'district') {
@@ -375,9 +375,9 @@ const checkSession = async () => {
     if (session[0].role === 'district officer') {
       await $router.push({ name: 'warehouse-dashboard' });
     } else if (session[0].role === 'central user (DoDMA)') {
-      await $router.push({ name: 'dodma-dashboard' });
-    } else if (session[0].role === 'field officer') {
-      await $router.push({ name: 'field-dashboard' });
+      await $router.push({ name: 'planner-dashboard' });
+    } else if (session[0].role === 'receipient officer') {
+      await $router.push({ name: 'receipient-dashboard' });
     } else if (session[0].role === 'Commissioner (DODMA)') {
       await $router.push({ name: 'commissioner-dashboard' });
     }

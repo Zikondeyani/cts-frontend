@@ -163,8 +163,8 @@ const props = defineProps({
 const emit = defineEmits(["update"]);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
-  { name: "Instruction Management", href: "/field/instruction-management", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
+  { name: "Instruction Management", href: "/receipient/instruction-management", current: false },
   { name: "Edit", href: "#", current: true },
 ];
 const WarehouseStore = usewarehousestore();

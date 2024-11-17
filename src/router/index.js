@@ -198,6 +198,13 @@ const routes = [
       },
 
 
+      
+      {
+        path: "/admin/user-dispatches",
+        name: "admin-user-dispatches",
+        component: () => import("../pages/admin/users/dispatches.page.vue"),
+      },
+
       {
         path: "/admin/logs",
         name: "admin-logs",
@@ -327,6 +334,12 @@ const routes = [
         path: "/admin/performance-stats",
         name: "admin-performance-stats",
         component: () => import("../pages/admin/reports/performance-stats.vue"),
+      },
+
+      {
+        path: "/admin/usage-stats",
+        name: "admin-usage-stats",
+        component: () => import("../pages/admin/reports/usage-stats.vue"),
       },
 
     ],
@@ -869,174 +882,174 @@ const routes = [
 
   //Dodma
   {
-    path: "/dodma",
-    name: "dodma",
-    component: () => import("../components/layouts/dodma.layout.vue"),
+    path: "/planner",
+    name: "planner",
+    component: () => import("../components/layouts/planner.layout.vue"),
     children: [
       //Dashboard
       {
         path: "",
-        name: "dodma-home",
-        redirect: { name: "dodma-dashboard" },
+        name: "planner-home",
+        redirect: { name: "planner-dashboard" },
       },
       {
-        path: "/dodma/dashboard",
-        name: "dodma-dashboard",
-        component: () => import("../pages/dodma/dashboard/index.page.vue"),
+        path: "/planner/dashboard",
+        name: "planner-dashboard",
+        component: () => import("../pages/planner/dashboard/index.page.vue"),
       },
 
       {
-        path: "/dodma/change-password",
-        name: "dodma-change-password",
+        path: "/planner/change-password",
+        name: "planner-change-password",
         component: () => import("../components/pages/users/change.password.vue"),
       },
 
       //Users
       {
-        path: "/dodma/users",
-        name: "dodma-users",
-        component: () => import("../pages/dodma/users/index.page.vue"),
+        path: "/planner/users",
+        name: "planner-users",
+        component: () => import("../pages/planner/users/index.page.vue"),
       },
       {
-        path: "/dodma/users/manage/:id",
-        name: "dodma-manage-user",
-        component: () => import("../pages/dodma/users/manage.page.vue"),
-      },
-
-      {
-        path: "/dodma/dispatch-management",
-        name: "dodma-dispatch-management",
-        component: () => import("../pages/dodma/dispatch/index.page.vue"),
+        path: "/planner/users/manage/:id",
+        name: "planner-manage-user",
+        component: () => import("../pages/planner/users/manage.page.vue"),
       },
 
       {
-        path: "/dodma/donations",
-        name: "dodma-donation-management",
-        component: () => import("../pages/dodma/donations/donations.page.vue"),
+        path: "/planner/dispatch-management",
+        name: "planner-dispatch-management",
+        component: () => import("../pages/planner/dispatch/index.page.vue"),
       },
 
       {
-        path: "/dodma/Lean-season-losses",
-        name: "dodma-lean-season-damage-management",
-        component: () => import("../pages/dodma/damages/damages.page.vue"),
+        path: "/planner/donations",
+        name: "planner-donation-management",
+        component: () => import("../pages/planner/donations/donations.page.vue"),
       },
 
       {
-        path: "/dodma/Emergency-season-losses",
-        name: "dodma-emergency-season-damage-management",
-        component: () => import("../pages/dodma/damages/er-damages.page.vue"),
+        path: "/planner/Lean-season-losses",
+        name: "planner-lean-season-damage-management",
+        component: () => import("../pages/planner/damages/damages.page.vue"),
       },
 
       {
-        path: "/dodma/required-leanseason",
-        name: "dodma-required-leanseason-management",
-        component: () => import("../pages/dodma/requested/requested-commodities.page.vue"),
+        path: "/planner/Emergency-season-losses",
+        name: "planner-emergency-season-damage-management",
+        component: () => import("../pages/planner/damages/er-damages.page.vue"),
       },
 
       {
-        path: "/dodma/dispatches",
-        name: "dodma-dispatches",
-        component: () => import("../pages/dodma/dispatch/dispatches.page.vue"),
+        path: "/planner/required-leanseason",
+        name: "planner-required-leanseason-management",
+        component: () => import("../pages/planner/requested/requested-commodities.page.vue"),
       },
 
       {
-        path: "/dodma/loadingplans",
-        name: "dodma-loadingplans",
-        component: () => import("../pages/dodma/loadingplans/index.page.vue"),
-      },
-      {
-        path: "/dodma/dispatch-management/manage/:id",
-        name: "dodma-manage-catalogue",
-        component: () => import("../pages/dodma/dispatch/manage.page.vue"),
+        path: "/planner/dispatches",
+        name: "planner-dispatches",
+        component: () => import("../pages/planner/dispatch/dispatches.page.vue"),
       },
 
       {
-        path: "/dodma/commodity-tracking",
-        name: "dodma-commodity-tracking",
-        component: () => import("../pages/dodma/commodities/index.page.vue"),
+        path: "/planner/loadingplans",
+        name: "planner-loadingplans",
+        component: () => import("../pages/planner/loadingplans/index.page.vue"),
       },
       {
-        path: "/dodma/commodity-tracking/manage/:id",
-        name: "dodma-manage-commodity-tracking",
-        component: () => import("../pages/dodma/commodities/manage.page.vue"),
+        path: "/planner/dispatch-management/manage/:id",
+        name: "planner-manage-catalogue",
+        component: () => import("../pages/planner/dispatch/manage.page.vue"),
       },
 
-
       {
-        path: "/dodma/receipt-management",
-        name: "dodma-receipt-management",
-        component: () => import("../pages/dodma/receipts/index.page.vue"),
+        path: "/planner/commodity-tracking",
+        name: "planner-commodity-tracking",
+        component: () => import("../pages/planner/commodities/index.page.vue"),
+      },
+      {
+        path: "/planner/commodity-tracking/manage/:id",
+        name: "planner-manage-commodity-tracking",
+        component: () => import("../pages/planner/commodities/manage.page.vue"),
       },
 
 
       {
-        path: "/dodma/receipts",
-        name: "dodma-receipts",
-        component: () => import("../pages/dodma/receipts/receipts.page.vue"),
-      },
-
-      {
-        path: "/dodma/receipt-management/manage/:id",
-        name: "dodma-manage-receipt-management",
-        component: () => import("../pages/dodma/receipts/manage.page.vue"),
-      },
-
-      {
-        path: "/dodma/requisition-management",
-        name: "dodma-requisition-management",
-        component: () => import("../pages/dodma/requisitions/index.page.vue"),
-      },
-      {
-        path: "/dodma/receipt-management/manage/:id",
-        name: "dodma-manage-requisition-management",
-        component: () => import("../pages/dodma/requisitions/manage.page.vue"),
-      },
-
-
-
-      {
-        path: "/dodma/system",
-        name: "dodma-system",
-        component: () => import("../pages/dodma/system/index.page.vue"),
+        path: "/planner/receipt-management",
+        name: "planner-receipt-management",
+        component: () => import("../pages/planner/receipts/index.page.vue"),
       },
 
 
       {
-        path: "/dodma/project-management",
-        name: "dodma-project-management",
-        component: () => import("../pages/dodma/projects/index.page.vue"),
+        path: "/planner/receipts",
+        name: "planner-receipts",
+        component: () => import("../pages/planner/receipts/receipts.page.vue"),
       },
 
       {
-        path: "/dodma/instruction-management",
-        name: "dodma-instruction-management",
-        component: () => import("../pages/dodma/instruction/index.page.vue"),
-      },
-
-
-      {
-        path: "/dodma/rejected-instruction-management",
-        name: "dodma-rejected-instruction-management",
-        component: () => import("../pages/dodma/instruction/rejected-index.page"),
+        path: "/planner/receipt-management/manage/:id",
+        name: "planner-manage-receipt-management",
+        component: () => import("../pages/planner/receipts/manage.page.vue"),
       },
 
       {
-        path: "/dodma/instruction-management/manage/:id",
-        name: "dodma-manage-instruction-management",
-        component: () => import("../pages/dodma/instruction/manage.page.vue"),
+        path: "/planner/requisition-management",
+        name: "planner-requisition-management",
+        component: () => import("../pages/planner/requisitions/index.page.vue"),
+      },
+      {
+        path: "/planner/receipt-management/manage/:id",
+        name: "planner-manage-requisition-management",
+        component: () => import("../pages/planner/requisitions/manage.page.vue"),
       },
 
 
 
       {
-        path: "/dodma/report-management",
-        name: "dodma-report-management",
-        component: () => import("../pages/dodma/reports/index.page.vue"),
+        path: "/planner/system",
+        name: "planner-system",
+        component: () => import("../pages/planner/system/index.page.vue"),
+      },
+
+
+      {
+        path: "/planner/project-management",
+        name: "planner-project-management",
+        component: () => import("../pages/planner/projects/index.page.vue"),
       },
 
       {
-        path: "/dodma/about-system",
-        name: "dodma-about-system",
+        path: "/planner/instruction-management",
+        name: "planner-instruction-management",
+        component: () => import("../pages/planner/instruction/index.page.vue"),
+      },
+
+
+      {
+        path: "/planner/rejected-instruction-management",
+        name: "planner-rejected-instruction-management",
+        component: () => import("../pages/planner/instruction/rejected-index.page"),
+      },
+
+      {
+        path: "/planner/instruction-management/manage/:id",
+        name: "planner-manage-instruction-management",
+        component: () => import("../pages/planner/instruction/manage.page.vue"),
+      },
+
+
+
+      {
+        path: "/planner/report-management",
+        name: "planner-report-management",
+        component: () => import("../pages/planner/reports/index.page.vue"),
+      },
+
+      {
+        path: "/planner/about-system",
+        name: "planner-about-system",
         component: () => import("../pages/about/index.page.vue"),
       },
 
@@ -1058,181 +1071,181 @@ const routes = [
   },
 
 
-  //field
+  //receipient
   {
-    path: "/field",
-    name: "field",
-    component: () => import("../components/layouts/field.layout.vue"),
+    path: "/receipient",
+    name: "receipient",
+    component: () => import("../components/layouts/receipient.layout.vue"),
     children: [
       //Dashboard
       {
         path: "",
-        name: "field-home",
-        redirect: { name: "field-dashboard" },
+        name: "receipient-home",
+        redirect: { name: "receipient-dashboard" },
       },
       {
-        path: "/field/dashboard",
-        name: "field-dashboard",
-        component: () => import("../pages/field/dashboard/index.page.vue"),
+        path: "/receipient/dashboard",
+        name: "receipient-dashboard",
+        component: () => import("../pages/receipient/dashboard/index.page.vue"),
       },
 
       {
-        path: "/field/change-password",
-        name: "field-change-password",
+        path: "/receipient/change-password",
+        name: "receipient-change-password",
         component: () => import("../components/pages/users/change.password.vue"),
       },
 
       //Users
       {
-        path: "/field/users",
-        name: "field-users",
-        component: () => import("../pages/field/users/index.page.vue"),
+        path: "/receipient/users",
+        name: "receipient-users",
+        component: () => import("../pages/receipient/users/index.page.vue"),
       },
       {
-        path: "/field/users/manage/:id",
-        name: "field-manage-user",
-        component: () => import("../pages/field/users/manage.page.vue"),
-      },
-
-      {
-        path: "/field/dispatch-management",
-        name: "field-dispatch-management",
-        component: () => import("../pages/field/dispatch/dispatches.page.vue"),
+        path: "/receipient/users/manage/:id",
+        name: "receipient-manage-user",
+        component: () => import("../pages/receipient/users/manage.page.vue"),
       },
 
       {
-        path: "/field/dispatches/emergency",
-        name: "field-emergency-dispatch-management",
-        component: () => import("../pages/field/dispatch/emergencydispatches.page.vue"),
-      },
-
-
-
-      {
-        path: "/field/dispatches",
-        name: "field-dispatches",
-        component: () => import("../pages/field/dispatch/dispatches.page.vue"),
+        path: "/receipient/dispatch-management",
+        name: "receipient-dispatch-management",
+        component: () => import("../pages/receipient/dispatch/dispatches.page.vue"),
       },
 
       {
-        path: "/field/loadingplans",
-        name: "field-loadingplans",
-        component: () => import("../pages/field/loadingplans/index.page.vue"),
-      },
-      {
-        path: "/field/dispatch-management/manage/:id",
-        name: "field-manage-catalogue",
-        component: () => import("../pages/field/dispatch/manage.page.vue"),
-      },
-
-      {
-        path: "/field/commodity-tracking",
-        name: "field-commodity-tracking",
-        component: () => import("../pages/field/commodities/index.page.vue"),
-      },
-      {
-        path: "/field/commodity-tracking/manage/:id",
-        name: "field-manage-commodity-tracking",
-        component: () => import("../pages/field/commodities/manage.page.vue"),
-      },
-
-
-      {
-        path: "/field/receipt-management",
-        name: "field-receipt-management",
-        component: () => import("../pages/field/receipts/index.page.vue"),
-      },
-
-
-      {
-        path: "/field/receipts",
-        name: "field-receipts",
-        component: () => import("../pages/field/receipts/index.page.vue"),
-      },
-
-      {
-        path: "/field/receipts/emergency",
-        name: "field-receipts-emergency",
-        component: () => import("../pages/field/receipts/emergency.receipts.page.vue"),
-      },
-
-      {
-        path: "/field/receipts/leanseason",
-        name: "field-receipts-leanseason",
-        component: () => import("../pages/field/receipts/leanseason.receipts.page.vue"),
-      },
-
-      {
-        path: "/field/receipt-management/manage/:id",
-        name: "field-manage-receipt-management",
-        component: () => import("../pages/field/receipts/manage.page.vue"),
-      },
-
-      {
-        path: "/field/requisition-management",
-        name: "field-requisition-management",
-        component: () => import("../pages/field/requisitions/index.page.vue"),
-      },
-
-
-      {
-        path: "/field/requisition-management/requisitions",
-        name: "field-requisition-management-rq",
-        component: () => import("../pages/field/requisitions/manage.page.vue"),
-      },
-
-      {
-        path: "/field/requisition-management/requisitions/manage/:id",
-        name: "field-manage-requisitions-management-id",
-        component: () => import("../pages/field/requisitions/edit.page.vue"),
-      },
-
-      {
-        path: "/field/receipt-management/manage/:id",
-        name: "field-manage-requisition-management",
-        component: () => import("../pages/field/requisitions/manage.page.vue"),
-      },
-
-      {
-        path: "/field/emergency-management",
-        name: "field-emergency-management",
-        component: () => import("../pages/field/emergency/index.page.vue"),
-      },
-
-      {
-        path: "/field/emergency-management/manage/:id",
-        name: "field-manage-emergency-management",
-        component: () => import("../pages/field/emergency/manage.page.vue"),
-      },
-
-
-
-
-
-      {
-        path: "/field/system",
-        name: "field-system",
-        component: () => import("../pages/field/system/index.page.vue"),
-      },
-
-
-      {
-        path: "/field/project-management",
-        name: "field-project-management",
-        component: () => import("../pages/field/projects/index.page.vue"),
+        path: "/receipient/dispatches/emergency",
+        name: "receipient-emergency-dispatch-management",
+        component: () => import("../pages/receipient/dispatch/emergencydispatches.page.vue"),
       },
 
 
 
       {
-        path: "/field/report-management",
-        name: "field-report-management",
-        component: () => import("../pages/field/reports/index.page.vue"),
+        path: "/receipient/dispatches",
+        name: "receipient-dispatches",
+        component: () => import("../pages/receipient/dispatch/dispatches.page.vue"),
       },
 
       {
-        path: "/field/about-system",
-        name: "field-about-system",
+        path: "/receipient/loadingplans",
+        name: "receipient-loadingplans",
+        component: () => import("../pages/receipient/loadingplans/index.page.vue"),
+      },
+      {
+        path: "/receipient/dispatch-management/manage/:id",
+        name: "receipient-manage-catalogue",
+        component: () => import("../pages/receipient/dispatch/manage.page.vue"),
+      },
+
+      {
+        path: "/receipient/commodity-tracking",
+        name: "receipient-commodity-tracking",
+        component: () => import("../pages/receipient/commodities/index.page.vue"),
+      },
+      {
+        path: "/receipient/commodity-tracking/manage/:id",
+        name: "receipient-manage-commodity-tracking",
+        component: () => import("../pages/receipient/commodities/manage.page.vue"),
+      },
+
+
+      {
+        path: "/receipient/receipt-management",
+        name: "receipient-receipt-management",
+        component: () => import("../pages/receipient/receipts/index.page.vue"),
+      },
+
+
+      {
+        path: "/receipient/receipts",
+        name: "receipient-receipts",
+        component: () => import("../pages/receipient/receipts/index.page.vue"),
+      },
+
+      {
+        path: "/receipient/receipts/emergency",
+        name: "receipient-receipts-emergency",
+        component: () => import("../pages/receipient/receipts/emergency.receipts.page.vue"),
+      },
+
+      {
+        path: "/receipient/receipts/leanseason",
+        name: "receipient-receipts-leanseason",
+        component: () => import("../pages/receipient/receipts/leanseason.receipts.page.vue"),
+      },
+
+      {
+        path: "/receipient/receipt-management/manage/:id",
+        name: "receipient-manage-receipt-management",
+        component: () => import("../pages/receipient/receipts/manage.page.vue"),
+      },
+
+      {
+        path: "/receipient/requisition-management",
+        name: "receipient-requisition-management",
+        component: () => import("../pages/receipient/requisitions/index.page.vue"),
+      },
+
+
+      {
+        path: "/receipient/requisition-management/requisitions",
+        name: "receipient-requisition-management-rq",
+        component: () => import("../pages/receipient/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/receipient/requisition-management/requisitions/manage/:id",
+        name: "receipient-manage-requisitions-management-id",
+        component: () => import("../pages/receipient/requisitions/edit.page.vue"),
+      },
+
+      {
+        path: "/receipient/receipt-management/manage/:id",
+        name: "receipient-manage-requisition-management",
+        component: () => import("../pages/receipient/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/receipient/emergency-management",
+        name: "receipient-emergency-management",
+        component: () => import("../pages/receipient/emergency/index.page.vue"),
+      },
+
+      {
+        path: "/receipient/emergency-management/manage/:id",
+        name: "receipient-manage-emergency-management",
+        component: () => import("../pages/receipient/emergency/manage.page.vue"),
+      },
+
+
+
+
+
+      {
+        path: "/receipient/system",
+        name: "receipient-system",
+        component: () => import("../pages/receipient/system/index.page.vue"),
+      },
+
+
+      {
+        path: "/receipient/project-management",
+        name: "receipient-project-management",
+        component: () => import("../pages/receipient/projects/index.page.vue"),
+      },
+
+
+
+      {
+        path: "/receipient/report-management",
+        name: "receipient-report-management",
+        component: () => import("../pages/receipient/reports/index.page.vue"),
+      },
+
+      {
+        path: "/receipient/about-system",
+        name: "receipient-about-system",
         component: () => import("../pages/about/index.page.vue"),
       },
 
@@ -1257,7 +1270,7 @@ const routes = [
          let role = JSON.parse(sessionStorage.getItem("RLE"));
          const localSession = await getDataOffline('session');
    
-         if ((localSession[0] && localSession[0].role === "field officer")) {
+         if ((localSession[0] && localSession[0].role === "receipient officer")) {
            // Role found in sessionStorage and it's an admin
            next();
          } else {

@@ -265,7 +265,7 @@ const onSubmit = async () => {
   }
 };
 
-// Driver field suggestions and handling new driver names
+// Driver receipient suggestions and handling new driver names
 const filteredDrivers = computed(() => {
   return drivers.filter(driver =>
     driver.Name.toLowerCase().includes(donation.DriverName.toLowerCase())

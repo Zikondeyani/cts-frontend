@@ -44,7 +44,7 @@ import {
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/dodma/dashboard", current: false },
+  { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Commodity Losses", href: "#", current: true },
   { name: "Lean Season Response", href: "#", current: true },
 ];

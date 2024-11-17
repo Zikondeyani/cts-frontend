@@ -231,7 +231,7 @@ const onSubmit = useSubmitForm((id) => {
 });
 
 const gotoEditInstruction = (id) => {
-  $router.push("/dodma/instruction-management/manage/" + id)
+  $router.push("/planner/instruction-management/manage/" + id)
 };
 
 

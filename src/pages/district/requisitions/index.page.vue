@@ -697,7 +697,7 @@ const createInstruction = async model => {
         confirmButtonText: "Ok"
       });
 
-      $router.push({ path: '/dodma/instruction-management' });
+      $router.push({ path: '/planner/instruction-management' });
 
     })
     .catch(error => {

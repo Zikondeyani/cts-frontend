@@ -46,7 +46,7 @@ import {
   KeyIcon,
   ArchiveIcon,
   FolderIcon,
-  
+  TrendingUpIcon,
   TruckIcon,
   MailIcon,
   BellIcon,
@@ -69,7 +69,7 @@ const optionGroups = ref([
       { label: 'User Roles', icon: UserGroupIcon, path: '/admin/userroles' },
       { label: 'Users', icon: UserIcon, path: '/admin/users' },
       { label: 'Performance Stats', icon: ChartBarIcon, path: '/admin/performance-stats' }, // Change to ChartBarIcon
-  
+   
       { label: 'Reminders', icon: BellIcon, path: '/admin/reminders' }, // Change to BellIcon
      
     ],
@@ -80,6 +80,7 @@ const optionGroups = ref([
     title: 'Commodity Management',
     options: [
     { label: 'Activities', icon: KeyIcon, path: '/admin/activity-management' },
+    { label: 'User Dispatches', icon: TruckIcon, path: '/admin/user-dispatches' },
    
       
     { label: 'Stock Register', icon: ClipboardListIcon, path: '/admin/stock-management' },
@@ -104,6 +105,8 @@ const optionGroups = ref([
     title: 'Reporting and Logs',
     options: [
       { label: 'Logs', icon: ArchiveIcon, path: '/admin/logs' },
+      { label: 'Usage Stats', icon: TrendingUpIcon, path: '/admin/usage-stats' }, // Change to ChartBarIcon
+  
     ],
   },
   // Add more groups and options as needed

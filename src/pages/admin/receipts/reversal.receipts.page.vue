@@ -638,7 +638,7 @@
       await getReceiptsClean();
   
       // Redirect to the receipts page
-      $router.push({ path: '/field/receipts/leanseason' });
+      $router.push({ path: '/admin/receipts/leanseason' });
     } catch (error) {
       Swal.fire({
         title: "Creation Failed",
@@ -673,7 +673,7 @@
         confirmButtonText: "Ok"
       });
       await getReceipts()
-      $router.push({ path: '/field/receipts/leanseason' });
+      $router.push({ path: '/admin/receipts/leanseason' });
     } catch (error) {
       Swal.fire({
         title: "Creation Failed",

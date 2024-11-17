@@ -485,16 +485,16 @@ function navigation() {
     /*  { name: "Commodities", href: "/warehouse/commodity-tracking", icon: CollectionIcon, current: false },
      { name: "Requisitions", href: "/warehouse/requisition-management", icon: IdentificationIcon, current: false },
      { name: "Project Management", href: "/warehouse/project-management", icon: IdentificationIcon, current: false },
-   */  /*  { name: "Dispatches", href: "/field/dispatch-management", icon: AdjustmentsIcon, current: false },
+   */  /*  { name: "Dispatches", href: "/receipient/dispatch-management", icon: AdjustmentsIcon, current: false },
         */
 
- /*    { name: "Disasters", href: "/field/emergency-management", icon: ExclamationIcon, current: false },
+ /*    { name: "Disasters", href: "/receipient/emergency-management", icon: ExclamationIcon, current: false },
  */
     { name: "Dispatches", href: "/district/project-management", icon: IdentificationIcon, current: false },
 
     { name: "Receipts", href: "/district/receipts", icon: DocumentDuplicateIcon, current: false },
 
-    /*   { name: "Reports", href: "/field/report-management", icon: DocumentTextIcon, current: false },
+    /*   { name: "Reports", href: "/receipient/report-management", icon: DocumentTextIcon, current: false },
    */
   ];
 

@@ -351,7 +351,7 @@ const roles = reactive([]);
 const { model } = toRefs(props);
 ///FORM
 
-const delegations = ref([]); // Delegations field
+const delegations = ref([]); // Delegations receipient
 const newDelegate = ref('');
 const DelegateError = ref('');
 

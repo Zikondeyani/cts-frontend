@@ -423,7 +423,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/dodma/loadingplans'); // Navigate to loading plans
+      $router.push('/planner/loadingplans'); // Navigate to loading plans
     })
     .catch(error => {
       // Handling error
