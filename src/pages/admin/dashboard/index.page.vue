@@ -385,7 +385,7 @@ const getDispatches = async () => {
     .then(result => {
       // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
       const sortedDispatches = [...result].sort((a, b) => {
-        // Convert the `createdOn` field to a Date object and compare
+        // Convert the `createdOn` receipient to a Date object and compare
         return new Date(b.createdon) - new Date(a.createdon);
       });
 
@@ -407,23 +407,7 @@ const getDispatchesCount = async () => {
   });
 }
 
-const getLoadingPlans = async () => {
-  // isLoading.value = true;
-  loadingPlanStore
-    .get()
-    .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
-      const sortedDispatches = [...result].sort((a, b) => {
-        // Convert the `createdOn` field to a Date object and compare
-        return new Date(b.createdon) - new Date(a.createdon);
-      });
 
-      // Clear the existing dispatches and push the sorted results
-      loadingplans.length = 0;
-      let data = sortedDispatches.reverse()
-      loadingplans.push(...data);
-    })
-}
 
 const pendingplans = ref(0)
 
@@ -443,7 +427,7 @@ const getLoadingPlansPending = async () => {
   loadingPlanStore
     .getloadingplansPending()
     .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` receipient
       pendingplans.value = result.count
     })
 }
@@ -454,7 +438,7 @@ const getdispatchSummary = async () => {
   dispatchStore
     .getdispatchSummary()
     .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` receipient
 
       totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
       totalReceived.value = result.totalReceived
@@ -470,7 +454,7 @@ const getloadingplansSummary = async () => {
   loadingPlanStore
     .getloadingplansSummary()
     .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` receipient
 
       totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT"
       totalBalance.value = result.totalBalance
@@ -486,7 +470,7 @@ const getloadingplansSummaryByCommodity = async () => {
   loadingPlanStore
     .getloadingplansSummaryByCommodity()
     .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
+      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` receipient
       loadingPlanSummary.length = 0;
       loadingPlanSummary.push(...result);
 
@@ -530,89 +514,6 @@ const getBookings = async () => {
 };
 
 
-
-
-const createReport = async (model) => {
-  isLoading.value = true;
-
-  model.userId = user.value.id;
-  model.Balance = model.Quantity;
-
-  if (model.StartDate) {
-    model.StartDate = moment(model.StartDate).toISOString();
-  }
-  if (model.EndDate) {
-    model.EndDate = moment(model.EndDate).toISOString();
-  }
-
-  // List of required fields
-  const requiredFields = ['StartDate', 'EndDate', 'Quantity', /* other required fields */];
-
-  // Check if all required fields are filled
-  for (const field of requiredFields) {
-    if (!model[field]) {
-      Swal.fire({
-        title: "Missing Information",
-        text: `Please fill in the ${field}.`,
-        icon: "error",
-        confirmButtonText: "Ok"
-      }).then(() => {
-        isLoading.value = false; // Stop loading
-      });
-      return; // Stop the function
-    }
-  }
-
-  // Check network status
-  if (navigator.onLine) {
-    // If online, execute the original code
-    loadingPlanStore
-      .create(model)
-      .then(result => {
-        Swal.fire({
-          title: "Success",
-          text: "Created a new loading plan successfully",
-          icon: "success",
-          confirmButtonText: "Ok"
-        });
-        $router.push('/admin/loadingplans'); // Navigate to loading plans
-      })
-      .catch(error => {
-        Swal.fire({
-          title: "Error",
-          text: "Failed to create loading plan",
-          icon: "error",
-          confirmButtonText: "Ok"
-        });
-        console.error('Error creating loading plan', error);
-      })
-      .finally(() => {
-        isLoading.value = false;
-        getDispatches();
-        getLoadingPlans();
-      });
-  } else {
-    // If offline, save data offline
-    await saveDataOffline('loading-plans', { ...model });
-
-    const offlineData = await getDataOffline('loading-plans');
-    console.log(offlineData, "Offline Data");
-
-    Swal.fire({
-      title: "Offline",
-      text: "You are offline. The loading plan will be saved locally and synced when you're back online.",
-      icon: "info",
-      confirmButtonText: "Ok"
-    });
-
-    isLoading.value = false;
-  }
-};
-
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(date).toLocaleDateString(undefined, options);
-};
 
 // Dummy data for stats
 const stats = ref([

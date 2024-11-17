@@ -390,7 +390,7 @@ function navigation() {
     { name: "Home", href: "/warehouse/dashboard", icon: HomeIcon, current: false },
   /*   { name: "Instructions", href: "/warehouse/instruction-management", icon: CollectionIcon, current: false },
    */  { name: "Warehouse management", href: "/warehouse/warehouse-management", icon: IdentificationIcon, current: false },
-   { name: "Loading Plans (LSR)", href: "/warehouse/loadingplans", icon: IdentificationIcon, current: false },
+   { name: "Loading Plans", href: "/warehouse/loadingplans", icon: IdentificationIcon, current: false },
    /*   { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
     { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
  */

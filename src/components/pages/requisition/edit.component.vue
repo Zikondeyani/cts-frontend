@@ -388,7 +388,7 @@ function validateCommodity(index) {
 
   if (commodity) {
     // Use the commodity details as needed
-    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' field
+    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' receipient
     console.log("Selected Commodity:", commodityUnit.value);
 
   }
@@ -541,7 +541,7 @@ function addTag() {
       props.Requisition.AffectedAreas = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newVillage.value = '';
     AffectedAreaError.value = '';
   } else {
@@ -574,7 +574,7 @@ function addTagGvh() {
       props.Requisition.gvhs = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newGvh.value = '';
     gvhAreaError.value = '';
   } else {
@@ -609,7 +609,7 @@ function addTagVg() {
       props.Requisition.villages_affected = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newVillageVal.value = '';
     villageAreaError.value = '';
   } else {

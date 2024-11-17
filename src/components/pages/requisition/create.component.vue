@@ -419,7 +419,7 @@ function validateCommodity(index) {
 
   if (commodity) {
     // Use the commodity details as needed
-    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' field
+    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' receipient
     console.log("Selected Commodity:", commodityUnit.value);
 
   }

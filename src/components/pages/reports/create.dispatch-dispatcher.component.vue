@@ -155,6 +155,11 @@
                     <!-- ... Loading Plan Details ... -->
 
                     <div class="mb-7">
+                      <span class="text-sm font-bold text-gray-700">ATC #: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.ATCNumber }}</span>
+                    </div>
+
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Created By: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.user?.username?.replace(/\./g, ' ') }}</span>
                     </div>

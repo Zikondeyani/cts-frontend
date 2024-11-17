@@ -280,7 +280,7 @@ const submitReceipt = async () => {
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/field/receipts');
+        $router.push('/receipient/receipts');
       });
 
 

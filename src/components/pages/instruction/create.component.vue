@@ -448,7 +448,7 @@ const getActivities = async () => {
 const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
-  // Manually validate each field
+  // Manually validate each receipient
   const isValidTransporter = transporterId.value !== '' ;
   const isValidPurpose = Purpose.value !== '';
   const isValidRemarks = Remarks.value !== '';
@@ -456,7 +456,7 @@ const onSubmit = useSubmitForm((values, actions) => {
 
   // Check if all fields are valid
   if (!isValidTransporter || !isValidPurpose || !isValidRemarks || !isValidWarehouse) {
-    // If any field is invalid, show an error message or handle accordingly
+    // If any receipient is invalid, show an error message or handle accordingly
     if (!isValidTransporter) {
       transporterError.value = "Please select a transporter.";
     }

@@ -156,7 +156,7 @@ const columns = ref([
 
   {
     label: "Options",
-    field: row => row,
+    receipient: row => row,
     sortable: false
   }
 ]);

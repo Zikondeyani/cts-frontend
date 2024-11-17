@@ -258,7 +258,7 @@ const onSubmit = () => {
       title: 'Error',
       text: 'All fields are required!',
     });
-    return; // Prevent form submission if any field is missing
+    return; // Prevent form submission if any receipient is missing
   }
 
   // Perform form submission

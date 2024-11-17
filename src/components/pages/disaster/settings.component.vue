@@ -112,8 +112,8 @@ const props = defineProps({
 const emit = defineEmits(["update"]);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
-  { name: "Disaster Management", href: "/field/disaster-management", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
+  { name: "Disaster Management", href: "/receipient/disaster-management", current: false },
   { name: "Edit", href: "#", current: true },
 ];
 const roleStore = useRoleStore();
@@ -193,7 +193,7 @@ const deleteAcc = async () => {
           Swal.fire("Deleted!", "Deleted disaster succesfully.", "success");
           isLoading.value = false;
           let role = user.value.roleId == "ADMIN1" ? "admin" : "manager";
-          $router.push({ path:  "/field/emergency-management" });
+          $router.push({ path:  "/receipient/emergency-management" });
         }
       });
     })

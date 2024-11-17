@@ -276,7 +276,22 @@
                   <!-- Dashboard Cards Section -->
                   <div class="col-span-3">
                     <div class="border rounded-lg shadow-lg p-4 bg-white relative">
-                      <h2 class="text-lg font-semibold text-[#096eb4] mb-4">Overall Stats</h2>
+                      <!-- Row with Heading and Filter -->
+                      <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-[#096eb4]">Overall Stats</h2>
+                       <!--  <div class="text-right">
+                          <select v-model="selectedFilter" @change="applyFilter"
+                            class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring focus:ring-[#0b8ad8]">
+                            <option value="all">All</option>
+                            <option value="today">Today</option>
+                            <option value="yesterday">Yesterday</option>
+                            <option value="thisWeek">This Week</option>
+                            <option value="lastMonth">Last Month</option>
+                          </select>
+                        </div> -->
+                      </div>
+
+                      <!-- Stats Section -->
                       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <!-- Total Commodities Dispatched -->
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
@@ -287,7 +302,6 @@
                           <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalStockPlanned }}</div>
                         </div>
 
-
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
@@ -296,7 +310,6 @@
                           <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalDispatched }}</div>
                         </div>
 
-                        <!-- Total Commodities Received -->
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <InboxIcon class="w-5 h-5 text-[#096eb4]" />
@@ -305,7 +318,6 @@
                           <div class="text-2xl font-bold text-[#0b8ad8]">{{ totalReceived }}</div>
                         </div>
 
-                        <!-- Total Loading Plans Created -->
                         <router-link to="/commissioner/loadingplans">
                           <div
                             class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
@@ -325,11 +337,10 @@
                           </div>
                         </router-link>
 
-                        <!-- % of Dispatches Received -->
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <ChartBarIcon class="w-5 h-5 text-[#096eb4]" />
-                            <div class="text-[#096eb4] text-sm">% of Dispatches Received</div>
+                            <div class="text-[#096eb4] text-xs">% of Dispatches Received</div>
                           </div>
                           <div class="text-lg mt-3 font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
                         </div>
@@ -531,8 +542,22 @@
 
                     </button>
 
+                    <button @click="currentTab = 'Allo'"
+                      :class="{ 'tab-button text-white': currentTab === 'Allo', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'Allo' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+
+                      Allocation Trends
+
+                    </button>
 
                   </div>
+
+                  <div v-show="currentTab === 'Allo'">
+
+                    <allocation-trends :allocationData="filteredLeanCommodityDispatchData2"
+                      :screenshotMode="screenshotMode" />
+                  </div>
+
 
                   <div v-show="currentTab === 'all'">
 
@@ -659,10 +684,10 @@
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!--  <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -678,14 +703,14 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/dodma/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/planner/Emergency-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -731,6 +756,9 @@ import dispatchSummaryLeansTwoTwo from '../../../components/pages/charts/dispatc
 
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 import stockSummaryLeanTwo from '../../../components/pages/charts/stocksummarylean2.vue'; // Adjust path as needed
+
+import allocationTrends from '../../../components/pages/charts/allocation_trends.vue'; // Adjust path as needed
+
 
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
@@ -973,6 +1001,13 @@ onMounted(async () => {
   getRequisitions();
 });
 
+
+
+function applyFilter() {
+  console.log(`Filter applied: ${selectedFilter.value}`);
+  // Add logic to filter data based on selectedFilter
+  // Example: Filter by date range for each filter option
+}
 
 const fetchFilteredData = async () => {
   try {

@@ -120,7 +120,24 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalDispatched.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ row.receiptCompletion?.toFixed(2) }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span v-if="row.receiptCompletion > 100"
+                            class="relative inline-block cursor-pointer group">
+                            <!-- Red badge with percentage -->
+                            <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"
+                                aria-label="Possible excess receipt">
+                                {{ Number(row.receiptCompletion).toFixed(2)}}%
+                            </span>
+
+                            <!-- Tooltip -->
+                            <span
+                                class="absolute right-0 bottom-6 w-max bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                Possible excess receipt
+                            </span>
+                        </span>
+                        <span v-else>{{ Number(row.receiptCompletion).toFixed(2)}}%</span>
+                     
+                    </td>
                 </tr>
             </tbody>
         </table>

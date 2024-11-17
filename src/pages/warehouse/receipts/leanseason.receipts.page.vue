@@ -187,7 +187,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
   { name: "Receipts", href: "#", current: true },
   { name: "Lean Season Response", href: "#", current: true },
 ];
@@ -592,7 +592,7 @@ const draftLeanReceipt = async (originalModel) => {
     await getReceiptsClean();
 
     // Redirect to the receipts page
-    $router.push({ path: '/field/receipts/leanseason' });
+    $router.push({ path: '/receipient/receipts/leanseason' });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",
@@ -627,7 +627,7 @@ const createLeanReceipt = async (originalModel) => {
       confirmButtonText: "Ok"
     });
     await getReceipts()
-    $router.push({ path: '/field/receipts/leanseason' });
+    $router.push({ path: '/receipient/receipts/leanseason' });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",

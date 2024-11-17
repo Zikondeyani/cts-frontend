@@ -573,7 +573,7 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/dodma/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/planner/Emergency-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
@@ -774,28 +774,28 @@ const takeScreenshot = () => {
 const columns = ref([
   {
     label: "#",
-    field: (row) => row.originalIndex + 1,
+    receipient: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
+    receipient: row => row.instruction?.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Destination District",
-    field: row => row.instruction?.district?.Name,
+    receipient: row => row.instruction?.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
+    receipient: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"

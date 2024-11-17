@@ -153,7 +153,7 @@ const Swal = inject("Swal");
 
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/dodma/dashboard", current: false },
+  { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Instructions", href: "#", current: true }
 ];
 

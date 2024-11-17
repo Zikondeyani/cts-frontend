@@ -221,8 +221,8 @@ import jsPDF from 'jspdf';
 const id = ref(null);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
-  { name: "Instruction Management", href: "/field/emergency-management", current: false },
+  { name: "Home", href: "/dispatcher/dashboard", current: false },
+  { name: "Instruction Management", href: "/dispatcher/emergency-management", current: false },
   { name: "Manage", href: "#", current: true },
 ];
 
@@ -324,17 +324,17 @@ const updateOrCreateReliefItems = async (items) => {
     // Use `Promise.all` to update or create items concurrently
     await Promise.all(
       items.map(async (item) => {
-        // Extract the `error` field and keep other fields for processing
+        // Extract the `error` receipient and keep other fields for processing
         const { error, ...cleanedItem } = item;
 
-        // Check if the item has an `id` field to determine if it's an existing item
+        // Check if the item has an `id` receipient to determine if it's an existing item
         if (cleanedItem.id) {
           // Update the existing relief item (using the `id` for updates)
 
 
           return InstructedCommoditiesStore.update(cleanedItem);
         } else {
-          // Create a new relief item if there's no `id` field
+          // Create a new relief item if there's no `id` receipient
           return InstructedCommoditiesStore.create(cleanedItem);
         }
       })
@@ -369,7 +369,7 @@ const updateRelief = async (newValues) => {
   try {
     // Loop through each object to clean and submit individually
     for (const item of newValues) {
-      // Remove the `error` field using destructuring
+      // Remove the `error` receipient using destructuring
       const { error, ...cleanedItem } = item;
 
       // Create the relief item individually

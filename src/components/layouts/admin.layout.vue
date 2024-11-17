@@ -408,11 +408,13 @@ function navigation() {
       ||
       (navItem.name === "Receipts" && currentRouteBase.startsWith("/admin/receipts"))
       ||
-      (navItem.name === "System" && (currentRouteBase.startsWith("/admin/userroles") || currentRouteBase.startsWith("/admin/users") || currentRouteBase.startsWith("/admin/logs")
+      (navItem.name === "System" && (currentRouteBase.startsWith("/admin/userroles") ||  currentRouteBase.startsWith("/admin/receipts/leanseason") ||  currentRouteBase.startsWith("/admin/usage-stats") || currentRouteBase.startsWith("/admin/performance-stats") || currentRouteBase.startsWith("/admin/users") || currentRouteBase.startsWith("/admin/logs")
         || currentRouteBase.startsWith("/admin/districts")
         || currentRouteBase.startsWith("/admin/organisations")
         || currentRouteBase.startsWith("/admin/commodity-types")
-        || currentRouteBase.startsWith("/admin/commodity-management")
+        || currentRouteBase.startsWith("/admin/commodity-management" 
+          
+        )
       ));
     navItem.current = isMatched;
   });

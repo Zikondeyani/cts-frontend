@@ -20,7 +20,7 @@
                     </select>
                 </div>
 
-              <!--   <div>
+                <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
                     <select v-model="selectedHandleBy"
                         class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -56,18 +56,18 @@
                 </div>
 
                 <div class="flex space-x-4">
-                   
-                    
+
+
                     <button @click="resetFilters"
                         class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
-                      </button>
+                    </button>
 
-                      <button @click="exportToExcel"
+                    <button @click="exportToExcel"
                         class="bg-green-500 mt-5 hover:bg-green-300 text-white font-medium py-1 px-2 text-sm rounded">
                         Export to Excel
-                      </button>
-                  
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -116,11 +116,29 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.tonnageAllocation.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.handledby }}</td>
-                  
+
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalDispatched.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ row.receiptCompletion?.toFixed(2) }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span v-if="row.receiptCompletion > 100"
+                            class="relative inline-block cursor-pointer group">
+                            <!-- Red badge with percentage -->
+                            <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"
+                                aria-label="Possible excess receipt">
+                                {{ Number(row.receiptCompletion).toFixed(2) }}%
+                            </span>
+
+                            <!-- Tooltip -->
+                            <span
+                                class="absolute right-0 bottom-6 w-max bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                Possible excess receipt
+                            </span>
+                        </span>
+                        <span v-else>{{ Number(row.receiptCompletion).toFixed(2) }}%</span>
+                     
+                    </td>
+
                 </tr>
             </tbody>
         </table>
@@ -207,7 +225,7 @@ const filteredData = computed(() => {
     const filtered = data.filter(item => {
         return (!selectedDistrict.value || item.district === selectedDistrict.value) &&
             (!selectedCommodity.value || item.commodity === selectedCommodity.value) &&
-            (!selectedActivity.value || item.activity === selectedActivity.value)&&
+            (!selectedActivity.value || item.activity === selectedActivity.value) &&
             (!selectedHandleBy.value || item.HandledBy === selectedHandleBy.value);
     });
 
@@ -224,7 +242,7 @@ function exportToExcel() {
         'Dispatched (Mt)': row.totalDispatched,
         'Received (Mt)': row.totalReceived,
         '% Dispatch': row.dispatchCompletion,
-        '% Receipt': row.receiptCompletion,    
+        '% Receipt': row.receiptCompletion,
         'Handled By': "DoDMA",
     }));
 

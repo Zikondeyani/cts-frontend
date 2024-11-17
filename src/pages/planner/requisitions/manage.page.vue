@@ -1,295 +1,282 @@
 <template>
-  <main class="font-bold">
+  <main class="">
     <!--spinner-->
     <spinner-widget v-bind:open="isLoading" />
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
-      <div class="mt-2 mb-2 md:flex md:items-center md:justify-between">
+      <div class=" md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-gray-900 sm:text-2xl sm:truncate">
-            Manage Enquiry
+          <h2 class="
+              font-bold
+              leading-7
+              text-white
+              sm:text-2xl sm:truncate
+            ">
+            Requisition Management
           </h2>
         </div>
-        <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
-      </div>
-      <!-- tabs -->
-      <div class="align-middle inline-block min-w-full space-y-2">
-        <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-          <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1">
-              <h3 class="text-lg font-medium leading-6 text-gray-900">
-                Enquiry Info
-              </h3>
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Enquiry:</span>
-                {{ booking }}
-              </p>
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Enquirer Email:</span>
-                {{ model.email }}
-              </p>
+        <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
+          <!-- <router-link :to="{ name: 'admin-create-requisitions' }">
+            <button
+              type="button"
+              class="
+                ml-3
+                inline-flex
+                items-center
+                px-4
+                py-2
+                border border-transparent
+                rounded
+                shadow-sm
+                text-sm
+                font-medium
+                text-white
+                bg-blue-500
+                hover:bg-blue-400
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-blue-500
+                capitalize
+              "
+            >
+              new requisition
+            </button>
+          </router-link> -->
+          <create-requisition-form v-on:create="createRequisition" />
 
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Enquirer Phone #:</span>
-                {{ model.phone }}
-              </p>
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Enquired From:</span>
-                {{ moment(model.enquiryFrom).format("DD/MM/YYYY") }}
-              </p>
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Enquired To:</span>
-                {{ moment(model.enquiryTo).format("DD/MM/YYYY") }}
-              </p>
-
-              <p class="mt-1 text-sm text-blue-500">
-                <span class="text-gray-500 font-bold">Service Type:</span>
-                {{ model.servicetype }}
-              </p>
-            </div>
-          </div>
         </div>
-        <Booking-details
-          v-bind:model="model"
-          v-on:update="updateBooking"
-          :key="refresh + 'Details'"
-          v-on:refresh="getBooking()"
-        />
-        <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-          <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1">
-              <h3 class="text-lg font-medium leading-6 text-gray-900">
-                Delete Enquiry
-              </h3>
-              <p class="mt-1 text-sm text-gray-500">Delete Enquiry</p>
-            </div>
-            <div class="mt-5 md:mt-0 md:col-span-2">
-              <div class="px-4 py-3 text-right sm:px-6">
-                <button
-                  type="button"
-                  class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  @click="deleteBooking()"
-                >
-                  Delete Enquiry
+      </div>
+      <!-- table  -->
+
+
+      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+        <vue-good-table :columns="columns" :rows="requisitions" :search-options="{ enabled: true }"
+          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
+          styleClass="vgt-table striped" compactMode>
+          <template #table-row="props">
+            <span v-if="props.column.label === 'Options'">
+              <div class="flex space-x-2">
+                <!-- Manage Button -->
+                <button @click.prevent="navigateToManage(props.row.id)" class="
+          inline-flex
+          items-center
+          px-3
+          py-2
+          text-sm
+          font-medium
+          text-blue-500
+          hover:text-green-900
+          bg-white
+          rounded-md
+          border
+          border-gray-200
+          hover:bg-gray-100
+        ">
+                  <!-- Heroicon Pencil (Manage) -->
+                  <PencilIcon class="h-5 w-5 mr-1" />
+                  
+
+                  <router-link :to="{ path: '/field/requisition-management/requisitions/manage/' + props.row.id }">
+                    <a href="#" class="text-blue-400 text-sm hover:text-green-900">Manage </a>
+                  </router-link>
+
+                </button>
+
+                <!-- Create Instruction Button -->
+                <button @click.prevent="createInstruction(props.row.id)" class="
+          inline-flex
+          items-center
+          px-3
+          py-2
+          text-sm
+          font-medium
+          text-green-600
+          hover:text-green-900
+          bg-white
+          rounded-md
+          border
+          border-gray-200
+          hover:bg-gray-100
+        ">
+                  <!-- Heroicon PlusCircle (Create Instruction) -->
+                  <PlusCircleIcon class="h-5 w-5 mr-1" />
+                  Create Instruction
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
+            </span>
+          </template>
+        </vue-good-table>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
+// import the styles
+
 import { inject, ref, reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import {
+  SearchIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PencilIcon, PlusCircleIcon
+} from "@heroicons/vue/solid";
 //COMPONENTS
-
-import BookingDetails from "../../../components/pages/bookings/details.component.vue";
-
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import { useSessionStore } from "../../../stores/session.store";
+import createRequisitionForm from "../../../components/pages/requisition/create.component.vue";
 
-import { useMailStore } from "../../../stores/mail.store";
 
-import { usebookingstore } from "../../../stores/booking.store";
+//SCHEMA//AND//STORES
+import { userequisitionstore } from "../../../stores/requisition.store";
 //INJENCTIONS
 const $router = useRouter();
-const $route = useRoute();
 const moment = inject("moment");
 const Swal = inject("Swal");
 
-const system = reactive({
-  name: process.env.VUE_APP_NAME,
-  short: process.env.VUE_APP_SHORT_NAME,
-  version: process.env.VUE_APP_VERSION,
-});
+const isDropdownOpen = ref(null);
+// Toggle dropdown visibility based on the row ID
+const toggleDropdown = (rowId) => {
+  isDropdownOpen.value = isDropdownOpen.value === rowId ? null : rowId;
+};
+
+
 //VARIABLES
-const id = ref(null);
-const refresh = ref(0);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Enquiries", href: "/admin/Bookings", current: false },
-  { name: "Manage", href: "/admin/Bookings/Manage", current: true },
+  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Requisition Management", href: "#", current: true }
 ];
-/* const BookingStore = useBookingStore(); */
-const sessionStore = useSessionStore();
-const bookingStore = usebookingstore();
+const requisitionsStore = userequisitionstore();
+const requisitions = reactive([]);
+const columns = ref([
 
-const booking = ref("");
-const mailStore = useMailStore();
-const user = ref(sessionStore.getUser);
+  {
+    label: "#",
+    field: (row) => row.originalIndex + 1,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
 
-const model = ref({
-  status: "",
-  id: id.value,
-});
+  {
+    label: "Details",
+    field: (row) => {
+      // Combine the disaster and activity names with proper formatting
+      const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster.name}</span>`;
+      const activityFormatted = `<span style="color: green;">Activity: ${row.activity.Name}</span>`;
+      return `${disasterFormatted}<br/>${activityFormatted}`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize",
+    html: true, // This is important to render HTML
+    tdAttr: { "v-html": true } // Use v-html directive to render HTML
+  },
+
+  {
+    label: "Affected Areas",
+    field: row => row.AffectedAreas,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
+
+
+  {
+    label: "Affected HH",
+    field: row => row.AffectedHouseholds,
+    sortable: true,
+    firstSortType: "asc"
+  },
+  {
+    label: "District",
+    hidden: false,
+    field: row => row.district.Name,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize"
+  },
+
+
+  {
+    label: "Options",
+    field: row => row,
+    sortable: false
+  }
+]);
 //MOUNTED
 onMounted(() => {
-  id.value = $route.params.id;
-  getBooking();
+  getRequisitions();
 });
-///FORM
 
-///FIELDS
+
+
 
 //FUNCTIONS
-const getBooking = async () => {
+const getRequisitions = async () => {
   isLoading.value = true;
-  bookingStore
-    .getOne(id.value)
-    .then((result) => {
-      model.value = result;
-      booking.value = model.value.listings.name;
+  requisitionsStore
+    .get()
+    .then(result => {
+      // for (let i = 0; i < 100; i++) {
+      //   requisitions.push(...result);
+      // }
+      requisitions.length = 0; //empty array
+      requisitions.push(...result);
+
+      requisitions.sort((a, b) => new Date(b.created) - new Date(a.created));
+
     })
-    .catch((error) => {
+    .catch(error => {
       Swal.fire({
-        title: "Enquiry Retrieval Failed",
-        text: "Failed to retrive enquiry info (Please refresh page to retry)",
+        title: "Requisition Retrieval Failed",
+        text: "failed to get requisitions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok",
+        confirmButtonText: "Ok"
       });
     })
     .finally(() => {
-      refresh.value = Math.random();
       isLoading.value = false;
     });
 };
 
-const updateBooking = async (newValues) => {
+const createRequisition = async model => {
   isLoading.value = true;
-  bookingStore
-    .update(newValues)
-    .then((result) => {
+  requisitionsStore
+    .create(model)
+    .then(result => {
       Swal.fire({
-        text: "Updated enquiry details",
+        title: "Success",
+        text: "Created a new requisition successfully",
         icon: "success",
-        toast: true,
-        position: "top-right",
-        showConfirmButton: false,
-        timer: 1500,
-        timerProgressBar: true,
+        confirmButtonText: "Ok"
       });
-
-      sendEmail(newValues);
     })
-    .catch((error) => {
-      Swal.fire({
-        title: "Enquiry Update Failed",
-        text: "Failed to update enquiry (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
+    .catch(error => {
+      /*  Swal.fire({
+         title: "Failed",
+         text: "failed to get create user (" + error + ")",
+         icon: "error",
+         confirmButtonText: "Ok"
+       }); */
     })
     .finally(() => {
       isLoading.value = false;
-      getBooking();
+      getRequisitions();
     });
-};
-
-const deleteBooking = async () => {
-  isLoading.value = true;
-  bookingStore
-    .remove(id.value)
-    .then((result) => {
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#16a34a",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire("Deleted!", "Deleted enquiry succesfully.", "success");
-          isLoading.value = false;
-          let role = user.value.roleId == "ADMIN1" ? "admin" : "manager";
-          $router.push({ path: "/" + role + "/Bookings" });
-        }
-      });
-    })
-    .catch((error) => {
-      Swal.fire({
-        title: "Enquiry Deletion Failed",
-        text: "Failed to remove enquiry  (" + error + ")",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    });
-};
-
-const sendEmail = (data) => {
-  console.log(model.value);
-
-  if (model.value.userId == undefined) {
-    let modelval = {
-      from: system.name,
-      to: model.value.email,
-      subject: "Machawi265 enquiry status",
-      text:
-        "The status of the enquiry you made for \b" +
-        model.value.listings.name +
-        " is as follows:\n\bStatus of enquiry:\b" +
-        data.status.toUpperCase(),
-
-      html: {
-        name: model.value.firstname,
-        message:
-          "The enquiry you made for " +
-          model.value.listings.name +
-           +
-          " is " +
-          model.value.status.toUpperCase().bold(),
-        otherinfo: data.comment,
-      },
-    };
-
-    mailStore
-      .send_mail(modelval)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  } else {
-    let modelval = {
-      from: system.name,
-      to: model.value.email,
-      subject: "Machawi265 enquiry status",
-      text:
-        "The status of the enquiry you made for \b" +
-        model.value.listings.name +
-        " is as follows:\n\bStatus of enquiry:\b" +
-        data.status.toUpperCase() +
-        "\n",
-
-      html: {
-        name: model.value.user.firstName,
-        message:
-          "The enquiry you made for " +
-          model.value.listings.name +
-          " " +
-          " is " +
-          model.value.status.toUpperCase().bold(),
-        otherinfo: data.comment,
-      },
-    };
-
-    mailStore
-      .send_mail(modelval)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 };
 </script>
+
+<style>
+.rounded-table {
+  border-radius: 10px;
+  /* Adjust the radius as needed */
+  overflow: hidden;
+  /* This is important to apply rounded corners to child elements */
+}
+</style>
