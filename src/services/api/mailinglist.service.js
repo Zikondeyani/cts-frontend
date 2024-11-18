@@ -1,15 +1,13 @@
 import axios from "axios";
-const resource = process.env.VUE_APP_ROOT_API + "/commodity-inventories";
+const resource = process.env.VUE_APP_ROOT_API + "/mailinglists";
 
-export default class CommodityInventoriesService {
+export default class MailingListService {
   get(id) {
     if (id == null) {
       return axios
         .get(
           resource +
-            `?filter={"include": [
-              "user","warehouse", "commodity"
-            ]}`,
+          `?filter={}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",
@@ -30,21 +28,13 @@ export default class CommodityInventoriesService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/` +
-            id +
-            `?filter={"include": [
-          "user","warehouse", "commodity"
-        ]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -57,101 +47,28 @@ export default class CommodityInventoriesService {
     }
   }
 
-  getloadingplansClean(id) {
-    if (id == null) {
-      return axios
-        .get(
-          resource +
-            `?filter={"include": [
-            "user","warehouse", "commodity"
-          ]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
-        .then((response) => {
-          var result = response.data;
 
-          return result;
-        })
-        .catch((error) => {
-          if (error.response) {
-            throw error.response.data.error;
-          }
-        });
-    } else if (id != null) {
-      return axios
-        .get(
-          resource +
-            `/` +
-            id +
-            `?filter={"include": [
-          "user","warehouse", "commodity"
-        ]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
-        .then((response) => {
-          var result = response.data;
-          return result;
-        })
-        .catch((error) => {
-          if (error.response) {
-            throw error.response.data.error;
-          }
-        });
-    }
-  }
-
-  checkInventory(filters) {
+  bulkcreate(data) {
     return axios
-      .get(resource + "/check", {
-        params: filters,
+      .post(resource + "/bulk", data, {
         headers: {
           "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
           Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
         },
       })
       .then((response) => {
-        return response.data; // Return the inventory data
+        var result = response.data;
+        return result;
       })
       .catch((error) => {
         if (error.response) {
-          throw error.response.data.error; // Handle API-specific errors
+          throw error.response.data.error;
         }
-        throw error; // Handle general errors
       });
   }
 
-  deductInventory(data) {
-    return axios
-      .patch(resource + "/deduct", data, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-        },
-      })
-      .then((response) => {
-        return response.data; // Return the updated inventory data
-      })
-      .catch((error) => {
-        if (error.response) {
-          throw error.response.data.error; // Handle API-specific errors
-        }
-        throw error; // Handle general errors
-      });
-  }
-
+  
   create(data) {
     return axios
       .post(resource, data, {
@@ -174,20 +91,13 @@ export default class CommodityInventoriesService {
 
   count() {
     return axios
-      .get(
-        resource +
-          `/count` +
-          `?filter={"include": [
-        "user","warehouse", "commodity"
-      ]}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        }
-      )
+      .get(resource + `/count` + `?filter={}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
       .then((response) => {
         var result = response.data;
         return result;
@@ -219,13 +129,16 @@ export default class CommodityInventoriesService {
       });
   }
 
+
+
+
+
+
   getByReference(data) {
     return axios
       .get(
         resource +
-          `?filter={"include": [
-          "user","warehouse", "commodity"
-        ]}`,
+        `?filter={}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",

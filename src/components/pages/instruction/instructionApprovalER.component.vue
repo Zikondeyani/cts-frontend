@@ -66,6 +66,9 @@
                     <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.totalQuantity }} MT </p>
                     <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouseName }}
                     </p>
+                    <p class="mb-4"><strong>Activity:</strong> {{ emergencyResponseInstructions.activityName }}
+                    </p>
+                    
                     <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district }}</p>
                     <p class="mb-4"><strong>Planned By:</strong> {{ emergencyResponseInstructions?.plannedBy }}</p>
 

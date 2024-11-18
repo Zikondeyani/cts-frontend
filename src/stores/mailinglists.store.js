@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
-import ActivitiesService from "../services/api/commodityinventories.service";
-const commodityinventoriesService = new ActivitiesService();
+import MailingListService from "../services/api/mailinglist.service";
+const mailinglistService = new MailingListService();
 
-export const usecommodityinventoriestore = defineStore({
-  id: 'commodityinventories',
+export const usemailinglistStore = defineStore({
+  id: 'mailinglist',
   state: () => ({
-     commodityinventories: [],
+     mailinglist: [],
   }),
   getters: {
 
   },
   actions: {
     async get() {
-      return await commodityinventoriesService.get().then((result) => {
+      return await mailinglistService.get().then((result) => {
         if (result) {
           var response = result;
           return response
@@ -21,33 +21,8 @@ export const usecommodityinventoriestore = defineStore({
     },
 
 
-
-    async check(filter) {
-      return await commodityinventoriesService.checkInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
-
-
-    async deduct(filter) {
-      return await commodityinventoriesService.deductInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
- 
- 
-
-    
     async getByReference(data) {
-      return await commodityinventoriesService.getByReference(data).then((result => {
+      return await mailinglistService.getByReference(data).then((result => {
           if (result) {
               return result
           }
@@ -60,7 +35,7 @@ export const usecommodityinventoriestore = defineStore({
   },
 
     async getOne(id) {
-      return await commodityinventoriesService
+      return await mailinglistService
         .get(id)
         .then((result) => {
           if (result) {
@@ -75,7 +50,7 @@ export const usecommodityinventoriestore = defineStore({
         });
     },
     async create(data) {
-      return await commodityinventoriesService
+      return await mailinglistService
         .create(data)
         .then((result) => {
           if (result) {
@@ -93,8 +68,26 @@ export const usecommodityinventoriestore = defineStore({
 
 
     async update(data) {
-      return await commodityinventoriesService
+      return await mailinglistService
         .update(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
+    
+    async bulkcreate(data) {
+      return await mailinglistService
+        .bulkcreate(data)
         .then((result) => {
           if (result) {
             return result;
@@ -111,7 +104,7 @@ export const usecommodityinventoriestore = defineStore({
 
 
     async remove(id) {
-      return await commodityinventoriesService
+      return await mailinglistService
         .remove(id)
         .then((result) => {
           if (result) {
@@ -127,7 +120,7 @@ export const usecommodityinventoriestore = defineStore({
     },
 
     async count() {
-      return await commodityinventoriesService
+      return await mailinglistService
         .count()
         .then((result) => {
           if (result) {

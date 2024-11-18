@@ -150,7 +150,7 @@ export default class DispatcherService {
   }
 
   getExtendedDispatchSummaryDodma(dateFilter) {
-    const endpoint = `${resource}/filtered-summary/planner`;
+    const endpoint = `${resource}/filtered-summary/dodma`;
 
     return axios
       .get(endpoint, {
@@ -379,8 +379,7 @@ export default class DispatcherService {
         },
       })
       .then((response) => {
-        console.log(response, "JDKDKDKDKK");
-
+      
         var result = response.data;
 
         return result;

@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
-import ActivitiesService from "../services/api/commodityinventories.service";
-const commodityinventoriesService = new ActivitiesService();
+import MailinggroupService from "../services/api/mailinggroups.service";
+const mailinggroupService = new MailinggroupService();
 
-export const usecommodityinventoriestore = defineStore({
-  id: 'commodityinventories',
+export const usemailinggrouptore = defineStore({
+  id: 'mailinggroup',
   state: () => ({
-     commodityinventories: [],
+     mailinggroup: [],
   }),
   getters: {
 
   },
   actions: {
     async get() {
-      return await commodityinventoriesService.get().then((result) => {
+      return await mailinggroupService.get().then((result) => {
         if (result) {
           var response = result;
           return response
@@ -20,34 +20,10 @@ export const usecommodityinventoriestore = defineStore({
       });
     },
 
-
-
-    async check(filter) {
-      return await commodityinventoriesService.checkInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
-
-
-    async deduct(filter) {
-      return await commodityinventoriesService.deductInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
- 
- 
 
     
     async getByReference(data) {
-      return await commodityinventoriesService.getByReference(data).then((result => {
+      return await mailinggroupService.getByReference(data).then((result => {
           if (result) {
               return result
           }
@@ -60,7 +36,7 @@ export const usecommodityinventoriestore = defineStore({
   },
 
     async getOne(id) {
-      return await commodityinventoriesService
+      return await mailinggroupService
         .get(id)
         .then((result) => {
           if (result) {
@@ -75,7 +51,7 @@ export const usecommodityinventoriestore = defineStore({
         });
     },
     async create(data) {
-      return await commodityinventoriesService
+      return await mailinggroupService
         .create(data)
         .then((result) => {
           if (result) {
@@ -91,9 +67,8 @@ export const usecommodityinventoriestore = defineStore({
     },
 
 
-
     async update(data) {
-      return await commodityinventoriesService
+      return await mailinggroupService
         .update(data)
         .then((result) => {
           if (result) {
@@ -111,7 +86,7 @@ export const usecommodityinventoriestore = defineStore({
 
 
     async remove(id) {
-      return await commodityinventoriesService
+      return await mailinggroupService
         .remove(id)
         .then((result) => {
           if (result) {
@@ -127,7 +102,7 @@ export const usecommodityinventoriestore = defineStore({
     },
 
     async count() {
-      return await commodityinventoriesService
+      return await mailinggroupService
         .count()
         .then((result) => {
           if (result) {

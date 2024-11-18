@@ -50,7 +50,7 @@
               styleClass="vgt-table striped" compactMode>
               <template #table-actions> </template>
 
-              
+
               <template #table-row="props">
                 <div v-if="props.column.label === 'Status'">
                   <span v-if="props.row.IsApproved"
@@ -66,7 +66,7 @@
                   <button @click="openEditDialog(props.row)"
                     class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                    Edit 
+                    Edit
                   </button>
 
                   <button @click="openAttachmentDialog(props.row)"
@@ -75,7 +75,7 @@
                     Attachments
                   </button>
 
-                  <button  @click="deleteItem(props.row.id)"
+                  <button @click="deleteItem(props.row.id)"
                     class="text-red-500 hover:text-red-700 transition duration-300">
                     <TrashIcon class="h-5 w-5 inline-block mr-1" />
                     Delete
@@ -158,11 +158,14 @@ const breadcrumbs = [
 
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
 
 import * as XLSX from 'xlsx';
 
 
 const loadingPlanStore = useloadingplanstore();
+
+const commodityinventoriesStore = usecommodityinventoriestore();
 
 const sessionStore = useSessionStore();
 
@@ -327,7 +330,7 @@ const getLoadingplans = async () => {
       data = await getOfflineLoadingPlans();
     } */
     data = await loadingPlanStore.get();
-  
+
     // Clear existing data and push new data
     loadingplans.splice(0, loadingplans.length, ...data.reverse());
 
@@ -342,35 +345,47 @@ const getLoadingplans = async () => {
 
 // Automatically update online status message whenever `isOnline` changes
 watchEffect(async () => {
-  updateOnlineStatusMessage();
+ // updateOnlineStatusMessage();
   getLoadingplans(); // Refresh data whenever online status changes
-  if (isOnline.value) {
-    syncOfflineData(); // Trigger synchronization when back online
-  }
+  
 });
 
 const createReport = async (reportData) => {
   try {
     isLoading.value = true;
 
+    if (!reportData || !reportData.Quantity || !reportData.warehouseId || !reportData.activityId || !reportData.commodityId) {
+      throw new Error("Missing required report data fields.");
+    }
 
-    const data = {
+    const prepareReportData = (reportData) => ({
       ...reportData,
       userId: user.value.id,
       IsApproved: false,
-      Balance: reportData.Quantity  // Set Quantity to Balance if offline
-    };
+      Balance: reportData.Quantity,
+    });
 
+    const prepareInventoryData = (reportData) => ({
+      warehouseId: reportData.warehouseId,
+      activityId: reportData.activityId,
+      commodityId: reportData.commodityId,
+      quantity: reportData.Quantity,
+    });
 
-    if (isOnline.value) {
-      await loadingPlanStore.create(data); // Save directly to server
-    } else {
-      await saveDataOffline('loading-plans', data); // Save offline with syncstatus
-    }
+    const data = prepareReportData(reportData);
+    const inventory = prepareInventoryData(reportData);
 
-    await getLoadingplans(); // Refresh loading plans after creating report
+    // Execute the operations concurrently
+    await Promise.all([
+      loadingPlanStore.create(data),
+      commodityinventoriesStore.deduct(inventory),
+    ]);
+
+    // Refresh loading plans
+    await getLoadingplans();
   } catch (error) {
-    console.error("Error creating report:", error);
+    console.error("Error creating report or deducting inventory:", error.message);
+    console.error(error.stack);
   } finally {
     isLoading.value = false;
   }

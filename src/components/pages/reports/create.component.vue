@@ -111,8 +111,12 @@
                         {{ warehouse.Name }}
                       </option>
                     </select>
-                    <!--  <span class="text-md text-blue-500 mb-5 text-italic text-lg"
-                      v-if="reports.commodityId && reports.warehouseId"> Commodity Balance: {{ availableBalance
+
+
+
+                 <!--    <span class="text-md text-blue-500 mb-5 text-italic text-lg"
+                      v-if="reports.commodityId && reports.warehouseId && reports.activityId"> Commodity Balance: {{
+                        availableBalance
                       }}</span> -->
 
                   </div>
@@ -294,6 +298,11 @@ const selectedCommodityName = computed(() => {
 });
 
 const reports = ref({});
+
+
+
+
+
 //FUNCTIONS
 const onSubmit = () => {
   // Validate that all fields are populated
@@ -471,18 +480,19 @@ const getTransporters = async () => {
 
 // Watch for changes in commodity and warehouse selections
 watch(
-  () => [reports.value.commodityId, reports.value.warehouseId],
-  ([newCommodityId, newWarehouseId]) => {
+  () => [reports.value.commodityId, reports.value.warehouseId, reports.value.activityId],
+  ([newCommodityId, newWarehouseId, newActivityId]) => {
     if (newCommodityId && newWarehouseId) {
       // Find the corresponding inventory record based on the selection
       const matchingInventory = commodityinventories.find(
         (inventory) => inventory.commodityId === newCommodityId && inventory.warehouseId === newWarehouseId
+          && inventory.activityId === newActivityId
       );
 
       // Update the available balance if a matching inventory record is found
       availableBalance.value = matchingInventory ? `${matchingInventory.Quantity} MT` : 'Not Available';
     } else {
-      availableBalance.value = 'Select Commodity and Warehouse';
+      availableBalance.value = 'Select Commodity, Activity and Warehouse';
     }
   }
 );

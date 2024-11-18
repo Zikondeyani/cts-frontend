@@ -33,8 +33,8 @@
 
         <vue-good-table :columns="columns" :rows="logs" @on-row-dblclick="showMetadata"
           :search-options="{ enabled: true }" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped condensed" compactMode />
+            enabled: true,
+          }" theme="polar-bear" styleClass=" vgt-table striped condensed" compactMode />
       </div>
     </div>
   </main>
@@ -81,10 +81,15 @@ const columns = ref([
   },
   {
     label: "User",
-    field: (row) => row.user.name + "(" + row.user.email + ")",
+    field: (row) => {
+      const name = row.user?.name;
+      const email = row.user?.email;
+      return name ? `${name} (${email})` : email;
+    },
     sortable: true,
     firstSortType: "asc",
-  },
+  }
+  ,
   {
     label: "Status",
     field: (row) => (row.status == true ? "Success" : "Fail"),
@@ -146,8 +151,12 @@ const generateExcel = () => {
   // Transform the logs data to include user name and email as one string
   const dataToExport = logs.map(log => ({
     ...log,
-    user: log.user ? `${log.user.name} (${log.user.email})` : 'N/A', // Concatenate name and email
-    metadata: log?.metadata ? JSON.stringify(log.metadata): 'N/A'
+    user: log.user
+      ? log.user.name
+        ? `${log.user.name} (${log.user.email})`
+        : log.user.email // Only email if name is undefined
+      : 'N/A', // Fallback if user is null/undefined
+    metadata: log?.metadata ? JSON.stringify(log.metadata) : 'N/A'
   }));
 
   const ws = XLSX.utils.json_to_sheet(dataToExport);
