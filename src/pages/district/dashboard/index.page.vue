@@ -573,7 +573,7 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/planner/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/district/Emergency-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>

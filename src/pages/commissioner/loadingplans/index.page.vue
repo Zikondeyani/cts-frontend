@@ -379,20 +379,19 @@ const getLoadingplans = async () => {
   loadingPlanStore
     .getloadingplansByATC()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   instructions.push(...result);
-      // }
-      loadingplans.length = 0;
+      loadingplans.length = 0; // Clear existing loadingplans array
 
-
-      loadingplans.push(...result.filter(item => !item.isRejected));
-
-
+      // Filter non-rejected plans and sort them by latest `createdOn` date
+      loadingplans.push(
+        ...result
+          .filter(item => !item.isRejected)
+          .sort((a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()) // Proper date parsing
+      );
     })
     .catch(error => {
       Swal.fire({
-        title: "Instruction Retrieval Failed",
-        text: "failed to get Emergency Response Instructions (Please refresh to try again)",
+        title: "Loading Plan Retrieval Failed",
+        text: "failed to get loadingplans (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok"
       });
@@ -401,6 +400,8 @@ const getLoadingplans = async () => {
       isLoading.value = false;
     });
 };
+
+
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Loading Plan';

@@ -45,6 +45,7 @@ function destroyCharts() {
   if (usageChart) usageChart.destroy();
 }
 
+
 // Function to initialize charts
 function createCharts() {
   if (!barChartRef.value || !pieChartRef.value || !usageChartRef.value || !statsChartRef.value) return;

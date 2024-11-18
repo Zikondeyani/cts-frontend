@@ -71,7 +71,8 @@ const optionGroups = ref([
       { label: 'Performance Stats', icon: ChartBarIcon, path: '/admin/performance-stats' }, // Change to ChartBarIcon
    
       { label: 'Reminders', icon: BellIcon, path: '/admin/reminders' }, // Change to BellIcon
-     
+      { label: 'Mailing Groups', icon: MailIcon, path: '/admin/mailinggroups' }, // Change to BellIcon
+    
     ],
   },
  
