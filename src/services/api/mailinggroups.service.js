@@ -48,9 +48,9 @@ export default class MailingGroupService {
   }
 
 
-  bulkcreate(data) {
+  create(data) {
     return axios
-      .post(resource + "/bulk", data, {
+      .post(resource, data, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-type": "Application/json",

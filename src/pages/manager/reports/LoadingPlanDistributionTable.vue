@@ -181,6 +181,7 @@ const exportToExcel = () => {
                 'FDP': note.finalDestination || 'N/A',
                 'Physical Delivery Note': note.physicalDeliveryNote || 'N/A',
                 'Recipient Name': dispatch.recipientName || 'N/A',
+                'Recieved On': note.receivedOn || 'N/A',
             }))
         )
     );

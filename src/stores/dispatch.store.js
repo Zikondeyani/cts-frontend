@@ -7,6 +7,8 @@ export const useDispatcherStore = defineStore({
   id: "dispatcher",
   state: () => ({
     dispatchers: [],
+    
+    performanceData: null,
   }),
   getters: {},
   actions: {

@@ -132,6 +132,33 @@ export const useloadingplanstore = defineStore({
       });
     },
 
+    async getloadingplansSummaryPrepo() {
+      return await loadingplansService.getloadingplansSummaryPrepo().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+    async getloadingplansPrepo(){
+      return await loadingplansService.getloadingplansPrepo().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+    
+    async getloadingplansSummaryEMR() {
+      return await loadingplansService.getloadingplansSummaryEMR().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
     async getloadingplansByATC() {
       return await loadingplansService.getloadingplansByATC().then((result) => {
         if (result) {

@@ -121,7 +121,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span v-if="row.receiptCompletion > 100"
+                        <span v-if="row.receiptCompletion > 100.001"
                             class="relative inline-block cursor-pointer group">
                             <!-- Red badge with percentage -->
                             <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"

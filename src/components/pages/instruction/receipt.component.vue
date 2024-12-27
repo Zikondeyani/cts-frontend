@@ -225,10 +225,12 @@ import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from "@headles
 import { useForm, useSubmitForm } from "vee-validate";
 import { CreateRequisitionSchema } from "../../../services/schema/requisition.schema";
 import { useSessionStore } from "../../../stores/session.store";
+import { usereceiptstore } from "../../../stores/receipt.store";
 
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 const isLoading = ref(false);
 const sessionStore = useSessionStore();
+const receiptStore = usereceiptstore();
 const user = ref(sessionStore.getUser);
 const Swal = inject('Swal');
 const props = defineProps({
@@ -267,6 +269,7 @@ const destinations = ref([{
 const removeDestination = (index) => {
   destinations.value.splice(index, 1);
 };
+
 
 const updateDestinations = () => {
   if (!multipleDestinations.value) {

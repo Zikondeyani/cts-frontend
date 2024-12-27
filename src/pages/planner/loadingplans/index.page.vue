@@ -159,6 +159,7 @@ const breadcrumbs = [
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
 
 import * as XLSX from 'xlsx';
 
@@ -166,6 +167,8 @@ import * as XLSX from 'xlsx';
 const loadingPlanStore = useloadingplanstore();
 
 const commodityinventoriesStore = usecommodityinventoriestore();
+
+const warehousesStore = usewarehousestore();
 
 const sessionStore = useSessionStore();
 
@@ -188,14 +191,49 @@ const columns = ref([
   },
   {
     label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">TP: ${row.transporter?.Name}</span>`,
+    field: row => {
+      // Get the matching warehouse name for 'From' and 'To'
+      const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
+      const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
+      const warehouse = row.warehouse?.Name;
+
+      // Build the "From" and "To" details conditionally
+      let details = `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+        From: ${fromWarehouse ? fromWarehouse.Name : warehouse}
+      </span><br>
+    `;
+
+      // Add "To" details only if isPrepositioned is true
+      if (row.IsPrepositioned) {
+        details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          To: ${toWarehouse ? toWarehouse.Name : "N/A"}
+        </span><br>
+      `;
+      }
+
+      // Add district and transporter details
+      details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        District: ${row.district?.Name}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+        TP: ${row.transporter?.Name}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-gray-100 text-gray-800">
+        ATC #: ${row.ATCNumber}
+      </span>
+    `;
+
+      return details;
+    },
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
+
 
   {
     label: "Stocks",
@@ -230,7 +268,7 @@ const columns = ref([
 const isLoading = ref(false);
 const isOnline = ref(false);
 const loadingplans = reactive([]);
-
+const warehouses = reactive([]);
 const isEditDialogOpen = ref(false);
 
 const selectedLoadingPlan = ref(null);
@@ -287,10 +325,12 @@ const startOnlineStatusCheck = () => {
 
 //MOUNTED
 onMounted(async () => {
- /*  startOnlineStatusCheck(); // Start periodic online status check
-  await updateOnlineStatusMessage();
-  */ await getLoadingplans();
+  /*  startOnlineStatusCheck(); // Start periodic online status check
+   await updateOnlineStatusMessage();
+   */
+  await getLoadingplans();
 
+  await getWarehouses()
 });
 //FUNCTIONS
 
@@ -342,22 +382,53 @@ const getLoadingplans = async () => {
 };
 
 
+const getWarehouses = async () => {
+  try {
+    let data = [];
+
+    /* if (isOnline.value) {
+      data = await loadingPlanStore.get();
+    } else {
+      data = await getOfflineLoadingPlans();
+    } */
+    data = await warehousesStore.get();
+
+    // Clear existing data and push new data
+    warehouses.splice(0, warehouses.length, ...data.reverse());
+
+  } catch (error) {
+    console.error("Error fetching loading plans:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+
 
 // Automatically update online status message whenever `isOnline` changes
 watchEffect(async () => {
- // updateOnlineStatusMessage();
+  // updateOnlineStatusMessage();
   getLoadingplans(); // Refresh data whenever online status changes
-  
+
 });
 
 const createReport = async (reportData) => {
   try {
     isLoading.value = true;
 
-    if (!reportData || !reportData.Quantity || !reportData.warehouseId || !reportData.activityId || !reportData.commodityId) {
+    // Check for missing required report data fields (excluding warehouseId check)
+    if (!reportData || !reportData.Quantity || !reportData.commodityId) {
       throw new Error("Missing required report data fields.");
     }
 
+    // If activityId is 'stock-prepositioning', replace with 0
+    if (reportData.activityId === 'stock-prepositioning') {
+      reportData.activityId = 0;
+      reportData.warehouseId = 0;
+      reportData.IsPrepositioned = true;
+    }
+
+    // Prepare report data
     const prepareReportData = (reportData) => ({
       ...reportData,
       userId: user.value.id,
@@ -365,6 +436,7 @@ const createReport = async (reportData) => {
       Balance: reportData.Quantity,
     });
 
+    // Prepare inventory data (for deduct operation)
     const prepareInventoryData = (reportData) => ({
       warehouseId: reportData.warehouseId,
       activityId: reportData.activityId,
@@ -372,24 +444,56 @@ const createReport = async (reportData) => {
       quantity: reportData.Quantity,
     });
 
+    // Remove moveToWarehouseId and moveFromWarehouseId from the reportData (if they exist)
+  
     const data = prepareReportData(reportData);
     const inventory = prepareInventoryData(reportData);
 
-    // Execute the operations concurrently
-    await Promise.all([
-      loadingPlanStore.create(data),
-      commodityinventoriesStore.deduct(inventory),
-    ]);
+    // Create the loading plan, proceed even if warehouseId is invalid (undefined or 0)
+    await loadingPlanStore.create(data);
 
-    // Refresh loading plans
+    // Only deduct if warehouseId is valid (not undefined or 0)
+    if (reportData.warehouseId && reportData.warehouseId !== 0) {
+     
+      await commodityinventoriesStore.deduct(inventory);
+
+      
+    }
+
+    // Refresh loading plans after operations
     await getLoadingplans();
+
+    // Only show success message if warehouseId is not 0 (since it was successfully created)
+    if (reportData.warehouseId !== 0) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Loadingplan created successfully!',
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Loadingplan created successfully.',
+      });
+    }
   } catch (error) {
-    console.error("Error creating report or deducting inventory:", error.message);
+    console.error("Error creating Loadingplan or deducting inventory:", error.message);
     console.error(error.stack);
+
+    // Show error if warehouseId is not 0 and an error occurs during inventory deduction
+    if (reportData.warehouseId !== 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `An error occurred: ${error.message}`,
+      });
+    }
   } finally {
     isLoading.value = false;
   }
 };
+
 
 
 // Function to handle synchronization when back online
@@ -496,15 +600,10 @@ const deleteItem = async (id) => {
       };
 
       // Check online status
-      if (isOnline.value) {
-        await loadingPlanStore.removeWithComments(deletePayload);
-      } else {
-        // Call local offline delete function
-        await removeDataOffline("loading-plans", id); // Adjust this function according to your service
-      }
+      await loadingPlanStore.removeWithComments(deletePayload);
 
       // Show success message
-      await Swal.fire("Deleted!", "Your Offline loading plan has been deleted.", "success");
+      await Swal.fire("Deleted!", "Loading plan has been deleted.", "success");
 
       // Refresh the dispatches
       await getLoadingplans();

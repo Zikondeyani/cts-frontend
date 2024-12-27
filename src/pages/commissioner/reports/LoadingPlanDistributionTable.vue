@@ -180,7 +180,8 @@ const exportToExcel = () => {
                 'Received (Mt)': dispatch.receiptStats?.totalReceived || 0,
                 'FDP': note.finalDestination || 'N/A',
                 'Physical Delivery Note': note.physicalDeliveryNote || 'N/A',
-                'Recipient Name': dispatch.recipientName || 'N/A',
+                'Recipient Name': dispatch.recipientName || 'N/A',     
+                'Recieved On': note.receivedOn || 'N/A',
             }))
         )
     );

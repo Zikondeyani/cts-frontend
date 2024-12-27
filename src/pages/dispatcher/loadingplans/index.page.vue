@@ -62,60 +62,61 @@
         </vue-good-table>
 
         <!-- Recent Dispatches Modal -->
-   
+
         <template v-if="isRecentDispatchesOpen">
-  <div id="content">
-    <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-      <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-semibold">Recent Dispatches</h3>
-        </div>
+          <div id="content">
+            <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+              <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-semibold">Recent Dispatches</h3>
+                </div>
 
-        <div class="overflow-auto max-h-96">
-          <table class="min-w-full table-auto border-collapse">
-            <thead>
-              <tr class="bg-blue-100">
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Delivery Note</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ATC #</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Dispatcher</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Qty (MT)</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">FDP</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Created</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Driver (Truck #)</th>
-                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Received</th> <!-- New column -->
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DeliveryNote }}</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.atc }}</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.dispatcher?.username?.replace(/\./g, ' ') }}</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.Quantity }} MT</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.FinalDestinationPoint }}</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch.CreatedOn).format('MMMM Do YYYY, h:mm a') }}</td>
-                <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DriverName }} ({{ dispatch.TruckNumber }})</td>
-                <td class="px-4 py-2 text-sm text-gray-900">
-                  <span 
-                    class="inline-block w-3 h-3 rounded-full" 
-                    :class="dispatch.received ? 'bg-green-500' : 'bg-red-500'">
-                  </span>
-                </td> <!-- Received status with dot -->
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <div class="overflow-auto max-h-96">
+                  <table class="min-w-full table-auto border-collapse">
+                    <thead>
+                      <tr class="bg-blue-100">
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Delivery Note</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ATC #</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Dispatcher</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Qty (MT)</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">FDP</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Created</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Driver (Truck #)</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Received</th>
+                        <!-- New column -->
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                      <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DeliveryNote }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.atc }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.dispatcher?.username?.replace(/\./g, '') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.Quantity }} MT</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.FinalDestinationPoint }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch.CreatedOn).format('MMMM Do YYYY,h:mm a') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DriverName }} ({{ dispatch.TruckNumber
+                          }})</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          <span class="inline-block w-3 h-3 rounded-full"
+                            :class="dispatch.received ? 'bg-green-500' : 'bg-red-500'">
+                          </span>
+                        </td> <!-- Received status with dot -->
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-        <div class="flex justify-end mt-4">
-          <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0" 
-            class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
-          <button type="button" id="closeButton"
-            class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-            @click="closeRecentDispatches">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
+                <div class="flex justify-end mt-4">
+                  <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0"
+                    class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
+                  <button type="button" id="closeButton"
+                    class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                    @click="closeRecentDispatches">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
 
 
         <!-- Edit Loading Plan Dialog -->
@@ -176,12 +177,16 @@ const breadcrumbs = [
   { name: "Lean Season Response & Emergency Assistance", href: "#", current: true },
 
 ];
+import { usewarehousestore } from "../../../stores/warehouse.store";
+const warehousesStore = usewarehousestore();
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
 import * as XLSX from 'xlsx';
 
 
+
+const warehouses = reactive([])
 const loadingPlanStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
@@ -205,18 +210,56 @@ const columns = ref([
     tdClass: "capitalize"
   },
 
+
   {
-    label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">TP: ${row.transporter?.Name}</span> <br>`
-      +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold  bg-gray-100 text-gray-800">ATC #: ${row.ATCNumber}</span>`,
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
+  label: "Details",
+  field: row => {
+    // Get the matching warehouse name for 'From' and 'To'
+    const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
+    const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
+    const warehouseName = row.warehouse?.Name;
+
+    // Build the "From" details
+    let details = `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+        From: ${fromWarehouse ? fromWarehouse.Name : warehouseName || "N/A"}
+      </span><br>
+    `;
+
+    // Add "To" details only if isPrepositioned is true
+    if (row.IsPrepositioned) {
+      details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          To: ${toWarehouse ? toWarehouse.Name : "N/A"}
+        </span><br>
+      `;
+    }
+
+    // Add district and transporter details
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        District: ${row.district?.Name || "Unknown"}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+        TP: ${row.transporter?.Name || "Unknown"}
+      </span><br>
+    `;
+
+    // Add the ATC Number
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-gray-100 text-gray-800">
+        ATC #: ${row.ATCNumber || "N/A"}
+      </span>
+    `;
+
+    return details;
   },
+  sortable: true,
+  firstSortType: "asc",
+  html: true, // This is important to render HTML
+  tdClass: "capitalize"
+},
+
 
   {
     label: "Stocks",
@@ -252,6 +295,29 @@ const openRecentDispatches = async (id, atc) => {
 const closeRecentDispatches = () => {
   isRecentDispatchesOpen.value = false;
 };
+
+
+const getWarehouses = async () => {
+  try {
+    let data = [];
+
+    /* if (isOnline.value) {
+      data = await loadingPlanStore.get();
+    } else {
+      data = await getOfflineLoadingPlans();
+    } */
+    data = await warehousesStore.get();
+
+    // Clear existing data and push new data
+    warehouses.splice(0, warehouses.length, ...data.reverse());
+
+  } catch (error) {
+    console.error("Error fetching loading plans:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 
 // Fetch Recent Dispatches
 const fetchRecentDispatches = async (id, atc) => {
@@ -297,6 +363,7 @@ const closeDispatchDialog = () => {
 //MOUNTED
 onMounted(() => {
   getLoadingplans();
+  getWarehouses();
   // getLatest()
 });
 
@@ -329,7 +396,7 @@ const getLoadingplans = async () => {
     // Filter based on user district if not national or null
     const filteredLoadingPlans = isNationalOrNull
       ? sortedLoadingPlans.filter(item => item.IsApproved === true) // For national or null, include approved only
-      : sortedLoadingPlans.filter(item => item.IsApproved === true && item.district.Name === user.value.district  && item.IsDivertedLoad == true); // For specific district, include approved and match district
+      : sortedLoadingPlans.filter(item => item.IsApproved === true && item.district.Name === user.value.district && item.IsDivertedLoad == true); // For specific district, include approved and match district
 
     // Clear the loadingplans array and then push the sorted results
     loadingplans.length = 0;
@@ -462,7 +529,7 @@ const printPDF = () => {
     printWindow.print();
 
     window.location.reload(); // Reloads the page after the print or cancel action
- 
+
   } else {
     console.error("Modal content not found!");
   }

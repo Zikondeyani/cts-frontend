@@ -143,6 +143,8 @@ import { useInstructedCommoditiesStore } from '../../../stores/instructedCommodi
 import { usecommoditiestore } from '../../../stores/commodity.store';
 import { useInstructedDispatchesStore } from '../../../stores/instructedDispatches.store';
 import { useDispatchedCommoditiesStore } from '../../../stores/dispatchedCommodities.store';
+import { usewarehousestore } from '../../../stores/warehouse.store';
+
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -161,6 +163,10 @@ const breadcrumbs = [
 
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
+
+
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([]);
 
 
 const loadingplansStore = useloadingplanstore()
@@ -237,8 +243,35 @@ onMounted(() => {
   getInstructedCommodities();
   getCommodity();
   getLoadingPlans();
+  getWarehouses();
 });
 
+
+const getWarehouses = async () => {
+  isLoading.value = true;
+  warehouseStore
+    .get()
+    .then(result => {
+      // Clear the leanSeasonInstructions array
+      warehouses.length = 0;
+
+      // Filter instructions where IsApproved and IsRejected are false,
+      // and requestCommodities is not empty
+      warehouses.push(...result);
+
+    })
+    .catch(error => {
+      Swal.fire({
+        title: "Instruction Retrieval Failed",
+        text: "Failed to get instructions (Please refresh to try again)",
+        icon: "error",
+        confirmButtonText: "Ok"
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
 
 //FUNCTIONS
 const getInstructions = async () => {

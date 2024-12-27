@@ -100,7 +100,7 @@
                   <div class="flex justify-center mb-4">
                     <button class="tab-button" :class="{ 'active-tab': activeTab === 'lean' }"
                       @click="activeTab = 'lean'">
-                      Lean Season  & Emergency Assistance
+                      Lean Season & Emergency Assistance
                       <span v-if="leanSeasonCount > 0" class="badge badge-red">{{ leanSeasonCount }}</span>
 
                     </button>
@@ -116,7 +116,6 @@
                 </div>
               </div>
               <div v-if="activeTab === 'lean'">
-
                 <vue-good-table :columns="columns" :rows="expectedDispatches" :search-options="{ enabled: true }"
                   style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
                   styleClass="vgt-table striped" compactMode>
@@ -342,7 +341,7 @@ const columns = ref([
   {
     label: "Details",
     hidden: false,
-    field: row => `<span >D.N: ${row.DeliveryNote}</span><br>`
+    field: row => `<span >HandledBy: ${row.loadingPlan?.HandledBy}</span><br>`
       +
       `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
     sortable: true,
@@ -528,11 +527,16 @@ const leanSeasonCount = computed(() => {
   return expectedDispatches.length;
 });
 
+const expecteddispatches = computed(() => {
+  const expectedCount = Array.isArray(expectedDispatches) ? expectedDispatches.length : 0;
+  const dispatchCount = Array.isArray(dispaches) ? dispaches.length : 0;
+  return expectedCount + dispatchCount;
+});
+
 const users = reactive([]);
 
 const dispaches = reactive([]);
 const isLoading = ref(false);
-
 const loadingPlanSummary = reactive([]);
 let userCount = ref(0);
 
@@ -574,6 +578,8 @@ onMounted(async () => {
   await getloadingplansSummaryByCommodity();
   await getRequisitions();
   await getDisasters();
+  await getEMRReceipts();
+  await getLeanReceipts();
 });
 
 const getWarehouses = async () => {
@@ -618,6 +624,7 @@ const getDispatches = async () => {
 
     // Update dispatches with the mapped data
     dispaches.push(...filteredDispatches);
+
 
 
   } catch (error) {
@@ -844,6 +851,36 @@ const getRequisitions = async () => {
 };
 
 
+
+const leanReceiptCount = ref(0)
+const getLeanReceipts = async () => {
+  recieptStore.get().then((result) => {
+    leanReceiptCount.value = result.filter(item => {item.Recipient?.id == user.value.id}).length
+  });
+
+};
+
+
+
+const emrReceiptCount = ref(0)
+const getEMRReceipts = async () => {
+  instructedreceiptStore.get().then((result) => {
+
+    emrReceiptCount.value = result.filter(item => item.recipientId == user.value.id).length;
+  });
+};
+
+
+
+
+const totalReceipts = computed(() => {
+  const emrCount = Array.isArray(emrReceiptCount) ? emrReceiptCount.length : 0;
+  const leanCount = Array.isArray(leanReceiptCount) ? leanReceiptCount.length : 0;
+  return emrCount + leanCount;
+});
+
+
+
 const disasterCount = ref(0)
 const getDisasters = async () => {
   disasterStore.get().then((result) => {
@@ -1009,8 +1046,8 @@ const formatDate = (date) => {
 // Dummy data for stats
 const stats = ref([
   {
-    label: 'Total Disasters Recorded',
-    value: disasterCount,
+    label: 'Total Receipts Recorded',
+    value: totalReceipts,
     icon: ClipboardListIcon,
     iconColor: 'green-500',
     percentageText: null
@@ -1018,12 +1055,12 @@ const stats = ref([
 
 
   {
-    label: 'Requisitions',
-    value: requisitionCount,
-    icon: ClipboardListIcon,
-    iconColor: 'gray-400',
+    label: 'Dispatches Pending Receipt',
+    value: expecteddispatches,
+    icon: TruckIcon,
+    iconColor: 'blue-400',
     percentageText: '',
-    textColor: 'gray-600',
+    textColor: 'blue-600',
     showProgress: false
   },
 ]);
@@ -1049,6 +1086,8 @@ const actions = [
 
 
 const dispatchstatus = ref(0)
+
+
 
 
 </script>

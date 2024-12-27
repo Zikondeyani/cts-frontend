@@ -18,7 +18,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
             <div
               class="inline-block align-middle bg-white rounded-lg text-left shadow-xl transform transition-all sm:align-middle sm:w-full max-w-4xl"
-              :class="{'max-h-screen overflow-y-auto': true}">
+              :class="{ 'max-h-screen overflow-y-auto': true }">
               <!-- Modal Header -->
               <div class="modal-header flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
                 <h5 class="text-lg font-bold text-gray-800">Lean Season Response Dispatch</h5>
@@ -130,7 +130,7 @@
                                     class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
-                                    <option value="missing">Missing</option>                                                       
+                                    <option value="missing">Missing</option>
                                     <option value="received but damaged">Received but damaged</option>
                                     <option value="received in excess">Received in excess</option>
                                     <option value="received but not expected quantity">Received but not at the expected
@@ -231,11 +231,13 @@ import { Dialog, DialogOverlay, TransitionRoot, TransitionChild } from '@headles
 import { PlusCircleIcon, MinusCircleIcon, XIcon, CheckCircleIcon, SaveIcon } from "@heroicons/vue/solid";
 
 import { useSessionStore } from "../../../stores/session.store";
+import { usereceiptstore } from "../../../stores/receipt.store";
 
 
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 const isLoading = ref(false);
 
+const receiptStore = usereceiptstore();
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const pdn = ref('')
@@ -264,6 +266,16 @@ const resetDestinations = () => {
   destinations[0].name = '';
 };
 
+
+const checkPDNExists = async (pdn) => {
+  try {
+    const response = await receiptStore.check(pdn);
+    return response;
+  } catch (error) {
+    console.error("Error checking PDN existence:", error);
+    return false;
+  }
+}
 
 const confirmSubmission = () => {
   Swal.fire({
@@ -343,6 +355,19 @@ const submitReceipt = async () => {
     return;
   }
 
+  // Check if PDN already exists
+  const pdnExists = await checkPDNExists(pdn.value);
+  if (pdnExists) {
+    Swal.fire({
+      icon: "error",
+      title: "🚫 Duplicate Physical Delivery Note",
+      html: `<p>The Physical Delivery Note <strong>${pdn.value}</strong> already exists in the database. Please use a unique PDN.</p>`,
+      allowOutsideClick: false,
+      customClass: { popup: 'swal-wide' }
+    });
+    isLoading.value = false;
+    return;
+  }
   const receivedCommodities = [];
   const commodityTotals = {}; // To track cumulative quantity per commodity across all destinations
   const remarksMap = {}; // To track if required remarks are added for each commodity
@@ -416,8 +441,8 @@ const submitReceipt = async () => {
     const dispatchedQuantity = props.dispatch?.NoBags || 0;
 
     if (totalReceived < dispatchedQuantity &&
-        !remarksMap[commodityName].has('received but not expected quantity') &&
-        !remarksMap[commodityName].has('missing')) {
+      !remarksMap[commodityName].has('received but not expected quantity') &&
+      !remarksMap[commodityName].has('missing')) {
       Swal.fire({
         icon: "error",
         title: "❗Quantity Less Than Expected",
