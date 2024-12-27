@@ -40,12 +40,20 @@
                   <div class="col-span-6 sm:col-span-3">
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Activity</label>
+
                     <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
                       class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                      <!-- Static Option -->
+                      <option value="stock-prepositioning" class="uppercase">
+                        Stock Prepositioning
+                      </option>
+
+                      <!-- Dynamic Options -->
+                      <option v-for="activity in activities" :key="activity.id" :value="activity.id" class="uppercase">
                         {{ activity.Name }}
                       </option>
                     </select>
+
 
                   </div>
 
@@ -102,7 +110,7 @@
                       class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                   </div>
 
-                  <div class="col-span-6 sm:col-span-3 mb-5">
+                  <div class="col-span-6 sm:col-span-3 mb-5" v-if="reports.activityId !== 'stock-prepositioning'">
                     <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
                     <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
@@ -114,13 +122,59 @@
 
 
 
-                 <!--    <span class="text-md text-blue-500 mb-5 text-italic text-lg"
-                      v-if="reports.commodityId && reports.warehouseId && reports.activityId"> Commodity Balance: {{
+                       <span class="text-md text-blue-500 mb-5 text-italic text-lg"
+                      v-if="reports.commodityId && reports.warehouseId && reports.activityId && availableBalance !== 'Not Available'"> Commodity Balance: {{
                         availableBalance
-                      }}</span> -->
+                      }}</span>
 
                   </div>
+
+
+
+
                 </div>
+
+                <!-- Conditional Rendering for Stock Prepositioning -->
+                <div v-if="reports.activityId === 'stock-prepositioning'" class="mt-5">
+                  <!-- Styled Section Label -->
+                  <div class="relative flex items-center mb-5">
+                    <hr class="w-full border-gray-300" />
+                    <span
+                      class="absolute left-1/2 transform -translate-x-1/2 bg-white px-4 text-sm font-semibold text-blue-400">
+                      Stock Prepositioning
+                    </span>
+                  </div>
+
+                  <!-- Move From Warehouse -->
+                  <div class="col-span-6 sm:col-span-3 mb-5">
+                    <label for="moveFromWarehouse" class="block text-sm font-bold text-gray-700">
+                      Move From Warehouse
+                    </label>
+                    <select id="moveFromWarehouse" v-model="reports.moveFromWarehouseId"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
+                        {{ warehouse.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Move To Warehouse -->
+                  <div class="col-span-6 sm:col-span-3 mb-5">
+                    <label for="moveToWarehouse" class="block text-sm font-bold text-gray-700">
+                      Move To Warehouse
+                    </label>
+                    <select id="moveToWarehouse" v-model="reports.moveToWarehouseId"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
+                        {{ warehouse.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Divider -->
+                  <hr class="border-gray-300 mt-5 mb-4" />
+                </div>
+
 
 
 
@@ -304,17 +358,29 @@ const reports = ref({});
 
 
 //FUNCTIONS
+
 const onSubmit = () => {
+  // Ensure warehouseId and activityId default to 0 if not present
+  if (!reports.value.warehouseId) {
+    reports.value.warehouseId = 0;
+  }
+
+  if (!reports.value.activityId) {
+    reports.value.activityId = 0;
+  }
+
+  reports.value.moveFromWarehouseId = reports.value.moveFromWarehouseId
+  reports.value.moveToWarehouseId = reports.value.moveToWarehouseId
   // Validate that all fields are populated
-  if (!reports.value.activityId || !reports.value.transporterId || !reports.value.commodityId ||
-    !reports.value.Quantity || !reports.value.warehouseId || !reports.value.districtId ||
+  if ( !reports.value.transporterId || !reports.value.commodityId ||
+    !reports.value.Quantity  || !reports.value.districtId ||
     !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
       text: 'All fields are required!',
     });
-    return; // Prevent form submission if any receipient is missing
+    return; // Prevent form submission if any required field is missing
   }
 
   // Perform form submission
@@ -486,11 +552,11 @@ watch(
       // Find the corresponding inventory record based on the selection
       const matchingInventory = commodityinventories.find(
         (inventory) => inventory.commodityId === newCommodityId && inventory.warehouseId === newWarehouseId
-          && inventory.activityId === newActivityId
+         
       );
 
       // Update the available balance if a matching inventory record is found
-      availableBalance.value = matchingInventory ? `${matchingInventory.Quantity} MT` : 'Not Available';
+      availableBalance.value = matchingInventory ? `${matchingInventory.Quantity.toFixed(2)} MT` : 'Not Available';
     } else {
       availableBalance.value = 'Select Commodity, Activity and Warehouse';
     }

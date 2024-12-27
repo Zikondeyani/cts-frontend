@@ -14,7 +14,7 @@
               text-white
               sm:text-2xl sm:truncate
             ">
-            Mailing List
+            Mailing Groups
           </h2>
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
@@ -166,6 +166,9 @@ const getMailinggroups = async () => {
 
 const createMailingGroup = async model => {
   isLoading.value = true;
+
+  
+
   mailinggroupStore
     .create(model)
     .then(result => {

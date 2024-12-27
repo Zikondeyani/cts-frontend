@@ -103,6 +103,9 @@ const routes = [
         component: () => import("../pages/admin/users/index.page.vue"),
       },
 
+     
+
+
       {
         path: "/admin/mailinggroups",
         name: "admin-mailinggroups",
@@ -383,6 +386,12 @@ const routes = [
         path: "/manager/users",
         name: "manager-users",
         component: () => import("../pages/manager/users/index.page.vue"),
+      },
+
+      {
+        path: "/manager/stock-prepositioning",
+        name: "manager-stock-prepositioning",
+        component: () => import("../pages/manager/stock-prepositoning/index.page.vue"),
       },
 
       {
@@ -905,6 +914,12 @@ const routes = [
         name: "planner-change-password",
         component: () =>
           import("../components/pages/users/change.password.vue"),
+      },
+
+      {
+        path: "/planner/stock-prepositioning",
+        name: "planner-stock-prepositioning",
+        component: () => import("../pages/planner/stock-prepositoning/index.page.vue"),
       },
 
       //Users
@@ -1497,6 +1512,12 @@ const routes = [
         name: "commissioner-dashboard",
         component: () =>
           import("../pages/commissioner/dashboard/index.page.vue"),
+      },
+
+      {
+        path: "/commissioner/stock-prepositioning",
+        name: "commissioner-stock-prepositioning",
+        component: () => import("../pages/commissioner/stock-prepositoning/index.page.vue"),
       },
 
       {

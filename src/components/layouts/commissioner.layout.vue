@@ -441,7 +441,7 @@ const getLoadingPlans = async () => {
 
 
       // Push the filtered instructions into the array
-      loadingplans.push(...result.filter(item => !item.isApproved));
+      loadingplans.push(...result.filter(item => !item.isApproved && !item.IsRejected));
 
       
 

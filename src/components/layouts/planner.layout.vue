@@ -485,7 +485,7 @@ const getLoadingPlans = async () => {
     .get()
     .then((result) => {
       loadingplans.length = 0;
-      loadingplans.push(...result.filter(item => item.IsRejected == true));
+      loadingplans.push(...result.filter(item => item.IsRejected == true && item.IsArchived == false));
       newRejectedLoadingPlanCount.value = loadingplans.length;
       updateNotifications();
     })

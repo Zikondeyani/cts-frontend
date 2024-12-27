@@ -64,11 +64,17 @@
                     <p class="mb-4"><strong>ATC Number:</strong> {{ emergencyResponseInstructions.ATCNUMBER }}</p>
 
                     <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.totalQuantity }} MT </p>
-                    <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouseName }}
+                    <p class="mb-4"><strong>Warehouse (From):</strong>
+                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseFrom : emergencyResponseInstructions?.warehouseName }}
                     </p>
-                    <p class="mb-4"><strong>Activity:</strong> {{ emergencyResponseInstructions.activityName }}
+                    <p class="mb-4" v-if="emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse'"><strong>Warehouse (To):</strong>
+                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseTo : emergencyResponseInstructions?.warehouseName }}
                     </p>
-                    
+                    <p class="mb-4"><strong>Activity:</strong> {{ emergencyResponseInstructions.activityName == "Unknown Activity"? 'Stock Prepositioning' :  emergencyResponseInstructions.activityName }}</p>
+                    <p class="mb-4"><strong>Transporter:</strong> {{ emergencyResponseInstructions.transporterName == "Unknown Transporter"? 'N/A' :  emergencyResponseInstructions.transporterName }}</p>
+                    <p class="mb-4"><strong>Handled By:</strong> {{ emergencyResponseInstructions.handledBy}}</p>
+                 
+                
                     <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district }}</p>
                     <p class="mb-4"><strong>Planned By:</strong> {{ emergencyResponseInstructions?.plannedBy }}</p>
 
@@ -177,6 +183,8 @@ const RejectionComment = ref("");
 // STORES
 const requisitionStore = userequisitionstore();
 const requisitions = reactive([]);
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([])
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 
@@ -195,6 +203,7 @@ const { meta } = useForm({
 // MOUNTED
 onMounted(() => {
   getRequisition();
+  getWarehouses();
 });
 
 // FUNCTIONS
@@ -202,6 +211,16 @@ const getRequisition = async () => {
   requisitionStore.get().then(result => {
     requisitions.length = 0; // empty array
     requisitions.push(...result);
+  }).catch(error => {
+    console.error(error);
+  }).finally(() => {
+  });
+};
+
+const getWarehouses = async () => {
+  warehouseStore.get().then(result => {
+    warehouses.length = 0; // empty array
+    warehouses.push(...result);
   }).catch(error => {
     console.error(error);
   }).finally(() => {

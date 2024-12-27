@@ -95,12 +95,23 @@
                     </div>
 
 
-                    <h2 class="text-lg font-semibold mb-1 text-blue-400 mt-2">Other Dispatch Details <p
-                        class="text-xs italic text-gray-400 mb-2">These details are optional</p>
+                    <h2 class="text-lg font-semibold mb-1 text-blue-400 mt-2" v-if="!loadingPlan?.IsPrepositioned">Other
+                      Dispatch Details <p class="text-xs italic text-gray-400 mb-2">These details are optional</p>
                     </h2>
 
+                    <div v-if="loadingPlan?.IsPrepositioned" class="mt-4">
+                      <h2 class="text-lg font-semibold text-blue-500 mb-3">Stock Prepositioning Details</h2>
+                      <div class="text-sm text-gray-500">
+                        <p class="italic">
+                          <span class="font-semibold text-gray-700">From:</span> {{ loadingPlan?.warehouseFrom }}
+                        </p>
+                        <p class="italic">
+                          <span class="font-semibold text-gray-700">To:</span> {{ loadingPlan?.warehouseTo }}
+                        </p>
+                      </div>
+                    </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" v-if="!loadingPlan?.IsPrepositioned">
                       <!-- Dispatch Status Dropdown -->
                       <div>
                         <label for="IsIntransit" class="block text-sm font-bold text-gray-700 mb-1">Dispatch
@@ -176,7 +187,7 @@
 
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Origin: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse?.Name == undefined ? loadingPlan?.warehouseFrom : loadingPlan.warehouse?.Name }}</span>
                     </div>
 
 
@@ -188,6 +199,11 @@
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Transporter: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.transporter.Name }}</span>
+                    </div>
+
+                    <div class="mb-7">
+                      <span class="text-sm font-bold text-gray-700">Activity: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.activity.Name }}</span>
                     </div>
 
 
@@ -324,6 +340,7 @@ const generateUniqueDeliveryNote = () => {
 };
 
 const loading = ref(false);
+
 const submitDispatch = async () => {
   if (loading.value) return; // Prevent multiple submissions
   loading.value = true; // Start loader
@@ -391,12 +408,10 @@ const submitDispatch = async () => {
     dispatch.value.Date = moment(dispatch.value.Date).toISOString();
   }
 
-  // Assuming dispatch is your object with the value property
-  if (dispatch.value) {
-    dispatch.value.warehouseId = dispatch.value.warehouseId !== undefined
-      ? parseInt(dispatch.value.warehouseId)
-      : 0;
-  }
+  // Determine warehouseId based on loadingPlan.IsPrepositioned
+  dispatch.value.warehouseId = props.loadingPlan.IsPrepositioned
+    ? props.loadingPlan.moveToWarehouseId
+    : 0;
 
   dispatch.value.DispatcherId = user.value.id;
   dispatch.value.loadingPlanId = props.loadingPlan.id;
@@ -451,6 +466,7 @@ const submitDispatch = async () => {
     loading.value = false; // Stop loader
   }
 };
+
 
 
 

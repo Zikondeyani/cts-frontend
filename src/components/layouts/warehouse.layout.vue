@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-full font-body" style="background-color: #096eb4;">
     <!-- Horizontal Navigation Bar -->
-  <nav aria-label="Sidebar" class="shadow-xl px-1 py-3 rounded-md" style="background-color: #096eb4;">
+    <nav aria-label="Sidebar" class="shadow-xl px-1 py-3 rounded-md" style="background-color: #096eb4;">
       <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap lg:flex-nowrap">
         <!-- Logo and Admin Info -->
         <div class="flex items-center justify-between w-full lg:w-auto">
@@ -28,18 +28,18 @@
           </div>
         </div>
         <!-- Mobile Admin Text -->
-        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS |  Warehouse Officer
+        <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | Warehouse Officer
           <span class="text-xs font-normal">(v2.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div class="flex flex-col lg:flex-row lg:space-x-4 mt-2 lg:mt-0 w-full lg:w-auto hidden lg:flex">
           <router-link v-for="item in mainItems" :key="item.name" :to="item.href">
             <a :class="[
-                item.current
-                  ? 'bg-white text-black'
-                  : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
-                'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-              ]" :aria-current="item.current ? 'page' : undefined">
+              item.current
+                ? 'bg-white text-black'
+                : 'text-gray-50 hover:text-gray-50 hover:bg-blue-400',
+              'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+            ]" :aria-current="item.current ? 'page' : undefined">
               {{ item.name }}
               <div v-if="item.name === 'Instructions' && newInstructionsCount > 0" class="relative ml-2 mx-4">
                 <span
@@ -52,7 +52,7 @@
 
 
 
-     <!--      <div class="relative">
+          <!--      <div class="relative">
             <button @click="toggleDropdown" @mouseenter="toggleDropdown"
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
@@ -70,13 +70,15 @@
             </div>
           </div>
  -->
-        
+
         </div>
         <!-- Notification Button -->
         <div class="relative hidden lg:block">
-          <button @click="toggleNotifications" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
+          <button @click="toggleNotifications"
+            class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
             <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
-            <span v-if="notificationsCount > 0" class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
+            <span v-if="notificationsCount > 0"
+              class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
               {{ notificationsCount }}
             </span>
           </button>
@@ -97,25 +99,31 @@
         <div class="relative ml-5 hidden lg:block">
           <Menu as="div" class="flex-shrink-0 relative">
             <div class="flex justify-end">
-              <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+              <MenuButton
+                class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
                 <span class="sr-only">Open user menu</span>
                 <span class="lowercase m-2 text-white">{{ user?.username.replace(/\./g, ' ') }}</span>
-                <span style="background-color: gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+                <span style="background-color: gray"
+                  class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                   {{ user?.username.match(/\b(\w)/g).join("") }}
                 </span>
               </MenuButton>
             </div>
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                  <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                    {{ item.name }}
-                  </a>
+                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                  {{ item.name }}
+                </a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                    About System
-                  </button>
+                <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                  About System
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                 <router-link to="/warehouse/change-password" :class="menuItemClasses(active, true)">
@@ -125,9 +133,9 @@
                 </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onSignout" :class="menuItemClasses(active, true)">
-                    Sign out
-                  </button>
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
+                  Sign out
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -137,20 +145,23 @@
       <!-- Mobile Menu -->
       <div v-if="isMobileMenuOpen" class="lg:hidden">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <router-link v-for="item in navItems" :key="item.name" @click="toggleMobileMenu()" :to="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
+          <router-link v-for="item in navItems" :key="item.name" @click="toggleMobileMenu()" :to="item.href"
+            class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
             {{ item.name }}
           </router-link>
         </div>
         <!-- Notification Button -->
         <div class="relative px-2 pt-2 pb-3 sm:px-3">
-          <button @click="toggleNotifications" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
+          <button @click="toggleNotifications"
+            class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
             <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
-            <span v-if="notificationsCount > 0" class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
+            <span v-if="notificationsCount > 0"
+              class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
               {{ notificationsCount }}
             </span>
           </button>
           <div v-if="isNotificationsOpen" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10">
-            <div class="py-2 px-4 text-xs text-gray-700"  @mouseleave="toggleNotifications">
+            <div class="py-2 px-4 text-xs text-gray-700" @mouseleave="toggleNotifications">
               <p v-if="notifications.length === 0">No new notifications</p>
               <ul v-else>
                 <li v-for="(notification, index) in notifications" :key="index" class="py-1 border-b border-gray-200">
@@ -166,25 +177,31 @@
         <div class="relative px-2 pt-2 pb-3 sm:px-3">
           <Menu as="div" class="flex-shrink-0 relative">
             <div class="flex justify-end">
-              <MenuButton class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
+              <MenuButton
+                class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
                 <span class="sr-only">Open user menu</span>
                 <span class="lowercase m-2 text-white">{{ user?.username.replace(/\./g, ' ') }}</span>
-                <span style="background-color: gray" class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
+                <span style="background-color: gray"
+                  class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
                   {{ user?.username.match(/\b(\w)/g).join("") }}
                 </span>
               </MenuButton>
             </div>
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
                 <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-                  <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                    {{ item.name }}
-                  </a>
+                <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
+                  {{ item.name }}
+                </a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                    About System
-                  </button>
+                <button @click="onAbout()" :class="menuItemClasses(active, true)">
+                  About System
+                </button>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                 <router-link to="/warehouse/change-password" :class="menuItemClasses(active, true)">
@@ -194,9 +211,9 @@
                 </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onSignout" :class="menuItemClasses(active, true)">
-                    Sign out
-                  </button>
+                <button @click="onSignout" :class="menuItemClasses(active, true)">
+                  Sign out
+                </button>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -390,10 +407,10 @@ function navigation() {
     { name: "Home", href: "/warehouse/dashboard", icon: HomeIcon, current: false },
   /*   { name: "Instructions", href: "/warehouse/instruction-management", icon: CollectionIcon, current: false },
    */  { name: "Warehouse management", href: "/warehouse/warehouse-management", icon: IdentificationIcon, current: false },
-   { name: "Loading Plans", href: "/warehouse/loadingplans", icon: IdentificationIcon, current: false },
-   /*   { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
-    { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
- */
+    { name: "Loading Plans", href: "/warehouse/loadingplans", icon: IdentificationIcon, current: false },
+    /*   { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
+     { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
+  */
   ];
 
   const currentRouteBase = $router.currentRoute.value.fullPath.split("/").slice(0, 3).join("/");
@@ -496,10 +513,10 @@ const getInstructions = async () => {
 
 const getLoadingPlans = async () => {
   try {
-    const result = await loadingStore.getLoadings();
+    const result = await loadingStore.get();
     loadingplans.length = 0;
     loadingplans.push(
-      ...result
+      ...result.filter(item => item.IsApproved === true && item.district.Name === user.value.district && !item.IsPrepositioned && !item.isClosed)
     );
     newLoadingPlanCount.value = loadingplans.length;
     updateNotifications()

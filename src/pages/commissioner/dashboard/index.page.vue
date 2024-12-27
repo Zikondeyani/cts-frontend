@@ -279,7 +279,7 @@
                       <!-- Row with Heading and Filter -->
                       <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-semibold text-[#096eb4]">Overall Stats</h2>
-                       <!--  <div class="text-right">
+                        <!--  <div class="text-right">
                           <select v-model="selectedFilter" @change="applyFilter"
                             class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring focus:ring-[#0b8ad8]">
                             <option value="all">All</option>
@@ -634,6 +634,7 @@
                     <div v-for="stat in stats2" :key="stat.label"
                       class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex flex-col justify-between transition-transform duration-300 transform hover:scale-105">
                       <div>
+
                         <div class="flex items-center justify-between">
                           <span class="text-3xl font-semibold text-gray-800">{{ stat.value }}</span>
                           <component v-if="stat.label === 'Total Stocks Planned (Lean Season Response)'"
@@ -656,6 +657,12 @@
                             :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
+                      <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
+                      <router-link v-if="stat.link" to="/commissioner/stock-prepositioning"
+                        class="text-blue-500 hover:underline">View
+                        Details</router-link>
+
+
                     </div>
                   </div>
                 </div>
@@ -703,7 +710,8 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/planner/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/planner/Emergency-season-losses"
+                              class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
@@ -840,7 +848,8 @@ import {
   ExclamationIcon,
   ArrowUpIcon,
   DocumentTextIcon, InboxIcon, ClipboardListIcon,
-  ArrowDownIcon
+  ArrowDownIcon,
+  ArchiveIcon
 } from "@heroicons/vue/outline";
 
 const screenshotMode = ref(false);
@@ -995,7 +1004,7 @@ onMounted(async () => {
   getDispatchesCount();
   getLoadingPlansPending();
   getloadingplansSummary();
-
+  getloadingplansSummaryEMR()
   getloadingplansSummaryByCommodity();
   getInstructions();
   getRequisitions();
@@ -1125,15 +1134,13 @@ const getActivities = async () => {
 
 
 const getInstructions = async () => {
-  instructionsStore
-    .get()
+  loadingPlanStore
+    .getloadingplansSummaryPrepo()
     .then((result) => {
-      instructions.length = 0;
-      instructions.push(...result.filter(item => item.IsApproved == false));
-      newInstructionsCount.value = instructions.length;
+      newInstructionsCount.value = result.totalQuantity.toLocaleString() + " MT";
     })
     .catch(error => {
-      console.error("Failed to load instructions:", error);
+      console.error("Failed to load plans:", error);
     });
 };
 
@@ -1214,14 +1221,19 @@ const getLoadingPlans = async () => {
 
 const pendingplans = ref(0)
 const totalBalance = ref(0)
+
+const totalBalanceEMR = ref(0)
 const totalStockPlanned = ref("")
+
+const totalRequiredTonnage = ref("")
 const dispatchPercentageFormated = ref("")
+const dispatchPercentageFormatedEMR = ref("")
 const totalDispatched = ref(0)
 const totalReceived = ref("")
 const receivedPercentageFormated = ref("")
 const receivedPercentage = ref("")
 const dispatchPercentage = ref("")
-
+const dispatchPercentageEMR = ref("")
 const getLoadingPlansPending = async () => {
   loadingPlanStore
     .getloadingplansPending()
@@ -1240,6 +1252,8 @@ const getdispatchSummary = async () => {
     })
 }
 
+
+
 const getloadingplansSummary = async () => {
   loadingPlanStore
     .getloadingplansSummary()
@@ -1248,6 +1262,17 @@ const getloadingplansSummary = async () => {
       totalBalance.value = result.totalBalance
       dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
       dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+const getloadingplansSummaryEMR = async () => {
+  loadingPlanStore
+    .getloadingplansSummaryEMR()
+    .then(result => {
+      totalRequiredTonnage.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalanceEMR.value = result.totalBalance
+      dispatchPercentageFormatedEMR.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentageEMR.value = result.dispatchPercentage.toFixed(2)
     })
 }
 
@@ -1270,16 +1295,6 @@ const getUsers = async () => {
 
 
 
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(date).toLocaleDateString(undefined, options);
-};
-
-const totalRequiredTonnage = computed(() => {
-  const total = commodityDistributionData.value.reduce((sum, item) => sum + item.required, 0);
-  return `${total.toLocaleString()} MT`;
-});
-
 const stats2 = ref([
   {
     label: 'Total Stocks Planned (Lean Season Response)',
@@ -1294,27 +1309,33 @@ const stats2 = ref([
     isProgressPositive: dispatchPercentage >= 50,
     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
   },
-  {
-    label: 'Total Required Tonnage (Emergency Response)',
-    value: totalRequiredTonnage,
-    icon: CheckCircleIcon,
-    iconColor: 'green-500',
-    percentageText: '',
-    textColor: 'green-500',
-    showProgress: false,
-    moreInfo: true,
 
-    extraInfo: true,
-  },
+
   {
-    label: 'Instructions Pending Approval (Emergency Response)',
+    label: 'Total Stocks Planned (Emergency Assistance)',
+    value: totalRequiredTonnage,
+    icon: dispatchPercentageEMR < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormatedEMR,
+    textColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    moreInfo: true,
+    progress: dispatchPercentageEMR,
+    isProgressPositive: dispatchPercentageEMR >= 50,
+    progressColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+  },
+
+
+  {
+    label: 'Total Prepositioned Stock',
     value: newInstructionsCount,
-    icon: DocumentIcon,
+    icon: ArchiveIcon,
     iconColor: 'blue-400',
     percentageText: '',
     textColor: 'blue-600',
     showProgress: false,
     moreInfo: true,
+    link: true,
   },
 
 ]);

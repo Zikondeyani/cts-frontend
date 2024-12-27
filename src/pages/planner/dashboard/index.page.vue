@@ -302,7 +302,7 @@
                         </div>
 
                         <!-- Total Loading Plans Created -->
-                        <router-link to="/commissioner/loadingplans">
+                        <router-link to="/planner/loadingplans">
                           <div
                             class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
                             <div class="flex items-center space-x-2">
@@ -616,6 +616,7 @@
                     <div v-for="stat in stats2" :key="stat.label"
                       class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex flex-col justify-between transition-transform duration-300 transform hover:scale-105">
                       <div>
+
                         <div class="flex items-center justify-between">
                           <span class="text-3xl font-semibold text-gray-800">{{ stat.value }}</span>
                           <component v-if="stat.label === 'Total Stocks Planned (Lean Season Response)'"
@@ -638,9 +639,16 @@
                             :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
+                      <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
+                      <router-link v-if="stat.link" to="/planner/stock-prepositioning"
+                        class="text-blue-500 hover:underline">View
+                        Details</router-link>
+
+
                     </div>
                   </div>
                 </div>
+
 
                 <!-- Damaged Stock Stats - only show when data is loaded -->
                 <div v-if="!isLoading"
@@ -738,6 +746,9 @@ import dispatchSummaryLeansTwoTwo from '../../../components/pages/charts/dispatc
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 import stockSummaryLeanTwo from '../../../components/pages/charts/stocksummarylean2.vue'; // Adjust path as needed
 
+import allocationTrends from '../../../components/pages/charts/allocation_trends.vue'; // Adjust path as needed
+
+
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
@@ -763,7 +774,6 @@ import CommodityDistributionTableLean from './CommodityDistributionTableLean.vue
 
 import CommodityDistributionTableLeanTwo from './CommodityDistributionTableLean2.vue';
 import CommodityDistributionTableLeanWFP from './CommodityDistributionTableLeanWFP.vue';
-import allocationTrends from '../../../components/pages/charts/allocation_trends.vue'; // Adjust path as needed
 
 import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLeanDodma.vue';
 const commodityDispatchDataWFP = ref([])
@@ -818,7 +828,8 @@ import {
   ExclamationIcon,
   ArrowUpIcon,
   DocumentTextIcon, InboxIcon, ClipboardListIcon,
-  ArrowDownIcon
+  ArrowDownIcon,
+  ArchiveIcon
 } from "@heroicons/vue/outline";
 
 const screenshotMode = ref(false);
@@ -881,37 +892,6 @@ const takeScreenshot = () => {
     }
   }, 300);
 };
-
-const columns = ref([
-  {
-    label: "#",
-    field: (row) => row.originalIndex + 1,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Destination District",
-    field: row => row.instruction?.district?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-]);
 
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
@@ -1004,12 +984,19 @@ onMounted(async () => {
   getDispatchesCount();
   getLoadingPlansPending();
   getloadingplansSummary();
-
+  getloadingplansSummaryEMR()
   getloadingplansSummaryByCommodity();
   getInstructions();
   getRequisitions();
 });
 
+
+
+function applyFilter() {
+  console.log(`Filter applied: ${selectedFilter.value}`);
+  // Add logic to filter data based on selectedFilter
+  // Example: Filter by date range for each filter option
+}
 
 const fetchFilteredData = async () => {
   try {
@@ -1043,6 +1030,9 @@ const fetchFilteredDataDodma = async () => {
     console.error("Error fetching filtered dispatch data:", error);
   }
 };
+
+
+
 const instructions = reactive([])
 const newInstructionsCount = ref(0)
 
@@ -1122,16 +1112,15 @@ const getActivities = async () => {
     });
 };
 
+
 const getInstructions = async () => {
-  instructionsStore
-    .get()
+  loadingPlanStore
+    .getloadingplansSummaryPrepo()
     .then((result) => {
-      instructions.length = 0;
-      instructions.push(...result.filter(item => item.IsApproved == false));
-      newInstructionsCount.value = instructions.length;
+      newInstructionsCount.value = result.totalQuantity.toLocaleString() + " MT";
     })
     .catch(error => {
-      console.error("Failed to load instructions:", error);
+      console.error("Failed to load plans:", error);
     });
 };
 
@@ -1212,14 +1201,19 @@ const getLoadingPlans = async () => {
 
 const pendingplans = ref(0)
 const totalBalance = ref(0)
+
+const totalBalanceEMR = ref(0)
 const totalStockPlanned = ref("")
+
+const totalRequiredTonnage = ref("")
 const dispatchPercentageFormated = ref("")
+const dispatchPercentageFormatedEMR = ref("")
 const totalDispatched = ref(0)
 const totalReceived = ref("")
 const receivedPercentageFormated = ref("")
 const receivedPercentage = ref("")
 const dispatchPercentage = ref("")
-
+const dispatchPercentageEMR = ref("")
 const getLoadingPlansPending = async () => {
   loadingPlanStore
     .getloadingplansPending()
@@ -1238,6 +1232,8 @@ const getdispatchSummary = async () => {
     })
 }
 
+
+
 const getloadingplansSummary = async () => {
   loadingPlanStore
     .getloadingplansSummary()
@@ -1246,6 +1242,17 @@ const getloadingplansSummary = async () => {
       totalBalance.value = result.totalBalance
       dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
       dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+const getloadingplansSummaryEMR = async () => {
+  loadingPlanStore
+    .getloadingplansSummaryEMR()
+    .then(result => {
+      totalRequiredTonnage.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalanceEMR.value = result.totalBalance
+      dispatchPercentageFormatedEMR.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentageEMR.value = result.dispatchPercentage.toFixed(2)
     })
 }
 
@@ -1268,16 +1275,6 @@ const getUsers = async () => {
 
 
 
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(date).toLocaleDateString(undefined, options);
-};
-
-const totalRequiredTonnage = computed(() => {
-  const total = commodityDistributionData.value.reduce((sum, item) => sum + item.required, 0);
-  return `${total.toLocaleString()} MT`;
-});
-
 const stats2 = ref([
   {
     label: 'Total Stocks Planned (Lean Season Response)',
@@ -1292,22 +1289,27 @@ const stats2 = ref([
     isProgressPositive: dispatchPercentage >= 50,
     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
   },
-  {
-    label: 'Total Required Tonnage (Emergency Response)',
-    value: totalRequiredTonnage,
-    icon: CheckCircleIcon,
-    iconColor: 'green-500',
-    percentageText: '',
-    textColor: 'green-500',
-    showProgress: false,
-    moreInfo: true,
 
-    extraInfo: true,
-  },
+
   {
-    label: 'Instructions Pending Approval (Emergency Response)',
+    label: 'Total Stocks Planned (Emergency Assistance)',
+    value: totalRequiredTonnage,
+    icon: dispatchPercentageEMR < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormatedEMR,
+    textColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    moreInfo: true,
+    progress: dispatchPercentageEMR,
+    isProgressPositive: dispatchPercentageEMR >= 50,
+    progressColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+  },
+
+ 
+  {
+    label: 'Total Prepositioned Stock',
     value: newInstructionsCount,
-    icon: DocumentIcon,
+    icon: ArchiveIcon,
     iconColor: 'blue-400',
     percentageText: '',
     textColor: 'blue-600',
@@ -1317,26 +1319,6 @@ const stats2 = ref([
 
 ]);
 
-const actions = [
-  {
-    icon: IdentificationIcon,
-    name: "Catalogue",
-    href: "/admin/catalogue",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all service catalogue",
-  },
-  {
-    icon: OfficeBuildingIcon,
-    name: "Enquiries",
-    href: "/admin/bookings",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all Enquiries made to services",
-  },
-];
-
-const dispatchstatus = ref(0)
 
 const colors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
 
@@ -1411,29 +1393,7 @@ const filteredCommodityDistributionData = computed(() => {
   });
 });
 
-// Filtered data for Lean Season Response Dashboard
-const filteredLeanCommodityDispatchData = computed(() => {
-  return commodityDispatchData.value.filter(item => {
 
-
-    const matchActivity = !selectedActivity.value || item.summary.some(summaryItem => summaryItem.activity === selectedActivity.value);
-    const matchDistrict = !selectedDistrict.value || item.summary.some(summaryItem => summaryItem.district === selectedDistrict.value);
-    const matchCommodity = !selectedCommodity.value || item.summary.some(summaryItem => summaryItem.commodity === selectedCommodity.value);
-    return matchDistrict && matchCommodity && matchActivity;
-  });
-});
-
-
-
-const flattenedData = computed(() => {
-  if (!commodityDispatchData2.value || commodityDispatchData2.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchData2.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
 
 
 const flattenedData2 = computed(() => {
@@ -1446,41 +1406,6 @@ const flattenedData2 = computed(() => {
   return Object.values(dataObj); // Convert the object into an array of values
 });
 
-
-const flattenedDataWFP = computed(() => {
-  if (!commodityDispatchDataWFP.value || commodityDispatchDataWFP.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataWFP.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
-
-
-const flattenedDataDodma = computed(() => {
-  if (!commodityDispatchDataDoDMA.value || commodityDispatchDataDoDMA.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataDoDMA.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
-
-
-
-const filteredLeanCommodityDispatchData22 = computed(() => {
-  return flattenedData2.value.filter(item => {
-
-    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
-    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
-    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
-
-
-    return matchActivity && matchCommodity && matchDistrict;
-  });
-});
 
 
 
@@ -1497,13 +1422,29 @@ const filteredLeanCommodityDispatchData2 = computed(() => {
 });
 
 
-const filteredLeanCommodityDispatchDataWFP = computed(() => {
-  return commodityDispatchDataWFP.value.filter(item => {
+const filteredLeanCommodityDispatchData22 = computed(() => {
+  return flattenedData2.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
+
+const filteredLeanCommodityDispatchDataWFP = computed(() => {
+
+
+  return commodityDispatchDataWFP.value.filter(item => {
+
+
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
     return matchActivity && matchCommodity && matchDistrict;
   });
@@ -1522,11 +1463,16 @@ const filteredLeanCommodityDispatchDataDodma = computed(() => {
   });
 });
 
+const filteredLeanStockSummary = computed(() => {
+  return leanStockSummary.value.filter(item => {
+    const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
+    const matchDistrict = !selectedDistrict.value || item.commodityName == selectedDistrict.value;
+    const matchActivity = !selectedActivity.value || item.commodityName == selectedActivity.value;
 
-
-
+    return matchCommodity && matchActivity && matchDistrict;
+  });
+});
 </script>
-
 <style scoped>
 .tab-button2 {
   background-color: white;

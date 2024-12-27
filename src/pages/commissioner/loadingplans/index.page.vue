@@ -381,11 +381,11 @@ const getLoadingplans = async () => {
     .then(result => {
       loadingplans.length = 0; // Clear existing loadingplans array
 
-      // Filter non-rejected plans and sort them by latest `createdOn` date
+      // Filter non-rejected plans and sort them in descending order
       loadingplans.push(
         ...result
           .filter(item => !item.isRejected)
-          .sort((a, b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()) // Proper date parsing
+          .sort((a, b) => b.createdOn - a.createdOn) 
       );
     })
     .catch(error => {
@@ -400,7 +400,6 @@ const getLoadingplans = async () => {
       isLoading.value = false;
     });
 };
-
 
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();

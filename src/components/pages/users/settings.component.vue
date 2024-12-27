@@ -17,14 +17,13 @@
             @submit="onSubmit"
             :validation-schema="UpdateUserSchema"
           >
-
-
-          
             <div class="overflow-hidden sm:rounded-md">
               <div class="px-4 py-5 sm:p-6">
                 <div class="grid grid-cols-6 gap-6">
-                  
-                  <div class="col-span-6 sm:col-span-3" v-if="roleId !== 'PROVIDER1'">
+                  <div
+                    class="col-span-6 sm:col-span-3"
+                    v-if="roleId !== 'PROVIDER1'"
+                  >
                     <label
                       for="first-name"
                       class="block text-sm font-medium text-gray-700"
@@ -43,7 +42,7 @@
                     </p>
                   </div>
 
-                  <div class="col-span-6 sm:col-span-3" >
+                  <div class="col-span-6 sm:col-span-3">
                     <label
                       for="last-name"
                       class="block text-sm font-medium text-gray-700"
@@ -61,10 +60,6 @@
                       {{ lastnameError }}
                     </p>
                   </div>
-
-
-                
-
 
                   <div class="col-span-6 sm:col-span-4">
                     <label
@@ -104,7 +99,7 @@
                     </p>
                   </div>
 
-                    <!--    <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
+                  <!--    <div class="col-span-12 sm:col-span-12" v-if="roleId == 'ADMIN2'">
                       <label for="privileges" class="block text-sm font-medium text-gray-700">
                         Account Delegations
                       </label>
@@ -158,6 +153,36 @@
             <div class="overflow-hidden sm:rounded-md">
               <div class="px-4 py-5 sm:p-6">
                 <div class="grid grid-cols-6 gap-6">
+                  <div
+                    class="col-span-6 sm:col-span-3"
+                    v-if="roleId == 'ADMIN5' || roleId == 'ADMIN6'"
+                  >
+                    <label
+                      for="user-role"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      District</label
+                    >
+                    <select
+                      id="district"
+                      name="district"
+                      v-model="districtId"
+                      autocomplete="district-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    >
+                      <option
+                        v-for="district in districts"
+                        :key="district.Name"
+                        :value="district.Name"
+                      >
+                        <span>{{ district.Name.toUpperCase() }}</span>
+                      </option>
+                    </select>
+                    <p class="text-red-500 text-xs italic pt-1">
+                      {{ districtIdError }}
+                    </p>
+                  </div>
+
                   <div class="col-span-6 sm:col-span-3">
                     <label
                       for="user-role"
@@ -177,15 +202,13 @@
                         :key="role.id"
                         :value="role.id"
                       >
-                        <span 
-                        >{{ role.name.toUpperCase() }}</span>
+                        <span>{{ role.name.toUpperCase() }}</span>
                       </option>
                     </select>
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ roleIdError }}
                     </p>
                   </div>
-                  
 
                   <div class="col-span-6 sm:col-span-3">
                     <label
@@ -322,6 +345,8 @@ import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 //SCHEMA AND STORES
 import { UpdateUserSchema } from "../../../services/schema/user.schema";
 import { useRoleStore } from "../../../stores/role.store";
+
+import { usedistrictstore } from "../../../stores/districts.store";
 import { useUserStore } from "../../../stores/user.store";
 
 import { useSessionStore } from "../../../stores/session.store";
@@ -344,16 +369,20 @@ const breadcrumbs = [
 const roleStore = useRoleStore();
 const userStore = useUserStore();
 
+const districtStore = usedistrictstore();
+
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 
 const roles = reactive([]);
+
+const districts = reactive([]);
 const { model } = toRefs(props);
 ///FORM
 
 const delegations = ref([]); // Delegations receipient
-const newDelegate = ref('');
-const DelegateError = ref('');
+const newDelegate = ref("");
+const DelegateError = ref("");
 
 const { meta } = useForm({
   validationSchema: UpdateUserSchema,
@@ -375,13 +404,15 @@ const { value: phone, errorMessage: phoneError } = useField("phone");
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: status, errorMessage: statusError } = useField("status");
 const { value: roleId, errorMessage: roleIdError } = useField("roleId");
+const { value: districtId, errorMessage: districtIdError } =
+  useField("districtId");
 
-
-const { value: nameOfOrg, errorMessage: nameOfOrgError } = useField("nameOfOrg");
+const { value: nameOfOrg, errorMessage: nameOfOrgError } =
+  useField("nameOfOrg");
 const { value: password, errorMessage: passwordError } = useField("password");
 
-const { value: OrgDescription, errorMessage: OrgDescriptionError } = useField("OrgDescription");
-
+const { value: OrgDescription, errorMessage: OrgDescriptionError } =
+  useField("OrgDescription");
 
 //WATCH
 // watch(model, (currentValue, oldValue) => {
@@ -398,14 +429,16 @@ onMounted(() => {
   email.value = model.value.email;
   status.value = model.value.status;
   roleId.value = model.value.roleId;
+  districtId.value = model.value.district;
   nameOfOrg.value = model.value.nameOfOrg;
   delegations.value.push(model.value.delegations || null);
   OrgDescription.value = model.value.OrgDescription;
   getRoles();
+
+  getDistricts();
 });
 //FUNCTIONS
 const onSubmit = useSubmitForm((values, actions) => {
-  
   let newValues = {
     id: model.value.id,
     firstname: firstname.value,
@@ -414,13 +447,34 @@ const onSubmit = useSubmitForm((values, actions) => {
     email: email.value,
     status: status.value,
     roleId: roleId.value,
+    district: districtId.value,
     nameOfOrg: nameOfOrg.value,
-    delegations: delegations.value.join() ,
-    OrgDescription: OrgDescription.value
+    delegations: delegations.value.join(),
+    OrgDescription: OrgDescription.value,
   };
 
   emit("update", newValues);
 });
+
+const getDistricts = async () => {
+  isLoading.value = true;
+  districtStore
+    .get()
+    .then((result) => {
+      districts.push(...result);
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Failed",
+        text: "failed to get districts error (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
 
 const getRoles = async () => {
   isLoading.value = true;
@@ -459,9 +513,9 @@ const deleteAcc = async () => {
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire("Deleted!", "Deleted user succesfully.", "success");
-           isLoading.value = false;
-      let role = user.value.roleId == "ADMIN1" ? "admin" : "manager";
-      $router.push({ path: "/" + role + "/users" });
+          isLoading.value = false;
+          let role = user.value.roleId == "ADMIN1" ? "admin" : "manager";
+          $router.push({ path: "/" + role + "/users" });
         }
       });
     })
@@ -472,7 +526,7 @@ const deleteAcc = async () => {
         icon: "error",
         confirmButtonText: "Ok",
       });
-    })
+    });
 };
 
 const changepassword = async () => {
@@ -506,12 +560,17 @@ const changepassword = async () => {
 const addTag = () => {
   const delegate = newDelegate.value.trim();
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (delegate && emailPattern.test(delegate) && !delegations.value.includes(delegate)) {
+  if (
+    delegate &&
+    emailPattern.test(delegate) &&
+    !delegations.value.includes(delegate)
+  ) {
     delegations.value.push(delegate);
-    newDelegate.value = '';
-    DelegateError.value = '';
+    newDelegate.value = "";
+    DelegateError.value = "";
   } else {
-    DelegateError.value = 'Please enter a valid email address or the email already exists in the delegations!';
+    DelegateError.value =
+      "Please enter a valid email address or the email already exists in the delegations!";
   }
 };
 

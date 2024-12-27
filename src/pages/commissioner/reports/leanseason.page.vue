@@ -223,17 +223,54 @@ const columns = ref([
     tdClass: "capitalize"
   },
   {
-    label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span> <br>`
-      +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">ATC #: ${row.ATCNumber}</span>`,
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
+  label: "Details",
+  field: row => {
+    // Get the matching warehouse name for 'From' and 'To'
+    const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
+    const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
+    const warehouseName = row.warehouse?.Name;
+
+    // Build the "From" details
+    let details = `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+        From: ${fromWarehouse ? fromWarehouse.Name : warehouseName || "N/A"}
+      </span><br>
+    `;
+
+    // Add "To" details only if isPrepositioned is true
+    if (row.IsPrepositioned) {
+      details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          To: ${toWarehouse ? toWarehouse.Name : "N/A"}
+        </span><br>
+      `;
+    }
+
+    // Add district and transporter details
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        District: ${row.district?.Name || "Unknown"}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+        TP: ${row.transporter?.Name || "Unknown"}
+      </span><br>
+    `;
+
+    // Add the ATC Number
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-gray-100 text-gray-800">
+        ATC #: ${row.ATCNumber || "N/A"}
+      </span>
+    `;
+
+    return details;
   },
+  sortable: true,
+  firstSortType: "asc",
+  html: true, // This is important to render HTML
+  tdClass: "capitalize"
+},
+
 
  
   {
