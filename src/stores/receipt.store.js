@@ -119,6 +119,20 @@ export const usereceiptstore = defineStore({
     },
 
 
+    async check(data) {
+      return await receiptsService
+        .check(data)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          console.error(error)
+        });
+    },
+
+
 
     async update(data) {
       return await receiptsService

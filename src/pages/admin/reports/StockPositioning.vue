@@ -1,166 +1,224 @@
 <template>
     <div class="w-full">
-        <div class="flex justify-between items-center rounded-md">
-            <!-- Title on the left -->
-            <span class="text-white font-bold">DODMA Warehouse Stock Positioning</span>
-
-
+      <div class="flex flex-col sm:flex-row justify-between items-center rounded-md">
+        <!-- Title on the left -->
+        <span class="text-white font-bold text-center sm:text-left mb-4 sm:mb-0">
+          DODMA Warehouse Stock Positioning
+        </span>
+      </div>
+  
+      <div class="overflow-x-auto bg-white p-4 sm:p-6 rounded-lg shadow-lg mt-4">
+        <!-- Filter Section -->
+        <div class="flex flex-col md:grid md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+          <div class="flex flex-col">
+            <label for="district" class="text-sm font-medium text-gray-700 mb-2">District</label>
+            <select
+              id="district"
+              v-model="selectedDistrict"
+              class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md"
+            >
+              <option value="">All Districts</option>
+              <option v-for="district in districts" :key="district.id" :value="district.Name">
+                {{ district.Name }}
+              </option>
+            </select>
+          </div>
+  
+          <div class="flex flex-col">
+            <label for="warehouse" class="text-sm font-medium text-gray-700 mb-2">Warehouse</label>
+            <select
+              id="warehouse"
+              v-model="selectedWarehouse"
+              class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md"
+            >
+              <option value="">All Warehouses</option>
+              <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.Name">
+                {{ warehouse.Name }}
+              </option>
+            </select>
+          </div>
+  
+          <div class="flex flex-col">
+            <label for="commodity" class="text-sm font-medium text-gray-700 mb-2">Commodity</label>
+            <select
+              id="commodity"
+              v-model="selectedCommodity"
+              class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md"
+            >
+              <option value="">All Commodities</option>
+              <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.Name">
+                {{ commodity.Name }}
+              </option>
+            </select>
+          </div>
+  
+          <div class="flex flex-col">
+            <label for="commodityType" class="text-sm font-medium text-gray-700 mb-2">Commodity Type</label>
+            <select
+              id="commodityType"
+              v-model="selectedCommodityType"
+              class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md"
+            >
+              <option value="">All Commodity Types</option>
+              <option v-for="commodity in commodityTypes" :key="commodity.id" :value="commodity.Name">
+                {{ commodity.Name }}
+              </option>
+            </select>
+          </div>
+  
+          <div class="flex flex-col">
+            <label for="expiryDate" class="text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+            <select
+              id="expiryDate"
+              v-model="selectedExpiryDateRange"
+              class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md"
+            >
+              <option value="">All</option>
+              <option value="today">Today</option>
+              <option value="thisWeek">This Week</option>
+              <option value="nextMonth">Next 1 Month</option>
+              <option value="nextSixMonths">Next 6 Months</option>
+            </select>
+          </div>
         </div>
-
-        <div class="overflow-x-auto relative bg-white p-6 rounded-lg shadow-lg mt-4">
-            <div class="flex items-center space-x-4 mb-4">
-                <div class="flex flex-col">
-                    <label for="district" class="text-sm font-medium text-gray-700 mb-2">District</label>
-                    <select id="district" v-model="selectedDistrict"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">All Districts</option>
-                        <option v-for="district in districts" :key="district.id" :value="district.Name">
-                            {{ district.Name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="warehouse" class="text-sm font-medium text-gray-700 mb-2">Warehouse</label>
-                    <select id="warehouse" v-model="selectedWarehouse"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">All Warehouses</option>
-                        <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.Name">
-                            {{ warehouse.Name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col w-40">
-                    <label for="commodity" class="text-sm font-medium text-gray-700 mb-2">Commodity</label>
-                    <select id="commodity" v-model="selectedCommodity"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">All Commodities</option>
-                        <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.Name">
-                            {{ commodity.Name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="commodityType" class="text-sm font-medium text-gray-700 mb-2">Commodity Type</label>
-                    <select id="commodityType" v-model="selectedCommodityType"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">All Commodity Types</option>
-                        <option v-for="commodity in commodityTypes" :key="commodity.id" :value="commodity.Name">
-                            {{ commodity.Name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="expiryDate" class="text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                    <select id="expiryDate" v-model="selectedExpiryDateRange"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        <option value="">All</option>
-                        <option value="today">Today</option>
-                        <option value="thisWeek">This Week</option>
-                        <option value="nextMonth">Next 1 Month</option>
-                        <option value="nextSixMonths">Next 6 Months</option>
-                    </select>
-                </div>
-
-                <div class="flex items-end mt-4">
-                    <button @click="resetFilters"
-                        class="bg-gray-200 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
-                        Reset
-                    </button>
-
-                    <!-- Export Dropdown Button on the right -->
-                    <div class="relative inline-block text-left mx-4">
-                        <button @click.prevent="exportToExcel"
-                            class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-green-500 text-white text-md font-medium hover:bg-green-600 focus:outline-none"
-                            id="menu-button" aria-expanded="true" aria-haspopup="true">
-                            Export
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <table class="min-w-full divide-y divide-gray-200 mt-8">
-                <thead class="bg-blue-50">
-                    <tr>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            District</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Commodity</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Commodity Type</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Warehouse</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batch
-                            Number</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Expiry Date</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
-                            Available</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
-                            Pending Dispatch</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(row, index) in filteredData" :key="index">
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.district }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.commodityType }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.warehouse }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.batchNumber }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span :class="getBadgeClass(row.expiryDate)">
-                                {{ row.expiryDate }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.stockAvailable.toFixed(2) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.commodityType == "Food" ? "MT" : "# of Units" }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.stockPendingDispatch.toFixed(2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Pagination Controls -->
-            <div class="flex justify-center mt-4" :class="{ 'hidden': screenshotMode }">
-                <button @click="prevPage" :disabled="currentPage <= 1"
-                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
-                    <ChevronLeftIcon class="w-5 h-5 mr-2" />
-                    Prev
-                </button>
-                <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
-                <button @click="nextPage" :disabled="currentPage >= totalPages"
-                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
-                    <ChevronRightIcon class="w-5 h-5 mr-2" />
-                    Next
-                </button>
-
-                <span class="mr-2 font-medium mt-2">Rows per page:</span>
-                <select v-model="pageSize" class="border-gray-300 rounded-md">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="40">40</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
+  
+        <!-- Buttons -->
+        <div class="flex flex-wrap items-center justify-between mt-4 space-y-4 md:space-y-0">
+          <button
+            @click="resetFilters"
+            class="bg-gray-200 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded"
+          >
+            Reset
+          </button>
+  
+          <button
+            @click.prevent="exportToExcel"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded"
+          >
+            Export
+          </button>
         </div>
+  
+        <!-- Table Section -->
+        <div class="overflow-x-auto mt-6">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-blue-50">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  District
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Commodity
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Commodity Type
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Warehouse
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Batch Number
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Expiry Date
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Stock Available
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Unit
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Stock Pending Dispatch
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="(row, index) in filteredData" :key="index">
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.district }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.commodityType }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.warehouse }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.batchNumber }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span :class="getBadgeClass(row.expiryDate)">
+                    {{ row.expiryDate }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ row.stockAvailable.toFixed(2) }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {{ row.commodityType == "Food" ? "MT" : "# of Units" }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {{ row.stockPendingDispatch.toFixed(2) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <!-- Pagination Controls -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
+          <div class="flex">
+            <button
+              @click="prevPage"
+              :disabled="currentPage <= 1"
+              class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50"
+            >
+              <ChevronLeftIcon class="w-5 h-5 mr-2" />
+              Prev
+            </button>
+            <button
+              @click="nextPage"
+              :disabled="currentPage >= totalPages"
+              class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50"
+            >
+              <ChevronRightIcon class="w-5 h-5 mr-2" />
+              Next
+            </button>
+          </div>
+          <div class="flex items-center">
+            <span class="mr-2 font-medium">Rows per page:</span>
+            <select v-model="pageSize" class="border-gray-400 rounded-md">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="40">40</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
-</template>
-
+  </template>
+  
 <script setup>
 import { ref, computed, reactive, onMounted } from 'vue';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/outline';
@@ -304,7 +362,7 @@ const exportToExcel = () => {
     background-color: #e5e7eb;
 }
 
-.bg-gray-300 {
+.bg-gray-400 {
     background-color: #d1d5db;
 }
 

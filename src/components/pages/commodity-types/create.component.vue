@@ -47,7 +47,7 @@
                         Name</label>
                       <input type="text" Name="organisation-Name" id="organisation-Name" v-model="Name"
                         autocomplete="given-Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ NameError }}
                       </p>

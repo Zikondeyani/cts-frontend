@@ -14,7 +14,7 @@
             <!-- District Filter -->
             <div class="md:col-span-1">
               <label for="district" class="block text-sm font-medium text-gray-700">District</label>
-              <select v-model="selectedDistrict" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <select v-model="selectedDistrict" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
                 <option value="">All Districts</option>
                 <option v-for="district in districts" :key="district.id" :value="district.id">{{ district.Name }}
                 </option>
@@ -24,7 +24,7 @@
             <!-- Warehouse Filter -->
             <div class="md:col-span-1">
               <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
-              <select v-model="selectedWarehouse" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <select v-model="selectedWarehouse" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
                 <option value="">All Warehouses</option>
                 <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">{{ warehouse.Name }}
                 </option>
@@ -34,7 +34,7 @@
             <!-- Transporter Filter -->
             <div class="md:col-span-1">
               <label for="transporter" class="block text-sm font-medium text-gray-700">Transporter</label>
-              <select v-model="selectedTransporter" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <select v-model="selectedTransporter" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
                 <option value="">All Transporters</option>
                 <option v-for="transporter in transporters" :key="transporter.id" :value="transporter.id">{{
       transporter.Name }}</option>
@@ -44,7 +44,7 @@
             <!-- Commodity Filter -->
             <div class="md:col-span-1">
               <label for="commodity" class="block text-sm font-medium text-gray-700">Commodity</label>
-              <select v-model="selectedCommodity" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <select v-model="selectedCommodity" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
                 <option value="">All Commodities</option>
                 <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">{{ commodity.Name }}
                 </option>
@@ -54,13 +54,13 @@
             <!-- Start Date Filter -->
             <div class="md:col-span-1">
               <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
-              <input type="date" v-model="startDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <input type="date" v-model="startDate" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
             </div>
 
             <!-- End Date Filter -->
             <div class="md:col-span-1">
               <label for="endDate" class="block text-sm font-medium text-gray-700">End Date</label>
-              <input type="date" v-model="endDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+              <input type="date" v-model="endDate" class="mt-1 block w-full rounded-md border-gray-400 shadow-sm">
             </div>
           </div>
 
@@ -69,7 +69,7 @@
           <div class="mt-6 flex justify-between items-center">
             <div>
               <button @click="resetFilters"
-                class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded hover:bg-gray-300 mr-2">
+                class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-800 text-sm font-medium rounded hover:bg-gray-400 mr-2">
                 Reset
               </button>
               <button @click="applyFilters"
@@ -81,7 +81,7 @@
 
             <div class="relative inline-block text-left">
               <button type="button" @click="opendropdown = !opendropdown"
-                class="inline-flex justify-center w-full px-4 py-2 bg-green-500 text-sm font-medium text-white rounded-md hover:bg-green-400 focus:outline-none"
+                class="inline-flex justify-center w-full px-4 py-2 bg-gray-500 text-sm font-medium text-white rounded-md hover:bg-green-400 focus:outline-none"
                 id="menu-button" aria-expanded="true" aria-haspopup="true">
                 Export
                 <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -223,17 +223,54 @@ const columns = ref([
     tdClass: "capitalize"
   },
   {
-    label: "Details",
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span> <br>`
-      +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">ATC #: ${row.ATCNumber}</span>`,
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // This is important to render HTML
-    tdClass: "capitalize"
+  label: "Details",
+  field: row => {
+    // Get the matching warehouse name for 'From' and 'To'
+    const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
+    const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
+    const warehouseName = row.warehouse?.Name;
+
+    // Build the "From" details
+    let details = `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+        From: ${fromWarehouse ? fromWarehouse.Name : warehouseName || "N/A"}
+      </span><br>
+    `;
+
+    // Add "To" details only if isPrepositioned is true
+    if (row.IsPrepositioned) {
+      details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          To: ${toWarehouse ? toWarehouse.Name : "N/A"}
+        </span><br>
+      `;
+    }
+
+    // Add district and transporter details
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        District: ${row.district?.Name || "Unknown"}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+        TP: ${row.transporter?.Name || "Unknown"}
+      </span><br>
+    `;
+
+    // Add the ATC Number
+    details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-gray-100 text-gray-800">
+        ATC #: ${row.ATCNumber || "N/A"}
+      </span>
+    `;
+
+    return details;
   },
+  sortable: true,
+  firstSortType: "asc",
+  html: true, // This is important to render HTML
+  tdClass: "capitalize"
+},
+
 
  
   {

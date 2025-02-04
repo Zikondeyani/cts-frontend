@@ -47,7 +47,7 @@
                         Name</label>
                       <input type="text" Name="organisation-Name" id="organisation-Name" v-model="Name"
                         autocomplete="given-Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ NameError }}
                       </p>
@@ -60,7 +60,7 @@
                       <label for="unit" class="block text-sm font-medium text-gray-700">
                         Select Unit</label>
                       <select id="district" name="unit" v-model="Unit" autocomplete="unit-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in ['Kg', 'Litres', 'Units']" :key="item" :value="item" class="uppercase">
                           {{ item }}
                         </option>
@@ -76,7 +76,7 @@
                         Select Commodity Type</label>
                       <select id="commodityTypeId" name="commodityTypeId" v-model="commodityTypeId"
                         autocomplete="commodityTypeId"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in commodity" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.Name }}
                         </option>
@@ -92,7 +92,7 @@
                         Select Container Type</label>
                       <select id="Container_type" name="Container_type" v-model="Container_type"
                         autocomplete="container_type-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in ['Bags', 'Boxes', 'Pails']" :key="item" :value="item" class="uppercase">
                           {{ item }}
                         </option>
@@ -104,7 +104,7 @@
                     <div class="col-span-6 sm:col-span-4">
                       <label for="PackSize" class="block text-sm font-medium text-gray-700">Pack Size</label>
                       <input type="number" v-model="PackSize" name="pack-size" id="pack-size" autocomplete="off"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ PackSizeError }}
                       </p>

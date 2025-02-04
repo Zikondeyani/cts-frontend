@@ -83,11 +83,11 @@
                     <!-- Form Inputs -->
                     <label for="deliveryNote" class="block font-medium">Delivery Note:</label>
                     <input type="text" id="deliveryNote" v-model="DeliveryNote"
-                      class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" readonly>
+                      class="mt-1 block w-full shadow-sm border-gray-400 rounded-md" readonly>
 
                     <label for="finalDestination" class="block font-medium mt-2">Final Destination Point:</label>
                     <input type="text" id="finalDestination" v-model="FinalDestinationPoint"
-                      class="mt-1 block w-full shadow-sm border-gray-300 rounded-md">
+                      class="mt-1 block w-full shadow-sm border-gray-400 rounded-md">
 
                     <!-- Relief Items Form -->
                     <div class="mt-2">
@@ -98,7 +98,7 @@
                           <div>
                             <label class="block text-sm font-bold text-gray-700">Commodity</label>
                             <select v-model="item.commodityId" @change="validateCommodity(index)"
-                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md">
+                              class="mt-1 block w-full shadow-sm border-gray-400 rounded-md">
                               <option value="" disabled>Commodity</option>
                               <option
                                 v-for="comm in commodityInventories.filter(comm => instruction.warehouses.some(wh => wh.id === comm.warehouseId))"
@@ -113,19 +113,19 @@
                             <label class="block text-sm font-bold text-gray-700">Qty <span v-if="item.commodityId">({{
                               item.commodityId?.commodity?.Container_type }})</span></label>
                             <input type="number" v-model="item.Quantity"
-                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Qty" />
+                              class="mt-1 block w-full shadow-sm border-gray-400 rounded-md" placeholder="Qty" />
                           </div>
 
                           <div>
                             <label class="block text-sm font-bold text-gray-700">Truck</label>
                             <input type="text" v-model="item.TruckNumber"
-                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Truck #" />
+                              class="mt-1 block w-full shadow-sm border-gray-400 rounded-md" placeholder="Truck #" />
                           </div>
 
                           <div>
                             <label class="block text-sm font-bold text-gray-700">Phone</label>
                             <input type="text" v-model="item.PhoneNumber"
-                              class="mt-1 block w-full shadow-sm border-gray-300 rounded-md" placeholder="Phone #" />
+                              class="mt-1 block w-full shadow-sm border-gray-400 rounded-md" placeholder="Phone #" />
                           </div>
 
                           <div class="flex items-left justify-left">
@@ -138,7 +138,7 @@
 
                         <div class="flex justify-end">
                           <button @click.prevent="addNewItem"
-                            class="inline-flex px-2 py-1 border border-gray-300 text-sm font-medium rounded-md text-blue-500 bg-white hover:bg-gray-100">
+                            class="inline-flex px-2 py-1 border border-gray-400 text-sm font-medium rounded-md text-blue-500 bg-white hover:bg-gray-100">
                             + Add Item
                           </button>
                         </div>
@@ -150,7 +150,7 @@
                 <!-- Footer Buttons -->
                 <div class="flex items-center justify-end bg-gray-50 px-4 py-3 border-t border-gray-200 rounded-b-md">
                   <button type="button" @click="open = false"
-                    class="inline-flex px-4 py-2 border border-gray-300 text-base font-medium rounded-md text-gray-700 hover:bg-gray-100">
+                    class="inline-flex px-4 py-2 border border-gray-400 text-base font-medium rounded-md text-gray-700 hover:bg-gray-100">
                     Cancel
                   </button>
                 

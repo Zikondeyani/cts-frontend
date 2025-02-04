@@ -7,12 +7,12 @@
             <div class="relative flex-grow max-w-lg">
                 <input v-model="searchQuery"
                     placeholder="Search by ATC Number, District, Handled By, Transporter, Delivery Note ...etc"
-                    class="block w-full py-1.5 pl-3 pr-8 text-sm border-gray-300 rounded-md shadow-sm focus:ring-blue-300 focus:border-blue-300" />
+                    class="block w-full py-1.5 pl-3 pr-8 text-sm border-gray-400 rounded-md shadow-sm focus:ring-blue-300 focus:border-blue-300" />
             </div>
 
             <!-- Export Button -->
             <button @click="exportToExcel"
-                class="ml-2 px-3 py-1.5 bg-green-500 text-white font-medium rounded-md shadow-md hover:bg-green-600">
+                class="ml-2 px-3 py-1.5 bg-gray-500 text-white font-medium rounded-md shadow-md hover:bg-gray-600">
                 Export
             </button>
 
@@ -81,12 +81,12 @@
             <!-- Pagination -->
             <div class="flex justify-center mt-4 space-x-2">
                 <button @click="prevPage" :disabled="currentPage <= 1"
-                    class="px-3 py-1.5 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    class="px-3 py-1.5 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100">
                     Prev
                 </button>
                 <span class="px-3 py-1.5 font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
                 <button @click="nextPage" :disabled="currentPage >= totalPages"
-                    class="px-3 py-1.5 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100">
+                    class="px-3 py-1.5 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100">
                     Next
                 </button>
             </div>

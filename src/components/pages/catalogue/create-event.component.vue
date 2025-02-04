@@ -38,7 +38,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="firstname" class="block text-sm font-medium text-gray-700">Booking for?</label>
                       <input type="text" name="firstname" id="firstname" v-model="firstname" autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -48,7 +48,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="phone" class="block text-sm font-medium text-gray-700">Booker Phone:</label>
                       <input type="text" name="phone" id="phone" v-model="phone" autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -61,7 +61,7 @@
                         <span class="flex select-none items-center pb-1 text-gray-500 sm:text-sm">Date of
                           Appointment</span>
                         <div
-                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md">
+                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md">
                           <input type="date" name="availableday" v-model="availableday" id="date"
                             autocomplete="availableday"
                             class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -77,7 +77,7 @@
                           <label for="timepicker1" class="block text-sm font-medium text-gray-700 mt-3">Available
                             from:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="availabletimefrom" id="timepicker1">
                             </VueTimePicker>
                           </div>
@@ -88,7 +88,7 @@
                           <label for="timepicker2" class="block text-sm font-medium text-gray-700 mt-3">Available
                             to:</label>
                           <div
-                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            class="mt-4 focus:ring-gray-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                             <VueTimePicker :format="timeFormat" v-model="availabletimeto" id="timepicker2">
                             </VueTimePicker>
                           </div>

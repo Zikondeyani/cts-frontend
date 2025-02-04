@@ -379,20 +379,19 @@ const getLoadingplans = async () => {
   loadingPlanStore
     .getloadingplansByATC()
     .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   instructions.push(...result);
-      // }
-      loadingplans.length = 0;
+      loadingplans.length = 0; // Clear existing loadingplans array
 
-
-      loadingplans.push(...result.filter(item => !item.isRejected));
-
-
+      // Filter non-rejected plans and sort them in descending order
+      loadingplans.push(
+        ...result
+          .filter(item => !item.isRejected)
+          .sort((a, b) => b.createdOn - a.createdOn) 
+      );
     })
     .catch(error => {
       Swal.fire({
-        title: "Instruction Retrieval Failed",
-        text: "failed to get Emergency Response Instructions (Please refresh to try again)",
+        title: "Loading Plan Retrieval Failed",
+        text: "failed to get loadingplans (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok"
       });
@@ -401,6 +400,7 @@ const getLoadingplans = async () => {
       isLoading.value = false;
     });
 };
+
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
   const wsName = 'Loading Plan';
@@ -480,7 +480,7 @@ const createReport = async (model) => {
         confirmButtonText: "Ok"
       });
 
-      $router.push('/dodma/loadingplans'); // Navigate to loading plans
+      $router.push('/planner/loadingplans'); // Navigate to loading plans
     })
     .catch(error => {
       // Handling error

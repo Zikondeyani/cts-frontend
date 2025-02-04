@@ -19,7 +19,7 @@
                     <label for="old-password" class="block text-sm font-medium text-gray-700">Old Password</label>
                     <input :type="showOldPassword ? 'text' : 'password'" v-model="oldPassword" name="old-password"
                       id="old-password" autocomplete="new-password"
-                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <span @click="showOldPassword = !showOldPassword"
                       class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
                       <svg v-if="showOldPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mt-4"
@@ -39,7 +39,7 @@
                     <label for="new-password" class="block text-sm font-medium text-gray-700">New Password</label>
                     <input :type="showNewPassword ? 'text' : 'password'" v-model="newPassword" name="new-password"
                       id="new-password" autocomplete="new-password"
-                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <span @click="showNewPassword = !showNewPassword"
                       class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
                       <svg v-if="showNewPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mt-4"

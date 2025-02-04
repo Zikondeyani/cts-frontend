@@ -36,26 +36,26 @@
                           Destination Point</label>
                         <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint"
                           id="FinalDestinationPoint"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
 
                       <div>
                         <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-1">Number of Bags</label>
                         <input type="number" name="NoBags" @keypress="validateNumberInput" required
                           v-model="dispatch.NoBags" id="NoBags"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
 
                       <div>
                         <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-1">Tonnage (MT)</label>
                         <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" readonly
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md bg-gray-100" />
                       </div>
 
                       <div>
                         <label for="Date" class="block text-sm font-bold text-gray-700 mb-1">Date</label>
                         <input type="date" name="Date" v-model="dispatch.Date" id="Date"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                           :max="new Date().toISOString().split('T')[0]" />
                       </div>
                     </div>
@@ -69,7 +69,7 @@
                       <div>
                         <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-1">Driver Name</label>
                         <input type="text" name="DriverName" required v-model="dispatch.DriverName" id="DriverName"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
 
                       <div>
@@ -77,36 +77,47 @@
                           License</label>
                         <input type="text" name="DriverLicense" required v-model="dispatch.DriverLicense"
                           id="DriverLicense"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
 
                       <div>
                         <label for="PhoneNumber" class="block text-sm font-bold text-gray-700 mb-1">Driver Phone
                           #</label>
                         <input type="text" name="PhoneNumber" required v-model="dispatch.PhoneNumber" id="PhoneNumber"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
 
                       <div>
                         <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-1">Truck Number</label>
                         <input type="text" name="TruckNumber" required v-model="dispatch.TruckNumber" id="TruckNumber"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                     </div>
 
 
-                    <h2 class="text-lg font-semibold mb-1 text-blue-400 mt-2">Other Dispatch Details <p
-                        class="text-xs italic text-gray-400 mb-2">These details are optional</p>
+                    <h2 class="text-lg font-semibold mb-1 text-blue-400 mt-2" v-if="!loadingPlan?.IsPrepositioned">Other
+                      Dispatch Details <p class="text-xs italic text-gray-400 mb-2">These details are optional</p>
                     </h2>
 
+                    <div v-if="loadingPlan?.IsPrepositioned" class="mt-4">
+                      <h2 class="text-lg font-semibold text-blue-500 mb-3">Stock Prepositioning Details</h2>
+                      <div class="text-sm text-gray-500">
+                        <p class="italic">
+                          <span class="font-semibold text-gray-700">From:</span> {{ loadingPlan?.warehouseFrom }}
+                        </p>
+                        <p class="italic">
+                          <span class="font-semibold text-gray-700">To:</span> {{ loadingPlan?.warehouseTo }}
+                        </p>
+                      </div>
+                    </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" v-if="!loadingPlan?.IsPrepositioned">
                       <!-- Dispatch Status Dropdown -->
                       <div>
                         <label for="IsIntransit" class="block text-sm font-bold text-gray-700 mb-1">Dispatch
                           Type</label>
                         <select name="IsIntransit" v-model="dispatch.IsIntransit" id="toWarehouse"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option disabled value="">Select dispatch status</option>
                           <option :value="true">Going to warehouse</option>
                           <option :value="false">Going to FDP</option>
@@ -117,7 +128,7 @@
                       <div v-if="dispatch.IsIntransit === true">
                         <label for="toWarehouse" class="block text-sm font-bold text-gray-700 mb-1">To Warehouse</label>
                         <select name="toWarehouse" v-model.number="dispatch.warehouseId" id="toWarehouse"
-                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option disabled value="">Select a Warehouse</option>
                           <option v-for="warehouse in warehoouses" :key="warehouse.id" :value="warehouse.id">{{
                             warehouse.Name }}</option>
@@ -155,6 +166,11 @@
                     <!-- ... Loading Plan Details ... -->
 
                     <div class="mb-7">
+                      <span class="text-sm font-bold text-gray-700">ATC #: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.ATCNumber }}</span>
+                    </div>
+
+                    <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Created By: </span>
                       <span class="text-sm text-gray-600"> {{ loadingPlan.user?.username?.replace(/\./g, ' ') }}</span>
                     </div>
@@ -171,18 +187,23 @@
 
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Origin: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.warehouse?.Name == undefined ? loadingPlan?.warehouseFrom : loadingPlan.warehouse?.Name }}</span>
                     </div>
 
 
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Destination: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.district.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan?.district?.Name }}</span>
                     </div>
 
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Transporter: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.transporter.Name }}</span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan?.transporter?.Name }}</span>
+                    </div>
+
+                    <div class="mb-7">
+                      <span class="text-sm font-bold text-gray-700">Activity: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan?.activity?.Name || 'Stock Prepositioning' }}</span>
                     </div>
 
 
@@ -319,6 +340,7 @@ const generateUniqueDeliveryNote = () => {
 };
 
 const loading = ref(false);
+
 const submitDispatch = async () => {
   if (loading.value) return; // Prevent multiple submissions
   loading.value = true; // Start loader
@@ -386,12 +408,10 @@ const submitDispatch = async () => {
     dispatch.value.Date = moment(dispatch.value.Date).toISOString();
   }
 
-  // Assuming dispatch is your object with the value property
-  if (dispatch.value) {
-    dispatch.value.warehouseId = dispatch.value.warehouseId !== undefined
-      ? parseInt(dispatch.value.warehouseId)
-      : 0;
-  }
+  // Determine warehouseId based on loadingPlan.IsPrepositioned
+  dispatch.value.warehouseId = props.loadingPlan.IsPrepositioned
+    ? props.loadingPlan.moveToWarehouseId
+    : 0;
 
   dispatch.value.DispatcherId = user.value.id;
   dispatch.value.loadingPlanId = props.loadingPlan.id;
@@ -446,6 +466,7 @@ const submitDispatch = async () => {
     loading.value = false; // Stop loader
   }
 };
+
 
 
 

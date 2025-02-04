@@ -47,7 +47,7 @@
                         Name</label>
                       <input type="text" Name="organisation-Name" id="organisation-Name" v-model="Name"
                         autocomplete="given-Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ NameError }}
                       </p>
@@ -57,7 +57,7 @@
                       <label for="contact-person" class="block text-sm font-medium text-gray-700">Contact Person</label>
                       <input type="text" Name="contact-person" id="contact-person" v-model="ContactPerson"
                         autocomplete="family-Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ ContactPersonError }}
                       </p>
@@ -68,7 +68,7 @@
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">Phone</label>
                       <input type="text" v-model="PhoneNumber" Name="phone-number" id="phone-number" autocomplete="off"
                         placeholder="e.g. 0999123456"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ phoneError }}
                       </p>

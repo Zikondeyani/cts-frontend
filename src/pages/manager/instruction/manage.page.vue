@@ -40,7 +40,7 @@
 
           <li class="nav-item ml-auto mb-4" role="presentation">
             <button @click="showPrintModal = true"
-              class="bg-blue-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md">
+              class="bg-blue-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
               Print Goods Release Instruction
             </button>
 
@@ -153,7 +153,7 @@
                 <!-- Print and Close Buttons -->
                 <div class="flex justify-end space-x-4 mt-4">
                   <button @click="printPDF"
-                    class="bg-green-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
                   <button @click="closePrintModal"
                     class="bg-red-500 text-white px-4 py-2 rounded-md  no-print">Close</button>
                 </div>

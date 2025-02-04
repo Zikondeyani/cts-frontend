@@ -32,7 +32,7 @@
       </div>
       <hr />
       <div class="mt-12">
-        <div class="border border-gray-300 rounded p-4 mb-3">
+        <div class="border border-gray-400 rounded p-4 mb-3">
           <div>
             <h2 class="font-body text-base font-semibold leading-7 text-gray-900">
               User Account Type
@@ -46,7 +46,7 @@
             <label for="useracc" class="font-body block text-sm font-medium leading-6 text-gray-900">Account Type</label>
             <div class="mt-2">
               <select id="useracc" v-model="useracc" autocomplete="useracc"
-                class="font-body block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:max-w-xs sm:text-sm sm:leading-6">
+                class="font-body block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-400 sm:max-w-xs sm:text-sm sm:leading-6">
                 <option>Service Provider</option>
                 <option>Customer</option>
               </select>
@@ -60,7 +60,7 @@
             <label for="first-name" class="font-body block text-sm font-medium text-gray-700">First name</label>
             <div class="mt-1">
               <input type="text" v-model="firstName" name="first-name" id="first-name" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ firstNameError }}
               </p>
@@ -70,7 +70,7 @@
             <label for="last-name" class="block text-sm font-medium text-gray-700 font-body">Last name</label>
             <div class="mt-1">
               <input type="text" v-model="lastName" name="last-name" autocomplete="off" id="last-name"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ lastNameError }}
               </p>
@@ -80,7 +80,7 @@
             <label for="email" class="block text-sm font-medium text-gray-700 font-body">Email</label>
             <div class="mt-1">
               <input id="email" v-model="email" name="email" autocomplete="off" type="email"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">{{ emailError }}</p>
             </div>
           </div>
@@ -88,7 +88,7 @@
             <label for="phone-number" class="block text-sm font-medium text-gray-700 font-body">Phone Number</label>
             <div class="mt-1">
               <input type="text" v-model="phone" name="phone-number" id="phone-number" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md"
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md"
                 placeholder=" +265888000000" />
               <p class="text-red-500 text-xs italic pt-1 font-body">{{ phoneError }}</p>
             </div>
@@ -102,7 +102,7 @@
               name="country"
               v-model="country"
               autocomplete="country"
-              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
             >
               <option
                 v-for="country in countries"
@@ -121,7 +121,7 @@
             <label for="password" class="font-body block text-sm font-medium text-gray-700">Password</label>
             <div class="mt-1">
               <input id="password" name="password" type="password" v-model="password" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ passwordError }}
               </p>
@@ -133,7 +133,7 @@
             <div class="mt-1">
               <input id="confirm-password" name="confirm-password" type="password" v-model="confirmPassword"
                 autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
 
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ confirmPasswordError }}
@@ -186,7 +186,7 @@
               Name</label>
             <div class="mt-1">
               <input type="text" v-model="nameOfOrg" name="nameOfOrg" id="nameOfOrg" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ nameOfOrgError }}
               </p>
@@ -196,7 +196,7 @@
             <label for="email" class="block text-sm font-medium text-gray-700 font-body">Service Provider Email</label>
             <div class="mt-1">
               <input id="email" v-model="email" name="email" autocomplete="off" type="email"
-                class="py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md font-body" />
+                class="py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md font-body" />
               <p class="text-red-500 text-xs italic pt-1 font-body">{{ emailError }}</p>
             </div>
           </div>
@@ -205,7 +205,7 @@
               Number</label>
             <div class="mt-1">
               <input type="text" v-model="phone" name="phone-number" id="phone-number" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md"
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md"
                 placeholder=" +265888000000" />
               <p class="text-red-500 text-xs italic pt-1 font-body">{{ phoneError }}</p>
             </div>
@@ -215,7 +215,7 @@
           <div class="sm:col-span-2">
             <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
             <select id="location" name="location" v-model="location" autocomplete="location"
-              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
               <option v-for="location in malawiDistricts" :key="location" :value="location" class="uppercase">
                 {{ location }}
               </option>
@@ -229,7 +229,7 @@
           <div class="sm:col-span-2">
             <label for="providertypes" class="block text-sm font-medium text-gray-700">Service Provider Type</label>
             <select id="providertypes" name="providertypes" v-model="providertypesId" autocomplete="providertypes"
-              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
               <option v-for="item in providertypes" :key="item.id" :value="item.id" class="uppercase">
                 {{ item.name }}
               </option>
@@ -244,7 +244,7 @@
             <div class="col-span-6 sm:col-span-6" v-if="filteredSubTypes.length > 0">
               <div class="flex items-center">
                 <select v-model="selectedTag" @change="addTag"
-                  class="p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded m-0 focus:text-gray-700 focus:bg-white">
+                  class="p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-400 rounded m-0 focus:text-gray-700 focus:bg-white">
                   <option value="" disabled>Select a subtype</option>
                   <option v-for="tag in filteredSubTypes" :key="tag.id" :value="tag">{{ tag.name }}</option>
                 </select>
@@ -270,7 +270,7 @@
             <label for="password" class="block text-sm font-medium text-gray-700 font-body">Password</label>
             <div class="mt-1">
               <input id="password" name="password" type="password" v-model="password" autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ passwordError }}
               </p>
@@ -282,7 +282,7 @@
             <div class="mt-1">
               <input id="confirm-password" name="confirm-password" type="password" v-model="confirmPassword"
                 autocomplete="off"
-                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-300 rounded-md" />
+                class="font-body py-3 px-4 block w-full shadow-sm focus:ring-gray-500 focus:border-blue-500 border-gray-400 rounded-md" />
 
               <p class="text-red-500 text-xs italic pt-1 font-body">
                 {{ confirmPasswordError }}

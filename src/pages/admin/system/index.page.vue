@@ -1,15 +1,18 @@
 <template>
   <main>
-    <!--spinner-->
+    <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
 
-    <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8">
+      <!-- Breadcrumb -->
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
-      <div class="md:flex md:items-center md:justify-between">
-        <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
+
+      <!-- Header Section -->
+      <div class="md:flex md:items-center md:justify-between mt-6">
+        <div class="flex-1 min-w-0 text-center sm:text-left">
+          <h2 class="font-bold leading-7 text-white text-lg sm:text-2xl sm:truncate">
             System Management Panel
           </h2>
         </div>
@@ -17,14 +20,19 @@
 
       <!-- Grouped Tiles -->
       <div v-for="group in optionGroups" :key="group.title" class="mt-10">
-        <h3 class="text-lg text-white font-bold">{{ group.title }}</h3>
+        <!-- Group Title -->
+        <h3 class="text-lg text-white font-bold text-center sm:text-left">
+          {{ group.title }}
+        </h3>
+
+        <!-- Tiles -->
         <div class="flex flex-wrap justify-center md:justify-start -mx-2 mt-4">
-          <div v-for="option in group.options" :key="option.label" class="p-2 md:w-1/3 lg:w-1/5">
+          <div v-for="option in group.options" :key="option.label" class="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
             <router-link :to="option.path" class="block">
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-500 transition-all duration-300">
                 <component :is="option.icon" class="h-6 w-6 mb-2" />
-                <span>{{ option.label }}</span>
+                <span class="text-center text-sm sm:text-base">{{ option.label }}</span>
               </div>
             </router-link>
           </div>
@@ -46,7 +54,9 @@ import {
   KeyIcon,
   ArchiveIcon,
   FolderIcon,
-  
+  ChatIcon ,
+  LocationMarkerIcon ,
+  TrendingUpIcon,
   TruckIcon,
   MailIcon,
   BellIcon,
@@ -69,9 +79,11 @@ const optionGroups = ref([
       { label: 'User Roles', icon: UserGroupIcon, path: '/admin/userroles' },
       { label: 'Users', icon: UserIcon, path: '/admin/users' },
       { label: 'Performance Stats', icon: ChartBarIcon, path: '/admin/performance-stats' }, // Change to ChartBarIcon
-  
+   
       { label: 'Reminders', icon: BellIcon, path: '/admin/reminders' }, // Change to BellIcon
-     
+      { label: 'Mailing Groups', icon: MailIcon, path: '/admin/mailinggroups' }, // Change to BellIcon
+      { label: 'Feedback', icon: ChatIcon , path: '/admin/feedback' }, // Change to BellIcon
+   
     ],
   },
  
@@ -80,6 +92,7 @@ const optionGroups = ref([
     title: 'Commodity Management',
     options: [
     { label: 'Activities', icon: KeyIcon, path: '/admin/activity-management' },
+    { label: 'User Dispatches', icon: TruckIcon, path: '/admin/user-dispatches' },
    
       
     { label: 'Stock Register', icon: ClipboardListIcon, path: '/admin/stock-management' },
@@ -95,8 +108,8 @@ const optionGroups = ref([
   {
     title: 'Geographical Data Management',
     options: [
-      { label: 'Districts', icon: MapIcon, path: '/admin/districts' },/* 
-      { label: 'Units', icon: ScaleIcon, path: '/admin/units' }, */
+      { label: 'Districts', icon: MapIcon, path: '/admin/districts' }, 
+      { label: 'FDPs', icon: LocationMarkerIcon   , path: '/admin/fdps' },
     ],
   },
 
@@ -104,6 +117,8 @@ const optionGroups = ref([
     title: 'Reporting and Logs',
     options: [
       { label: 'Logs', icon: ArchiveIcon, path: '/admin/logs' },
+      { label: 'Usage Stats', icon: TrendingUpIcon, path: '/admin/usage-stats' }, // Change to ChartBarIcon
+  
     ],
   },
   // Add more groups and options as needed

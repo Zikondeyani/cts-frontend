@@ -65,7 +65,7 @@
                 <!-- Commodity Selection -->
                 <div class="flex-1">
                   <label class="block text-sm font-bold text-gray-700">Commodity</label>
-                  <select v-model="item.commodityId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                  <select v-model="item.commodityId" class="mt-1 block w-full border-gray-400 rounded-md shadow-sm">
                     <option value="" disabled>Select a commodity</option>
                     <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
                       {{ commodity.Name }}
@@ -76,7 +76,7 @@
                 <!-- Warehouse Selection -->
                 <div class="flex-1">
                   <label class="block text-sm font-bold text-gray-700">Warehouse</label>
-                  <select v-model="item.warehouseId" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                  <select v-model="item.warehouseId" class="mt-1 block w-full border-gray-400 rounded-md shadow-sm">
                     <option value="" disabled>Select a warehouse</option>
                     <option v-for="warehouse in model.warehouses" :key="warehouse.id" :value="warehouse.id">
                       {{ warehouse.name }}
@@ -87,7 +87,7 @@
                 <!-- Quantity Input -->
                 <div class="flex-1">
                   <label class="block text-sm font-bold text-gray-700">Quantity (bags)</label>
-                  <input type="number" v-model.number="item.Quantity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+                  <input type="number" v-model.number="item.Quantity" class="mt-1 block w-full border-gray-400 rounded-md shadow-sm" />
                 </div>
 
                 <!-- Remove Item Button -->
@@ -97,7 +97,7 @@
               </div>
 
               <!-- Add Item Button -->
-              <button type="button" @click="addNewItem" class="mt-4 inline-flex items-center px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700">
+              <button type="button" @click="addNewItem" class="mt-4 inline-flex items-center px-4 py-2 text-white bg-gray-600 rounded-md hover:bg-green-700">
                 + Add Relief Item
               </button>
               
@@ -148,8 +148,8 @@ const availableBalance = ref(0)
 const emit = defineEmits(["update"]);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
-  { name: "Instruction Management", href: "/field/instruction-management", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
+  { name: "Instruction Management", href: "/receipient/instruction-management", current: false },
   { name: "Edit", href: "#", current: true },
 ];
 const WarehouseStore = usewarehousestore();

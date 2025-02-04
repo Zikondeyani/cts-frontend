@@ -29,7 +29,7 @@
 
                       <input type="text" name="fdp" v-model="receipt.FinalDestinationPoint" id="DeliveryNote"
                         autocomplete="FinalDestinationPoint"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     </div>
 
 
@@ -38,21 +38,21 @@
                       <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Number of Bags</label>
                       <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="receipt.NoBags"
                         id="NoBags" autocomplete="NoBags"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">
                       <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2  mt-2">Tonnage</label>
                       <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity"
                         readonly
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md bg-gray-100" />
                     </div>
 
 
                     <div class="col-span-6 sm:col-span-3">
                       <label for="End Date" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Date</label>
                       <input type="date" name="Date" v-model="receipt.Date" id="Date" autocomplete="Date"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                         :max="new Date().toISOString().split('T')[0]" />
                     </div>
 
@@ -61,7 +61,7 @@
                       <label for="Remarks" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Remarks</label>
 
                       <select name="Remarks" v-model="receipt.Remarks" id="Remarks"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">Select Remark</option>
                         <option value="received in good condition">Received in good condition</option>
                         <option value="received but damaged">Received but damaged</option>
@@ -71,7 +71,7 @@
                       </select>
 
                       <textarea v-if="receipt.Remarks === 'other'" v-model="receipt.Comments" id="CustomRemark" rows="3"
-                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                         placeholder="Enter your custom remark here"></textarea>
                     </div>
 
@@ -280,7 +280,7 @@ const submitReceipt = async () => {
         cancelButtonColor: '#aaa', // Optional: style the cancel button
       }).then((result) => {
         closeDialog();
-        $router.push('/field/receipts');
+        $router.push('/receipient/receipts');
       });
 
 

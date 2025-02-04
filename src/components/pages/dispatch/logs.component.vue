@@ -43,27 +43,27 @@ const logStore = useLogStore();
 const columns = ref([
   {
     label: "Action",
-    field: (row) => row.action,
+    receipient: (row) => row.action,
     sortable: true,
     firstSortType: "asc",
     tdClass: "uppercase",
   },
   {
     label: "User",
-    field: (row) => row.user.name + "(" + row.user.email + ")",
+    receipient: (row) => row.user.name + "(" + row.user.email + ")",
     sortable: true,
     firstSortType: "asc",
   },
   {
     label: "Status",
-    field: (row) => (row.status == true ? "Success" : "Fail"),
+    receipient: (row) => (row.status == true ? "Success" : "Fail"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
   },
   {
     label: "metadata",
-    field: (row) => row.metadata,
+    receipient: (row) => row.metadata,
     sortable: true,
     hidden: true,
     firstSortType: "asc",
@@ -71,7 +71,7 @@ const columns = ref([
   {
     label: "Created",
     hidden: false,
-    field: (row) => moment(row.created),
+    receipient: (row) => moment(row.created),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",

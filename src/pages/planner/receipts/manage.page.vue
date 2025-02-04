@@ -69,7 +69,7 @@
               <div class="px-4 py-3 text-right sm:px-6">
                 <button
                   type="button"
-                  class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  class="bg-white py-2 px-4 border border-gray-400 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                   @click="deleteBooking()"
                 >
                   Delete Enquiry

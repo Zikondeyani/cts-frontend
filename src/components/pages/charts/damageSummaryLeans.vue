@@ -146,7 +146,7 @@ onMounted(() => {
       <canvas ref="barChartRef" style="width: 100%; height: 350px;"></canvas>
     </div>
     <div v-else
-      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
       No Data
     </div>
   </div>

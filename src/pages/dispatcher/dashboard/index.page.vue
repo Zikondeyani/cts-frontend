@@ -79,7 +79,7 @@
                       </div>
 
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div :class="stat.progress >= 50 ? 'bg-green-500' : 'bg-red-500'" class="h-2 rounded-full"
+                        <div :class="stat.progress >= 50 ? 'bg-gray-500' : 'bg-red-500'" class="h-2 rounded-full"
                           :style="{ width: stat.progress + '%' }">
                         </div>
                       </div>

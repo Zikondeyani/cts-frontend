@@ -40,12 +40,20 @@
                   <div class="col-span-6 sm:col-span-3">
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Activity</label>
+
                     <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                      <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                      <!-- Static Option -->
+                      <option value="stock-prepositioning" class="uppercase">
+                        Stock Prepositioning
+                      </option>
+
+                      <!-- Dynamic Options -->
+                      <option v-for="activity in activities" :key="activity.id" :value="activity.id" class="uppercase">
                         {{ activity.Name }}
                       </option>
                     </select>
+
 
                   </div>
 
@@ -54,7 +62,7 @@
                       Select Transporter</label>
                     <select id="transporter" name="transporter" v-model="reports.transporterId"
                       autocomplete="transporter-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="transporter in transporters" :key="transporter" :value="transporter.id"
                         class="uppercase">
                         {{ transporter.Name }}
@@ -70,7 +78,7 @@
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Commodity</label>
                     <select id="commodity" name="commodity" v-model="reports.commodityId" autocomplete="commodity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
                         {{ commodity.Name }}
                       </option>
@@ -82,7 +90,7 @@
                     <label for="Handled By" class="block text-sm text-gray-700 font-bold">To Be Handled By</label>
                     <select id="HandledBy" name="HandledBy" required v-model="reports.HandledBy"
                       autocomplete="HandledBy-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="item in ['WFP', 'DoDMA']" :key="item" :value="item" class="uppercase">
                         {{ item }}
                       </option>
@@ -99,24 +107,74 @@
 
                     <input type="number" name="quantity" required v-model="reports.Quantity" id="reportFrom"
                       autocomplete="quantity"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
-                  <div class="col-span-6 sm:col-span-3 mb-5">
+                  <div class="col-span-6 sm:col-span-3 mb-5" v-if="reports.activityId !== 'stock-prepositioning'">
                     <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
                     <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id" class="uppercase">
                         {{ warehouse.Name }}
                       </option>
                     </select>
-                    <!--  <span class="text-md text-blue-500 mb-5 text-italic text-lg"
-                      v-if="reports.commodityId && reports.warehouseId"> Commodity Balance: {{ availableBalance
-                      }}</span> -->
+
+
+
+                       <span class="text-md text-blue-500 mb-5 text-italic text-lg"
+                      v-if="reports.commodityId && reports.warehouseId && reports.activityId && availableBalance !== 'Not Available'"> Commodity Balance: {{
+                        availableBalance
+                      }}</span>
 
                   </div>
+
+
+
+
                 </div>
+
+                <!-- Conditional Rendering for Stock Prepositioning -->
+                <div v-if="reports.activityId === 'stock-prepositioning'" class="mt-5">
+                  <!-- Styled Section Label -->
+                  <div class="relative flex items-center mb-5">
+                    <hr class="w-full border-gray-400" />
+                    <span
+                      class="absolute left-1/2 transform -translate-x-1/2 bg-white px-4 text-sm font-semibold text-blue-400">
+                      Stock Prepositioning
+                    </span>
+                  </div>
+
+                  <!-- Move From Warehouse -->
+                  <div class="col-span-6 sm:col-span-3 mb-5">
+                    <label for="moveFromWarehouse" class="block text-sm font-bold text-gray-700">
+                      Move From Warehouse
+                    </label>
+                    <select id="moveFromWarehouse" v-model="reports.moveFromWarehouseId"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
+                        {{ warehouse.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Move To Warehouse -->
+                  <div class="col-span-6 sm:col-span-3 mb-5">
+                    <label for="moveToWarehouse" class="block text-sm font-bold text-gray-700">
+                      Move To Warehouse
+                    </label>
+                    <select id="moveToWarehouse" v-model="reports.moveToWarehouseId"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
+                        {{ warehouse.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Divider -->
+                  <hr class="border-gray-400 mt-5 mb-4" />
+                </div>
+
 
 
 
@@ -129,7 +187,7 @@
 
                     <select id="destination" name="destination" required v-model="reports.districtId"
                       autocomplete="destination-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
                         {{ district.Name }}
                       </option>
@@ -142,7 +200,7 @@
                     <label for="project" class="block text-xs text-italic font-medium text-gray-700 mt-5">Lean Season Response</label>
 
                   <select id="project" name="project" v-model="reports.projectId" autocomplete="project-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="project in projects" :key="project" :value="project.id" class="uppercase">
                         {{ project.Name }}
                       </option>
@@ -156,7 +214,7 @@
                     </label>
                     <input type="text" name="ATCNumber" v-model="reports.ATCNumber" id="ATCNumber"
                       autocomplete="ATCNumber"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                 </div>
@@ -170,14 +228,14 @@
                     <label for="Start Date" class="block text-sm text-gray-700 font-bold">Start Date</label>
                     <input type="date" name="Start Date" v-model="reports.StartDate" required id="Start Date"
                       autocomplete="Start Date" :max="reports.EndDate || new Date().toISOString().split('T')[0]"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
                     <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
                     <input type="date" name="End Date" v-model="reports.EndDate" required id="End Date"
                       autocomplete="End Date" :min="reports.StartDate"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                 </div>
@@ -294,18 +352,35 @@ const selectedCommodityName = computed(() => {
 });
 
 const reports = ref({});
+
+
+
+
+
 //FUNCTIONS
+
 const onSubmit = () => {
+  // Ensure warehouseId and activityId default to 0 if not present
+  if (!reports.value.warehouseId) {
+    reports.value.warehouseId = 0;
+  }
+
+  if (!reports.value.activityId) {
+    reports.value.activityId = 0;
+  }
+
+  reports.value.moveFromWarehouseId = reports.value.moveFromWarehouseId
+  reports.value.moveToWarehouseId = reports.value.moveToWarehouseId
   // Validate that all fields are populated
-  if (!reports.value.activityId || !reports.value.transporterId || !reports.value.commodityId ||
-    !reports.value.Quantity || !reports.value.warehouseId || !reports.value.districtId ||
+  if ( !reports.value.transporterId || !reports.value.commodityId ||
+    !reports.value.Quantity  || !reports.value.districtId ||
     !reports.value.ATCNumber || !reports.value.StartDate || !reports.value.EndDate) {
     Swal.fire({
       icon: 'error',
       title: 'Error',
       text: 'All fields are required!',
     });
-    return; // Prevent form submission if any field is missing
+    return; // Prevent form submission if any required field is missing
   }
 
   // Perform form submission
@@ -471,18 +546,19 @@ const getTransporters = async () => {
 
 // Watch for changes in commodity and warehouse selections
 watch(
-  () => [reports.value.commodityId, reports.value.warehouseId],
-  ([newCommodityId, newWarehouseId]) => {
+  () => [reports.value.commodityId, reports.value.warehouseId, reports.value.activityId],
+  ([newCommodityId, newWarehouseId, newActivityId]) => {
     if (newCommodityId && newWarehouseId) {
       // Find the corresponding inventory record based on the selection
       const matchingInventory = commodityinventories.find(
         (inventory) => inventory.commodityId === newCommodityId && inventory.warehouseId === newWarehouseId
+         
       );
 
       // Update the available balance if a matching inventory record is found
-      availableBalance.value = matchingInventory ? `${matchingInventory.Quantity} MT` : 'Not Available';
+      availableBalance.value = matchingInventory ? `${matchingInventory.Quantity.toFixed(2)} MT` : 'Not Available';
     } else {
-      availableBalance.value = 'Select Commodity and Warehouse';
+      availableBalance.value = 'Select Commodity, Activity and Warehouse';
     }
   }
 );

@@ -38,7 +38,7 @@
                     <div class="col-span-6 sm:col-span-6">
                       <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
                       <input type="text" name="name" id="name" v-model="name" autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -49,7 +49,7 @@
                         Listing Type</label>
                       <select id="listingTypesId" name="listingTypesId" v-model="listingTypesId"
                         autocomplete="listingTypesId"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in catalogueTypes" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.name }}
                         </option>
@@ -62,7 +62,7 @@
                       <select :disabled="filteredListingTypesCategories.length == 0" id="catalogueTypeCategory"
                         name="catalogueTypeCategory" v-model="cataloguetypecategoryId"
                         autocomplete="catalogueTypeCategory"
-                        class="mt-1 focus:ring-blue-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-blue-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="type in filteredListingTypesCategories" :key="type.id" :value="type.id"
                           class="uppercase">
                           {{ type.name }}
@@ -76,7 +76,7 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="Price (MWK)" class="block text-sm font-medium text-gray-700">Price from</label>
                       <input type="number" min="0" name="price" id="price" v-model="pricefrom" autocomplete="price"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
 
                     </div>
@@ -85,7 +85,7 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="Price (MWK)" class="block text-sm font-medium text-gray-700">Price to</label>
                       <input type="number" min="0" name="price" id="price" v-model="priceto" autocomplete="price"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
 
                     </div>
@@ -94,7 +94,7 @@
                       <label for="location" class="block text-sm font-medium text-gray-700">
                         Location</label>
                       <select id="location" name="location" v-model="location" autocomplete="location"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in districts" :key="item" :value="item" class="uppercase">
                           {{ item }}
                         </option>
@@ -106,7 +106,7 @@
                         Description</label>
                       <input type="text" name="location_details" id="location_details" v-model="location_details"
                         autocomplete="location_details"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     </div>
 
                     <div class="col-span-6 sm:col-span-6">
@@ -115,7 +115,7 @@
                       </label>
                       <div class="mt-1">
                         <textarea id="description" name="description" v-model="description" rows="3"
-                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-400 rounded-md"
                           placeholder="" />
                       </div>
                       <p class="mt-2 text-sm text-gray-500">
@@ -129,7 +129,7 @@
                     <div class="col-span-8 sm:col-span-4">
                       <div class="flex my-3 ml-0">
                         <input id="status" name="status" v-model="status" type="checkbox" style="color: gray"
-                          class="h-4 w-4 focus:ring-gray-500 border-gray-300 rounded" />
+                          class="h-4 w-4 focus:ring-gray-500 border-gray-400 rounded" />
                         <label for="status" class="ml-2 block text-sm text-gray-900">
                           Is available?
                         </label>
@@ -137,7 +137,7 @@
 
                       <div class="flex my-3 ml-0">
                         <input id="is_event" name="is_event" v-model="is_event" type="checkbox" style="color: gray"
-                          class="h-4 w-4 focus:ring-gray-500 border-gray-300 rounded" />
+                          class="h-4 w-4 focus:ring-gray-500 border-gray-400 rounded" />
                         <label for="status" class="ml-2 block text-sm text-gray-900">
                           Is event?
                         </label>
@@ -148,7 +148,7 @@
                       <div class="mt-2">
                         <span class="flex select-none items-center pb-1 text-gray-500 sm:text-sm">Date of Event</span>
                         <div
-                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md">
+                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md">
                           <input type="date" name="occuringWhen" v-model="occuringWhen" id="date"
                             autocomplete="occuringWhen"
                             class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"

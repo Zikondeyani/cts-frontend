@@ -41,7 +41,7 @@
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Activity</label>
                     <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
                         {{ activity.Name }}
                       </option>
@@ -54,7 +54,7 @@
                       Select Transporter</label>
                     <select id="transporter" name="transporter" v-model="reports.transporterId"
                       autocomplete="transporter-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="transporter in transporters" :key="transporter" :value="transporter.id"
                         class="uppercase">
                         {{ transporter.Name }}
@@ -70,7 +70,7 @@
                     <label for="transporter" class="block text-sm font-bold text-gray-700">
                       Select Commodity</label>
                     <select id="commodity" name="commodity" v-model="reports.commodityId" autocomplete="commodity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
                         {{ commodity.Name }}
                       </option>
@@ -82,7 +82,7 @@
                     <label for="Handled By" class="block text-sm text-gray-700 font-bold">To Be Handled By</label>
                     <select id="HandledBy" name="HandledBy" required v-model="reports.HandledBy"
                       autocomplete="HandledBy-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="item in ['WFP', 'DoDMA']" :key="item" :value="item" class="uppercase">
                         {{ item }}
                       </option>
@@ -99,7 +99,7 @@
 
                     <select id="destination" name="destination" required v-model="reports.districtId"
                       autocomplete="destination-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
                         {{ district.Name }}
                       </option>
@@ -112,7 +112,7 @@
 
                     <input type="number" name="quantity" required v-model="reports.Quantity" id="reportFrom"
                       autocomplete="quantity"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                   
@@ -131,14 +131,14 @@
                     <label for="Start Date" class="block text-sm text-gray-700 font-bold">Start Date</label>
                     <input type="date" name="Start Date" v-model="reports.StartDate" required id="Start Date"
                       autocomplete="Start Date" :max="reports.EndDate || new Date().toISOString().split('T')[0]"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
                     <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
                     <input type="date" name="End Date" v-model="reports.EndDate" required id="End Date"
                       autocomplete="End Date" :min="reports.StartDate"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                 </div>
@@ -258,7 +258,7 @@ const onSubmit = () => {
       title: 'Error',
       text: 'All fields are required!',
     });
-    return; // Prevent form submission if any field is missing
+    return; // Prevent form submission if any receipient is missing
   }
 
   // Perform form submission

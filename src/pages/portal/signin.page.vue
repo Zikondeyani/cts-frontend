@@ -3,7 +3,8 @@
     <spinner-widget :open="isLoading" />
 
     <!-- Left Section (Hidden on mobile) -->
-    <div class="hidden lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-1/2" style="background-color: #096eb4; text-align: center; padding: 20px;">
+    <div class="hidden lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-1/2"
+      style="background-color: #096eb4; text-align: center; padding: 20px;">
       <div class="flex justify-center items-center mb-4">
         <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
         <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
@@ -13,23 +14,25 @@
         <span class="text-sm font-normal">(v2.0)</span>
       </h2>
       <h2 class="mt-6 text-3xl font-extrabold text-white" v-if="system.mode == 'TRAINING'">
-      
-        <span class="text-sm font-normal">({{system.mode}})</span>
+
+        <span class="text-sm font-normal">({{ system.mode }})</span>
       </h2>
     </div>
 
     <!-- Right Section (Sign In Form) -->
-    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24" style="background-color: #ffffff;">
+    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24"
+      style="background-color: #ffffff;">
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <div style="background-color: #096eb4;" class="flex justify-center items-center mb-4 lg:hidden rounded-md p-4" >
-        <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
-        <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
-      </div>
-      <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center lg:hidden">
-        DoDMA Commodity Tracking System
-        <span class="text-sm font-normal">(v2.0)</span>
-      </h2>
+          <div style="background-color: #096eb4;"
+            class="flex justify-center items-center mb-4 lg:hidden rounded-md p-4">
+            <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
+            <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
+          </div>
+          <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center lg:hidden">
+            DoDMA Commodity Tracking System
+            <span class="text-sm font-normal">(v2.0)</span>
+          </h2>
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
@@ -37,7 +40,7 @@
         <div class="mt-8">
           <div class="mt-6 relative">
             <div class="absolute inset-0 flex items-center" aria-hidden="true">
-              <div class="w-full border-t border-gray-300" />
+              <div class="w-full border-t border-gray-400" />
             </div>
             <div class="relative flex justify-center text-sm">
               <span class="px-2 bg-white text-gray-500"></span>
@@ -51,7 +54,7 @@
                 </label>
                 <div class="mt-1">
                   <input id="email" name="email" type="email" v-model="email" autocomplete="email"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
+                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
                   <p class="text-red-500 text-xs italic pt-1">
                     {{ emailError }}
                   </p>
@@ -64,7 +67,7 @@
                 <div class="mt-1">
                   <input id="password" name="password" :type="isPwd ? 'text' : 'password'"
                     autocomplete="current-password" v-model="password"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
+                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
                   <p class="text-red-500 text-xs italic pt-1">
                     {{ passwordError }}
                   </p>
@@ -73,7 +76,7 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
                   <input id="hide-password" name="hide-password" v-model="isPwd" type="checkbox" style="color: #096eb4"
-                    class="h-4 w-4 focus:ring-blue-400 border-gray-300 rounded" />
+                    class="h-4 w-4 focus:ring-blue-400 border-gray-400 rounded" />
                   <label for="show-password" class="ml-2 block text-sm text-gray-900">
                     Show password
                   </label>
@@ -108,7 +111,7 @@
 <script setup>
 import { ChevronLeftIcon } from '@heroicons/vue/solid';
 import { useField, useForm, useSubmitForm } from 'vee-validate';
-import { inject, onMounted, reactive, ref, nextTick  } from 'vue';
+import { inject, onMounted, reactive, ref, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 import { useSessionStore } from '../../stores/session.store';
@@ -294,78 +297,92 @@ onMounted(async () => {
 const sessionObject = ref(null)
 const onSubmit = useSubmitForm((values, actions) => {
   isLoading.value = true;
-  let model = {
+  const model = {
     email: email.value,
     password: password.value,
   };
+
   sessionStore
     .signIn(model)
-    .then(async result => {
+    .then(async (result) => {
       // Display success toast
       Swal.fire({
-        text: 'Successfully signed in',
-        icon: 'success',
+        text: "Successfully signed in",
+        icon: "success",
         toast: true,
-        position: 'top-right',
+        position: "top-right",
         showConfirmButton: false,
         timer: 1500,
         timerProgressBar: true,
       });
-    
-      // Store session in localbase
-
-     // console.log(result.session, "ETG")
-      //await saveDataOffline('session', { email: email.value, role: result.role });
-     // await saveDataOffline('user', JSON.parse(result.session?.USR));
 
       // Check the role and redirect accordingly
-      if (result.role === 'dispatcher') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/dispatcher' });
-      }
-      else if (result.role === 'planner') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/dodma' });
-      }
-      else if (result.role === 'recipient') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/field' });
-      }
-
-      else if (result.role === 'district') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/district' });
-      }
-      else if (result.role === 'commissioner') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/commissioner' });
-      }
-
-      else if (result.role === 'warehouse') {
-        // Specific redirection for warehouse officer
-        $router.push({ path: '/warehouse' });
-      }
-      else {
-        // General redirection for other roles
-        $router.push({ path: '/' + result.role });
+      if (result.role === "dispatcher") {
+        $router.push({ path: "/dispatcher" });
+      } else if (result.role === "planner") {
+        $router.push({ path: "/planner" });
+      } else if (result.role === "recipient") {
+        $router.push({ path: "/receipient" });
+      } else if (result.role === "district") {
+        $router.push({ path: "/district" });
+      } else if (result.role === "commissioner") {
+        $router.push({ path: "/commissioner" });
+      } else if (result.role === "warehouse") {
+        $router.push({ path: "/warehouse" });
+      } else {
+        $router.push({ path: "/" + result.role });
       }
     })
-    .catch(error => {
-      Swal.fire({
-        text: 'Failed to login (Check network connection!, If problem persists contact admin)',
-        icon: 'error',
-        toast: true,
-        position: 'top-right',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-      });
-    })
-    .finally(() => {
+    .catch((error) => {
+
+      // Extract error message if it's an object with a `message` property
+      const errorMessage = typeof error === "object" && error.message
+        ? error.message
+        : String(error);
+
+
+    
+      // Check for specific errors
+      if (errorMessage.includes("This user is disabled")) {
+        Swal.fire({
+          text: "User is inactive. Please contact the administrator.",
+          icon: "error",
+          toast: true,
+          position: "top-right",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else if (errorMessage.includes("Invalid credentials")) {
+        Swal.fire({
+          text: "Invalid email or password. Please try again.",
+          icon: "error",
+          toast: true,
+          position: "top-right",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      } else {
+        // General error handling
+        Swal.fire({
+          text: "Failed to login (Check network connection! If the problem persists, contact admin).",
+          icon: "error",
+          toast: true,
+          position: "top-right",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+      }
+    }).finally(() => {
       isLoading.value = false;
       actions.resetForm();
     });
+
+
 });
+
 
 
 const checkSession = async () => {
@@ -375,9 +392,9 @@ const checkSession = async () => {
     if (session[0].role === 'district officer') {
       await $router.push({ name: 'warehouse-dashboard' });
     } else if (session[0].role === 'central user (DoDMA)') {
-      await $router.push({ name: 'dodma-dashboard' });
-    } else if (session[0].role === 'field officer') {
-      await $router.push({ name: 'field-dashboard' });
+      await $router.push({ name: 'planner-dashboard' });
+    } else if (session[0].role === 'receipient officer') {
+      await $router.push({ name: 'receipient-dashboard' });
     } else if (session[0].role === 'Commissioner (DODMA)') {
       await $router.push({ name: 'commissioner-dashboard' });
     }

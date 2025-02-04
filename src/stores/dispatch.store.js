@@ -7,6 +7,8 @@ export const useDispatcherStore = defineStore({
   id: "dispatcher",
   state: () => ({
     dispatchers: [],
+    
+    performanceData: null,
   }),
   getters: {},
   actions: {
@@ -27,6 +29,22 @@ export const useDispatcherStore = defineStore({
     },
 
 
+
+    async getdispatchUserSummary() {
+      return await dispatcherService
+        .getdispatchUserSummary()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
 
   
     async getdispatchDamageSummary() {

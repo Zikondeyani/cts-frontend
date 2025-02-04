@@ -3,11 +3,11 @@ const MAX_FILE_SIZE = 1000000;
 
 export const CreateBookingSchema = yup.object({
   bookingFrom: yup.date()
-  .required("field is required"),
+  .required("receipient is required"),
   bookingTo: yup.string()
-  .required("field is required"),
+  .required("receipient is required"),
   servicetype: yup.number()
-  .required("field is required"),
+  .required("receipient is required"),
   firstname: yup.string(),
   lastname: yup.string(),
   phone: yup
@@ -28,11 +28,11 @@ export const CreateBookingSchema = yup.object({
 
 export const UpdateBookingSchema = yup.object({
   bookingFrom: yup.string()
-  .required("field is required"),
+  .required("receipient is required"),
   bookingTo: yup.string()
-  .required("field is required"),
+  .required("receipient is required"),
   servicetype: yup.number()
-  .required("field is required"),
+  .required("receipient is required"),
   firstname: yup.string(),
   lastname: yup.string(),
   phone: yup

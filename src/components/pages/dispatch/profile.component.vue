@@ -21,7 +21,7 @@
                   id="first-name"
                   v-model="firstName"
                   autocomplete="given-name"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 />
                 <p class="text-red-500 text-xs italic pt-1">
                   {{ firstNameError }}
@@ -40,7 +40,7 @@
                   id="last-name"
                   v-model="lastName"
                   autocomplete="family-name"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 />
                 <p class="text-red-500 text-xs italic pt-1">
                   {{ lastNameError }}
@@ -59,7 +59,7 @@
                   id="email-address"
                   v-model="email"
                   autocomplete="email"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 />
                 <p class="text-red-500 text-xs italic pt-1">
                   {{ emailError }}
@@ -78,7 +78,7 @@
                   id="phone-number"
                   autocomplete="off"
                   placeholder=" +26599123456"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 />
                 <p class="text-red-500 text-xs italic pt-1">
                   {{ phoneError }}
@@ -98,7 +98,7 @@
                   name="role"
                   v-model="roleId"
                   autocomplete="role-name"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 >
                   <option
                     v-for="role in roles"
@@ -128,7 +128,7 @@
                   name="status"
                   v-model="status"
                   autocomplete="status-name"
-                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                  class="mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                 >
                   <option :value="true">Active</option>
                   <option :value="false">Inactive</option>

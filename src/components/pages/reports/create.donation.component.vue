@@ -41,32 +41,32 @@
                       Goods Receive Note</label>
                     <input type="text" name="goodsreceivenote" v-model="donation.GoodsReceiveNote" id="goodsreceivenote"
                       autocomplete="goodsreceivenote" readonly
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                   </div>
                   <div class="col-span-6 sm:col-span-3">
                     <label for="trucknumber" class="block text-sm font-bold text-gray-700">
                       Truck Number</label>
                     <input type="text" name="TruckNumber" v-model="donation.TruckNumber" id="TruckNumber"
                       autocomplete="trucknumber"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                   </div>
                   <div class="col-span-6 sm:col-span-3">
                     <label for="date" class="block text-sm font-bold text-gray-700">
                       Date</label>
                     <input type="date" name="Date" v-model="donation.Date" id="date" autocomplete="date"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                   </div>
                   <div class="col-span-6 sm:col-span-3">
                     <label for="remarks" class="block text-sm font-bold text-gray-700">
                       Remarks</label>
                     <input type="text" name="Remarks" v-model="donation.Remarks" id="remarks" autocomplete="remarks"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                   </div>
                   <div class="col-span-6 sm:col-span-3">
                     <label for="districtid" class="block text-sm font-bold text-gray-700">
                       District</label>
                     <select id="districtid" name="districtid" v-model="donation.districtId" autocomplete="district-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="district in districts" :key="district.id" :value="district.id">
                         {{ district.Name }}
                       </option>
@@ -76,7 +76,7 @@
                     <label for="warehouseid" class="block text-sm font-bold text-gray-700">
                       Warehouse</label>
                     <select id="warehouseid" name="warehouseid" v-model="donation.warehouseId" autocomplete="warehouse-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id">
                         {{ warehouse.Name }}
                       </option>
@@ -86,7 +86,7 @@
                     <label for="Donorid" class="block text-sm font-bold text-gray-700">
                       Donor</label>
                     <select id="Donorid" name="Donorid" v-model="donation.organisationId" autocomplete="Donor-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="donor in donors" :key="donor.id" :value="donor.id">
                         {{ donor.Name }}
                       </option>
@@ -98,7 +98,7 @@
                     <input type="text" name="DriverName" v-model="donation.DriverName" id="DriverName"
                       autocomplete="drivername" @input="handleDriverInput" @focus="showSuggestions = true"
                       @blur="hideSuggestions"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <ul v-if="showSuggestions && filteredDrivers.length > 0"
                       class="absolute z-10 w-full mt-1 bg-white shadow-lg rounded-md max-h-28 overflow-y-auto">
                       <li v-for="driver in filteredDrivers.slice(0, 3)" :key="driver.id"
@@ -115,7 +115,7 @@
                     <label for="commodity" class="block text-sm font-bold text-gray-700">
                       Commodity</label>
                     <select :id="'commodity-' + index" v-model="item.commodityid" autocomplete="commodity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
                         {{ commodity.Name }}
                       </option>
@@ -125,7 +125,7 @@
                     <label for="quantity" class="block text-sm font-bold text-gray-700">
                       Quantity (MT)</label>
                     <input type="number" :id="'quantity-' + index" v-model="item.quantity" autocomplete="quantity"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                   </div>
                   <div class="col-span-6 text-right">
                     <button @click="removeCommodity(index)"
@@ -265,7 +265,7 @@ const onSubmit = async () => {
   }
 };
 
-// Driver field suggestions and handling new driver names
+// Driver receipient suggestions and handling new driver names
 const filteredDrivers = computed(() => {
   return drivers.filter(driver =>
     driver.Name.toLowerCase().includes(donation.DriverName.toLowerCase())

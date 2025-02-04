@@ -86,7 +86,7 @@ const showErrorMessage = (message) => {
 }
 
 .send-reminder-btn {
-  background-color: #248cd6;
+  background-color: gray;
   color: white;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;

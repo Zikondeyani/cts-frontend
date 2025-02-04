@@ -38,7 +38,7 @@
                     Select Transporter</label>
                   <select id="transporter" name="transporter" v-model="loadingPlan.transporterId"
                     autocomplete="transporter-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="transporter in transporters" :key="transporter" :value="transporter.id"
                       class="uppercase">
                       {{ transporter.Name }}
@@ -55,7 +55,7 @@
                     Select Commodity</label>
                   <select id="commodity" name="commodity" v-model="loadingPlan.commodityId"
                     autocomplete="commodity-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
                       {{ commodity.Name }}
                     </option>
@@ -71,7 +71,7 @@
 
                   <input type="number" name="quantity" v-model="loadingPlan.Quantity" id="reportFrom"
                     autocomplete="quantity"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -79,7 +79,7 @@
 
                   <select id="warehouse" name="warehouse" v-model="loadingPlan.warehouseId"
                     autocomplete="warehouse-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id" class="uppercase">
                       {{ warehouse.Name }}
                     </option>
@@ -96,7 +96,7 @@
 
                   <select id="destination" name="destination" v-model="loadingPlan.districtId"
                     autocomplete="destination-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
                       {{ district.Name }}
                     </option>
@@ -108,7 +108,7 @@
                   <label for="transporter" class="block text-sm font-bold text-gray-700">
                     Select Activity</label>
                   <select id="activity" name="activity" v-model="loadingPlan.activityId" autocomplete="activity-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
                       {{ activity.Name }}
                     </option>
@@ -124,7 +124,7 @@
                   </label>
                   <input type="text" name="ATCNumber" v-model="loadingPlan.ATCNumber" id="ATCNumber"
                     autocomplete="ATCNumber"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-3 sm:col-span-3">
@@ -133,7 +133,7 @@
 
 
                   <input type="date" name="Start Date" v-model="formattedStartDate"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
                 </div>
 
@@ -141,7 +141,7 @@
                   <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
 
                   <input type="date" name="End Date" v-model="formattedEndDate" id="End Date" autocomplete="End Date"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
                 </div>
 
@@ -150,7 +150,7 @@
                     Reason for Update
                   </label>
                   <textarea name="reasonForUpdate" v-model="loadingPlan.UpdatedReason" id="reasonForUpdate" rows="4"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                     placeholder="Enter the reason for this update...">
     </textarea>
                 </div>

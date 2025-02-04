@@ -108,7 +108,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
   { name: "Expected Dispatches", href: "#", current: true },
   { name: "Lean Season Response", href: "#", current: true },
 ];
@@ -325,7 +325,7 @@ try {
   });
   await recieptStore.get();
 
-  $router.push({ path: '/field/receipts/leanseason' });
+  $router.push({ path: '/receipient/receipts/leanseason' });
 } catch (error) {
   Swal.fire({
     title: "Creation Failed",

@@ -7,7 +7,7 @@ export default class CommodityInventoriesService {
       return axios
         .get(
           resource +
-          `?filter={"include": [
+            `?filter={"include": [
               "user","warehouse", "commodity"
             ]}`,
           {
@@ -30,15 +30,21 @@ export default class CommodityInventoriesService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": [
+        .get(
+          resource +
+            `/` +
+            id +
+            `?filter={"include": [
           "user","warehouse", "commodity"
-        ]}`, {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        })
+        ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
         .then((response) => {
           var result = response.data;
           return result;
@@ -56,7 +62,7 @@ export default class CommodityInventoriesService {
       return axios
         .get(
           resource +
-          `?filter={"include": [
+            `?filter={"include": [
             "user","warehouse", "commodity"
           ]}`,
           {
@@ -79,15 +85,21 @@ export default class CommodityInventoriesService {
         });
     } else if (id != null) {
       return axios
-        .get(resource + `/` + id + `?filter={"include": [
+        .get(
+          resource +
+            `/` +
+            id +
+            `?filter={"include": [
           "user","warehouse", "commodity"
-        ]}`, {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        })
+        ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
         .then((response) => {
           var result = response.data;
           return result;
@@ -98,6 +110,46 @@ export default class CommodityInventoriesService {
           }
         });
     }
+  }
+
+  checkInventory(filters) {
+    return axios
+      .get(resource + "/check", {
+        params: filters,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        return response.data; // Return the inventory data
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error; // Handle API-specific errors
+        }
+        throw error; // Handle general errors
+      });
+  }
+
+  deductInventory(data) {
+    return axios
+      .patch(resource + "/deduct", data, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        return response.data; // Return the updated inventory data
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error; // Handle API-specific errors
+        }
+        throw error; // Handle general errors
+      });
   }
 
   create(data) {
@@ -122,15 +174,20 @@ export default class CommodityInventoriesService {
 
   count() {
     return axios
-      .get(resource + `/count` + `?filter={"include": [
+      .get(
+        resource +
+          `/count` +
+          `?filter={"include": [
         "user","warehouse", "commodity"
-      ]}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-type": "Application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-        },
-      })
+      ]}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        }
+      )
       .then((response) => {
         var result = response.data;
         return result;
@@ -162,14 +219,11 @@ export default class CommodityInventoriesService {
       });
   }
 
-
-
-
   getByReference(data) {
     return axios
       .get(
         resource +
-        `?filter={"include": [
+          `?filter={"include": [
           "user","warehouse", "commodity"
         ]}`,
         {

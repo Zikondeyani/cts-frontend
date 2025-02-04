@@ -47,7 +47,7 @@
                       <label for="batch" class="block text-sm font-medium text-gray-700">Disaster Name</label>
                       <input type="text" v-model="name" Name="name" id="name" autocomplete="off"
                         placeholder="Disaster Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>
@@ -58,7 +58,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select Disaster Type</label>
                       <select id="type" name="type" v-model="type" autocomplete="type-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in ['Strong winds (with no rains)',
                           'Floods',
                           'Stormy rains',
@@ -88,7 +88,7 @@
                       <label for="date_of_occurrence" class="block text-sm font-medium text-gray-700">Date of
                         Occurrence</label>
                       <input type="date" v-model="date_of_occurrence" id="date_of_occurrence" :max="today"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ dateError }}
                       </p>

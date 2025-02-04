@@ -21,6 +21,28 @@ export const usecommodityinventoriestore = defineStore({
     },
 
 
+
+    async check(filter) {
+      return await commodityinventoriesService.checkInventory(filter).then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
+
+    async deduct(filter) {
+      return await commodityinventoriesService.deductInventory(filter).then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+ 
  
 
     

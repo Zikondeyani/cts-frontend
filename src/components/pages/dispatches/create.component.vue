@@ -44,7 +44,7 @@
                       Select Transporter</label>
                     <select id="transporter" name="transporter" v-model="reports.transporterId"
                       autocomplete="transporter-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="transporter in transporters" :key="transporter" :value="transporter.id"
                         class="uppercase">
                         {{ transporter.Name }}
@@ -60,7 +60,7 @@
                     <label for="transporter" class="block text-sm font-medium text-gray-700">
                       Select Commodity</label>
                     <select id="commodity" name="commodity" v-model="reports.commodityId" autocomplete="commodity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="commodity in commodities" :key="commodity" :value="commodity.id" class="uppercase">
                         {{ commodity.Name }}
                       </option>
@@ -76,14 +76,14 @@
 
                     <input type="number" name="quantity" v-model="reports.Quantity" id="reportFrom"
                       autocomplete="quantity"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="warehouse" class="block text-sm font-medium text-gray-700">Warehouse</label>
 
                     <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse.id" class="uppercase">
                         {{ warehouse.Name }}
                       </option>
@@ -100,7 +100,7 @@
 
                     <select id="destination" name="destination" v-model="reports.districtId"
                       autocomplete="destination-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="district in districts" :key="district" :value="district.id" class="uppercase">
                         {{ district.Name }}
                       </option>
@@ -111,7 +111,7 @@
                     <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
 
                     <select id="project" name="project" v-model="reports.projectId" autocomplete="project-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="project in projects" :key="project" :value="project.id" class="uppercase">
                         {{ project.Name }}
                       </option>
@@ -124,7 +124,7 @@
                     <label for="destination-district" class="block text-sm font-medium text-gray-700">Activity</label>
 
                     <select id="activity" name="activity" v-model="reports.activityId" autocomplete="activity-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="activity in activities" :key="activity" :value="activity.id" class="uppercase">
                         {{ activity.Name }}
                       </option>
@@ -136,7 +136,7 @@
 
                     <input type="date" name="Start Date" v-model="reports.StartDate" id="Start Date"
                       autocomplete="Start Date"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
                   </div>
 
@@ -144,7 +144,7 @@
                     <label for="End Date" class="block text-sm font-medium text-gray-700">End Date</label>
 
                     <input type="date" name="End Date" v-model="reports.EndDate" id="End Date" autocomplete="End Date"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
 
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 <template>
   <main>
-    <!--spinner-->
+    <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
 
     <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
@@ -16,13 +16,42 @@
       </div>
 
       <div class="flex flex-wrap justify-center md:justify-start -mx-2 mt-7">
-        <div v-for="option in options" :key="option.label" class="p-2 md:w-1/3 lg:w-1/5">
-          <router-link :to="option.path" class="block">
-            <div class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
-              <component :is="option.icon" class="h-6 w-6 mb-2" />
-              <span class="text-center p-2">{{ option.label }}</span>
-            </div>
-          </router-link>
+        <div 
+          v-for="option in options" 
+          :key="option.label" 
+          class="p-2 md:w-1/3 lg:w-1/5 relative group"
+        >
+          <div 
+            @mouseover="showDropdown(option.label)" 
+            @mouseleave="maybeHideDropdown(option.label)"
+          >
+            <router-link :to="option.path" class="block">
+              <div
+                class="tile flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2"
+              >
+                <component :is="option.icon" class="h-6 w-6 mb-2" />
+                <span class="text-center p-2">{{ option.label }}</span>
+              </div>
+            </router-link>
+          </div>
+
+          <!-- Dropdown for Lean Season Response -->
+          <div 
+            v-if="option.label.includes('Lean Season Response')" 
+            v-show="option.showDropdown"
+            @mouseover="keepDropdownVisible(option.label)" 
+            @mouseleave="maybeHideDropdown(option.label)"
+            class="dropdown-menu"
+          >
+            <router-link to="/planner/loadingplans"
+              class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+              Loading Plans
+            </router-link>
+            <router-link to="/planner/dispatches"
+              class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+              Dispatches
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -33,23 +62,107 @@
 import { ref } from 'vue';
 
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import { TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon , TemplateIcon,  // Suggested icon for Projects
-  HeartIcon,     // Suggested icon for Donations
-  LightningBoltIcon } from "@heroicons/vue/outline";
+import { 
+  TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon, 
+  TemplateIcon, HeartIcon, LightningBoltIcon 
+} from "@heroicons/vue/outline";
 
 const isLoading = ref(false); // Example reactive state
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Project & Donation Management", href: "#", current: true },
 ];
+
 const options = ref([
-  { label: 'Projects', icon: TemplateIcon, path: '/projects' },
-  { label: 'Donations', icon: HeartIcon, path: '/donations' },
-  { label: 'Activities', icon: LightningBoltIcon, path: '/activities' }
-  // ... other options as needed
+  { label: 'Lean Season Response & Emergency Assistance', icon: TemplateIcon, path: '/planner/dispatch-management', showDropdown: false },
+  { label: 'Donation Management', icon: HeartIcon, path: '/planner/donations' },
+  // Add more options as needed
 ]);
+
+const showDropdown = (label) => {
+  options.value.forEach(option => {
+    if (option.label === label) {
+      option.showDropdown = true;
+    }
+  });
+};
+
+const maybeHideDropdown = (label) => {
+  setTimeout(() => {
+    const hoveredDropdown = options.value.find(option => option.label === label && option.showDropdown);
+    if (hoveredDropdown && !hoveredDropdown.hovered) {
+      hideDropdown(label);
+    }
+  }, 100); // Small delay to allow mouseover on dropdown
+};
+
+const hideDropdown = (label) => {
+  options.value.forEach(option => {
+    if (option.label === label) {
+      option.showDropdown = false;
+    }
+  });
+};
+
+const keepDropdownVisible = (label) => {
+  options.value.forEach(option => {
+    if (option.label === label) {
+      option.hovered = true;
+    }
+  });
+};
+
+const removeDropdownVisibility = (label) => {
+  options.value.forEach(option => {
+    if (option.label === label) {
+      option.hovered = false;
+      maybeHideDropdown(label);
+    }
+  });
+};
 </script>
 
-<style>
-/* Additional styles if needed */
+<style scoped>
+.tile {
+  height: 150px; /* Set a consistent height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.dropdown-menu {
+  position: absolute;
+  left: 0;
+  width: 200px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  transform-origin: top center;
+  transform: scale(0.95);
+  opacity: 0;
+  z-index: 10;
+  padding: 10px;
+}
+
+.group:hover .dropdown-menu,
+.group:focus .dropdown-menu,
+.dropdown-menu:hover {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Custom arrow shape for the dropdown */
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 10px 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
 </style>

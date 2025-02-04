@@ -22,7 +22,7 @@
       </div>
       <!-- table  -->
 
-      <div class="my-4 border-b border-gray-300">
+      <div class="my-4 border-b border-gray-400">
         <div class="flex flex-wrap">
           <button @click="activeTab = 'submitted'"
             :class="{ 'tab-button text-white': activeTab === 'submitted', 'bg-white text-blue-800 border border-blue-800': activeTab !== 'submitted' }"
@@ -188,7 +188,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/dispatcher/dashboard", current: false },
   { name: "Receipts", href: "#", current: true },
   { name: "Lean Season Response", href: "#", current: true },
 ];
