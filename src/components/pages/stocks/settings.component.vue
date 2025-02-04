@@ -40,7 +40,7 @@
                   <div class="col-span-6 sm:col-span-3">
                     <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
                     <input type="number" Name="quantity" id="quantity" v-model="Quantity" autocomplete="quantity"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ quantityError }}
                     </p>
@@ -53,7 +53,7 @@
                     <label for="ExpiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
                     <input type="date" v-model="ExpiryDate" name="ExpiryDate" id="ExpiryDate" autocomplete="off"
                       placeholder="Expiry Date"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ ExpiryDateError }}
                     </p>
@@ -92,7 +92,7 @@
         <div class="mt-5 md:mt-0 md:col-span-2">
           <div class="px-4 py-3 text-right sm:px-6">
             <button type="button"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              class="bg-white py-2 px-4 border border-gray-400 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               @click="deleteAcc()">
               Delete stock
             </button>

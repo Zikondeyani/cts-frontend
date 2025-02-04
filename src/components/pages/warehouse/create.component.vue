@@ -47,7 +47,7 @@
                         Warehouse Name</label>
                       <input type="text" Name="warehouse-Name" id="warehouse-Name" v-model="Name"
                         autocomplete="given-Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ NameError }}
                       </p>
@@ -57,7 +57,7 @@
                       <label for="MaxStorage (MT)" class="block text-sm font-medium text-gray-700">Max Storage (MT)</label>
                       <input type="number" Name="MaxStorage" id="MaxStorage" v-model="MaxStorage"
                         autocomplete="MaxStorage"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ MaxStorageError }}
                       </p>
@@ -68,7 +68,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select District</label>
                       <select id="district" name="district" v-model="districtId" autocomplete="role-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="district in districts" :key="district.id" :value="district.id" class="uppercase">
                           {{ district.Name }}
                         </option>
@@ -83,7 +83,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select Organisation</label>
                       <select id="organisation" name="organisation" v-model="organisationId" autocomplete="role-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="organisation in organisations" :key="organisation.id" :value="organisation.id"
                           class="uppercase">
                           {{ organisation.Name }}

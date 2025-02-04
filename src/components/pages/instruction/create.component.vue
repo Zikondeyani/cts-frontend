@@ -76,7 +76,7 @@
 
 
                       <p
-                        class="mt-1 focus:ring-gray-500 font-bold focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 font-bold focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         {{ props.district?.Name }}
                       </p>
 
@@ -86,7 +86,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select transporter</label>
                       <select id="activity" name="activity" v-model="transporterId" autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in transporters" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.Name }}
                         </option>
@@ -100,7 +100,7 @@
                       <label for="DriverName" class="block text-sm font-medium text-gray-700">Driver Name</label>
                       <input type="text" v-model="DriverName" name="DriverName" id="From" autocomplete="off"
                         placeholder="Driver Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ DriverNameError }}
                       </p>
@@ -112,7 +112,7 @@
                       <label for="From" class="block text-sm font-medium text-gray-700">Vehicle Reg #</label>
                       <input type="text" v-model="VehicleRegNo" name="Fromr" id="From" autocomplete="off"
                         placeholder="Vehicle Reg #"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ VRnoError }}
                       </p>
@@ -123,7 +123,7 @@
                       <label for="From" class="block text-sm font-medium text-gray-700">Purpose</label>
                       <input type="text" v-model="Purpose" name="Purpose" id="Purpose" autocomplete="off"
                         placeholder="Purpose"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ PurposeError }}
                       </p>
@@ -143,7 +143,7 @@
 
                       <!-- Textarea for Remarks -->
                       <textarea id="remarks" v-model="Remarks" rows="4" placeholder="Add your instruction here..."
-                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
+                        class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
 
                       <!-- Error message -->
                       <p class="text-red-500 text-xs italic pt-1">{{ remarksError }}</p>
@@ -448,7 +448,7 @@ const getActivities = async () => {
 const currentDate = ref(moment().format('YYYY-MM-DD HH:mm:ss'));
 
 const onSubmit = useSubmitForm((values, actions) => {
-  // Manually validate each field
+  // Manually validate each receipient
   const isValidTransporter = transporterId.value !== '' ;
   const isValidPurpose = Purpose.value !== '';
   const isValidRemarks = Remarks.value !== '';
@@ -456,7 +456,7 @@ const onSubmit = useSubmitForm((values, actions) => {
 
   // Check if all fields are valid
   if (!isValidTransporter || !isValidPurpose || !isValidRemarks || !isValidWarehouse) {
-    // If any field is invalid, show an error message or handle accordingly
+    // If any receipient is invalid, show an error message or handle accordingly
     if (!isValidTransporter) {
       transporterError.value = "Please select a transporter.";
     }

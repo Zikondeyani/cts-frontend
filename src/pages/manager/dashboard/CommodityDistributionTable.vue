@@ -5,7 +5,7 @@
             <!-- District Selector -->
             <span class="mr-3 font-bold">District:</span>
             <select v-model="selectedDistrict"
-                class="mb-2 mr-2 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                class="mb-2 mr-2 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                 <option value="">All Districts</option>
                 <option v-for="district in districts" :key="district.Name" :value="district.Name">
                     {{ district.Name }}
@@ -14,7 +14,7 @@
             <!-- Commodity Selector -->
             <span class="mr-3 font-bold">Commodity:</span>
             <select v-model="selectedCommodity"
-                class="mb-2 focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                class="mb-2 focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                 <option value="">All Commodities</option>
                 <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                     {{ commodity.Name }}
@@ -90,19 +90,19 @@
         <!-- Pagination Controls -->
         <div class="flex justify-center mt-4" :class="{ 'hidden': screenshotMode }">
             <button @click="prevPage" :disabled="currentPage <= 1"
-                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronLeftIcon class="w-5 h-5 mr-2" />
                 Prev
             </button>
             <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
             <button @click="nextPage" :disabled="currentPage >= totalPages"
-                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronRightIcon class="w-5 h-5 mr-2" />
                 Next
             </button>
 
             <span class="mr-2 font-medium mt-2">Rows per page:</span>
-            <select v-model="pageSize" class="border-gray-300 rounded-md">
+            <select v-model="pageSize" class="border-gray-400 rounded-md">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>

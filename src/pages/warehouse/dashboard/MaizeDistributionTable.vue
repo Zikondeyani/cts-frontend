@@ -33,12 +33,12 @@
         </table>
         <!-- Pagination Controls -->
         <div class="flex justify-center mt-4">
-            <button @click="prevPage" :disabled="currentPage <= 1" class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+            <button @click="prevPage" :disabled="currentPage <= 1" class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronLeftIcon class="w-5 h-5 mr-2" />
                 Prev
             </button>
             <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button @click="nextPage" :disabled="currentPage >= totalPages" class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+            <button @click="nextPage" :disabled="currentPage >= totalPages" class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronRightIcon class="w-5 h-5 mr-2" />
                 Next
             </button>

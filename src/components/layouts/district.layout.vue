@@ -1,8 +1,12 @@
 <template>
-  <div class="min-h-full font-body" style="background-color: #096eb4;">
+  <div class="min-h-full font-body" style="background-color: #096eb4">
     <!-- Horizontal Navigation Bar for Desktop, Vertical for Mobile -->
-    <nav aria-label="Sidebar" class="shadow-xl px-1 py-3 rounded-md" style="background-color: #096eb4;">
-      <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap lg:flex-nowrap">
+    <nav
+      aria-label="Sidebar"
+      class="shadow-xl px-1 py-3 rounded-md"
+      style="background-color: #096eb4"
+    >
+    <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap lg:flex-nowrap">
         <!-- Logo and Admin Info -->
         <div class="flex items-center justify-between w-full lg:w-auto">
           <div class="flex items-center">
@@ -45,7 +49,8 @@
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
             </button>
-            <div v-if="isDropdownOpen" @mouseleave="closeDropdown" @focusout="closeDropdown"
+            <div v-if="isDropdownOpen"     @mouseenter="keepDropdownOpen"
+              @mouseleave="closeDropdown"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
               <router-link v-for="item in remainingItems" :key="item.name" :to="item.href"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
@@ -128,57 +133,90 @@
         </div>
       </div>
       <!-- Mobile Menu -->
-      <div v-if="isMobileMenuOpen" class="lg:hidden">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <router-link v-for="item in navItems" :key="item.name" @click="toggleMobileMenu()" :to="item.href"
-            class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-400">
-            {{ item.name }}
-          </router-link>
-        </div>
-      </div>
-      <!-- User Menu for Mobile -->
-      <div class="relative mt-4 block lg:hidden w-full">
-        <Menu as="div" class="flex-shrink-0 relative">
-          <div class="flex justify-end">
-            <MenuButton
-              class="rounded-full flex focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300">
-              <span class="sr-only">Open user menu</span>
-              <span class="lowercase m-2 text-white"> {{ user?.username.replace(/\./g, ' ') }} </span>
-              <span style="background-color:gray"
-                class="inline-flex items-center px-3 rounded-full text-sm font-medium text-white uppercase">
-                {{ user?.username.match(/\b(\w)/g).join("") }}
-              </span>
-            </MenuButton>
-          </div>
-          <transition enter-active-class="transition ease-out duration-100"
-            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
-            leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
-            leave-to-class="transform opacity-0 scale-95">
-            <MenuItems
-              class="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 focus:outline-none">
-              <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
-              <a :href="item.href" :class="[active ? 'bg-white' : '', 'block py-2 px-4 text-sm text-gray-700']">
-                {{ item.name }}
-              </a>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-              <button @click="onAbout()" :class="menuItemClasses(active, true)">
-                About System
+
+      <!-- Mobile Sidebar -->
+      <transition name="slide-in">
+        <div v-if="isMobileMenuOpen" class="fixed inset-0 z-40 flex lg:hidden">
+          <!-- Sidebar Content -->
+          <div
+            class="relative flex flex-col w-64 bg-[#096eb4] shadow-xl text-white z-50"
+            @click.stop
+          >
+            <!-- Header -->
+            <div
+              class="flex items-center justify-between px-4 py-3 border-b border-blue-300"
+            >
+              <div class="flex items-center">
+                <a
+                  href="#"
+                  class="bg-transparent rounded-md shadow-0 px-0 flex items-center"
+                >
+                  <img
+                    class="block"
+                    src="../../assets/images/images.png"
+                    alt="govt"
+                    style="height: 50px"
+                  />
+                </a>
+                <a
+                  href="#"
+                  class="bg-transparent rounded-md shadow-0 px-0 flex items-center"
+                >
+                  <img
+                    class="block"
+                    src="../../assets/images/wfp-logo-emblem-white.png"
+                    alt="wfp"
+                    style="height: 50px"
+                  />
+                </a>
+              </div>
+              <button
+                @click="toggleMobileMenu"
+                class="text-white focus:outline-none"
+              >
+                <XIcon class="h-6 w-6" />
               </button>
-              </MenuItem>
-              <MenuItem v-slot="{ active }">
-              <button @click="onSignout" :class="menuItemClasses(active, true)">
+            </div>
+
+            <!-- Links -->
+            <div class="flex-1 px-4 py-2 space-y-1">
+              <router-link
+                v-for="item in navItems"
+                :key="item.name"
+                :to="item.href"
+                @click="toggleMobileMenu"
+                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-blue-500"
+              >
+                {{ item.name }}
+              </router-link>
+
+              <button
+                @click="onSignout"
+                class="text-white text-right text-xs flex-1 px-4 py-2 space-y-1"
+              >
+                <hr />
                 Sign out
               </button>
-              </MenuItem>
-            </MenuItems>
-          </transition>
-        </Menu>
-      </div>
+            </div>
+            <span class="font-medium text-white mx-4 block lg:hidden mb-5"
+              >DODMA CTS | District Council
+              <span class="text-xs font-normal">(v2.0)</span>
+            </span>
+          </div>
+
+          <!-- Backdrop -->
+          <div
+            class="fixed inset-0 bg-black bg-opacity-50"
+            @click="toggleMobileMenu"
+          ></div>
+        </div>
+      </transition>
     </nav>
     <!-- Main Content -->
     <div class="py-4">
-      <div class="max-w-3xl mx-auto sm:px-1 lg:max-w-7xl lg:px-1 lg:grid lg:grid-cols-12 lg:gap-5">
+      <div
+        class="max-w-3xl mx-auto sm:px-1 lg:max-w-7xl lg:px-1 lg:grid lg:grid-cols-12 lg:gap-5"
+      >
         <!-- Page Content -->
         <div class="lg:col-span-12 xl:col-span-12">
           <router-view />
@@ -186,13 +224,17 @@
       </div>
     </div>
     <!-- Footer -->
-    <footer class="text-white text-center p-4" style="background-color: #096eb4;">
+    <footer
+      class="text-white text-center p-4"
+      style="background-color: #096eb4"
+    >
       <span class="inline-block align-middle text-sm">
         © WFP Malawi Supply Chain Unit | DoDMA
       </span>
     </footer>
   </div>
 </template>
+
 <script setup>
 import { inject, ref, watch, reactive, onMounted, computed, toRefs, onBeforeUnmount } from "vue";
 import { useSessionStore } from "../../stores/session.store";
@@ -297,6 +339,22 @@ const onAbout = async () => {
 };
 
 
+let dropdownTimeout;
+
+const openDropdown = () => {
+  isDropdownOpen.value = true;
+};
+
+const closeDropdown = () => {
+  dropdownTimeout = setTimeout(() => {
+    isDropdownOpen.value = false;
+  }, 200); // Add slight delay to prevent flickering
+};
+
+const keepDropdownOpen = () => {
+  clearTimeout(dropdownTimeout);
+};
+
 
 const updateNotifications = () => {
   notifications.value = [];
@@ -333,11 +391,7 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-const closeDropdown = () => {
-  if (isDropdownOpen.value) {
-    isDropdownOpen.value = false;
-  }
-};
+
 function signOut() {
   userStore.signOut(); // Your sign-out logic
   isDropdownOpen.value = false;
@@ -485,16 +539,16 @@ function navigation() {
     /*  { name: "Commodities", href: "/warehouse/commodity-tracking", icon: CollectionIcon, current: false },
      { name: "Requisitions", href: "/warehouse/requisition-management", icon: IdentificationIcon, current: false },
      { name: "Project Management", href: "/warehouse/project-management", icon: IdentificationIcon, current: false },
-   */  /*  { name: "Dispatches", href: "/field/dispatch-management", icon: AdjustmentsIcon, current: false },
+   */  /*  { name: "Dispatches", href: "/receipient/dispatch-management", icon: AdjustmentsIcon, current: false },
         */
 
- /*    { name: "Disasters", href: "/field/emergency-management", icon: ExclamationIcon, current: false },
+ /*    { name: "Disasters", href: "/receipient/emergency-management", icon: ExclamationIcon, current: false },
  */
     { name: "Dispatches", href: "/district/project-management", icon: IdentificationIcon, current: false },
 
     { name: "Receipts", href: "/district/receipts", icon: DocumentDuplicateIcon, current: false },
 
-    /*   { name: "Reports", href: "/field/report-management", icon: DocumentTextIcon, current: false },
+    /*   { name: "Reports", href: "/receipient/report-management", icon: DocumentTextIcon, current: false },
    */
   ];
 

@@ -1,7 +1,7 @@
 import { download } from './download'
 import * as ExcelJS from 'exceljs'
 
-/* sample data and you can also send data without sheet field and which means all will be in one sheet named SHEET1
+/* sample data and you can also send data without sheet receipient and which means all will be in one sheet named SHEET1
 let data = [
   { name: 'mika', sheet: 'sheet1', age: 50 },
   { name: 'ben', age: 23, sheet: 'sheet2' },

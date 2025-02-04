@@ -44,7 +44,7 @@
 
 
                     <select id="role" name="warehouseId" v-model="transporterId" autocomplete="role-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="transporter in transporters" :key="transporter.id" :value="transporter.id"
                         class="uppercase">
                         {{ transporter.Name }}
@@ -61,7 +61,7 @@
                     <label for="user-role" class="block text-sm font-bold text-gray-700">
                       Select Districts</label>
                     <select id="role" name="districtId" v-model="districtId" autocomplete="role-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="district in districts" :key="districtId" :value="districtId" class="uppercase">
                         {{ district.Name }}
                       </option>
@@ -74,7 +74,7 @@
                   <!--      <div class="col-span-12 sm:col-span-12">
                     <label for="DriverName" class="block text-sm font-bold text-gray-700">Driver Name</label>
                     <input type="text" Name="DriverName" id="DriverName" v-model="DriverName" autocomplete="DriverName"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ DriverNameError }}
                     </p>
@@ -84,7 +84,7 @@
                   <div class="col-span-12 sm:col-span-12">
                     <label for="Purpose" class="block text-sm font-bold text-gray-700">Purpose</label>
                     <input type="text" Name="Purpose" id="Purpose" v-model="Purpose" autocomplete="Purpose"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ PurposeError }}
                     </p>
@@ -94,7 +94,7 @@
                     <label for="VehicleRegNo" class="block text-sm font-bold text-gray-700">Vehicle Reg #</label>
                     <input type="text" Name="VehicleRegNo" id="VehicleRegNo" v-model="VehicleRegNo"
                       autocomplete="VehicleRegNo"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ VehicleRegNoError }}
                     </p>
@@ -108,7 +108,7 @@
 
                     <!-- Textarea for Remarks -->
                     <textarea id="remarks" v-model="Remarks" rows="4" placeholder="Add your instruction here..."
-                      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
+                      class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"></textarea>
 
                     <!-- Error message -->
                     <p class="text-red-500 text-xs italic pt-1">{{ remarksError }}</p>
@@ -163,8 +163,8 @@ const props = defineProps({
 const emit = defineEmits(["update"]);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
-  { name: "Instruction Management", href: "/field/instruction-management", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
+  { name: "Instruction Management", href: "/receipient/instruction-management", current: false },
   { name: "Edit", href: "#", current: true },
 ];
 const WarehouseStore = usewarehousestore();

@@ -1,70 +1,134 @@
 <template>
   <main class="font-bold">
-    <!--spinner-->
+    <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
+
+      <!-- Header Section -->
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate mb-3">
+          <h2 class="font-bold text-lg sm:text-2xl text-white leading-7 sm:truncate mb-3">
             Report Management
           </h2>
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
       </div>
-      <!-- tabs -->
-      <div class="align-middle inline-block min-w-full">
-        <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300" id="tabs-menu"
-          role="tablist">
-          <li class="nav-item mr-1" role="presentation">
-            <a href="#user-loadings"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
-              id="tabs-user-loadings" data-bs-toggle="pill" data-bs-target="#user-loadings" role="tab"
-              aria-controls="user-loadings" aria-selected="true">Lean Season & Emergency Assistance  Delivery Reports</a>
-          </li>
-          <li class="nav-item mr-1" role="presentation">
-            <a href="#user-lean"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-lean" data-bs-toggle="pill" data-bs-target="#user-lean" role="tab"
-              aria-controls="user-lean" aria-selected="false">Lean Season & Emergency Assistance Dispatch Reports</a>
-          </li>
 
+      <!-- Tabs Section -->
+      <div class="align-middle inline-block w-full">
+        <ul
+          class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300"
+          id="tabs-menu"
+          role="tablist"
+        >
+          <!-- Tabs -->
           <li class="nav-item mr-1" role="presentation">
-            <a href="#user-relief"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-relief" data-bs-toggle="pill" data-bs-target="#user-relief" role="tab"
-              aria-controls="user-relief" aria-selected="false">Stock Position</a>
+            <a
+              href="#user-loadings"
+              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500 active
+              rounded-t-lg"
+              id="tabs-user-loadings"
+              data-bs-toggle="pill"
+              data-bs-target="#user-loadings"
+              role="tab"
+              aria-controls="user-loadings"
+              aria-selected="true"
+            >
+              LSR & Emergency Assistance Delivery Reports
+            </a>
           </li>
           <li class="nav-item mr-1" role="presentation">
-            <a href="#user-settings"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
-              aria-controls="user-settings" aria-selected="false">Commodity Distribution Report</a>
+            <a
+              href="#user-lean"
+              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
+              id="tabs-user-lean"
+              data-bs-toggle="pill"
+              data-bs-target="#user-lean"
+              role="tab"
+              aria-controls="user-lean"
+              aria-selected="false"
+            >
+              Lean Season & Emergency Assistance Dispatch Reports
+            </a>
           </li>
-
-       
-       
+          <li class="nav-item mr-1" role="presentation">
+            <a
+              href="#user-relief"
+              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
+              id="tabs-user-relief"
+              data-bs-toggle="pill"
+              data-bs-target="#user-relief"
+              role="tab"
+              aria-controls="user-relief"
+              aria-selected="false"
+            >
+              Stock Position
+            </a>
+          </li>
+          <li class="nav-item mr-1" role="presentation">
+            <a
+              href="#user-settings"
+              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
+              id="tabs-user-settings"
+              data-bs-toggle="pill"
+              data-bs-target="#user-settings"
+              role="tab"
+              aria-controls="user-settings"
+              aria-selected="false"
+            >
+              Commodity Distribution Report
+            </a>
+          </li>
         </ul>
 
-        <!-- Tab content -->
+        <!-- Tab Content -->
         <div class="tab-content" id="tabs-user-options">
-          <div class="tab-pane fade mt-3" id="user-relief" role="tabpanel"
-            aria-labelledby="tabs-user-relief">
-            <user-relief :data="warehousesinventory" v-on:update="updateOrCreateReliefItems" />
+          <div
+            class="tab-pane fade mt-3"
+            id="user-relief"
+            role="tabpanel"
+            aria-labelledby="tabs-user-relief"
+          >
+            <user-relief
+              :data="warehousesinventory"
+              v-on:update="updateOrCreateReliefItems"
+            />
           </div>
-          <div class="tab-pane fade" id="user-settings" role="tabpanel" aria-labelledby="tabs-user-settings">
-            <commodity-distribution-table :data="commodityDistributionData" :screenshotMode="screenshotMode" />
+          <div
+            class="tab-pane fade"
+            id="user-settings"
+            role="tabpanel"
+            aria-labelledby="tabs-user-settings"
+          >
+            <commodity-distribution-table
+              :data="commodityDistributionData"
+              :screenshotMode="screenshotMode"
+            />
           </div>
-
-          <div class="tab-pane fade show active" id="user-loadings" role="tabpanel" aria-labelledby="tabs-user-loadings">
-            <loading-plan-distribution-table :data="loadingplansdata" 
-            :dispatchesdataSummary="dispatchesdataSummary"
-            :screenshotMode="screenshotMode" :dispatchdata="dispatchesdata" />
+          <div
+            class="tab-pane fade show active"
+            id="user-loadings"
+            role="tabpanel"
+            aria-labelledby="tabs-user-loadings"
+          >
+            <loading-plan-distribution-table
+              :data="loadingplansdata"
+              :screenshotMode="screenshotMode"
+              :dispatchesdataSummary="dispatchesdataSummary"
+              :dispatchdata="dispatchesdata"
+            />
           </div>
-
-          <div class="tab-pane fade" id="user-lean" role="tabpanel" aria-labelledby="tabs-user-lean">
+          <div
+            class="tab-pane fade"
+            id="user-lean"
+            role="tabpanel"
+            aria-labelledby="tabs-user-lean"
+          >
             <user-lean :screenshotMode="screenshotMode" />
           </div>
         </div>
@@ -120,7 +184,7 @@ import jsPDF from 'jspdf';
 const id = ref(null);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/admin/dashboard", current: false },
   { name: "Report Management", href: "#", current: false },
 ];
 
@@ -159,6 +223,7 @@ onMounted(async () => {
 
     const dispatchdata = await dispatchStore.getdispatchSummaryTime();
     dispatchesdata.value = [...dispatchdata];
+
     const dispatchdataSummary = await dispatchStore.getdispatchSummary();
     dispatchesdataSummary.value = [...dispatchdataSummary.unsummarizedDispatches];
 
@@ -273,17 +338,17 @@ const updateOrCreateReliefItems = async (items) => {
     // Use `Promise.all` to update or create items concurrently
     await Promise.all(
       items.map(async (item) => {
-        // Extract the `error` field and keep other fields for processing
+        // Extract the `error` receipient and keep other fields for processing
         const { error, ...cleanedItem } = item;
 
-        // Check if the item has an `id` field to determine if it's an existing item
+        // Check if the item has an `id` receipient to determine if it's an existing item
         if (cleanedItem.id) {
           // Update the existing relief item (using the `id` for updates)
 
 
           return InstructedCommoditiesStore.update(cleanedItem);
         } else {
-          // Create a new relief item if there's no `id` field
+          // Create a new relief item if there's no `id` receipient
           return InstructedCommoditiesStore.create(cleanedItem);
         }
       })
@@ -318,7 +383,7 @@ const updateRelief = async (newValues) => {
   try {
     // Loop through each object to clean and submit individually
     for (const item of newValues) {
-      // Remove the `error` field using destructuring
+      // Remove the `error` receipient using destructuring
       const { error, ...cleanedItem } = item;
 
       // Create the relief item individually
@@ -430,10 +495,10 @@ const logoBase64 = " data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN0AAADkCAMAA
 }
 
 .nav-tabs .nav-link.active {
-  color: #000;
-  border-color: #d3d3d3;
+  color: #fff;
+  border-color: #248cd6;
 
-  background-color: #d3d3d3;
+  background-color: #248cd6;
 }
 
 .rounded-table {

@@ -1,38 +1,39 @@
 <template>
-    <main class="bg-transparent min-h-screen">
-      <!-- Spinner -->
-      <spinner-widget v-bind:open="isLoading" />
-  
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Breadcrumb Widget -->
-        <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
-  
-        <!-- Header Section with Title and Export Button -->
-        <div class="flex items-center justify-between mt-6">
-          <!-- Page Title -->
-          <h2 class="text-2xl font-bold text-white">
-            Dispatcher Performance Statistics
-          </h2>
-  
-          <!-- Export Button -->
-          <button
-            type="button"
-            class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-sm rounded shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out capitalize"
-            @click="generateExcel"
-          >
-            <i class="fas fa-file-export mr-2"></i> Export Data
-          </button>
-        </div>
-  
-        <!-- Performance Chart Section -->
-        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
-      
-          <dispatcher-performance :dispatchData="dispatches" />
-        </div>
+  <main class="min-h-screen">
+    <!-- Spinner -->
+    <spinner-widget v-bind:open="isLoading" />
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Breadcrumb Widget -->
+      <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
+
+      <!-- Header Section -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-6 space-y-4 sm:space-y-0"
+      >
+        <!-- Page Title -->
+        <h2 class="text-xl font-bold text-white sm:text-2xl">
+          Dispatcher Performance Statistics
+        </h2>
+
+        <!-- Export Button -->
+        <button
+          type="button"
+          class="w-full sm:w-auto inline-flex items-center px-4 py-2 bg-gray-500 text-white font-medium text-sm rounded shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+          @click="generateExcel"
+        >
+          <i class="fas fa-file-export mr-2"></i> Export Data
+        </button>
       </div>
-    </main>
-  </template>
-  
+
+      <!-- Performance Chart Section -->
+      <div class="mt-6 bg-white p-4 sm:p-6 rounded-lg shadow-md">
+        <dispatcher-performance :dispatchData="dispatches" />
+      </div>
+    </div>
+  </main>
+</template>
+
   
   <script setup>
   // import the styles
@@ -54,6 +55,8 @@
 
 
   import { useSessionStore } from "../../../stores/session.store";
+
+  
   //INJENCTIONS
   const $router = useRouter();
   const moment = inject("moment");

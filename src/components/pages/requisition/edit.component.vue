@@ -44,7 +44,7 @@
                         Select Activity</label>
                       <select id="activity" name="activity" v-model="Requisition.activityId"
                         autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in activities" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.Name }}
                         </option>
@@ -59,7 +59,7 @@
                         Select Disaster</label>
                       <select id="activity" name="activity" v-model="Requisition.disasterId"
                         autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in disasters" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.name }}
                         </option>
@@ -78,7 +78,7 @@
                       <label for="batch" class="block text-sm font-medium text-gray-700">Affected Households</label>
                       <input type="number" v-model="Requisition.AffectedHouseholds" Name="AffectedHouseholds"
                         id="AffectedHouseholds" autocomplete="off" placeholder="Affected Households"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ AffectedHouseholdsError }}
                       </p>
@@ -91,7 +91,7 @@
                       <!-- Tags display -->
                       <!-- Your Vue Template -->
 
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
                         <span
                           v-for="(place, index) in Requisition.AffectedAreas?.split(',').map(v => v.trim()).filter(v => v) || []"
                           :key="index"
@@ -119,7 +119,7 @@
                       </label>
 
                       <!-- Tags display -->
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
                         <span
                           v-for="(place, index) in Requisition.gvhs?.split(',').map(v => v.trim()).filter(v => v) || []"
                           :key="index"
@@ -144,7 +144,7 @@
 
                       <!-- Tags display -->
 
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
                         <span
                           v-for="(place, index) in Requisition.villages_affected?.split(',').map(v => v.trim()).filter(v => v) || []"
                           :key="index"
@@ -172,7 +172,7 @@
                           <div class="flex-1">
                             <label class="block text-sm font-bold text-gray-700">Commodity</label>
                             <select v-model="item.commodityId" @change="validateCommodity(index)"
-                              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                              class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
                               <option value="" disabled>Commodity</option>
                               <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id">
                                 {{ commodity.Name }}
@@ -186,7 +186,7 @@
                             <label class="block text-sm font-bold text-gray-700">Quantity ({{
                               getCommodityUnit(item.commodityId) }})</label>
                             <input type="number" v-model.number="item.NoBags"
-                              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+                              class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
                               placeholder="Quantity" />
                           </div>
 
@@ -198,7 +198,7 @@
 
                         <!-- Add New Item Button -->
                         <button type="button" @click="addNewItem"
-                          class="mt-2 px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
+                          class="mt-2 px-4 py-2 text-white bg-gray-600 hover:bg-green-700 rounded-md">
                           + Add Relief Item
                         </button>
                       </div>
@@ -210,13 +210,13 @@
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
                     <button type="button" @click="saveAsDraft"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       <SaveIcon class="h-5 w-5 mr-3" />
                       Save as Draft
                     </button>
 
                     <button type="submit"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       Submit for action
                     </button>
                   </div>
@@ -388,7 +388,7 @@ function validateCommodity(index) {
 
   if (commodity) {
     // Use the commodity details as needed
-    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' field
+    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' receipient
     console.log("Selected Commodity:", commodityUnit.value);
 
   }
@@ -541,7 +541,7 @@ function addTag() {
       props.Requisition.AffectedAreas = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newVillage.value = '';
     AffectedAreaError.value = '';
   } else {
@@ -574,7 +574,7 @@ function addTagGvh() {
       props.Requisition.gvhs = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newGvh.value = '';
     gvhAreaError.value = '';
   } else {
@@ -609,7 +609,7 @@ function addTagVg() {
       props.Requisition.villages_affected = place;
     }
 
-    // Clear the input field
+    // Clear the input receipient
     newVillageVal.value = '';
     villageAreaError.value = '';
   } else {

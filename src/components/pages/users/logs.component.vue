@@ -3,7 +3,6 @@
     <!--spinner-->
     <spinner-widget v-bind:open="isLoading" />
 
-
     <div class="md:flex md:items-center md:justify-between mb-4">
       <div class="flex-1 min-w-0">
         <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
@@ -12,20 +11,31 @@
       </div>
 
       <!-- Export Data Button -->
-      <button type="button"
+      <button
+        type="button"
         class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-        @click="generateExcel()">
-        <i class="fas fa-file-export mr-2"></i> <!-- Icon (Font Awesome used as an example) -->
+        @click="generateExcel()"
+      >
+        <i class="fas fa-file-export mr-2"></i>
+        <!-- Icon (Font Awesome used as an example) -->
         Export Logs
       </button>
-
     </div>
+
     <!-- table  -->
     <div class="align-middle inline-block min-w-full rounded-table">
-      <vue-good-table :columns="columns" :rows="logs" @on-row-dblclick="showMetadata"
-        :search-options="{ enabled: true }" :pagination-options="{
-      enabled: true,
-    }" theme="polar-bear" styleClass=" vgt-table striped condensed" compactMode />
+      <vue-good-table
+        :columns="columns"
+        :rows="logs"
+        @on-row-dblclick="showMetadata"
+        :search-options="{ enabled: true }"
+        :pagination-options="{
+          enabled: true,
+        }"
+        theme="polar-bear"
+        styleClass=" vgt-table striped condensed"
+        compactMode
+      />
     </div>
   </main>
 </template>
@@ -34,8 +44,7 @@ import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 
-
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 //SCHEMA AND STORES
@@ -100,35 +109,32 @@ onMounted(() => {
 });
 //FUNCTIONS
 
-
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
-  const wsName = 'Logs';
+  const wsName = "Logs";
 
-  const extract = str => (/\(([^)]+)\)/.exec(str) || [])[1];
+  const extract = (str) => (/\(([^)]+)\)/.exec(str) || [])[1];
 
   // Transform the logs data to include user name and email as one string
-  const dataToExport = logs.map(log => ({
+  const dataToExport = logs.map((log) => ({
     ...log,
-    user: log.user ? `${log.user.name} (${log.user.email})` : 'N/A', // Concatenate name and email
-    metadata: log?.metadata ? JSON.stringify(log.metadata) : 'N/A'
+    user: log.user ? `${log.user.name} (${log.user.email})` : "N/A", // Concatenate name and email
+    metadata: log?.metadata ? JSON.stringify(log.metadata) : "N/A",
   }));
 
   const ws = XLSX.utils.json_to_sheet(dataToExport);
   XLSX.utils.book_append_sheet(wb, ws, wsName);
 
   // Export the workbook
-  XLSX.writeFile(wb, extract(dataToExport[0].user) + '-UserLogs.xlsx');
+  XLSX.writeFile(wb, extract(dataToExport[0].user) + "-UserLogs.xlsx");
 };
 
-
 const getLogs = async (id) => {
-
   isLoading.value = true;
   logStore
     .get(id)
     .then((result) => {
-      let filtereData = result.filter(item => item.user.id == props.id)
+      let filtereData = result.filter((item) => item.user.id == props.id);
       logs.push(...filtereData.reverse());
     })
     .catch((error) => {

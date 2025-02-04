@@ -56,7 +56,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/dodma/dashboard", current: false },
+  { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Required Commodities", href: "#", current: true },
   { name: "Emergency Response", href: "#", current: true },
 ];

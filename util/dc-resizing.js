@@ -8,8 +8,8 @@ var find_query = function () {
             p[v[0]] = true;
         return p;
     }, {});
-    return function (field) {
-        return _map[field] || null;
+    return function (receipient) {
+        return _map[receipient] || null;
     };
 }();
 var resizeMode = (find_query('resize') || 'widhei').toLowerCase();

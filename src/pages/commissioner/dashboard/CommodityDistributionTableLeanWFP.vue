@@ -12,7 +12,7 @@
                 <div>
                     <span class="mr-2 font-bold">Activity:</span>
                     <select v-model="selectedActivity"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Activities</option>
                         <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
@@ -23,7 +23,7 @@
               <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
                     <select v-model="selectedHandleBy"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Organisations</option>
                         <option v-for="item in ['WFP', 'DoDMA']" :key="item" :value="item">
                             {{ item }}
@@ -35,7 +35,7 @@
                 <div>
                     <span class="mr-2 font-bold">District:</span>
                     <select v-model="selectedDistrict"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Districts</option>
                         <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
@@ -47,7 +47,7 @@
                 <div>
                     <span class="mr-2 font-bold">Commodity:</span>
                     <select v-model="selectedCommodity"
-                        class="w-40 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="w-40 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Commodities</option>
                         <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -59,12 +59,12 @@
                    
                     
                     <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
 
                       <button @click="exportToExcel"
-                        class="bg-green-500 mt-5 hover:bg-green-300 text-white font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-500 mt-5 hover:bg-gray-400 text-white font-medium py-1 px-2 text-sm rounded">
                         Export to Excel
                       </button>
                   
@@ -120,7 +120,24 @@
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalDispatched.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ row.receiptCompletion?.toFixed(2) }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span v-if="row.receiptCompletion > 100.001"
+                            class="relative inline-block cursor-pointer group">
+                            <!-- Red badge with percentage -->
+                            <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"
+                                aria-label="Possible excess receipt">
+                                {{ Number(row.receiptCompletion).toFixed(2) }}%
+                            </span>
+
+                            <!-- Tooltip -->
+                            <span
+                                class="absolute right-0 bottom-6 w-max bg-gray-800 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                Possible excess receipt
+                            </span>
+                        </span>
+                        <span v-else>{{ Number(row.receiptCompletion).toFixed(2) }}%</span>
+                     
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -128,19 +145,19 @@
         <!-- Pagination Controls -->
         <div class="flex justify-center mt-4" :class="{ 'hidden': screenshotMode }">
             <button @click="prevPage" :disabled="currentPage <= 1"
-                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronLeftIcon class="w-5 h-5 mr-2" />
                 Prev
             </button>
             <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
             <button @click="nextPage" :disabled="currentPage >= totalPages"
-                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                 <ChevronRightIcon class="w-5 h-5 mr-2" />
                 Next
             </button>
 
             <span class="ml-4 font-medium">Rows per page:</span>
-            <select v-model="pageSize" class="ml-2 border-gray-300 rounded-md">
+            <select v-model="pageSize" class="ml-2 border-gray-400 rounded-md">
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>

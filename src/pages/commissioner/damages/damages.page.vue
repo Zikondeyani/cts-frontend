@@ -127,7 +127,7 @@ const columns = ref([
 
     field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800" >Dispatched : ${row.originQuantity}MT</span><br>`
       +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Loss: ${row.totalQuantityAll.toFixed(2)}MT</span><br>`,
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">Loss: ${row.totalQuantity?.toFixed(2)}MT</span><br>`,
 
     sortable: true,
     firstSortType: "asc",
@@ -148,7 +148,7 @@ const columns = ref([
   },
 
   {
-    label: "Percentage of Damage",
+    label: "Percentage of Loss",
     field: row => {
       let colorClass = '';
       if (row.damagePercentage < 10) {

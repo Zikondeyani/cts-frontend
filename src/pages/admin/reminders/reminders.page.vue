@@ -1,43 +1,58 @@
 <template>
-  <main>
+  <main class="min-h-screen">
     <!-- Spinner -->
     <spinner-widget v-bind:open="isLoading" />
 
     <!-- Breadcrumb Navigation -->
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-6xl lg:px-8 mt-5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
       <breadcrumb-widget :breadcrumbs="breadcrumbs" />
 
       <!-- Header with Stats and Button -->
-      <div class="md:flex md:items-center md:justify-between mt-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-6 space-y-4 md:space-y-0">
+        <!-- Header Text -->
         <div class="flex-1 space-y-2">
-          <h2 class="text-3xl font-extrabold text-white tracking-wide">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-wide">
             Lean Season Dispatch Reminders
           </h2>
-          <p class="text-lg text-white opacity-90">
+          <p class="text-base sm:text-lg text-white opacity-90">
             Send reminders to the commissioner, dispatchers, and recipients to ensure timely actions.
           </p>
         </div>
 
-
-        <button style="background-color: #248cd6;"
-          class="mt-4 md:mt-0 px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-500 transition"
-          @click="sendAllReminders">
+        <!-- Button -->
+        <button
+          class="w-full sm:w-auto px-4 py-2 bg-gray-500 text-white rounded-md shadow hover:bg-gray-600 transition duration-150 ease-in-out"
+          @click="sendAllReminders"
+        >
           Send Reminders To All
         </button>
       </div>
 
       <!-- Stats Overview -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-        <StatCard title="Unapproved Loading Plans" :value="reminderStats[0]?.unapprovedPlansCount" color="bg-white"
-          reminder="unapproved" />
-        <StatCard title="Loading Plans Pending Dispatch" :value="reminderStats[0]?.loadingPlansWithoutDispatchesCount"
-          color="bg-white" reminder="noDispatches" />
-        <StatCard title="Dispatches Pending Receiving" :value="reminderStats[0]?.dispatchesWithoutReceiptsCount"
-          color="bg-white" reminder="noReceipts" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+        <StatCard
+          title="Unapproved Loading Plans"
+          :value="reminderStats[0]?.unapprovedPlansCount"
+          color="bg-white"
+          reminder="unapproved"
+        />
+        <StatCard
+          title="Loading Plans Pending Dispatch"
+          :value="reminderStats[0]?.loadingPlansWithoutDispatchesCount"
+          color="bg-white"
+          reminder="noDispatches"
+        />
+        <StatCard
+          title="Dispatches Pending Receiving"
+          :value="reminderStats[0]?.dispatchesWithoutReceiptsCount"
+          color="bg-white"
+          reminder="noReceipts"
+        />
       </div>
     </div>
   </main>
 </template>
+
 
 <script setup>
 import { ref, inject, reactive, onMounted } from "vue";

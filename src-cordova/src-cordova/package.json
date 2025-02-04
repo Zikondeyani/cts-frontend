@@ -1,5 +1,5 @@
 {
-  "name": "cts.dodma.app",
+  "name": "cts.planner.app",
   "displayName": "ctsdodma",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",

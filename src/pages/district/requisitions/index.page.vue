@@ -185,7 +185,7 @@
                     <button @click="closeModal"
                       class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
                     <button @click="printPDF"
-                      class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
+                      class="mr-3 bg-gray-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
                   </div>
                 </div>
               </div>
@@ -697,7 +697,7 @@ const createInstruction = async model => {
         confirmButtonText: "Ok"
       });
 
-      $router.push({ path: '/dodma/instruction-management' });
+      $router.push({ path: '/planner/instruction-management' });
 
     })
     .catch(error => {

@@ -64,8 +64,17 @@
                     <p class="mb-4"><strong>ATC Number:</strong> {{ emergencyResponseInstructions.ATCNUMBER }}</p>
 
                     <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.totalQuantity }} MT </p>
-                    <p class="mb-4"><strong>Warehouse (From):</strong> {{ emergencyResponseInstructions.warehouseName }}
+                    <p class="mb-4"><strong>Warehouse (From):</strong>
+                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseFrom : emergencyResponseInstructions?.warehouseName }}
                     </p>
+                    <p class="mb-4" v-if="emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse'"><strong>Warehouse (To):</strong>
+                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseTo : emergencyResponseInstructions?.warehouseName }}
+                    </p>
+                    <p class="mb-4"><strong>Activity:</strong> {{ emergencyResponseInstructions.activityName == "Unknown Activity"? 'Stock Prepositioning' :  emergencyResponseInstructions.activityName }}</p>
+                    <p class="mb-4"><strong>Transporter:</strong> {{ emergencyResponseInstructions.transporterName == "Unknown Transporter"? 'N/A' :  emergencyResponseInstructions.transporterName }}</p>
+                    <p class="mb-4"><strong>Handled By:</strong> {{ emergencyResponseInstructions.handledBy}}</p>
+                 
+                
                     <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district }}</p>
                     <p class="mb-4"><strong>Planned By:</strong> {{ emergencyResponseInstructions?.plannedBy }}</p>
 
@@ -77,7 +86,7 @@
                 <!-- Comments Section (only show when rejecting) -->
                 <div v-if="isRejecting" class="mt-4">
                   <textarea v-model="RejectionComment" placeholder="Add comments here..." rows="3"
-                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-400 rounded-md"></textarea>
                 </div>
 
                 <!-- Footer Buttons -->
@@ -85,7 +94,7 @@
                   <button type="button" @click="closeDialog"
                     class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">Close</button>
                   <button type="submit" v-if="!isRejecting"
-                    class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
+                    class="px-4 py-2 mr-3 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
                     <CheckCircleIcon class="h-5 w-5 mr-1" />
                     Approve Loading Plan
                   </button>
@@ -174,6 +183,8 @@ const RejectionComment = ref("");
 // STORES
 const requisitionStore = userequisitionstore();
 const requisitions = reactive([]);
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([])
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 
@@ -192,6 +203,7 @@ const { meta } = useForm({
 // MOUNTED
 onMounted(() => {
   getRequisition();
+  getWarehouses();
 });
 
 // FUNCTIONS
@@ -199,6 +211,16 @@ const getRequisition = async () => {
   requisitionStore.get().then(result => {
     requisitions.length = 0; // empty array
     requisitions.push(...result);
+  }).catch(error => {
+    console.error(error);
+  }).finally(() => {
+  });
+};
+
+const getWarehouses = async () => {
+  warehouseStore.get().then(result => {
+    warehouses.length = 0; // empty array
+    warehouses.push(...result);
   }).catch(error => {
     console.error(error);
   }).finally(() => {

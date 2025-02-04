@@ -47,7 +47,7 @@
                       <label for="batch" class="block text-sm font-medium text-gray-700">Activity Name</label>
                       <input type="text" v-model="name" Name="name" id="name" autocomplete="off"
                         placeholder="Activity Name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
                       </p>

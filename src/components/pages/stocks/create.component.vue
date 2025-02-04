@@ -48,7 +48,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select Commodity</label>
                       <select id="commodity" name="commodity" v-model="commodityId" autocomplete="commodity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.id"
                           class="uppercase">
                           {{ commodity.Name }}
@@ -63,7 +63,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select Warehouse</label>
                       <select id="warehouse" name="warehouse" v-model="warehouseId" autocomplete="warehouse-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.id"
                           class="uppercase">
                           {{ warehouse.Name }}
@@ -80,7 +80,7 @@
                       <label for="batch" class="block text-sm font-medium text-gray-700">Batch #</label>
                       <input type="text" v-model="BatchNumber" Name="BatchNumber" id="BatchNumber" autocomplete="off"
                         placeholder="BatchNumber"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ BatchNumberError }}
                       </p>
@@ -90,7 +90,7 @@
                       <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
                       <input type="number" v-model="Quantity" Name="quantity" id="quantity" autocomplete="off"
                         placeholder="Quantity"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ quantityError }}
                       </p>
@@ -100,7 +100,7 @@
                       <label for="ExpiryDate" class="block text-sm font-medium text-gray-700">Expiry Date</label>
                       <input type="date" v-model="ExpiryDate" name="ExpiryDate" id="ExpiryDate" autocomplete="off"
                         placeholder="Expiry Date"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ ExpiryDateError }}
                       </p>

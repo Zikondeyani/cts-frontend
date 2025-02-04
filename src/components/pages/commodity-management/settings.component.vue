@@ -23,7 +23,7 @@
                       Name</label>
                     <input type="text" Name="organisation-Name" id="organisation-Name" v-model="Name"
                       autocomplete="given-Name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ NameError }}
                     </p>
@@ -38,7 +38,7 @@
                     <label for="unit" class="block text-sm font-medium text-gray-700">
                       Select Unit</label>
                     <select id="district" name="unit" v-model="Unit" autocomplete="unit-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="item in ['Kg', 'Litres']" :key="item" :value="item" class="uppercase">
                         {{ item }}
                       </option>
@@ -54,7 +54,7 @@
                       Select Commodity Type</label>
                     <select id="commodityTypeId" name="commodityTypeId" v-model="commodityTypeId"
                       autocomplete="commodityTypeId"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option v-for="item in commodity" :key="item.id" :value="item.id" class="uppercase">
                         {{ item.Name }}
                       </option>
@@ -66,7 +66,7 @@
                   <div class="col-span-6 sm:col-span-4">
                     <label for="PackSize" class="block text-sm font-medium text-gray-700">Pack Size</label>
                     <input type="number" v-model="PackSize" name="pack-size" id="pack-size" autocomplete="off"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ PackSizeError }}
                     </p>
@@ -103,7 +103,7 @@
         <div class="mt-5 md:mt-0 md:col-span-2">
           <div class="px-4 py-3 text-right sm:px-6">
             <button type="button"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              class="bg-white py-2 px-4 border border-gray-400 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               @click="deleteAcc()">
               Delete Commodity
             </button>

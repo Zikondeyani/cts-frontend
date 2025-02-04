@@ -21,7 +21,7 @@
         <!-- Page Content -->
         <div class="lg:col-span-12 xl:col-span-12 bg-white p-8 rounded-lg shadow-lg">
           <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">About the System</h2>
-          <p class="text-gray-700 mb-4">The Commodity Tracking System (CTS) was developed by the WFP Malawi Supply Chain Unit for the Department of Disaster Management Affairs (DoDMA). This system is designed to assist in the efficient tracking and management of commodities during emergencies and lean seasons.</p>
+          <p class="text-gray-700 mb-4">The Commodity Tracking System (CTS) was developed by the WFP Malawi Supply Chain Unit in collaboration the Department of Disaster Management Affairs (DoDMA). This system is designed to assist in the efficient tracking and management of commodities during emergencies and lean seasons.</p>
           <p class="text-gray-700 mb-4">The CTS aims to enhance the visibility and traceability of commodity movements, ensuring timely and accurate delivery to intended recipients. By leveraging technology, the system improves the overall coordination and response efforts during critical times.</p>
           <p class="text-gray-700">For more information, please contact the WFP Malawi Supply Chain Unit or the Department of Disaster Management Affairs.</p>
           <div class="flex justify-center mt-8">

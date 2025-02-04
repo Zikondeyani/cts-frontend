@@ -85,7 +85,7 @@
                         id="name"
                         v-model="name"
                         autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
@@ -104,7 +104,7 @@
                           name="description"
                           v-model="description"
                           rows="3"
-                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-400 rounded-md"
                           placeholder=""
                         />
                       </div>
@@ -127,7 +127,7 @@
                         </label>
                         <div class="mt-1 flex rounded-md shadow-sm">
                           <span
-                            class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"
+                            class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-400 bg-gray-50 text-gray-500 text-sm"
                           >
                             www
                           </span>
@@ -136,7 +136,7 @@
                             name="reference"
                             id="reference"
                             v-model="reference"
-                            class="focus:ring-gray-500 focus:border-blue-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                            class="focus:ring-gray-500 focus:border-blue-300 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-400"
                             placeholder="https://example.com"
                           />
                           <p class="text-red-500 text-xs italic pt-1">
@@ -175,7 +175,7 @@
                           name="locationTypeId"
                           v-model="locationTypeId"
                           autocomplete="locationTypeId"
-                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                         >
                           <option
                             v-for="type in locationTypes"
@@ -205,7 +205,7 @@
                           name="location"
                           v-model="location"
                           autocomplete="location"
-                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                         >
                           <option
                             v-for="item in districts"
@@ -235,7 +235,7 @@
                         name="documentType"
                         v-model="documentTypeId"
                         autocomplete="documentType"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       >
                         <option
                           v-for="documentType in documentTypes"
@@ -263,7 +263,7 @@
                         name="documentSubType"
                         v-model="documentSubTypeId"
                         autocomplete="documentType"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       >
                         <option
                           v-for="documentSubType in filteredDocumentSubTypes"
@@ -293,7 +293,7 @@
                       h-4
                       w-4
                       focus:ring-gray-500
-                      border-gray-300
+                      border-gray-400
                       rounded
                     "
                   />
@@ -317,7 +317,7 @@
                         id="publication-date"
                         v-model="publicationDate"
                         autocomplete="publication-date"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       />
                     </div>
                   </div>

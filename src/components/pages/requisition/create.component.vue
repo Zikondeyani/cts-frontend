@@ -48,7 +48,7 @@
                       <label for="user-district" class="block text-sm font-medium text-gray-700">
                         Select Disaster</label>
                       <select id="activity" name="activity" v-model="disasterId" autocomplete="activity-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="item in disasters" :key="item.id" :value="item.id" class="uppercase">
                           {{ item.type }} | {{ item.date_of_occurrence }}
                         </option>
@@ -67,7 +67,7 @@
                       <label for="batch" class="block text-sm font-medium text-gray-700">Affected Households</label>
                       <input type="number" v-model="AffectedHouseholds" Name="AffectedHouseholds"
                         id="AffectedHouseholds" autocomplete="off" placeholder="Affected Households"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ AffectedHouseholdsError }}
                       </p>
@@ -79,7 +79,7 @@
                       </label>
 
                       <!-- Tags display -->
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
                         <span v-for="(place, index) in AffectedAreas" :key="index"
                           class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
                           {{ place }}
@@ -104,7 +104,7 @@
                       </label>
 
                       <!-- Tags display -->
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
 
                         <!-- Input for adding new tags -->
                         <input type="number" v-model="newGvh" placeholder="Enter Number Affected"
@@ -119,7 +119,7 @@
                       </label>
 
                       <!-- Tags display -->
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
 
                         <!-- Input for adding new tags -->
                         <input type="number" v-model="newVillageVal" placeholder="Enter Number Affected"
@@ -140,7 +140,7 @@
                           <div class="flex-1">
                             <label class="block text-sm font-bold text-gray-700">Commodity</label>
                             <select v-model="item.commodityId" @change="validateCommodity(index)"
-                              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+                              class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
                               <option value="" disabled>Commodity</option>
                               <option v-for="commodity in commodities" :key="commodity" :value="commodity">
                                 {{ commodity.Name }}
@@ -151,7 +151,7 @@
                           <div class="flex-1">
                             <label class="block text-sm font-bold text-gray-700">Quantity {{ commodityUnit }}</label>
                             <input type="number" v-model.number="item.Quantity"
-                              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+                              class="mt-1 block w-full border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
                               placeholder="Quantity" />
                           </div>
                           <button type="button" @click="removeItem(item.id)" class="text-red-500 hover:text-red-700">
@@ -159,7 +159,7 @@
                           </button>
                         </div>
                         <button type="button" @click="addNewItem"
-                          class="mt-2 px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
+                          class="mt-2 px-4 py-2 text-white bg-gray-600 hover:bg-green-700 rounded-md">
                           + Add Relief Item
                         </button>
                       </div>
@@ -171,13 +171,13 @@
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
                     <button type="button" @click="saveAsDraft"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       <SaveIcon class="h-5 w-5 mr-3" />
                       Save as Draft
                     </button>
 
                     <button type="submit"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       Submit for action
                     </button>
                   </div>
@@ -419,7 +419,7 @@ function validateCommodity(index) {
 
   if (commodity) {
     // Use the commodity details as needed
-    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' field
+    commodityUnit.value = "(" + commodity?.Container_type + ")" // Assuming the commodity object has a 'unit' receipient
     console.log("Selected Commodity:", commodityUnit.value);
 
   }

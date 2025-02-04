@@ -36,7 +36,7 @@
 
                   <input type="text" name="deliverynote" v-model="Dispatch.DeliveryNote" id="deliverynote"
                     autocomplete="deliverynote" readonly
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
 
@@ -48,7 +48,7 @@
 
                   <input type="text" name="FinalDestinationPoint" v-model="Dispatch.FinalDestinationPoint"
                     id="FinalDestinationPoint" autocomplete="FinalDestinationPoint"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
               </div>
@@ -60,14 +60,14 @@
                   <label for="NoBags" class="block text-sm font-medium text-gray-700 mb-2  mt-2">Number of Bags</label>
                   <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="Dispatch.NoBags"
                     id="NoBags" autocomplete="NoBags"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="Quantity" class="block text-sm font-medium text-gray-700 mb-2  mt-2">Tonnage</label>
                   <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity"
                     readonly
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md bg-gray-100" />
                 </div>
               </div>
 
@@ -84,7 +84,7 @@
 
                   <input type="text" name="DriverName" v-model="Dispatch.DriverName" id="DriverName"
                     autocomplete="DriverName"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -93,7 +93,7 @@
 
                   <input type="text" name="DriverPhone" v-model="Dispatch.PhoneNumber" id="DriverPhone"
                     autocomplete="DriverPhone"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -102,7 +102,7 @@
 
                   <input type="text" name="DriverLicense" v-model="Dispatch.DriverLicense" id="DriverLicense"
                     autocomplete="DriverLicense"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -110,7 +110,7 @@
 
                   <input type="text" name="TruckNumber" v-model="Dispatch.TruckNumber" id="TruckNumber"
                     autocomplete="TruckNumber"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
               </div>
@@ -234,7 +234,7 @@ const updateDispatch = async () => {
 
     Dispatch.value.IsArchived = false;
 
-    const { Dispatcher, Driver, loadingPlan, originalIndex, vgt_id, ...updatedDispatch } = Dispatch.value;
+    const { Dispatcher, Driver, loadingPlan, originalIndex, vgtSelected, vgt_id, ...updatedDispatch } = Dispatch.value;
 
     // Now, updatedDispatch is a copy of Dispatch.value without the specified properties
 

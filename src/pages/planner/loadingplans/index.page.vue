@@ -7,7 +7,11 @@
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
+
+
+
       <div class="md:flex md:items-center md:justify-between">
+
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Loading Plans
@@ -24,47 +28,67 @@
 
 
 
+
+
         <div class="mt-5 flex ml-4 justify-center sm:mt-0">
+
           <create-report-form v-on:create="createReport" />
         </div>
 
       </div>
       <!-- table  -->
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-lg bg-white rounded-table">
-        <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          <template #table-actions> </template>
-          <template #table-row="props">
-            <div v-if="props.column.label == 'Options'" class="flex space-x-2">
+
+      <section aria-labelledby="quick-links-title" class="bg-transparent rounded-table">
+        <div class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
 
 
 
-              <!-- 
-              <button type="button" @click="openDispatchDialog(props.row)"
-                class="font-heading inline-flex items-center px-6 py-2.5 border border-blue-400 text-blue-400 font-bold text-xs rounded shadow-md hover:bg-blue-300 hover:text-white hover:shadow-lg focus:outline-none focus:ring-0 active:border-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
-                <TruckIcon class="h-5 w-5 mr-2" />
-                Dispatch
-              </button> -->
+          <div class="overflow-x-auto">
+
+            <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
+              style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
+              styleClass="vgt-table striped" compactMode>
+              <template #table-actions> </template>
 
 
-              <!-- Edit Button with Pencil Icon -->
-              <!--   <button @click="openEditDialog(props.row)"
-                class="text-green-500 hover:text-green-700 transition duration-300">
-                <PencilIcon class="h-5 w-5 inline-block mr-1" />
-                Edit
-              </button> -->
+              <template #table-row="props">
+                <div v-if="props.column.label === 'Status'">
+                  <span v-if="props.row.IsApproved"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                    Approved
+                  </span>
+                  <span v-else
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    Not Approved
+                  </span>
+                </div>
+                <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
+                  <button @click="openEditDialog(props.row)"
+                    class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
+                    <PencilIcon class="h-5 w-5 inline-block mr-1" />
+                    Edit
+                  </button>
 
-              <!-- Delete Button with Trash Icon -->
-              <button @click="deleteItem(props.row.id)" class="text-red-500 hover:text-red-700 transition duration-300">
-                <TrashIcon class="h-5 w-5 inline-block mr-1" />
-                Delete
-              </button>
+                  <button @click="openAttachmentDialog(props.row)"
+                    class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0">
+                    <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
+                    Attachments
+                  </button>
 
-            </div>
-          </template>
-        </vue-good-table>
+                  <button @click="deleteItem(props.row.id)"
+                    class="text-red-500 hover:text-red-700 transition duration-300">
+                    <TrashIcon class="h-5 w-5 inline-block mr-1" />
+                    Delete
+                  </button>
+                </div>
+              </template>
+            </vue-good-table>
 
+          </div>
+
+
+
+        </div>
         <!-- Edit Loading Plan Dialog -->
         <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
           v-on:update="reloadPage" />
@@ -73,7 +97,10 @@
           @close="closeDispatchDialog" v-on:update="reloadPage" />
 
 
-      </div>
+        <AttachDocumentsDialog :isOpen="isAttachmentDialogOpen" :loadingPlan="selectedLoadingPlan"
+          @close="closeAttachmentForm" @submit="submitAttachments" />
+
+      </section>
 
     </div>
   </main>
@@ -82,12 +109,14 @@
 <script setup>
 // import the styles
 
-import { inject, ref, reactive, onMounted } from "vue";
+import { inject, ref, reactive, onMounted, computed, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  GlobeAltIcon,
+  PaperclipIcon,
   PencilIcon, TrashIcon, TruckIcon
 } from "@heroicons/vue/solid";
 //COMPONENTS
@@ -102,35 +131,44 @@ import createDispatchForm from "../../../components/pages/dispatch/create.compon
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 
 
+import { saveDataOffline, getDataOffline, getOfflineLoadingPlans, removeDataOffline } from '@/services/localbase';
+
+import { checkOnlineStatus } from '@/services/utils/network';
+
 import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
+
+import AttachDocumentsDialog from "../../../components/pages/reports/attach-documents.component.vue"; // Import your AttachDocumentsDialog component
 
 
 import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch-planner.component.vue";
 
 import { useSessionStore } from "../../../stores/session.store";
+const onlineStatusMessage = ref("Checking status..."); // Ref for online status message
+
 //INJENCTIONS
 const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
 //VARIABLES
-const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
-  { name: "Lean Season Response", href: "#", current: true },
+  { name: "Lean Season Response & Emergency Assistance", href: "#", current: true },
 ];
 
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
+import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
 
 import * as XLSX from 'xlsx';
 
 
 const loadingPlanStore = useloadingplanstore();
-const loadingplans = reactive([]);
 
+const commodityinventoriesStore = usecommodityinventoriestore();
 
-
+const warehousesStore = usewarehousestore();
 
 const sessionStore = useSessionStore();
 
@@ -153,23 +191,67 @@ const columns = ref([
   },
   {
     label: "Details",
-    field: row => `<span class="from-color">From: ${row.warehouse?.Name}</span><br>` +
-      `<span class="to-color">To: ${row.district?.Name}</span><br>` +
-      `<span class="by-color">By: ${row.transporter?.Name}</span>`,
+    field: row => {
+      // Get the matching warehouse name for 'From' and 'To'
+      const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
+      const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
+      const warehouse = row.warehouse?.Name;
+
+      // Build the "From" and "To" details conditionally
+      let details = `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+        From: ${fromWarehouse ? fromWarehouse.Name : warehouse}
+      </span><br>
+    `;
+
+      // Add "To" details only if isPrepositioned is true
+      if (row.IsPrepositioned) {
+        details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          To: ${toWarehouse ? toWarehouse.Name : "N/A"}
+        </span><br>
+      `;
+      }
+
+      // Add district and transporter details
+      details += `
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        District: ${row.district?.Name}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+        TP: ${row.transporter?.Name}
+      </span><br>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-gray-100 text-gray-800">
+        ATC #: ${row.ATCNumber}
+      </span>
+    `;
+
+      return details;
+    },
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
     tdClass: "capitalize"
   },
 
+
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="from-color">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="to-color">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity.toFixed(2)} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
+    tdClass: "capitalize"
+  },
+
+  {
+    label: "Status",
+    hidden: false,
+    field: row => row.IsApproved,
+    sortable: true,
+    firstSortType: "asc",
     tdClass: "capitalize"
   },
 
@@ -183,12 +265,17 @@ const columns = ref([
 
 ]);
 
+const isLoading = ref(false);
+const isOnline = ref(false);
+const loadingplans = reactive([]);
+const warehouses = reactive([]);
 const isEditDialogOpen = ref(false);
 
 const selectedLoadingPlan = ref(null);
 
 // Function to open the edit dialog
 const openEditDialog = (loadingPlan) => {
+
   selectedLoadingPlan.value = loadingPlan;
   isEditDialogOpen.value = true;
 };
@@ -201,6 +288,7 @@ const closeEditDialog = () => {
 
 
 const isDispatchDialogOpen = ref(false);
+const isAttachmentDialogOpen = ref(false); // Add this variable
 
 // Function to open the edit dialog
 const openDispatchDialog = (loadingPlan) => {
@@ -213,12 +301,52 @@ const closeDispatchDialog = () => {
   isDispatchDialogOpen.value = false;
 };
 
+
+
+
+const closeAttachmentForm = () => {
+  isAttachmentDialogOpen.value = false;
+};
+
+const submitAttachments = (attachments) => {
+  // Logic for submitting the attachments
+};
+
+const openAttachmentDialog = (loadingPlan) => {
+  selectedLoadingPlan.value = loadingPlan;
+  isAttachmentDialogOpen.value = true;
+};
+
+// Function to periodically update online status
+const startOnlineStatusCheck = () => {
+  setInterval(updateOnlineStatusMessage, 3000); // Update every 60 seconds (adjust as needed)
+
+};
+
 //MOUNTED
-onMounted(() => {
-  getLoadingplans();
-  // getLatest()
+onMounted(async () => {
+  /*  startOnlineStatusCheck(); // Start periodic online status check
+   await updateOnlineStatusMessage();
+   */
+  await getLoadingplans();
+
+  await getWarehouses()
 });
 //FUNCTIONS
+
+// Function to check the online status and update the message
+const updateOnlineStatusMessage = async () => {
+  try {
+    const onlineval = await checkOnlineStatus();
+    isOnline.value = onlineval;
+    onlineStatusMessage.value = onlineval ? "You are online" : "You are offline";
+  } catch (error) {
+    console.error("Error checking online status:", error);
+    onlineStatusMessage.value = "Error checking online status";
+  }
+};
+
+
 
 
 const reloadPage = async () => {
@@ -230,24 +358,180 @@ const reloadPage = async () => {
 }
 
 
+// Functions to get the loading plans
 const getLoadingplans = async () => {
-  isLoading.value = true;
-
   try {
-    const result = await loadingPlanStore.get();
+    isLoading.value = true;
+    let data = [];
 
-    // Reverse the order of the results
-    const reversedLoadingPlans = result.reverse();
+    /* if (isOnline.value) {
+      data = await loadingPlanStore.get();
+    } else {
+      data = await getOfflineLoadingPlans();
+    } */
+    data = await loadingPlanStore.get();
 
-    // Empty the loadingplans array and then push the reversed results
-    loadingplans.length = 0;
-    loadingplans.push(...reversedLoadingPlans);
+    // Clear existing data and push new data
+    loadingplans.splice(0, loadingplans.length, ...data.reverse());
 
   } catch (error) {
-    // Handle any errors that occur during the get or reverse
-    console.error('Failed to fetch and reverse loading plans:', error);
+    console.error("Error fetching loading plans:", error);
   } finally {
     isLoading.value = false;
+  }
+};
+
+
+const getWarehouses = async () => {
+  try {
+    let data = [];
+
+    /* if (isOnline.value) {
+      data = await loadingPlanStore.get();
+    } else {
+      data = await getOfflineLoadingPlans();
+    } */
+    data = await warehousesStore.get();
+
+    // Clear existing data and push new data
+    warehouses.splice(0, warehouses.length, ...data.reverse());
+
+  } catch (error) {
+    console.error("Error fetching loading plans:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+
+
+// Automatically update online status message whenever `isOnline` changes
+watchEffect(async () => {
+  // updateOnlineStatusMessage();
+  getLoadingplans(); // Refresh data whenever online status changes
+
+});
+
+const createReport = async (reportData) => {
+  try {
+    isLoading.value = true;
+
+    // Check for missing required report data fields (excluding warehouseId check)
+    if (!reportData || !reportData.Quantity || !reportData.commodityId) {
+      throw new Error("Missing required report data fields.");
+    }
+
+    // If activityId is 'stock-prepositioning', replace with 0
+    if (reportData.activityId === 'stock-prepositioning') {
+      reportData.activityId = 0;
+      reportData.warehouseId = 0;
+      reportData.IsPrepositioned = true;
+    }
+
+    // Prepare report data
+    const prepareReportData = (reportData) => ({
+      ...reportData,
+      userId: user.value.id,
+      IsApproved: false,
+      Balance: reportData.Quantity,
+    });
+
+    // Prepare inventory data (for deduct operation)
+    const prepareInventoryData = (reportData) => ({
+      warehouseId: reportData.warehouseId,
+      activityId: reportData.activityId,
+      commodityId: reportData.commodityId,
+      quantity: reportData.Quantity,
+    });
+
+    // Remove moveToWarehouseId and moveFromWarehouseId from the reportData (if they exist)
+  
+    const data = prepareReportData(reportData);
+    const inventory = prepareInventoryData(reportData);
+
+    // Create the loading plan, proceed even if warehouseId is invalid (undefined or 0)
+    await loadingPlanStore.create(data);
+
+    // Only deduct if warehouseId is valid (not undefined or 0)
+    if (reportData.warehouseId && reportData.warehouseId !== 0) {
+     
+      await commodityinventoriesStore.deduct(inventory);
+
+      
+    }
+
+    // Refresh loading plans after operations
+    await getLoadingplans();
+
+    // Only show success message if warehouseId is not 0 (since it was successfully created)
+    if (reportData.warehouseId !== 0) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Loadingplan created successfully!',
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Loadingplan created successfully.',
+      });
+    }
+  } catch (error) {
+    console.error("Error creating Loadingplan or deducting inventory:", error.message);
+    console.error(error.stack);
+
+    // Show error if warehouseId is not 0 and an error occurs during inventory deduction
+    if (reportData.warehouseId !== 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `An error occurred: ${error.message}`,
+      });
+    }
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+
+
+// Function to handle synchronization when back online
+const syncOfflineData = async () => {
+  try {
+    // Check if there are offline plans to sync
+    const offlinePlans = await getOfflineLoadingPlans();
+
+    if (offlinePlans.length === 0) {
+      return;
+    }
+
+    for (const plan of offlinePlans) {
+      // Remove specified fields before sync
+      const { id, key, transporter, commodity, district, project, warehouse, ...planToSync } = plan;
+
+      // Ensure StartDate and EndDate follow date-time format
+      planToSync.StartDate = new Date(planToSync.StartDate).toISOString();
+      planToSync.EndDate = new Date(planToSync.EndDate).toISOString();
+
+      try {
+        // Create loading plan on server
+        await loadingPlanStore.create(planToSync);
+
+        // Remove from offline storage only if server creation is successful
+        await removeDataOffline('loading-plans', id);
+      } catch (error) {
+        console.error(`Failed to sync plan with id ${id} to server:`, error);
+        // Handle specific error or log it for debugging
+        // You can choose to retry or leave the item in offline storage
+      }
+    }
+
+    await getLoadingplans(); // Refresh data after synchronization
+    Swal.fire('Sync Success', 'Offline data synced successfully!', 'success');
+  } catch (error) {
+    console.error('Error syncing offline data:', error);
+    Swal.fire('Sync Error', 'Failed to sync offline data.', 'error');
   }
 };
 
@@ -264,6 +548,7 @@ const generateExcel = () => {
     Quantity: plan.Quantity,
     Balance: plan.Balance,
     StartDate: plan.StartDate,
+    "ATC NUMBER": plan.ATCNumber,
     EndDate: plan.EndDate,
     "Commodity": plan.commodity?.Name,
     "From": plan.warehouse?.Name,
@@ -277,42 +562,6 @@ const generateExcel = () => {
 
   // Export the workbook
   XLSX.writeFile(wb, 'LoadingPlans.xlsx');
-};
-
-
-const createReport = async (model) => {
-  isLoading.value = true;
-
-  // Format the StartDate and EndDate using moment.js
-  model.userId = user.value.id
-  model.Balance = model.Quantity
-  if (model.StartDate) {
-    model.StartDate = moment(model.StartDate).toISOString();
-  }
-  if (model.EndDate) {
-    model.EndDate = moment(model.EndDate).toISOString();
-  }
-
-  loadingPlanStore
-    .create(model)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Created a new loading plan successfully",
-        icon: "success",
-        confirmButtonText: "Ok"
-      });
-
-      $router.push('/planner/loadingplans'); // Use the router's push method to navigate
-
-    })
-    .catch(error => {
-      // Handling error
-    })
-    .finally(() => {
-      isLoading.value = false;
-      getLoadingplans();
-    });
 };
 
 
@@ -350,10 +599,11 @@ const deleteItem = async (id) => {
         reason: result.value
       };
 
+      // Check online status
       await loadingPlanStore.removeWithComments(deletePayload);
 
       // Show success message
-      await Swal.fire("Deleted!", "Your loading plan has been deleted.", "success");
+      await Swal.fire("Deleted!", "Loading plan has been deleted.", "success");
 
       // Refresh the dispatches
       await getLoadingplans();
@@ -370,6 +620,7 @@ const deleteItem = async (id) => {
     isLoading.value = false;
   }
 };
+
 
 
 </script>

@@ -41,7 +41,7 @@
               Lean Season Response Dashboard
             </button>
 
-        
+
           </div>
         </div>
 
@@ -152,7 +152,7 @@
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
 
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
 
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
@@ -164,7 +164,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -175,7 +175,7 @@
                       <div class="flex flex-col">
                         <label for="disaster" class="text-sm font-medium text-gray-700">Disaster/Emergency</label>
                         <select id="disaster" v-model="selectedDisaster"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Disasters</option>
                           <option v-for="disaster in disasters" :key="disaster.name" :value="disaster.name">
                             {{ disaster.type }} | {{ disaster.date_of_occurrence }}
@@ -186,17 +186,17 @@
                       <div class="flex flex-col">
                         <label for="dateFrom" class="text-sm font-medium text-gray-700">Date of Emergency From</label>
                         <input type="date" id="dateFrom" v-model="selectedDateFrom"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       </div>
 
                       <div class="flex flex-col">
                         <label for="dateTo" class="text-sm font-medium text-gray-700">Date of Emergency To</label>
                         <input type="date" id="dateTo" v-model="selectedDateTo"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -207,7 +207,7 @@
                       :commodityDistributionData="filteredCommodityDistributionData" />
 
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg mt-4">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg mt-4">
                       No Data
                     </div>
                   </div>
@@ -216,7 +216,7 @@
                     <distribution-by-district v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -224,7 +224,7 @@
                     <distribution-percentage v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -302,7 +302,7 @@
                         </div>
 
                         <!-- Total Loading Plans Created -->
-                        <router-link to="/commissioner/loadingplans">
+                        <router-link to="#">
                           <div
                             class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer">
                             <div class="flex items-center space-x-2">
@@ -311,12 +311,12 @@
                             </div>
                             <div class="mt-2">
                               <div class="text-2xl font-bold text-[#0b8ad8]">{{ loadingplansCount }}</div>
-                              <div class="text-sm text-gray-600 mt-1">
+                             <!--  <div class="text-sm text-gray-600 mt-1">
                                 <span class="font-bold text-[#ff6f61]" v-if="loadingplansCountPending > 0">
                                   {{ loadingplansCountPending }} <span
                                     class="font-semibold text-sm text-[#0b8ad8]">Pending Approval</span>
                                 </span>
-                              </div>
+                              </div> -->
                             </div>
                           </div>
                         </router-link>
@@ -325,7 +325,7 @@
                         <div class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4">
                           <div class="flex items-center space-x-2">
                             <ChartBarIcon class="w-5 h-5 text-[#096eb4]" />
-                            <div class="text-[#096eb4] text-sm">% of Dispatches Received</div>
+                            <div class="text-[#096eb4] text-xs">% of Dispatches Received</div>
                           </div>
                           <div class="text-lg mt-3 font-bold text-[#0b8ad8]">{{ receivedPercentageFormated }}</div>
                         </div>
@@ -339,7 +339,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
                         <select id="district" v-model="selectedActivity"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Activity</option>
                           <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
@@ -350,7 +350,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
@@ -361,7 +361,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -370,7 +370,7 @@
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -381,7 +381,7 @@
                     <dispatch-summary-leans-two v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -389,7 +389,7 @@
                     <stock-summary-lean v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :leanStockSummary="filteredLeanCommodityDispatchData2" :screenshotMode="screenshotMode" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -397,7 +397,7 @@
                     <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -411,13 +411,13 @@
 
 
 
-              
+
                   <div class="col-span-3 flex flex-col justify-center items-center mt-2">
                     <div class="flex flex-wrap items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
                         <select id="district" v-model="selectedActivity"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Activity</option>
                           <option v-for="activity in activitiesLsr" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
@@ -428,7 +428,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
@@ -439,7 +439,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -448,7 +448,7 @@
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -459,7 +459,7 @@
                     <dispatch-summary-leans-two-two v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData22" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -467,7 +467,7 @@
                     <stock-summary-lean-two v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :leanStockSummary="filteredLeanCommodityDispatchData22" :screenshotMode="screenshotMode" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -475,7 +475,7 @@
                     <dispatch-summary-leans-three v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData22" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -527,13 +527,26 @@
 
                     </button>
 
+                    <button @click="currentTab = 'Allo'"
+                      :class="{ 'tab-button text-white': currentTab === 'Allo', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'Allo' }"
+                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
 
+                      Allocation Trends
+
+                    </button>
+
+
+                  </div>
+                  <div v-show="currentTab === 'Allo'">
+
+                    <allocation-trends :allocationData="filteredLeanCommodityDispatchData2"
+                      :screenshotMode="screenshotMode" />
                   </div>
 
                   <div v-show="currentTab === 'all'">
                     <span class="mr-4 font-bold mb-2">Filter By:</span>
                     <select v-model="selectedFilter" @change="fetchFilteredDataAll"
-                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option value="all">All</option>
                       <option value="today">Today</option>
                       <option value="yesterday">Yesterday</option>
@@ -550,7 +563,7 @@
                   <div v-show="currentTab === 'WFP'">
                     <span class="mr-4 font-bold mb-2">Filter By:</span>
                     <select v-model="selectedFilter" @change="fetchFilteredData"
-                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option value="all">All</option>
                       <option value="today">Today</option>
                       <option value="yesterday">Yesterday</option>
@@ -563,9 +576,9 @@
 
 
                   <div v-show="currentTab === 'DoDMA'">
-                     <span class="mr-4 font-bold mb-2">Filter By:</span>
+                    <span class="mr-4 font-bold mb-2">Filter By:</span>
                     <select v-model="selectedFilter" @change="fetchFilteredDataDodma"
-                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                      class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       <option value="all">All</option>
                       <option value="today">Today</option>
                       <option value="yesterday">Yesterday</option>
@@ -601,6 +614,7 @@
                     <div v-for="stat in stats2" :key="stat.label"
                       class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 flex flex-col justify-between transition-transform duration-300 transform hover:scale-105">
                       <div>
+
                         <div class="flex items-center justify-between">
                           <span class="text-3xl font-semibold text-gray-800">{{ stat.value }}</span>
                           <component v-if="stat.label === 'Total Stocks Planned (Lean Season Response)'"
@@ -623,9 +637,16 @@
                             :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
+                      <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
+                      <router-link v-if="stat.link" to="/manager/stock-prepositioning"
+                        class="text-blue-500 hover:underline">View
+                        Details</router-link>
+
+
                     </div>
                   </div>
                 </div>
+
 
                 <!-- Damaged Stock Stats - only show when data is loaded -->
                 <div v-if="!isLoading"
@@ -646,15 +667,14 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/manager/Lean-season-losses"
-                              class="text-blue-500 hover:underline">View
+                            <router-link to="/manager/Lean-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -670,14 +690,15 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/manager/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/manager/Emergency-season-losses"
+                              class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
-                        <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
+                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
                           + '%' }}
                           <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -724,10 +745,14 @@ import dispatchSummaryLeansTwoTwo from '../../../components/pages/charts/dispatc
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 import stockSummaryLeanTwo from '../../../components/pages/charts/stocksummarylean2.vue'; // Adjust path as needed
 
+import allocationTrends from '../../../components/pages/charts/allocation_trends.vue'; // Adjust path as needed
+
+
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
+import DonationsTable from './DonationsTable.vue';
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import html2canvas from 'html2canvas';
@@ -754,7 +779,6 @@ import CommodityDistributionTableLeanDoDMA from './CommodityDistributionTableLea
 const commodityDispatchDataWFP = ref([])
 const commodityDispatchDataDoDMA = ref([])
 
-const selectedFilter = ref("all");
 const currentTab = ref('all');
 // Active tab state
 const activeTab = ref('emergency'); // Default tab is 'emergency'
@@ -804,7 +828,8 @@ import {
   ExclamationIcon,
   ArrowUpIcon,
   DocumentTextIcon, InboxIcon, ClipboardListIcon,
-  ArrowDownIcon
+  ArrowDownIcon,
+  ArchiveIcon
 } from "@heroicons/vue/outline";
 
 const screenshotMode = ref(false);
@@ -868,37 +893,6 @@ const takeScreenshot = () => {
   }, 300);
 };
 
-const columns = ref([
-  {
-    label: "#",
-    field: (row) => row.originalIndex + 1,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Destination District",
-    field: row => row.instruction?.district?.Name,
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-  {
-    label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize"
-  },
-]);
-
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 const requisitionsStore = userequisitionstore();
@@ -943,6 +937,7 @@ const loadingPlanSummary = reactive([]);
 
 const leanStockSummary = ref([]);
 
+const selectedFilter = ref("all");
 let userCount = ref(0);
 const newRequisitionsCount = ref(0);
 const receiptcount = ref(0)
@@ -951,51 +946,57 @@ const loadingplansCount = ref(0)
 //MOUNTEDgetCatalogue
 onMounted(async () => {
 
-isLoading.value = true;
-try {
-  await fetchFilteredData()
-  await fetchFilteredDataAll()
-  await fetchFilteredDataDodma()
-  const data = await requisitionStore.getCommodityDistributionSummary();
-  const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
+  isLoading.value = true;
+  try {
+    await fetchFilteredData()
+    await fetchFilteredDataAll()
+    await fetchFilteredDataDodma()
+    const data = await requisitionStore.getCommodityDistributionSummary();
+    const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
 
 
-  const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
-  const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
-  commodityDispatchData.value.length = 0
-  commodityEmergencyDispatchData.value.length = 0
-  leanStockSummary.value = [...leanstocks]
-  commodityDispatchData.value.push({ ...dispatchdata })
-  const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
+    const dispatchEmergencydata = await receivedcommoditiesstore.getdispatchDamageSummary();
+    const leanstocks = await loadingPlanStore.getloadingplansSummaryByCommodity();
+    commodityDispatchData.value.length = 0
+    commodityEmergencyDispatchData.value.length = 0
+    leanStockSummary.value = [...leanstocks]
+    commodityDispatchData.value.push({ ...dispatchdata })
+    const dispatchdata22 = await dispatchesStore.getdispatchSummary2();
 
-  commodityDispatchData22.value.push({ ...dispatchdata22 })
-  commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
-  commodityDistributionData.value = [...data];
-} catch (error) {
-  console.error("Failed to load commodity data:", error);
-} finally {
-  isLoading.value = false;
-}
-getActivities();
-getCommodities();
-getDisasters();
-getDistricts();
-getDonations();
-getLoadingPlans();
-getdispatchSummary();
-getUsers();
-getDispatches();
-getReceipts();
-getDispatchesCount();
-getLoadingPlansPending();
-getloadingplansSummary();
-
-getloadingplansSummaryByCommodity();
-getInstructions();
-getRequisitions();
+    commodityDispatchData22.value.push({ ...dispatchdata22 })
+    commodityEmergencyDispatchData.value.push({ ...dispatchEmergencydata })
+    commodityDistributionData.value = [...data];
+  } catch (error) {
+    console.error("Failed to load commodity data:", error);
+  } finally {
+    isLoading.value = false;
+  }
+  getActivities();
+  getCommodities();
+  getDisasters();
+  getDistricts();
+  getDonations();
+  getLoadingPlans();
+  getdispatchSummary();
+  getUsers();
+  getDispatches();
+  getReceipts();
+  getDispatchesCount();
+  getLoadingPlansPending();
+  getloadingplansSummary();
+  getloadingplansSummaryEMR()
+  getloadingplansSummaryByCommodity();
+  getInstructions();
+  getRequisitions();
 });
 
 
+
+function applyFilter() {
+  console.log(`Filter applied: ${selectedFilter.value}`);
+  // Add logic to filter data based on selectedFilter
+  // Example: Filter by date range for each filter option
+}
 
 const fetchFilteredData = async () => {
   try {
@@ -1029,6 +1030,7 @@ const fetchFilteredDataDodma = async () => {
     console.error("Error fetching filtered dispatch data:", error);
   }
 };
+
 
 
 const instructions = reactive([])
@@ -1112,15 +1114,13 @@ const getActivities = async () => {
 
 
 const getInstructions = async () => {
-  instructionsStore
-    .get()
+  loadingPlanStore
+    .getloadingplansSummaryPrepo()
     .then((result) => {
-      instructions.length = 0;
-      instructions.push(...result.filter(item => item.IsApproved == false));
-      newInstructionsCount.value = instructions.length;
+      newInstructionsCount.value = result.totalQuantity.toLocaleString() + " MT";
     })
     .catch(error => {
-      console.error("Failed to load instructions:", error);
+      console.error("Failed to load plans:", error);
     });
 };
 
@@ -1201,14 +1201,19 @@ const getLoadingPlans = async () => {
 
 const pendingplans = ref(0)
 const totalBalance = ref(0)
+
+const totalBalanceEMR = ref(0)
 const totalStockPlanned = ref("")
+
+const totalRequiredTonnage = ref("")
 const dispatchPercentageFormated = ref("")
+const dispatchPercentageFormatedEMR = ref("")
 const totalDispatched = ref(0)
 const totalReceived = ref("")
 const receivedPercentageFormated = ref("")
 const receivedPercentage = ref("")
 const dispatchPercentage = ref("")
-
+const dispatchPercentageEMR = ref("")
 const getLoadingPlansPending = async () => {
   loadingPlanStore
     .getloadingplansPending()
@@ -1227,6 +1232,8 @@ const getdispatchSummary = async () => {
     })
 }
 
+
+
 const getloadingplansSummary = async () => {
   loadingPlanStore
     .getloadingplansSummary()
@@ -1235,6 +1242,17 @@ const getloadingplansSummary = async () => {
       totalBalance.value = result.totalBalance
       dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
       dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
+    })
+}
+
+const getloadingplansSummaryEMR = async () => {
+  loadingPlanStore
+    .getloadingplansSummaryEMR()
+    .then(result => {
+      totalRequiredTonnage.value = result.totalStockPlanned.toLocaleString() + " MT"
+      totalBalanceEMR.value = result.totalBalance
+      dispatchPercentageFormatedEMR.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
+      dispatchPercentageEMR.value = result.dispatchPercentage.toFixed(2)
     })
 }
 
@@ -1257,16 +1275,6 @@ const getUsers = async () => {
 
 
 
-const formatDate = (date) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date(date).toLocaleDateString(undefined, options);
-};
-
-const totalRequiredTonnage = computed(() => {
-  const total = commodityDistributionData.value.reduce((sum, item) => sum + item.required, 0);
-  return `${total.toLocaleString()} MT`;
-});
-
 const stats2 = ref([
   {
     label: 'Total Stocks Planned (Lean Season Response)',
@@ -1281,51 +1289,38 @@ const stats2 = ref([
     isProgressPositive: dispatchPercentage >= 50,
     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
   },
-  {
-    label: 'Total Required Tonnage (Emergency Response)',
-    value: totalRequiredTonnage,
-    icon: CheckCircleIcon,
-    iconColor: 'green-500',
-    percentageText: '',
-    textColor: 'green-500',
-    showProgress: false,
-    moreInfo: true,
 
-    extraInfo: true,
-  },
+
   {
-    label: 'Instructions Pending Approval (Emergency Response)',
+    label: 'Total Stocks Planned (Emergency Assistance)',
+    value: totalRequiredTonnage,
+    icon: dispatchPercentageEMR < 50 ? CheckCircleIcon : ExclamationCircleIcon,
+    iconColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    percentageText: dispatchPercentageFormatedEMR,
+    textColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    showProgress: true,
+    moreInfo: true,
+    progress: dispatchPercentageEMR,
+    isProgressPositive: dispatchPercentageEMR >= 50,
+    progressColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+  },
+
+ 
+  {
+    label: 'Total Prepositioned Stock',
     value: newInstructionsCount,
-    icon: DocumentIcon,
+    icon: ArchiveIcon,
     iconColor: 'blue-400',
     percentageText: '',
     textColor: 'blue-600',
     showProgress: false,
     moreInfo: true,
+    
+    link: true,
   },
 
 ]);
 
-const actions = [
-  {
-    icon: IdentificationIcon,
-    name: "Catalogue",
-    href: "/admin/catalogue",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all service catalogue",
-  },
-  {
-    icon: OfficeBuildingIcon,
-    name: "Enquiries",
-    href: "/admin/bookings",
-    iconForeground: "text-gray-500",
-    iconBackground: "bg-gray-50",
-    details: "Manage all Enquiries made to services",
-  },
-];
-
-const dispatchstatus = ref(0)
 
 const colors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff'];
 
@@ -1400,29 +1395,7 @@ const filteredCommodityDistributionData = computed(() => {
   });
 });
 
-// Filtered data for Lean Season Response Dashboard
-const filteredLeanCommodityDispatchData = computed(() => {
-  return commodityDispatchData.value.filter(item => {
 
-
-    const matchActivity = !selectedActivity.value || item.summary.some(summaryItem => summaryItem.activity === selectedActivity.value);
-    const matchDistrict = !selectedDistrict.value || item.summary.some(summaryItem => summaryItem.district === selectedDistrict.value);
-    const matchCommodity = !selectedCommodity.value || item.summary.some(summaryItem => summaryItem.commodity === selectedCommodity.value);
-    return matchDistrict && matchCommodity && matchActivity;
-  });
-});
-
-
-
-const flattenedData = computed(() => {
-  if (!commodityDispatchData2.value || commodityDispatchData2.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchData2.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
 
 
 const flattenedData2 = computed(() => {
@@ -1436,40 +1409,7 @@ const flattenedData2 = computed(() => {
 });
 
 
-const flattenedDataWFP = computed(() => {
-  if (!commodityDispatchDataWFP.value || commodityDispatchDataWFP.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
 
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataWFP.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
-
-
-const flattenedDataDodma = computed(() => {
-  if (!commodityDispatchDataDoDMA.value || commodityDispatchDataDoDMA.value.length === 0) {
-    return []; // Return an empty array if data is not available
-  }
-
-  // Assume props.data is an array with a single object containing numerically indexed keys
-  const [dataObj] = commodityDispatchDataDoDMA.value; // Extract the first object (your data)
-  return Object.values(dataObj); // Convert the object into an array of values
-});
-
-
-
-const filteredLeanCommodityDispatchData22 = computed(() => {
-  return flattenedData2.value.filter(item => {
-
-    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
-    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
-    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
-
-
-    return matchActivity && matchCommodity && matchDistrict;
-  });
-});
 
 const filteredLeanCommodityDispatchData2 = computed(() => {
   return commodityDispatchData2.value.filter(item => {
@@ -1484,13 +1424,29 @@ const filteredLeanCommodityDispatchData2 = computed(() => {
 });
 
 
-const filteredLeanCommodityDispatchDataWFP = computed(() => {
-  return commodityDispatchDataWFP.value.filter(item => {
+const filteredLeanCommodityDispatchData22 = computed(() => {
+  return flattenedData2.value.filter(item => {
 
     const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
     const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
     const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
+
+    return matchActivity && matchCommodity && matchDistrict;
+  });
+});
+
+
+const filteredLeanCommodityDispatchDataWFP = computed(() => {
+
+
+  return commodityDispatchDataWFP.value.filter(item => {
+
+
+
+    const matchActivity = !selectedActivity.value || item.activity === selectedActivity.value;
+    const matchDistrict = !selectedDistrict.value || item.district === selectedDistrict.value;
+    const matchCommodity = !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
     return matchActivity && matchCommodity && matchDistrict;
   });
@@ -1509,9 +1465,16 @@ const filteredLeanCommodityDispatchDataDodma = computed(() => {
   });
 });
 
+const filteredLeanStockSummary = computed(() => {
+  return leanStockSummary.value.filter(item => {
+    const matchCommodity = !selectedCommodity.value || item.commodityName == selectedCommodity.value;
+    const matchDistrict = !selectedDistrict.value || item.commodityName == selectedDistrict.value;
+    const matchActivity = !selectedActivity.value || item.commodityName == selectedActivity.value;
 
+    return matchCommodity && matchActivity && matchDistrict;
+  });
+});
 </script>
-
 <style scoped>
 .tab-button2 {
   background-color: white;

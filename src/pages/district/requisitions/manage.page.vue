@@ -79,7 +79,7 @@
                   <PencilIcon class="h-5 w-5 mr-1" />
                   
 
-                  <router-link :to="{ path: '/field/requisition-management/requisitions/manage/' + props.row.id }">
+                  <router-link :to="{ path: '/receipient/requisition-management/requisitions/manage/' + props.row.id }">
                     <a href="#" class="text-blue-400 text-sm hover:text-green-900">Manage </a>
                   </router-link>
 
@@ -148,7 +148,7 @@ const toggleDropdown = (rowId) => {
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/field/dashboard", current: false },
+  { name: "Home", href: "/receipient/dashboard", current: false },
   { name: "Requisition Management", href: "#", current: true }
 ];
 const requisitionsStore = userequisitionstore();
@@ -157,7 +157,7 @@ const columns = ref([
 
   {
     label: "#",
-    field: (row) => row.originalIndex + 1,
+    receipient: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -165,7 +165,7 @@ const columns = ref([
 
   {
     label: "Details",
-    field: (row) => {
+    receipient: (row) => {
       // Combine the disaster and activity names with proper formatting
       const disasterFormatted = `<span style="color: #096eb4;">Disaster: ${row.disaster.name}</span>`;
       const activityFormatted = `<span style="color: green;">Activity: ${row.activity.Name}</span>`;
@@ -180,7 +180,7 @@ const columns = ref([
 
   {
     label: "Affected Areas",
-    field: row => row.AffectedAreas,
+    receipient: row => row.AffectedAreas,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -189,14 +189,14 @@ const columns = ref([
 
   {
     label: "Affected HH",
-    field: row => row.AffectedHouseholds,
+    receipient: row => row.AffectedHouseholds,
     sortable: true,
     firstSortType: "asc"
   },
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    receipient: row => row.district.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
@@ -205,7 +205,7 @@ const columns = ref([
 
   {
     label: "Options",
-    field: row => row,
+    receipient: row => row,
     sortable: false
   }
 ]);

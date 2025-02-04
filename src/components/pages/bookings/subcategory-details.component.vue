@@ -23,7 +23,7 @@
             </div>
             <div class="mt-4">
               <input v-model="newItem" @keyup.enter="addItem"
-                class="rounded border-gray-300 text-gray-700 focus:ring-blue-400 py-2 px-4"
+                class="rounded border-gray-400 text-gray-700 focus:ring-blue-400 py-2 px-4"
                 placeholder="Add a new subcategory" @change="updatesubcategoryItem(item)" />
               <button @click="addItem" class="ml-2 rounded bg-blue-500 text-white px-4 py-2">Add</button>
             </div>

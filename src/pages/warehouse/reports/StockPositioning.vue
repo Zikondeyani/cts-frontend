@@ -12,7 +12,7 @@
                 <div class="flex flex-col">
                     <label for="district" class="text-sm font-medium text-gray-700 mb-2">District</label>
                     <select id="district" v-model="selectedDistrict"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Districts</option>
                         <option v-for="district in districts" :key="district.id" :value="district.Name">
                             {{ district.Name }}
@@ -23,7 +23,7 @@
               <!--   <div class="flex flex-col">
                     <label for="warehouse" class="text-sm font-medium text-gray-700 mb-2">Warehouse</label>
                     <select id="warehouse" v-model="selectedWarehouse"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Warehouses</option>
                         <option v-for="warehouse in warehouses" :key="warehouse.id" :value="warehouse.Name">
                             {{ warehouse.Name }}
@@ -34,7 +34,7 @@
                 <div class="flex flex-col w-40">
                     <label for="commodity" class="text-sm font-medium text-gray-700 mb-2">Commodity</label>
                     <select id="commodity" v-model="selectedCommodity"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Commodities</option>
                         <option v-for="commodity in commodities" :key="commodity.id" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -45,7 +45,7 @@
                 <div class="flex flex-col">
                     <label for="commodityType" class="text-sm font-medium text-gray-700 mb-2">Commodity Type</label>
                     <select id="commodityType" v-model="selectedCommodityType"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All Commodity Types</option>
                         <option v-for="commodity in commodityTypes" :key="commodity.id" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -56,7 +56,7 @@
                 <div class="flex flex-col">
                     <label for="expiryDate" class="text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
                     <select id="expiryDate" v-model="selectedExpiryDateRange"
-                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option value="">All</option>
                         <option value="today">Today</option>
                         <option value="thisWeek">This Week</option>
@@ -67,14 +67,14 @@
 
                 <div class="flex items-end mt-4">
                     <button @click="resetFilters"
-                        class="bg-gray-200 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                     </button>
 
                     <!-- Export Dropdown Button on the right -->
                     <div class="relative inline-block text-left mx-4">
                         <button @click.prevent="exportToExcel"
-                            class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-green-500 text-white text-md font-medium hover:bg-green-600 focus:outline-none"
+                            class="inline-flex justify-center rounded-md border p-3 border-none shadow-sm px-2 py-1 bg-gray-500 text-white text-md font-medium hover:bg-gray-600 focus:outline-none"
                             id="menu-button" aria-expanded="true" aria-haspopup="true">
                             Export
                         </button>
@@ -137,19 +137,19 @@
             <!-- Pagination Controls -->
             <div class="flex justify-center mt-4" :class="{ 'hidden': screenshotMode }">
                 <button @click="prevPage" :disabled="currentPage <= 1"
-                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                     <ChevronLeftIcon class="w-5 h-5 mr-2" />
                     Prev
                 </button>
                 <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
                 <button @click="nextPage" :disabled="currentPage >= totalPages"
-                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+                    class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
                     <ChevronRightIcon class="w-5 h-5 mr-2" />
                     Next
                 </button>
 
                 <span class="mr-2 font-medium mt-2">Rows per page:</span>
-                <select v-model="pageSize" class="border-gray-300 rounded-md">
+                <select v-model="pageSize" class="border-gray-400 rounded-md">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
@@ -304,7 +304,7 @@ const exportToExcel = () => {
     background-color: #e5e7eb;
 }
 
-.bg-gray-300 {
+.bg-gray-400 {
     background-color: #d1d5db;
 }
 

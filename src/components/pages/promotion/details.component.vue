@@ -32,7 +32,7 @@
                       id="name"
                       v-model="name"
                       autocomplete="name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                     />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ nameError }}
@@ -52,7 +52,7 @@
                         id="price"
                         v-model="price"
                         autocomplete="price"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       />
                     </div>
  -->
@@ -70,7 +70,7 @@
     id="location_details"
     v-model="short_desc"
     autocomplete="location_details"
-    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
   />
 </div>
                     
@@ -87,7 +87,7 @@
                         name="description"
                         v-model="description"
                         rows="3"
-                        class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                        class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-400 rounded-md"
                         placeholder=""
                       />
                     </div>
@@ -113,7 +113,7 @@
                       id="publication-date"
                       v-model="publicationDate"
                       autocomplete="publication-date"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                     />
                   </div> -->
 
@@ -124,7 +124,7 @@
                       v-model="status"
                       type="checkbox"
                       style="color: gray"
-                      class="h-4 w-4 focus:ring-gray-500 border-gray-300 rounded"
+                      class="h-4 w-4 focus:ring-gray-500 border-gray-400 rounded"
                     />
                     <label for="status" class="inline text-sm text-gray-900">
                       Available
@@ -139,7 +139,7 @@
                       v-model="is_event"
                       type="checkbox"
                       style="color: gray"
-                      class="h-4 w-4 focus:ring-gray-500 border-gray-300 rounded"
+                      class="h-4 w-4 focus:ring-gray-500 border-gray-400 rounded"
                     />
                     <label for="status" class="inline text-sm text-gray-900">
                       Event

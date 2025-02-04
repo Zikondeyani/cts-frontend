@@ -40,7 +40,7 @@
                   <label for="user-role" class="block text-sm font-medium text-gray-700">
                     Select User Type</label>
                   <select id="role" name="role" v-model="roleId" autocomplete="role-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                     <option v-for="role in roles" :key="role.id" :value="role.id" class="uppercase">
                       {{ role.name }}
                     </option>
@@ -58,7 +58,7 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="first-name" class="block text-sm font-medium text-gray-700">First name</label>
                       <input type="text" name="first-name" id="first-name" v-model="firstname" autocomplete="given-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ firstNameError }}
                       </p>
@@ -67,7 +67,7 @@
                     <div class="col-span-6 sm:col-span-3">
                       <label for="last-name" class="block text-sm font-medium text-gray-700">Last name</label>
                       <input type="text" name="last-name" id="last-name" v-model="lastname" autocomplete="family-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ lastNameError }}
                       </p>
@@ -76,7 +76,7 @@
                     <div class="col-span-6 sm:col-span-5">
                       <label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
                       <input type="text" name="email-address" id="email-address" v-model="email" autocomplete="email"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ emailError }}
                       </p>
@@ -85,7 +85,7 @@
                       <label for="phone-number" class="block text-sm font-medium text-gray-700">Phone</label>
                       <input type="text" v-model="phone" name="phone-number" id="phone-number" autocomplete="off"
                         placeholder="e.g. 0999123456"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ phoneError }}
                       </p>
@@ -95,7 +95,7 @@
                       v-if="roleId == 'ADMIN8' || roleId == 'ADMIN6' || roleId == 'ADMIN7' || roleId == 'ADMIN5'">
                       <label for="user-district" class="block text-sm font-medium text-gray-700">Select District</label>
                       <select id="district" name="district" v-model="district" autocomplete="district-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
                         <option v-for="district in districts" :key="district.Name" :value="district.Name"
                           class="uppercase">
                           {{ district.Name }}
@@ -116,7 +116,7 @@
                       <label for="privileges" class="block text-sm font-medium text-gray-700">
                         User Privileges
                       </label>
-                      <div class="flex flex-wrap items-center border-gray-300 rounded-md border p-2 mt-1">
+                      <div class="flex flex-wrap items-center border-gray-400 rounded-md border p-2 mt-1">
                         <span v-for="(privilege, index) in privileges" :key="index"
                           class="mr-2 mb-2 px-2 py-1 bg-blue-200 text-blue-800 rounded-lg text-sm flex items-center">
                           {{ privilege }}
@@ -125,7 +125,7 @@
                       </div>
                       <div class="mt-2">
                         <select v-model="selectedPrivilege" @change="addPrivilege"
-                          class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-blue-300 sm:text-sm">
+                          class="mt-1 block w-full py-2 px-3 border border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-blue-300 sm:text-sm">
                           <option value="" disabled selected>Select user privileges</option>
                           <option v-for="priv in availablePrivileges" :key="priv" :value="priv">{{ priv }}</option>
                         </select>
@@ -144,7 +144,7 @@
                       </label>
 
                       <select v-model="isDelegated"
-                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                         <option value="false">No</option>
                         <option value="true">Yes</option>
                       </select>
@@ -160,10 +160,10 @@
                         Password</label>
                       <input id="password" name="password" :type="isPwd ? 'text' : 'password'" v-model="password"
                         autocomplete="off"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       <div class="flex items-center w-full">
                         <input id="hide-password" name="show-password" v-model="isPwd" type="checkbox"
-                          class="ml-2 h-4 w-4 border-gray-300 text-blue-400 focus:ring-blue-400 rounded" />
+                          class="ml-2 h-4 w-4 border-gray-400 text-blue-400 focus:ring-blue-400 rounded" />
                         <label for="show-password" class="block text-sm text-gray-900 p-2">Show password</label>
                       </div>
                       <p class="text-red-500 text-xs italic pt-1">

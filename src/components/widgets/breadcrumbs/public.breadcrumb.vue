@@ -31,7 +31,7 @@
             <div class="flex items-center">
               <svg
                 v-show="breadcrumbIndx > 0"
-                class="flex-shrink-0 h-5 w-5 text-gray-300 mr-4"
+                class="flex-shrink-0 h-5 w-5 text-gray-400 mr-4"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 20 20"

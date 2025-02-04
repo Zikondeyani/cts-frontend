@@ -119,7 +119,7 @@
                             name="locations"
                             v-model="locationId"
                             autocomplete="locations-name"
-                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            class="form-multiselect mt-1 focus:ring-gray-500 focus:border-gray-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                           >
                             <option
                               v-for="location in locations"

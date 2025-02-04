@@ -5,7 +5,7 @@
         <!-- District Selector -->
         <span class="mr-3 font-medium">District:</span>
         <select v-model="selectedDistrict"
-          class="mb-2 mr-2 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+          class="mb-2 mr-2 focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
           <option value="">All Districts</option>
           <option v-for="district in districts" :key="district.id" :value="district.Name">
             {{ district.Name }}
@@ -60,18 +60,18 @@
       <!-- Pagination Controls -->
       <div class="flex justify-center mt-4" :class="{'hidden': screenshotMode}">
         <button @click="prevPage" :disabled="currentPage <= 1"
-          class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+          class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
           <ChevronLeftIcon class="w-5 h-5 mr-2" />
           Prev
         </button>
         <span class="px-4 py-2 font-body font-medium">Page {{ currentPage }} of {{ totalPages }}</span>
         <button @click="nextPage" :disabled="currentPage >= totalPages"
-          class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-300 rounded hover:bg-gray-100 disabled:opacity-50">
+          class="flex items-center px-4 py-2 mx-1 text-gray-600 bg-white border border-gray-400 rounded hover:bg-gray-100 disabled:opacity-50">
           <ChevronRightIcon class="w-5 h-5 mr-2" />
           Next
         </button>
         <span class="mr-2 font-medium mt-2">Rows per page:</span>
-        <select v-model="pageSize" class="border-gray-300 rounded-md">
+        <select v-model="pageSize" class="border-gray-400 rounded-md">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="20">20</option>
@@ -114,7 +114,7 @@
               </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              <button @click="showModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              <button @click="showModal = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-400 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                 Close
               </button>
             </div>

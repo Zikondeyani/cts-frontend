@@ -82,7 +82,7 @@
                         id="name"
                         v-model="name"
                         autocomplete="document-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       />
                       <p class="text-red-500 text-xs italic pt-1">
                         {{ nameError }}
@@ -98,7 +98,7 @@
                           Starting</label
                         >
                         <div
-                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md"
+                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md"
                         >
                           <input
                             type="date"
@@ -122,7 +122,7 @@
                           Ending</label
                         >
                         <div
-                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md"
+                          class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-400 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-400 sm:max-w-md"
                         >
                           <input
                             type="date"
@@ -149,7 +149,7 @@
                         id="short_desc"
                         v-model="short_desc"
                         autocomplete="short_desc"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                       />
                     </div>
 
@@ -166,7 +166,7 @@
                           name="description"
                           v-model="description"
                           rows="3"
-                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-300 rounded-md"
+                          class="shadow-sm focus:ring-gray-500 focus:border-blue-300 block w-full sm:text-sm border border-gray-400 rounded-md"
                           placeholder=""
                         />
                       </div>

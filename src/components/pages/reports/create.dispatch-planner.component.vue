@@ -19,23 +19,23 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label for="DeliveryNote" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Delivery Note</label>
-                        <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote" autocomplete="DeliveryNote" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="text" name="DeliveryNote" v-model="dispatch.DeliveryNote" id="DeliveryNote" autocomplete="DeliveryNote" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                       <div>
                         <label for="FinalDestinationPoint" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Final Destination Point</label>
-                        <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint" id="FinalDestinationPoint" autocomplete="FinalDestinationPoint" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="text" name="FinalDestinationPoint" v-model="dispatch.FinalDestinationPoint" id="FinalDestinationPoint" autocomplete="FinalDestinationPoint" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                       <div>
                         <label for="NoBags" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Number of Bags</label>
-                        <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="dispatch.NoBags" id="NoBags" autocomplete="NoBags" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="number" name="NoBags" @keypress="validateNumberInput" v-model="dispatch.NoBags" id="NoBags" autocomplete="NoBags" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                       <div>
                         <label for="Quantity" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Tonnage</label>
-                        <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity" readonly class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md bg-gray-100" />
+                        <input type="number" name="Quantity" :value="computedTonnage" id="Quantity" autocomplete="Quantity" readonly class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md bg-gray-100" />
                       </div>
                       <div>
                         <label for="Date" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Date</label>
-                        <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="date" name="Date" v-model="dispatch.Date" id="Date" autocomplete="Date" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                     </div>
 
@@ -46,15 +46,15 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label for="DriverName" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Driver Name</label>
-                        <input type="text" name="DriverName" v-model="dispatch.DriverName" id="DriverName" autocomplete="DriverName" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="text" name="DriverName" v-model="dispatch.DriverName" id="DriverName" autocomplete="DriverName" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                       <div>
                         <label for="DriverLicense" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Driver License</label>
-                        <input type="text" name="DriverLicense" v-model="dispatch.DriverLicense" id="DriverLicense" autocomplete="DriverLicense" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="text" name="DriverLicense" v-model="dispatch.DriverLicense" id="DriverLicense" autocomplete="DriverLicense" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                       <div>
                         <label for="TruckNumber" class="block text-sm font-bold text-gray-700 mb-2 mt-2">Truck Number</label>
-                        <input type="text" name="TruckNumber" v-model="dispatch.TruckNumber" id="TruckNumber" autocomplete="TruckNumber" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                        <input type="text" name="TruckNumber" v-model="dispatch.TruckNumber" id="TruckNumber" autocomplete="TruckNumber" class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                       </div>
                     </div>
 

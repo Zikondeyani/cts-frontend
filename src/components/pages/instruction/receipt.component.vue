@@ -68,7 +68,7 @@
                   <div class="flex items-center space-x-2 mb-4 mt-2">
                     <p class="text-xs text-italic text-red-500 mt-3">*</p> <input type="text" v-model="pdn"
                       placeholder="Enter Physical Delivery Note"
-                      class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                      class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
 
                   </div>
 
@@ -102,7 +102,7 @@
                     <div class="flex items-center space-x-2">
                       <input type="text" :id="'destination-' + index" v-model="destinations[index].name"
                         placeholder="Enter Final Destination Point"
-                        class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                       <button type="button" @click="removeDestination(index)"
                         class="inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                         v-if="multipleDestinations">
@@ -132,7 +132,7 @@
                                 <div class="col-span-6 sm:col-span-3">
                                   <label class="text-sm font-medium text-gray-700">Select Remark</label>
                                   <select name="Remarks" v-model="remark.remark" id="Remarks"
-                                    class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    class="mt-2 block w-60 p-1 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     <option value="">Select Remark</option>
                                     <option value="received in good condition">Received in good condition</option>
                                     <option value="received but damaged">Received but damaged</option>
@@ -147,7 +147,7 @@
                                   <label for="quantity" class="text-sm font-medium text-gray-700"> Extend of damage
 
                                     <select name="Extent" v-model="remark.extentofdamage" id="Remarks"
-                                      class="mt-2 block w-60 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                      class="mt-2 block w-60 p-1 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                       <option value="">Select Remark</option>
                                       <option value="received in good condition">Bags wet</option>
                                       <option value="received but damaged">Bags need reconstitution</option>
@@ -159,7 +159,7 @@
                                     item.commodity.Container_type }})</label>
                                   <input type="number" v-model.number="remark.quantity" min="0"
                                     placeholder="Qty Received"
-                                    class="mt-2 block w-40 p-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                    class="mt-2 block w-40 p-1 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                 </div>
                                 <button @click="removeRemark(index, itemIndex, i)" type="button"
                                   class="ml-2 mt-6 inline-flex items-center p-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
@@ -167,7 +167,7 @@
                                 </button>
                                 <textarea v-if="remark.remark === 'other'" v-model="remark.Comments" id="CustomRemark"
                                   rows="3"
-                                  class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                  class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                                   placeholder="Enter your custom remark here"></textarea>
 
                               </div>
@@ -193,7 +193,7 @@
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
                   <div class="flex justify-end space-x-3">
                     <!--  <button type="button" @click="saveProgress"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       <SaveIcon class="h-5 w-5 mr-1" />
                       Save Progress
                     </button> -->
@@ -204,7 +204,7 @@
                       Submit Receipt
                     </button>
                     <button type="button" @click="open = false"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-300 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       Cancel
                     </button>
                   </div>
@@ -225,10 +225,12 @@ import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from "@headles
 import { useForm, useSubmitForm } from "vee-validate";
 import { CreateRequisitionSchema } from "../../../services/schema/requisition.schema";
 import { useSessionStore } from "../../../stores/session.store";
+import { usereceiptstore } from "../../../stores/receipt.store";
 
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 const isLoading = ref(false);
 const sessionStore = useSessionStore();
+const receiptStore = usereceiptstore();
 const user = ref(sessionStore.getUser);
 const Swal = inject('Swal');
 const props = defineProps({
@@ -267,6 +269,7 @@ const destinations = ref([{
 const removeDestination = (index) => {
   destinations.value.splice(index, 1);
 };
+
 
 const updateDestinations = () => {
   if (!multipleDestinations.value) {

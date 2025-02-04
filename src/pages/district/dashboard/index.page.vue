@@ -147,7 +147,7 @@
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
 
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
 
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
@@ -159,7 +159,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -170,7 +170,7 @@
                       <div class="flex flex-col">
                         <label for="disaster" class="text-sm font-medium text-gray-700">Disaster/Emergency</label>
                         <select id="disaster" v-model="selectedDisaster"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Disasters</option>
                           <option v-for="disaster in disasters" :key="disaster.name" :value="disaster.name">
                             {{ disaster.type }} | {{ disaster.date_of_occurrence }}
@@ -181,17 +181,17 @@
                       <div class="flex flex-col">
                         <label for="dateFrom" class="text-sm font-medium text-gray-700">Date of Emergency From</label>
                         <input type="date" id="dateFrom" v-model="selectedDateFrom"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       </div>
 
                       <div class="flex flex-col">
                         <label for="dateTo" class="text-sm font-medium text-gray-700">Date of Emergency To</label>
                         <input type="date" id="dateTo" v-model="selectedDateTo"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -202,7 +202,7 @@
                       :commodityDistributionData="filteredCommodityDistributionData" />
 
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg mt-4">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg mt-4">
                       No Data
                     </div>
                   </div>
@@ -211,7 +211,7 @@
                     <distribution-by-district v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -219,7 +219,7 @@
                     <distribution-percentage v-if="filteredCommodityDistributionData.length > 0"
                       :commodityDistributionData="filteredCommodityDistributionData" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -270,7 +270,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
                         <select id="district" v-model="selectedActivity"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Activity</option>
                           <option v-for="activity in activities" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
@@ -281,7 +281,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
@@ -292,7 +292,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -301,7 +301,7 @@
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -312,7 +312,7 @@
                     <dispatch-summary-leans-two v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -320,7 +320,7 @@
                     <stock-summary-lean v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :leanStockSummary="filteredLeanCommodityDispatchData2" :screenshotMode="screenshotMode" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -328,7 +328,7 @@
                     <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData2" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -348,7 +348,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">Activity</label>
                         <select id="district" v-model="selectedActivity"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Activity</option>
                           <option v-for="activity in activitiesLsr" :key="activity.Name" :value="activity.Name">
                             {{ activity.Name }}
@@ -359,7 +359,7 @@
                       <div class="flex flex-col">
                         <label for="district" class="text-sm font-medium text-gray-700">District</label>
                         <select id="district" v-model="selectedDistrict"
-                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Districts</option>
                           <option v-for="district in districts" :key="district.Name" :value="district.Name">
                             {{ district.Name }}
@@ -370,7 +370,7 @@
                       <div class="flex flex-col">
                         <label for="commodity" class="text-sm font-medium text-gray-700">Commodity</label>
                         <select id="commodity" v-model="selectedCommodity"
-                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          class="focus:ring-gray-500 w-40 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
                           <option value="">All Commodities</option>
                           <option v-for="commodity in commodities" :key="commodity.Name" :value="commodity.Name">
                             {{ commodity.Name }}
@@ -379,7 +379,7 @@
                       </div>
 
                       <button @click="resetFilters"
-                        class="bg-gray-200 mt-5 hover:bg-gray-300 text-black font-medium py-1 px-2 text-sm rounded">
+                        class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
                       </button>
                     </div>
@@ -390,7 +390,7 @@
                     <dispatch-summary-leans-two-two v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData22" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -398,7 +398,7 @@
                     <stock-summary-lean-two v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :leanStockSummary="filteredLeanCommodityDispatchData22" :screenshotMode="screenshotMode" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -406,7 +406,7 @@
                     <dispatch-summary-leans-three v-if="filteredLeanCommodityDispatchData22.length > 0"
                       :commodityDispatchData="filteredLeanCommodityDispatchData22" />
                     <div v-else
-                      class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
+                      class="flex items-center justify-center border border-gray-400 rounded-md h-64 text-gray-500 text-lg">
                       No Data
                     </div>
                   </div>
@@ -522,7 +522,7 @@
                             :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'" />
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                          <div :class="stat.progress >= 50 ? 'bg-green-500' : 'bg-red-500'" class="h-2 rounded-full"
+                          <div :class="stat.progress >= 50 ? 'bg-gray-500' : 'bg-red-500'" class="h-2 rounded-full"
                             :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
@@ -573,7 +573,7 @@
                           <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
                           <div>
                             <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/dodma/Emergency-season-losses" class="text-blue-500 hover:underline">View
+                            <router-link to="/district/Emergency-season-losses" class="text-blue-500 hover:underline">View
                               Details</router-link>
                           </div>
                         </div>
@@ -774,28 +774,28 @@ const takeScreenshot = () => {
 const columns = ref([
   {
     label: "#",
-    field: (row) => row.originalIndex + 1,
+    receipient: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
+    receipient: row => row.instruction?.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Destination District",
-    field: row => row.instruction?.district?.Name,
+    receipient: row => row.instruction?.district?.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
   },
   {
     label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
+    receipient: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize"
