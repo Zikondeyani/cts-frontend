@@ -179,7 +179,7 @@
                     >
                     <div class="flex items-center space-x-2">
                       <select
-                        v-if="FDPs.length"
+                        v-if="FDPs?.length"
                         :id="'destination-' + index"
                         v-model="destination.name"
                         placeholder="Enter Final Destination Point"
@@ -498,6 +498,7 @@ const resetDestinations = () => {
   destinations[0].name = "";
 };
 
+
 const checkPDNExists = async (pdn) => {
   try {
     const response = await receiptStore.check(pdn);
@@ -506,7 +507,7 @@ const checkPDNExists = async (pdn) => {
     console.error("Error checking PDN existence:", error);
     return false;
   }
-};
+}
 
 const confirmSubmission = () => {
   Swal.fire({
@@ -607,7 +608,6 @@ const submitReceipt = async () => {
     isLoading.value = false;
     return;
   }
-
   const receivedCommodities = [];
   const commodityTotals = {}; // To track cumulative quantity per commodity across all destinations
   const remarksMap = {}; // To track if required remarks are added for each commodity

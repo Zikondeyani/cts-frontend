@@ -588,7 +588,6 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-
 function signOut() {
   userStore.signOut(); // Your sign-out logic
   isDropdownOpen.value = false;

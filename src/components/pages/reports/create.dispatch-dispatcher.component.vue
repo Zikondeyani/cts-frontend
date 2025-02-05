@@ -206,6 +206,11 @@
                       <span class="text-sm text-gray-600"> {{ loadingPlan?.activity?.Name || 'Stock Prepositioning' }}</span>
                     </div>
 
+                    <div class="mb-7">
+                      <span class="text-sm font-bold text-gray-700">Activity: </span>
+                      <span class="text-sm text-gray-600"> {{ loadingPlan.activity.Name }}</span>
+                    </div>
+
 
                     <div class="mb-7">
                       <span class="text-sm font-bold text-gray-700">Total Quantity: </span>

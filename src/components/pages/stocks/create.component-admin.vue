@@ -56,6 +56,25 @@
                       </p>
                     </div>
 
+                    <div class="col-span-6 sm:col-span-3">
+                      <label for="activity-search" class="block text-sm font-medium text-gray-700">
+                        Select Activity
+                      </label>
+                      <input type="text" id="activity-search" v-model="activitySearch" placeholder="Search activity"
+                        @input="filterActivities"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                      <ul v-if="filteredActivities.length"
+                        class="border border-gray-300 rounded-md mt-2 max-h-48 overflow-y-auto">
+                        <li v-for="activity in filteredActivities" :key="activity.id" @click="selectActivity(activity)"
+                          class="cursor-pointer p-2 hover:bg-gray-200">{{
+                          activity.Name }}
+                        </li>
+                      </ul>
+                      <p class="text-red-500 text-xs italic pt-1">
+                        {{ activityError }}
+                      </p>
+                    </div>
+
                     <div class="col-span-1">
                       <label for="activity-search" class="block text-sm font-medium text-gray-700">
                         Select Activity
