@@ -260,6 +260,23 @@ const columns = ref([
     field: row => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
       const District = row.district;
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-yellow-100 text-yellow-800" > ${District}
+            </span><br>`;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // Important for rendering HTML
+
+    tdClass: "capitalize"
+  }
+  ,
+
+  {
+    label: "District",
+    hidden: false,
+    field: row => {
+      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
+      const District = row.district;
       return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800" > ${District}
             </span><br>`;
     },

@@ -1,52 +1,67 @@
 <template>
-  <main class=" min-h-screen">
-    <!-- Spinner -->
+  <main class="">
+    <!--spinner-->
     <spinner-widget v-bind:open="isLoading" />
-
-    <!-- Breadcrumb Navigation -->
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
-      <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
-
-      <!-- Header Section -->
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-6 space-y-4 md:space-y-0">
-        <!-- Title -->
-        <div class="flex-1">
-          <h2 class="text-2xl sm:text-3xl font-bold text-white leading-7">
+    <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
+      <div>
+        <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
+      </div>
+      <div class=" md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+          <h2 class="
+              font-bold
+              leading-7
+              text-white
+              sm:text-2xl sm:truncate
+            ">
             Mailing Groups
           </h2>
         </div>
-
-        <!-- Create Mailing Group Form -->
-        <div class="flex-shrink-0">
-          <create-mailing-group-form 
-            group-form 
-            v-on:create="createMailingGroup" 
-            :mailinggroups="mailinggroups" 
-          />
+        <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
+          <!-- <router-link :to="{ name: 'admin-create-mailinggroups' }">
+            <button
+              type="button"
+              class="
+                ml-3
+                inline-flex
+                items-center
+                px-4
+                py-2
+                border border-transparent
+                rounded
+                shadow-sm
+                text-sm
+                font-medium
+                text-white
+                bg-blue-500
+                hover:bg-blue-400
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-blue-500
+                capitalize
+              "
+            >
+              new mailing group
+            </button>
+          </router-link> -->
+          <create-mailing-group-form group-form v-on:create="createMailingGroup" :mailinggroups="mailinggroups" />
+          
         </div>
       </div>
+      <!-- table  -->
 
-      <!-- Table Section -->
-      <div class="align-middle inline-block min-w-full mt-6 bg-white shadow-xl rounded-lg overflow-hidden">
-        <vue-good-table 
-          :columns="columns" 
-          :rows="mailinggroups" 
-          :search-options="{ enabled: true }"
-          :pagination-options="{ enabled: true }" 
-          theme="polar-bear"
-          styleClass="vgt-table striped" 
-          compactMode
-        >
-          <!-- Table Actions -->
+
+      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+        <vue-good-table :columns="columns" :rows="mailinggroups" :search-options="{ enabled: true }"
+          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
+          styleClass="vgt-table striped" compactMode>
           <template #table-actions> </template>
-
-          <!-- Table Row -->
+       
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
               <router-link :to="{ path: '/admin/mailinggroups/manage/' + props.row.id }">
-                <a class="text-blue-500 text-sm hover:text-green-600 transition duration-150 ease-in-out">
-                  Manage
-                </a>
+                <a href="#" class="text-blue-400 text-sm hover:text-green-900">Manage </a>
               </router-link>
             </span>
           </template>

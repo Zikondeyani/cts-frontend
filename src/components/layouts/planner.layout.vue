@@ -49,6 +49,12 @@
               {{ user?.district }}
             </span>
           </div>
+          <div class="flex items-center ml-2 hidden lg:flex">
+            <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
+            <span class="text-white font-medium text-sm">
+              {{ user?.district }}
+            </span>
+          </div>
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
@@ -400,8 +406,12 @@ const system = reactive({
 const $router = useRouter();
 
 // INJECTIONS
+
+// INJECTIONS
 const moment = inject("moment");
 const Swal = inject("Swal");
+
+// VARIABLES
 
 // VARIABLES
 const sessionStore = useSessionStore();
@@ -429,6 +439,7 @@ const menuItemClasses = (active, isButton = false) => [
 
 const onAbout = async () => {
   $router.push({ path: "/planner/about-system" });
+  $router.push({ path: "/planner/about-system" });
 };
 
 const isDropdownOpen = ref(false);
@@ -440,6 +451,7 @@ const openDropdown = () => {
 const closeDropdown = () => {
   isDropdownOpen.value = false;
 };
+
 
 function signOut() {
   userStore.signOut(); // Your sign-out logic
@@ -540,7 +552,10 @@ function navigation() {
 }
 
 // Select active page the route must be the same as the full path
+// Select active page the route must be the same as the full path
 const userNavigation = [
+  // { name: "Profile", href: "#" },
+  // { name: "Settings", href: "#" },
   // { name: "Profile", href: "#" },
   // { name: "Settings", href: "#" },
 ];
@@ -566,10 +581,12 @@ const itemClasses = (item) => [
   "group flex items-center px-2 py-2 text-sm font-medium rounded-md",
 ];
 
+
 const onSignout = async () => {
   try {
     await sessionStore.signOut();
     await clearDataOffline("session");
+    clearSignOutTimer();
     clearSignOutTimer();
     sessionStore.$reset();
     await $router.push({ path: "/portal/signin" }).then((res) => {
