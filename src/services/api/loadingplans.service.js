@@ -870,6 +870,8 @@ export default class LoadingPlanService {
       });
   }
 
+
+  
   async removeWithComments(data) {
     return await axios
       .post(resource + "/" + data.id + `/delete`, data, {
