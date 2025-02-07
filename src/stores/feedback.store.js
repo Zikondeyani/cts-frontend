@@ -3,9 +3,9 @@ import FeedbackService from "../services/api/feedback.service";
 const feedbackService = new FeedbackService();
 
 export const usefeedbackstore = defineStore({
-  id: 'projects',
+  id: 'feedback',
   state: () => ({
-     projects: [],
+     feedback: [],
   }),
   getters: {
 

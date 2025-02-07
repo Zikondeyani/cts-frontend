@@ -385,6 +385,10 @@ const requestReversal = async (row) => {
     inputLabel: 'Reason',
     inputPlaceholder: 'Enter the reason for reversal here...',
     showCancelButton: true,
+    
+      
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
     confirmButtonText: 'Submit Request',
     cancelButtonText: 'Cancel',
     inputValidator: (value) => {

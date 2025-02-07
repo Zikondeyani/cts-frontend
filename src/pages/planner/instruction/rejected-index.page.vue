@@ -8,12 +8,7 @@
       </div>
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="
-              font-bold
-              leading-7
-              text-white
-              sm:text-2xl sm:truncate
-            ">
+          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Instructions
           </h2>
         </div>
@@ -21,25 +16,47 @@
 
       <!-- Tabs -->
       <div class="tabs">
-        <button @click="currentTab = 'leanSeason'" class="rounded-md" :class="{ active: currentTab === 'leanSeason' }">
+        <button
+          @click="currentTab = 'leanSeason'"
+          class="rounded-md"
+          :class="{ active: currentTab === 'leanSeason' }"
+        >
           Lean Season Instructions
-          <span v-if="emergencyResponseInstructions.length > 0" class="badge badge-red">{{
-      emergencyResponseInstructions.length }}</span>
+          <span
+            v-if="emergencyResponseInstructions.length > 0"
+            class="badge badge-red"
+            >{{ emergencyResponseInstructions.length }}</span
+          >
         </button>
-        <button @click="currentTab = 'emergencyResponse'" class="rounded-md"
-          :class="{ active: currentTab === 'emergencyResponse' }">
+        <button
+          @click="currentTab = 'emergencyResponse'"
+          class="rounded-md"
+          :class="{ active: currentTab === 'emergencyResponse' }"
+        >
           Emergency Response Instructions
-          <span v-if="leanSeasonInstructions.length > 0" class="badge badge-red">{{ leanSeasonInstructions.length
-            }}</span>
+          <span
+            v-if="leanSeasonInstructions.length > 0"
+            class="badge badge-red"
+            >{{ leanSeasonInstructions.length }}</span
+          >
         </button>
       </div>
 
       <!-- Content for Tabs -->
       <div v-if="currentTab === 'emergencyResponse'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-          <vue-good-table :columns="columns" :rows="leanSeasonInstructions" :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-            styleClass="vgt-table striped" compactMode>
+        <div
+          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+        >
+          <vue-good-table
+            :columns="columns"
+            :rows="leanSeasonInstructions"
+            :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4"
+            :pagination-options="{ enabled: true }"
+            theme="polar-bear"
+            styleClass="vgt-table striped"
+            compactMode
+          >
             <template #table-actions> </template>
 
             <template #table-row="props">
@@ -56,27 +73,33 @@
                     </span>
                   </span> -->
                   <span>
-                    <span v-if="props.row.IsRejected"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    <span
+                      v-if="props.row.IsRejected"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+                    >
                       Rejected
                     </span>
-                    <span v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                    <span
+                      v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"
+                    >
                       On-hold
                     </span>
                   </span>
                 </div>
               </span>
               <span v-if="props.column.label == 'Options'">
-
                 <div class="flex space-x-2">
-
                   <!-- Create Instruction Button -->
 
-                  <create-instruction-dispatch-form :row-id="props.row.id" v-on:create="updateInstruction"
-                    :instruction="props.row" :commodities="filteredCommodities(props.row.id)" :commodity="commodity"
-                    v-on:reject="rejectInstruction" />
-
+                  <create-instruction-dispatch-form
+                    :row-id="props.row.id"
+                    v-on:create="updateInstruction"
+                    :instruction="props.row"
+                    :commodities="filteredCommodities(props.row.id)"
+                    :commodity="commodity"
+                    v-on:reject="rejectInstruction"
+                  />
                 </div>
               </span>
             </template>
@@ -85,47 +108,74 @@
       </div>
 
       <div v-if="currentTab === 'leanSeason'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-          <vue-good-table :columns="columns2" :rows="emergencyResponseInstructions" :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-            styleClass="vgt-table striped" compactMode>
+        <div
+          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+        >
+          <vue-good-table
+            :columns="columns2"
+            :rows="emergencyResponseInstructions"
+            :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4"
+            :pagination-options="{ enabled: true }"
+            theme="polar-bear"
+            styleClass="vgt-table striped"
+            compactMode
+          >
             <template #table-actions> </template>
 
             <template #table-row="props">
               <span v-if="props.column.label === 'Status'">
                 <div>
-
                   <span>
-                    <span v-if="props.row.IsRejected"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    <span
+                      v-if="props.row.IsRejected"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+                    >
                       Rejected
                     </span>
-                    <span v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                    <span
+                      v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800"
+                    >
                       On-hold
                     </span>
                   </span>
                 </div>
               </span>
               <span v-if="props.column.label == 'Options'">
-
                 <div class="flex space-x-2">
-
                   <!-- Create Instruction Button -->
 
-                  <button @click="openEditDialog(props.row)"
-                    class="text-green-500 hover:text-green-700 transition duration-300">
+                  <button
+                    @click="openEditDialog(props.row)"
+                    class="text-green-500 hover:text-green-700 transition duration-300"
+                  >
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
                     Edit
                   </button>
 
-                  <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan"
-                    @close="closeEditDialog" v-on:update="getLoadingPlans" />
+                  <button
+                    type="button"
+                    class="bg-white py-2 px-4 border border-white rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    @click="deleteLoading(props.row.id)"
+                  >
+                    Delete
+                  </button>
+                  <EditLoadingPlanDialog
+                    :isOpen="isEditDialogOpen"
+                    :loadingPlan="selectedLoadingPlan"
+                    @close="closeEditDialog"
+                    v-on:update="getLoadingPlans"
+                  />
 
-                  <create-approval-loadingplan :row-id="props.row.id" v-on:create="updateApproval"
-                    :emergencyResponseInstructions="props.row" :commodities="filteredCommodities(props.row.id)"
-                    :commodity="commodity" v-on:reject="rejectLoadingPlan" />
-
+                  <create-approval-loadingplan
+                    :row-id="props.row.id"
+                    v-on:create="updateApproval"
+                    :emergencyResponseInstructions="props.row"
+                    :commodities="filteredCommodities(props.row.id)"
+                    :commodity="commodity"
+                    v-on:reject="rejectLoadingPlan"
+                  />
                 </div>
               </span>
             </template>
@@ -136,22 +186,22 @@
   </main>
 </template>
 <script setup>
-import { ref, reactive, onMounted, inject, onBeforeUnmount } from 'vue';
-import { useRouter } from 'vue-router';
-import spinnerWidget from '../../../components/widgets/spinners/default.spinner.vue';
-import breadcrumbWidget from '../../../components/widgets/breadcrumbs/admin.breadcrumb.vue';
-import createInstructionDispatchForm from '../../../components/pages/instruction/instructionRejection.component.vue';
-import createApprovalLoadingplan from '../../../components/pages/instruction/instructionRejectionER.component.vue';
+import { ref, reactive, onMounted, inject, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
+import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
+import createInstructionDispatchForm from "../../../components/pages/instruction/instructionRejection.component.vue";
+import createApprovalLoadingplan from "../../../components/pages/instruction/instructionRejectionER.component.vue";
 import EditLoadingPlanDialog from "../../../components/pages/instruction/edit-loading-plan.component.vue";
 
-import { useloadingplanstore } from '../../../stores/loadingplans.store';
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
-import { useinstructionstore } from '../../../stores/instructions.store';
-import { useSessionStore } from '../../../stores/session.store';
-import { useInstructedCommoditiesStore } from '../../../stores/instructedCommodities.store';
-import { usecommoditiestore } from '../../../stores/commodity.store';
-import { useInstructedDispatchesStore } from '../../../stores/instructedDispatches.store';
-import { useDispatchedCommoditiesStore } from '../../../stores/dispatchedCommodities.store';
+import { useinstructionstore } from "../../../stores/instructions.store";
+import { useSessionStore } from "../../../stores/session.store";
+import { useInstructedCommoditiesStore } from "../../../stores/instructedCommodities.store";
+import { usecommoditiestore } from "../../../stores/commodity.store";
+import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
+import { useDispatchedCommoditiesStore } from "../../../stores/dispatchedCommodities.store";
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -164,16 +214,13 @@ const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/planner/dashboard", current: false },
   { name: "Instructions", href: "#", current: true },
-  { name: "Rejected", href: "#", current: true }
+  { name: "Rejected", href: "#", current: true },
 ];
-
-
 
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 
-
-const loadingplansStore = useloadingplanstore()
+const loadingplansStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
 const leanSeasonInstructions = reactive([]);
@@ -186,8 +233,7 @@ const instructedCommodityStore = useInstructedCommoditiesStore();
 const commodities = reactive([]);
 const CommodityStore = usecommoditiestore();
 const commodity = reactive([]);
-import eventBus from '../../../services/events/eventbus';
-
+import eventBus from "../../../services/events/eventbus";
 
 const columns = ref([
   {
@@ -195,7 +241,7 @@ const columns = ref([
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Details",
@@ -208,38 +254,38 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize",
     html: true,
-    tdAttr: { "v-html": true }
+    tdAttr: { "v-html": true },
   },
   {
     label: "Transporter",
-    field: row => row.transporter.Name,
+    field: (row) => row.transporter.Name,
     sortable: true,
-    firstSortType: "asc"
+    firstSortType: "asc",
   },
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: (row) => row.district.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Status",
     hidden: false,
-    field: row => row.IsRejected,
+    field: (row) => row.IsRejected,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 
-const currentTab = ref('leanSeason');
+const currentTab = ref("leanSeason");
 
 // Fetch instructions based on their type
 onMounted(() => {
@@ -247,11 +293,7 @@ onMounted(() => {
   getInstructedCommodities();
   getCommodity();
   getLoadingPlans();
-
-
 });
-
-
 
 const isEditDialogOpen = ref(false);
 
@@ -269,58 +311,85 @@ const closeEditDialog = () => {
   isEditDialogOpen.value = false;
 };
 
+const deleteLoading = async (id) => {
+  isLoading.value = true;
+  loadingplansStore
+    .update({ id: id, IsDeleted: true })
+    .then((result) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#16a34a",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          eventBus.emit("requisitionArchived", id);
+
+          Swal.fire("Deleted!", "Deleted Loading Plan succesfully.", "success");
+          isLoading.value = false;
+          getLoadingPlans();
+        }
+      });
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Loading Plan Deletion Failed",
+        text: "Failed to remove Loading Plan  (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    });
+};
 
 //FUNCTIONS
 const getInstructions = async () => {
   isLoading.value = true;
   instructionsStore
     .get()
-    .then(result => {
+    .then((result) => {
       // for (let i = 0; i < 100; i++) {
       //   instructions.push(...result);
       // }
       leanSeasonInstructions.length = 0;
 
-      leanSeasonInstructions.push(...result.filter(item => item.IsRejected));
-
-      
-
+      leanSeasonInstructions.push(...result.filter((item) => item.IsRejected));
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "User Retrieval Failed",
         text: "failed to get instructions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
       isLoading.value = false;
     });
 };
-
 
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplansStore
     .get()
-    .then(result => {
+    .then((result) => {
       // for (let i = 0; i < 100; i++) {
       //   instructions.push(...result);
       // }
       emergencyResponseInstructions.length = 0;
 
-
-      emergencyResponseInstructions.push(...result.filter(item => item.IsRejected));
-
-
+      emergencyResponseInstructions.push(
+        ...result.filter((item) => item.IsRejected && item.IsDeleted == false)
+      );
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "User Retrieval Failed",
         text: "failed to get Emergency Response Instructions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
@@ -328,42 +397,38 @@ const getLoadingPlans = async () => {
     });
 };
 
-
 const getCommodity = async () => {
   isLoading.value = true;
-  CommodityStore.get()
-    .then(result => {
-      commodity.length = 0;
-      commodity.push(...result);
-    });
+  CommodityStore.get().then((result) => {
+    commodity.length = 0;
+    commodity.push(...result);
+  });
 };
 
 const getInstructedCommodities = async () => {
   isLoading.value = true;
-  instructedCommodityStore.get()
-    .then(result => {
-      commodities.length = 0;
-      commodities.push(...result);
-    });
+  instructedCommodityStore.get().then((result) => {
+    commodities.length = 0;
+    commodities.push(...result);
+  });
 };
-
-
 
 const updateInstruction = async (newValues) => {
   isLoading.value = true;
-  instructionsStore.update(newValues)
-    .then(result => {
+  instructionsStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Successfully updated instruction",
         icon: "success",
       });
 
-      eventBus.emit('instructionArchived', newValues.id);
+      eventBus.emit("instructionArchived", newValues.id);
 
       getInstructions();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to update instruction (" + error + ")",
@@ -376,22 +441,22 @@ const updateInstruction = async (newValues) => {
     });
 };
 
-
 const rejectInstruction = async (newValues) => {
   isLoading.value = true;
-  instructionsStore.update(newValues)
-    .then(result => {
+  instructionsStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Instruction Rejected!",
         icon: "success",
       });
 
-      eventBus.emit('instructionArchived', newValues.id);
+      eventBus.emit("instructionArchived", newValues.id);
 
       getInstructions();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to update instruction (" + error + ")",
@@ -404,22 +469,22 @@ const rejectInstruction = async (newValues) => {
     });
 };
 
-
 const updateApproval = async (newValues) => {
   isLoading.value = true;
-  loadingplansStore.update(newValues)
-    .then(result => {
+  loadingplansStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Successfully approved loading plan",
         icon: "success",
       });
 
-      eventBus.emit('loadingplanArchived', newValues.id);
+      eventBus.emit("loadingplanArchived", newValues.id);
 
       getLoadingPlans();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to approve loading plan (" + error + ")",
@@ -434,19 +499,20 @@ const updateApproval = async (newValues) => {
 
 const rejectLoadingPlan = async (newValues) => {
   isLoading.value = true;
-  loadingplansStore.update(newValues)
-    .then(result => {
+  loadingplansStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Loading Plan rejected!",
         icon: "success",
       });
 
-      eventBus.emit('loadingplanArchived', newValues.id);
+      eventBus.emit("loadingplanArchived", newValues.id);
 
       getLoadingPlans();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to approve loading plan (" + error + ")",
@@ -463,64 +529,61 @@ const filteredCommodities = (instructionID) => {
   return commodities.filter((item) => item.instructionId === instructionID);
 };
 
-
 const columns2 = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Commodity",
-    field: row => row.commodity?.Name,
+    field: (row) => row.commodity?.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Details",
-    field: row => 
+    field: (row) =>
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance + " MT" : "Pending"}</span>`,
+    field: (row) =>
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${
+        row.Balance !== null ? row.Balance + " MT" : "Pending"
+      }</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
   {
     label: "Status",
     hidden: false,
-    field: row => row.IsApproved,
+    field: (row) => row.IsApproved,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
 
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
-
-
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
-
 </script>
 <style>
 .tabs {

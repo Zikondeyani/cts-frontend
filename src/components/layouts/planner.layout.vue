@@ -93,6 +93,8 @@
             <div
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
+              
+              @click="openDropdown"
               @mouseenter="openDropdown"
               @mouseleave="closeDropdown"
             >
@@ -654,7 +656,7 @@ const getLoadingPlans = async () => {
       loadingplans.length = 0;
       loadingplans.push(
         ...result.filter(
-          (item) => item.IsRejected == true && item.IsArchived == false
+          (item) => item.IsRejected == true && item.IsArchived == false && item.IsDeleted == false
         )
       );
       newRejectedLoadingPlanCount.value = loadingplans.length;

@@ -206,14 +206,15 @@
                         placeholder="Enter Final Destination Point"
                         class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
-
                       <input
                         v-if="destination.name === 'custom'"
                         type="text"
-                        v-model="customDestination"
+                        v-model="destination.customName"
                         placeholder="Enter Final Destination Point"
+                        @input="updateCustomDestination(index)"
                         class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       />
+
                       <button
                         type="button"
                         @click="removeDestination(index)"
@@ -459,6 +460,7 @@ const multipleDestinations = ref(false);
 
 const customDestination = ref("");
 
+
 const destinations = reactive([
   {
     name: "",
@@ -467,6 +469,10 @@ const destinations = reactive([
     ],
   },
 ]);
+
+const updateCustomDestination = (index) => {
+  destinations[index].name = "custom"; // Keep select stable while typing
+};
 
 onMounted(() => {
   getFDPs();
@@ -498,7 +504,6 @@ const resetDestinations = () => {
   destinations[0].name = "";
 };
 
-
 const checkPDNExists = async (pdn) => {
   try {
     const response = await receiptStore.check(pdn);
@@ -507,7 +512,7 @@ const checkPDNExists = async (pdn) => {
     console.error("Error checking PDN existence:", error);
     return false;
   }
-}
+};
 
 const confirmSubmission = () => {
   Swal.fire({
@@ -624,9 +629,11 @@ const submitReceipt = async () => {
       });
       return;
     }
-
-    // Check for duplicate destination names
-    if (destinationNames.has(destination.name)) {
+    // Check for duplicate destination names (excluding "custom")
+    if (
+      destination.name !== "custom" &&
+      destinationNames.has(destination.name)
+    ) {
       Swal.fire({
         icon: "warning",
         title: "🚫 Duplicate Destination",
@@ -636,7 +643,10 @@ const submitReceipt = async () => {
       });
       return;
     }
-    destinationNames.add(destination.name);
+
+    if (destination.name !== "custom") {
+      destinationNames.add(destination.name);
+    }
 
     // Track remarks per destination to check for duplicates
     const destinationRemarksMap = {};
@@ -755,7 +765,7 @@ const submitReceipt = async () => {
           Remarks: remark.remark,
           FinalDestinationPoint:
             destination.name === "custom"
-              ? customDestination.value
+              ? destination.customName
               : destination.name,
           PhysicalDeliveryNote: pdn.value,
         });

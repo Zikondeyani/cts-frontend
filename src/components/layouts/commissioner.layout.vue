@@ -580,7 +580,7 @@ const getLoadingPlans = async () => {
 
       // Push the filtered instructions into the array
       loadingplans.push(
-        ...result.filter((item) => !item.isApproved && !item.IsRejected)
+        ...result.filter((item) => !item.isApproved && item.IsRejected == false)
       );
 
       // Update the count of new instructions
