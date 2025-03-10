@@ -123,6 +123,18 @@ export const useloadingplanstore = defineStore({
     },
 
 
+    
+
+    async getDataSummaryAll() {
+      return await loadingplansService.getDataSummaryAll().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
     async getloadingplansSummary() {
       return await loadingplansService.getloadingplansSummary().then((result) => {
         if (result) {

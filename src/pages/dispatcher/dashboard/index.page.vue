@@ -7,15 +7,12 @@
 
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate">
+          <h2
+            class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate"
+          >
             Dashboard
           </h2>
         </div>
-
-
-
-      
-
       </div>
 
       <!-- Main 3 column grid -->
@@ -35,10 +32,14 @@
                       <p class="text-md font-medium font-heading text-gray-600">
                         Welcome back,
                       </p>
-                      <p class="text-xl font-bold text-gray-900 sm:text-2xl capitalize">
-                        {{ user.username.replace(/\./g, ' ') }}
+                      <p
+                        class="text-xl font-bold text-gray-900 sm:text-2xl capitalize"
+                      >
+                        {{ user.username.replace(/\./g, " ") }}
                       </p>
-                      <p class="text-sm font-medium text-gray-600 md:text-1xl pt-2 uppercase">
+                      <p
+                        class="text-sm font-medium text-gray-600 md:text-1xl pt-2 uppercase"
+                      >
                         {{ role.name }}
                       </p>
                     </div>
@@ -46,59 +47,133 @@
                   <div class="mt-1 flex justify-center sm:mt-0">
                     <LocationMarkerIcon class="h-5 w-5 text-gray mr-2" />
                     <span class="text-gray font-medium text-sm">
-                      {{user.district ? user.district : "National" }}
+                      {{ user.district ? user.district : "National" }}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-gray-100 p-5" v-if="user.district == 'National' || user.district == null">
-                <div
-                  class="grid gap-4">
+              <div
+                class="bg-gray-100 p-5"
+                v-if="user.district == 'National' || user.district == null"
+              >
+                <div class="grid gap-4">
                   <!-- Stats Cards -->
-                  <div v-for="stat in statsToShow" :key="stat.label"
-                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
+                  <div
+                    v-for="stat in statsToShow"
+                    :key="stat.label"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between"
+                  >
                     <div>
                       <div class="flex items-center justify-between">
-                        <span class="text-2xl font-semibold text-gray-800">{{ stat.value }}</span>
-                        <component v-if="stat.label == 'Dispatch Status'"
-                          :is="stat.progress >= 50 ? CheckCircleIcon : ExclamationCircleIcon"
-                          :class="`h-6 w-6 text-${stat.progress >= 50 ? 'green-500' : 'red-500'}`" />
-                        <component v-else :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
+                        <span class="text-2xl font-semibold text-gray-800">{{
+                          stat.value
+                        }}</span>
+                        <component
+                          v-if="stat.label == 'Dispatch Status'"
+                          :is="
+                            stat.progress >= 50
+                              ? CheckCircleIcon
+                              : ExclamationCircleIcon
+                          "
+                          :class="`h-6 w-6 text-${
+                            stat.progress >= 50 ? 'green-500' : 'red-500'
+                          }`"
+                        />
+                        <component
+                          v-else
+                          :is="stat.icon"
+                          :class="`h-6 w-6 text-${stat.iconColor}`"
+                        />
                       </div>
 
-                      <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
-
+                      <div class="text-sm font-medium text-gray-600 mt-2">
+                        {{ stat.label }}
+                      </div>
                     </div>
                     <div v-if="stat.percentageText" class="mt-4">
                       <div class="flex items-center justify-between">
-                        <span :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'">{{ stat.percentageText
-                          }}</span>
-                        <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon" class="h-5 w-5"
-                          :class="stat.progress >= 50 ? 'text-green-500' : 'text-red-500'" />
+                        <span
+                          :class="
+                            stat.progress >= 50
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                          "
+                          >{{ stat.percentageText }}</span
+                        >
+                        <component
+                          :is="
+                            stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon
+                          "
+                          class="h-5 w-5"
+                          :class="
+                            stat.progress >= 50
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                          "
+                        />
                       </div>
 
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div :class="stat.progress >= 50 ? 'bg-gray-500' : 'bg-red-500'" class="h-2 rounded-full"
-                          :style="{ width: stat.progress + '%' }">
-                        </div>
+                        <div
+                          :class="
+                            stat.progress >= 50 ? 'bg-gray-500' : 'bg-red-500'
+                          "
+                          class="h-2 rounded-full"
+                          :style="{ width: stat.progress + '%' }"
+                        ></div>
                       </div>
                     </div>
                     <div class="text-sm text-gray-500 mt-4">
-                      <router-link v-if="stat.label == 'Pending Instructions (Emergency Response)'"
-                        to="/dispatcher/instruction-management" class="text-blue-500 hover:underline">
+                      <router-link
+                        v-if="
+                          stat.label ==
+                          'Pending Instructions (Emergency Response)'
+                        "
+                        to="/dispatcher/instruction-management"
+                        class="text-blue-500 hover:underline"
+                      >
                         View Details
                       </router-link>
 
-                      <router-link v-if="stat.label == 'Pending Loading Plans (Lean Season Response & Emergency Assistance)'"
-                        to="/dispatcher/loadingplans" class="text-blue-500 hover:underline">
+                      <router-link
+                        v-if="
+                          stat.label ==
+                          'Pending Loading Plans (Lean Season Response & Emergency Assistance)'
+                        "
+                        to="/dispatcher/loadingplans"
+                        class="text-blue-500 hover:underline"
+                      >
                         View Details
                       </router-link>
-
                     </div>
                   </div>
-
                 </div>
+              </div>
+            </div>
+            <div
+              v-if="!isLoading"
+              class="bg-white border border-gray-200 rounded-lg shadow-lg p-5 col-span-1 md:col-span-2 mt-4"
+            >
+              <div class="flex items-center mb-4">
+                <TruckIcon class="h-10 w-10 mr-2" style="color: #248cd6" />
+                <h3 class="text-xl font-bold text-gray-600">
+                  Transporter Tracker
+                </h3>
+              </div>
+
+              <div class="mb-4">
+                <!-- Removed commented-out sections for clarity -->
+              </div>
+
+              <!-- Button to navigate to Vehicle or Transporter Tracker -->
+              <div class="mt-4 mb-6">
+                <router-link
+                  to="/dispatcher/tracker"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
+                >
+                  Go to Transporter Tracker
+                </router-link>
               </div>
             </div>
           </section>
@@ -113,20 +188,20 @@ import { inject, ref, watch, reactive, onMounted, toRefs, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
 import createInstructionReceiptForm from "../../../components/pages/instruction/receipt.component.vue";
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx';
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { saveAs } from "file-saver";
+import * as XLSX from "xlsx";
 import "jspdf-autotable";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import { useUserStore } from "../../../stores/user.store";
 import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
-import ChartComponent from '../../../components/pages/charts/dashboardcharts.vue'; // Adjust path as needed
+import ChartComponent from "../../../components/pages/charts/dashboardcharts.vue"; // Adjust path as needed
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
-import MaizeDistributionTable from './MaizeDistributionTable.vue';
+import MaizeDistributionTable from "./MaizeDistributionTable.vue";
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
 import { usereceiptstore } from "../../../stores/receipt.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import createReportForm from "../../../components/pages/reports/create.component.vue";
@@ -165,30 +240,38 @@ import {
   IdentificationIcon,
   DocumentTextIcon,
   OfficeBuildingIcon,
-  DocumentIcon, ClipboardListIcon, ExclamationCircleIcon, ExclamationIcon, ArrowUpIcon, ArrowDownIcon
+  DocumentIcon,
+  ClipboardListIcon,
+  ExclamationCircleIcon,
+  ExclamationIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from "@heroicons/vue/outline";
 import { SearchIcon } from "@headlessui/vue";
 const screenshotMode = ref(false);
-const currentView = ref('dashboard'); // The initial view can be 'dashboard' or 'charts'
+const currentView = ref("dashboard"); // The initial view can be 'dashboard' or 'charts'
 const toggleView = (view) => {
   currentView.value = view;
 };
-
 
 const showTooltip = ref(false);
 const maizeTable = ref(null);
 const takeScreenshot = () => {
   screenshotMode.value = true;
   if (maizeTable.value) {
-    html2canvas(maizeTable.value.$el || maizeTable.value).then((canvas) => {
-      const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-      const link = document.createElement('a');
-      link.download = 'maize-distribution.png';
-      link.href = image;
-      link.click();
-    }).catch(error => {
-      console.error('Error taking screenshot:', error);
-    });
+    html2canvas(maizeTable.value.$el || maizeTable.value)
+      .then((canvas) => {
+        const image = canvas
+          .toDataURL("image/png")
+          .replace("image/png", "image/octet-stream");
+        const link = document.createElement("a");
+        link.download = "maize-distribution.png";
+        link.href = image;
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error taking screenshot:", error);
+      });
   }
 };
 const columns = ref([
@@ -197,34 +280,34 @@ const columns = ref([
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Origin Warehouse",
-    field: row => row.instruction?.warehouse?.Name,
+    field: (row) => row.instruction?.warehouse?.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Destination District",
-    field: row => row.instruction?.district?.Name,
+    field: (row) => row.instruction?.district?.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Date Created",
-    field: row => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
+    field: (row) => moment(row.instruction?.CreatedOn).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 const loadingPlanStore = useloadingplanstore();
 const loadingplans = reactive([]);
@@ -256,8 +339,8 @@ const isLoading = ref(false);
 const loadingPlanSummary = reactive([]);
 let userCount = ref(0);
 let bookingCount = ref(0);
-const receiptcount = ref(0)
-const dispatchcount = ref(0)
+const receiptcount = ref(0);
+const dispatchcount = ref(0);
 //MOUNTEDgetCatalogue
 onMounted(() => {
   getCatalogue();
@@ -267,7 +350,7 @@ onMounted(() => {
   getDispatches();
   getReceipts();
   getDispatchesCount();
-  getLoadingPlans()
+  getLoadingPlans();
   getLoadingPlansPending();
   getloadingplansSummary();
   getdispatchSummary();
@@ -282,8 +365,9 @@ const getCatalogue = async () => {
 };
 const getWarehouses = async () => {
   warehouseStore.get().then((result) => {
-    warehouseCount.value = result.filter(item => item.district.Name == user.value.district).length;
-
+    warehouseCount.value = result.filter(
+      (item) => item.district.Name == user.value.district
+    ).length;
   });
 };
 const getReceipts = async () => {
@@ -294,40 +378,40 @@ const getReceipts = async () => {
 import { useinstructionstore } from "../../../stores/instructions.store";
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
-const newInstructionsCount = ref(0)
-const newLoadingPlanCount = ref(0)
+const newInstructionsCount = ref(0);
+const newLoadingPlanCount = ref(0);
 
 //FUNCTIONS
 const getInstructions = async () => {
-  instructionsStore
-    .get()
-    .then((result) => {
-      instructions.length = 0;
-      instructions.push(result.filter(item =>  !item.IsArchived && item.IsApproved));
-      newInstructionsCount.value = instructions[0].length;
-    })
+  instructionsStore.get().then((result) => {
+    instructions.length = 0;
+    instructions.push(
+      result.filter((item) => !item.IsArchived && item.IsApproved)
+    );
+    newInstructionsCount.value = instructions[0].length;
+  });
 };
 const exportToExcel = () => {
   const worksheet = XLSX.utils.json_to_sheet(maizeDistributionData.value);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Maize Distribution');
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-  saveAs(data, 'table.xlsx');
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Maize Distribution");
+  const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const data = new Blob([excelBuffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+  });
+  saveAs(data, "table.xlsx");
 };
 const getloadingplansSummaryByCommodity = async () => {
-  loadingPlanStore
-    .getloadingplansSummaryByCommodity()
-    .then(result => {
-      loadingPlanSummary.length = 0;
-      loadingPlanSummary.push(...result);
-    })
-}
+  loadingPlanStore.getloadingplansSummaryByCommodity().then((result) => {
+    loadingPlanSummary.length = 0;
+    loadingPlanSummary.push(...result);
+  });
+};
 const getDispatches = async () => {
   isLoading.value = true;
   dispatchStore
     .get()
-    .then(result => {
+    .then((result) => {
       const sortedDispatches = [...result].sort((a, b) => {
         return new Date(b.createdon) - new Date(a.createdon);
       });
@@ -338,65 +422,62 @@ const getDispatches = async () => {
     .finally(() => {
       isLoading.value = false;
     });
-}
+};
 const getDispatchesCount = async () => {
   dispatchStore.count().then((result) => {
     dispatchcount.value = result.count;
   });
-}
+};
 const getLoadingPlans = async () => {
-  loadingPlanStore
-    .get()
-    .then(result => {
-     
-      loadingplans.length = 0;
-      loadingplans.push(...result.filter(item =>  !item.IsArchived && item.IsApproved && !item.isClosed));
-      newLoadingPlanCount.value = loadingplans.length
-    })
-}
-const pendingplans = ref(0)
-const totalBalance = ref(0)
-const totalStockPlanned = ref("")
-const dispatchPercentageFormated = ref("")
-const totalDispatched = ref("")
-const totalReceived = ref("")
-const receivedPercentageFormated = ref("")
-const receivedPercentage = ref("")
-const dispatchPercentage = ref("")
+  loadingPlanStore.get().then((result) => {
+    loadingplans.length = 0;
+    loadingplans.push(
+      ...result.filter(
+        (item) => !item.IsArchived && item.IsApproved && !item.isClosed
+      )
+    );
+    newLoadingPlanCount.value = loadingplans.length;
+  });
+};
+const pendingplans = ref(0);
+const totalBalance = ref(0);
+const totalStockPlanned = ref("");
+const dispatchPercentageFormated = ref("");
+const totalDispatched = ref("");
+const totalReceived = ref("");
+const receivedPercentageFormated = ref("");
+const receivedPercentage = ref("");
+const dispatchPercentage = ref("");
 const getLoadingPlansPending = async () => {
-  loadingPlanStore
-    .getloadingplansPending()
-    .then(result => {
-      pendingplans.value = result.count
-    })
-}
+  loadingPlanStore.getloadingplansPending().then((result) => {
+    pendingplans.value = result.count;
+  });
+};
 const getdispatchSummary = async () => {
-  dispatchStore
-    .getdispatchSummary()
-    .then(result => {
-      totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
-      totalReceived.value = result.totalReceived
-      receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
-      receivedPercentage.value = result.dispatchPercentage.toFixed(2)
-    })
-}
+  dispatchStore.getdispatchSummary().then((result) => {
+    totalDispatched.value = result.totalDispatched.toLocaleString() + " MT";
+    totalReceived.value = result.totalReceived;
+    receivedPercentageFormated.value =
+      result.dispatchPercentage.toFixed(2) + "% received";
+    receivedPercentage.value = result.dispatchPercentage.toFixed(2);
+  });
+};
 const getloadingplansSummary = async () => {
-  loadingPlanStore
-    .getloadingplansSummary()
-    .then(result => {
-      totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT"
-      totalBalance.value = result.totalBalance
-      dispatchPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% dispatched'
-      dispatchPercentage.value = result.dispatchPercentage.toFixed(2)
-    })
-}
+  loadingPlanStore.getloadingplansSummary().then((result) => {
+    totalStockPlanned.value = result.totalStockPlanned.toLocaleString() + " MT";
+    totalBalance.value = result.totalBalance;
+    dispatchPercentageFormated.value =
+      result.dispatchPercentage.toFixed(2) + "% dispatched";
+    dispatchPercentage.value = result.dispatchPercentage.toFixed(2);
+  });
+};
 const getUsers = async () => {
   userStore.count().then((result) => {
     userCount.value = result.count;
   });
   userStore
     .get()
-    .then(result => {
+    .then((result) => {
       users.length = 0;
       users.push(...result);
       users.sort((a, b) => new Date(b.created) - new Date(a.created));
@@ -416,7 +497,7 @@ const getBookings = async () => {
 };
 const createReport = async (model) => {
   isLoading.value = true;
-  model.userId = user.value.id
+  model.userId = user.value.id;
   if (model.StartDate) {
     model.StartDate = moment(model.StartDate).toISOString();
   }
@@ -425,17 +506,17 @@ const createReport = async (model) => {
   }
   loadingPlanStore
     .create(model)
-    .then(result => {
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Created a new loading plan successfully",
         icon: "success",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
-      $router.push('/admin/loadingplans');
+      $router.push("/admin/loadingplans");
     })
-    .catch(error => {
-      console.error('Error:', error);
+    .catch((error) => {
+      console.error("Error:", error);
     })
     .finally(() => {
       isLoading.value = false;
@@ -458,28 +539,27 @@ const stats = ref([
     moreInfo: true,
   }, */
   {
-    label: 'Pending Instructions (Emergency Response)',
+    label: "Pending Instructions (Emergency Response)",
     value: newInstructionsCount,
     icon: DocumentIcon,
-    iconColor: 'gray-400',
-    percentageText: '',
-    textColor: 'gray-600',
-    showProgress: false
+    iconColor: "gray-400",
+    percentageText: "",
+    textColor: "gray-600",
+    showProgress: false,
   },
   {
-    label: 'Pending Loading Plans (Lean Season Response & Emergency Assistance)',
+    label:
+      "Pending Loading Plans (Lean Season Response & Emergency Assistance)",
     value: newLoadingPlanCount,
     icon: DocumentIcon,
-    iconColor: 'gray-400',
-    percentageText: '',
-    textColor: 'gray-600',
-    showProgress: false
-  }
+    iconColor: "gray-400",
+    percentageText: "",
+    textColor: "gray-600",
+    showProgress: false,
+  },
 ]);
 const statsToShow = computed(() => {
- 
-    return stats.value.filter(stat => stat.label !== 'Number of Warehouses');
-  
+  return stats.value.filter((stat) => stat.label !== "Number of Warehouses");
 });
 const actions = [
   {
@@ -499,7 +579,7 @@ const actions = [
     details: "Manage all Enquiries made to services",
   },
 ];
-const dispatchstatus = ref(0)
+const dispatchstatus = ref(0);
 const navigateToLeanSeasonLoadingPlans = () => {
   $router.push("/dispatcher/loadingplans");
 };

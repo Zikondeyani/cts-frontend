@@ -64,6 +64,12 @@
                     <strong>System Delivery Note:</strong>
                     {{ dispatch.DeliveryNote }}
                   </p>
+
+                  <p class="mb-4" v-if="dispatch?.DNote">
+                    <strong> Delivery Note:</strong>
+                    {{ dispatch?.DNote }}
+                  </p>
+
                   <p class="mb-4">
                     <strong>Target FDP:</strong>
                     {{ dispatch?.FinalDestinationPoint }}

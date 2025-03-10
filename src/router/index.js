@@ -561,6 +561,12 @@ const routes = [
         redirect: { name: "dispatcher-dashboard" },
       },
       {
+        path: "/dispatcher/tracker",
+        name: "dispatcher-tracker",
+        component: () => import("../pages/dispatcher/tracker/tracker.page.vue"),
+      },
+
+      {
         path: "/dispatcher/dashboard",
         name: "dispatcher-dashboard",
         component: () => import("../pages/dispatcher/dashboard/index.page.vue"),
@@ -914,6 +920,13 @@ const routes = [
         redirect: { name: "planner-dashboard" },
       },
       {
+        path: "/planner/stats",
+        name: "planner-stats",
+        component: () =>
+          import("../pages/planner/stats/stats.page.vue"),
+      },
+
+      {
         path: "/planner/dashboard",
         name: "planner-dashboard",
         component: () => import("../pages/planner/dashboard/index.page.vue"),
@@ -968,6 +981,12 @@ const routes = [
         path: "/planner/Lean-season-losses",
         name: "planner-lean-season-damage-management",
         component: () => import("../pages/planner/damages/damages.page.vue"),
+      },
+
+      {
+        path: "/planner/tracker",
+        name: "planner-tracker",
+        component: () => import("../pages/planner/tracker/tracker.page.vue"),
       },
 
       {
@@ -1544,6 +1563,21 @@ const routes = [
         component: () =>
           import("../pages/commissioner/dashboard/index.page.vue"),
       },
+
+      {
+        path: "/commissioner/tracker",
+        name: "commissioner-tracker",
+        component: () =>
+          import("../pages/commissioner/tracker/tracker.page.vue"),
+      },
+
+      {
+        path: "/commissioner/stats",
+        name: "commissioner-stats",
+        component: () =>
+          import("../pages/commissioner/stats/stats.page.vue"),
+      },
+
 
       {
         path: "/commissioner/stock-prepositioning",

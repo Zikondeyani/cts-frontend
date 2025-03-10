@@ -50,7 +50,6 @@
           <span class="text-xs font-normal">(v2.0)</span>
         </span>
 
-        
         <!-- Navigation Items -->
         <div
           class="flex lg:flex-row flex-col lg:space-x-4 mt-2 lg:mt-0 w-full lg:w-auto hidden lg:flex"
@@ -98,7 +97,7 @@
             </button>
             <div
               v-if="isDropdownOpen"
-             @mouseenter="keepDropdownOpen"
+              @mouseenter="keepDropdownOpen"
               @mouseleave="closeDropdown"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
             >
@@ -387,9 +386,6 @@ const toggleNotifications = () => {
 
 const isMobileMenuOpen = ref(false);
 
-
-
-
 let dropdownTimeout;
 
 const openDropdown = () => {
@@ -451,7 +447,6 @@ const isLoading = ref(false);
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
-
 
 const onAbout = async () => {
   $router.push({ path: "/commissioner/about-system" });
@@ -580,9 +575,11 @@ const getLoadingPlans = async () => {
 
       // Push the filtered instructions into the array
       loadingplans.push(
-        ...result.filter((item) => !item.isApproved && item.IsRejected == false)
+        ...result
+          .filter((item) => !item.isApproved && !item.isRejected)
+          // Only include plans that are not approved or rejected
+        
       );
-
       // Update the count of new instructions
       newLoadingplanCount.value = loadingplans.length;
 

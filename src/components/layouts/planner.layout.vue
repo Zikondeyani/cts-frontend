@@ -49,12 +49,7 @@
               {{ user?.district }}
             </span>
           </div>
-          <div class="flex items-center ml-2 hidden lg:flex">
-            <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
-            <span class="text-white font-medium text-sm">
-              {{ user?.district }}
-            </span>
-          </div>
+         
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"

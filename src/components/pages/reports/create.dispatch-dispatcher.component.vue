@@ -30,6 +30,14 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
+                      <div>
+                        <label for="DNote" class="block text-sm font-bold text-gray-700 mb-1">
+                          Delivery Note</label>
+                        <input type="text" name="DNote" v-model="dispatch.DNote"
+                          id="DNote"
+                          class="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
+                      </div>
+
 
                       <div>
                         <label for="FinalDestinationPoint" class="block text-sm font-bold text-gray-700 mb-1">Final
@@ -206,10 +214,6 @@
                       <span class="text-sm text-gray-600"> {{ loadingPlan?.activity?.Name || 'Stock Prepositioning' }}</span>
                     </div>
 
-                    <div class="mb-7">
-                      <span class="text-sm font-bold text-gray-700">Activity: </span>
-                      <span class="text-sm text-gray-600"> {{ loadingPlan.activity.Name }}</span>
-                    </div>
 
 
                     <div class="mb-7">

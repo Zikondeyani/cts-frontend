@@ -119,7 +119,7 @@
                   <button type="button" @click="closeDialog"
                     class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">Close</button>
                   <button type="submit" v-if="!isRejecting"
-                    class="px-4 py-2 mr-3 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
+                    class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 inline-flex items-center">
                     <CheckCircleIcon class="h-5 w-5 mr-1" />
                     Approve Instruction
                   </button>

@@ -177,7 +177,6 @@
                 :columns="columns"
                 :rows="dispaches"
                 :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4"
                 :pagination-options="{ enabled: true }"
                 theme="polar-bear"
                 styleClass="vgt-table striped"
@@ -292,6 +291,14 @@ const columns = ref([
     label: "Dispatcher",
     field: (row) =>
       row.Dispatcher ? row.Dispatcher?.username?.replace(/\./g, " ") : " ",
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize",
+  },
+
+  {
+    label: "Date of Dispatch",
+    field: (row) => moment(row.Date).format("DD/MM/yyyy"),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
