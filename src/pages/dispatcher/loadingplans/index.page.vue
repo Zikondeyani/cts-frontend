@@ -88,17 +88,17 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                       <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DeliveryNote }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.atc }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.dispatcher?.username?.replace(/\./g, '') }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.Quantity }} MT</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.FinalDestinationPoint }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch.CreatedOn).format('MMMM Do YYYY,h:mm a') }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch.DriverName }} ({{ dispatch.TruckNumber
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.DeliveryNote }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.atc }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.dispatcher?.username?.replace(/\./g, '') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.Quantity }} MT</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.FinalDestinationPoint }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch?.CreatedOn).format('MMMM Do YYYY,h:mm a') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.DriverName }} ({{ dispatch?.TruckNumber
                           }})</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                           <span class="inline-block w-3 h-3 rounded-full"
-                            :class="dispatch.received ? 'bg-gray-500' : 'bg-red-500'">
+                            :class="dispatch?.received ? 'bg-gray-500' : 'bg-red-500'">
                           </span>
                         </td> <!-- Received status with dot -->
                       </tr>

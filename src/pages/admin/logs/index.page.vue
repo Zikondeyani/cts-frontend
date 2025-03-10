@@ -98,14 +98,29 @@ const columns = ref([
     tdClass: "capitalize",
   },
   {
-    label: "metadata",
-    field: (row) => row.metadata,
+    label: "Login IP Address",
+    field: (row) => row.metadata?.ipAddress,
     sortable: true,
-    hidden: true,
+    hidden: false,
+    firstSortType: "asc",
+  },
+  
+  {
+    label: "Login Location",
+    field: (row) => row.metadata?.location,
+    sortable: true,
+    hidden: false,
     firstSortType: "asc",
   },
   {
-    label: "Created",
+    label: "Device",
+    field: (row) => row.metadata?.deviceType,
+    sortable: true,
+    hidden: false,
+    firstSortType: "asc",
+  },
+  {
+    label: "Action Time",
     hidden: false,
     field: (row) => moment(row.created),
     sortable: true,
@@ -167,7 +182,8 @@ const generateExcel = () => {
 };
 
 
-function showMetadata(params) {
+
+const showMetadata = (params)  => {
   Swal.fire({
     title: "Details",
     text: params.row.metadata,

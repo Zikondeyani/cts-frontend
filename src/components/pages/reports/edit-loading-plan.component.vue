@@ -271,8 +271,8 @@ const updateLoadingPlan = async () => {
 
     const {
       commodity, district, transporter, warehouse, activity, IsRejected, RejectionComment,
-      user, originalIndex, vgt_id, IsActive, IsArchived, NoBags, dispatches,
-      ApprovedBy, IsApproved, ...updatedLoadingPlan
+      user, originalIndex, vgt_id, IsActive, IsArchived, NoBags,  dispatches, moveFromWarehouseId, moveToWarehouseId, warehouseFrom,warehouseTo,
+      ApprovedBy, IsApproved, vgtSelected,...updatedLoadingPlan
     } = loadingPlan.value;
 
     updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
@@ -282,14 +282,8 @@ const updateLoadingPlan = async () => {
 
     // Check for negative balance
     if (updatedLoadingPlan.Balance < 0) {
-      await Swal.fire({
-        title: "Invalid Balance",
-        text: "The balance cannot be negative. Please check the quantities.",
-        icon: "error",
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: "Ok"
-      });
-      return;
+      updatedLoadingPlan.Balance = 0; // Set balance to 0 if negative
+
     }
 
     // Check for missing information

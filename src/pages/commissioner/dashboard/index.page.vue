@@ -278,7 +278,7 @@
                     <div class="border rounded-lg shadow-lg p-4 bg-white relative">
                       <!-- Row with Heading and Filter -->
                       <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-[#096eb4]">Overall Stats</h2>
+                        <h2 class="text-lg font-semibold text-[#096eb4]">Overall Stats (All Seasons)</h2>
                         <!--  <div class="text-right">
                           <select v-model="selectedFilter" @change="applyFilter"
                             class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring focus:ring-[#0b8ad8]">
@@ -289,6 +289,11 @@
                             <option value="lastMonth">Last Month</option>
                           </select>
                         </div> -->
+
+                        <div class="text-right">
+                          <router-link  to="/commissioner/stats/"
+                        class="text-blue-400 hover:underline">View More</router-link>
+                        </div>
                       </div>
 
                       <!-- Stats Section -->
@@ -642,6 +647,7 @@
                             <TruckIcon class="h-10 w-10 inline-block mr-1" style="color: #248cd6;" />
                           </component>
                           <component v-else :is="stat.icon" :class="`h-7 w-7 text-${stat.iconColor}`" />
+                          
                         </div>
                         <div class="text-sm font-medium text-gray-600 mt-2">{{ stat.label }}</div>
                       </div>
@@ -657,8 +663,8 @@
                             :style="{ width: stat.progress + '%' }"></div>
                         </div>
                       </div>
-                      <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                      <router-link v-if="stat.link" to="/commissioner/stock-prepositioning"
+                      <div class="text-lg font-medium text-gray-800 mt-3">{{ stat.commodity }}</div>
+                      <router-link v-if="stat.link" :to="stat.href"
                         class="text-blue-500 hover:underline">View
                         Details</router-link>
 
@@ -668,59 +674,29 @@
                 </div>
 
                 <!-- Damaged Stock Stats - only show when data is loaded -->
-                <div v-if="!isLoading"
-                  class="bg-white border border-gray-200 rounded-lg shadow-lg p-5 col-span-1 md:col-span-2">
+                <div
+                  v-if="!isLoading"
+                  class="bg-white border border-gray-200 rounded-lg shadow-lg p-5 col-span-1 md:col-span-2"
+                >
                   <div class="flex items-center mb-4">
-                    <ReceiptRefundIcon class="h-10 w-10 mr-2" style="color: #248cd6;" />
-                    <h3 class="text-xl font-bold text-gray-600">Stock Loss Statistics</h3>
+                    <TruckIcon class="h-10 w-10 mr-2" style="color: #248cd6" />
+                    <h3 class="text-xl font-bold text-gray-600">
+                      Transporter Tracker
+                    </h3>
                   </div>
 
                   <div class="mb-4">
-                    <div class="text-sm font-bold text-gray-500">Lean Season Response & Emergency Assistance</div>
-                    <div v-if="damagedStockStats.length === 0" class="text-gray-500 text-sm mb-3 font-medium">No Data
-                    </div>
-                    <div v-else>
-                      <div v-for="(stat, index) in damagedStockStats" :key="index"
-                        class="flex items-center justify-between py-2 border-b last:border-b-0">
-                        <div class="flex items-center">
-                          <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
-                          <div>
-                            <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/commissioner/Lean-season-losses"
-                              class="text-blue-500 hover:underline">View
-                              Details</router-link>
-                          </div>
-                        </div>
-                        <!--  <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
-                          + '%' }}
-                          <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div> -->
-                      </div>
-                    </div>
+                    <!-- Removed commented-out sections for clarity -->
                   </div>
 
-                  <div>
-                    <div class="text-sm font-bold text-gray-500">Emergency Response</div>
-                    <div v-if="damagedStockStatsEmergency.length === 0" class="text-gray-500 text-sm mb-3 font-medium">
-                      No Data</div>
-                    <div v-else>
-                      <div v-for="(stat, index) in damagedStockStatsEmergency" :key="index"
-                        class="flex items-center justify-between py-2 border-b last:border-b-0">
-                        <div class="flex items-center">
-                          <div :style="{ backgroundColor: stat.color }" class="w-4 h-4 rounded-full mr-2"></div>
-                          <div>
-                            <div class="text-lg font-medium text-gray-800">{{ stat.commodity }}</div>
-                            <router-link to="/planner/Emergency-season-losses"
-                              class="text-blue-500 hover:underline">View
-                              Details</router-link>
-                          </div>
-                        </div>
-                        <!-- <div class="text-lg font-bold text-red-600">{{ stat.percentage > 100 ? '100%' : stat.percentage
-                          + '%' }}
-                          <span v-if="stat.percentage > 100" style="color: red;">&#9650;</span>
-                        </div> -->
-                      </div>
-                    </div>
+                  <!-- Button to navigate to Vehicle or Transporter Tracker -->
+                  <div class="mt-4 mb-6">
+                    <router-link
+                      to="/commissioner/tracker"
+                      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
+                    >
+                      Go to Transporter Tracker
+                    </router-link>
                   </div>
                 </div>
 
@@ -1215,7 +1191,7 @@ const getLoadingPlans = async () => {
       loadingplans.push(...result);
       loadingplansCount.value = loadingplans.length
 
-      loadingplansCountPending.value = loadingplans.filter(item => item.isApproved == false).length
+      loadingplansCountPending.value = loadingplans.filter(item => item.isApproved == false && item.isRejected == false).length
     })
 }
 
@@ -1308,6 +1284,8 @@ const stats2 = ref([
     progress: dispatchPercentage,
     isProgressPositive: dispatchPercentage >= 50,
     progressColor: dispatchPercentage < 50 ? 'green-500' : 'red-500',
+    link: true,
+    href: "/commissioner/stats"
   },
 
 
@@ -1323,6 +1301,8 @@ const stats2 = ref([
     progress: dispatchPercentageEMR,
     isProgressPositive: dispatchPercentageEMR >= 50,
     progressColor: dispatchPercentageEMR < 50 ? 'green-500' : 'red-500',
+    link: true,
+    href: "/commissioner/stock-prepositioning"
   },
 
 
@@ -1336,6 +1316,7 @@ const stats2 = ref([
     showProgress: false,
     moreInfo: true,
     link: true,
+    href: "/commissioner/stock-prepositioning"
   },
 
 ]);
