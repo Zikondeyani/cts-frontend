@@ -339,7 +339,6 @@ import {
   onMounted,
   onBeforeUnmount,
 } from "vue";
-import { useRouter } from "vue-router";
 import {
   Menu,
   MenuButton,
@@ -354,6 +353,8 @@ import {
   MenuIcon,
   XIcon,
 } from "@heroicons/vue/outline";
+
+import { useRouter } from "vue-router";
 import { useSessionStore } from "../../stores/session.store";
 import { useinstructionstore } from "../../stores/instructions.store";
 

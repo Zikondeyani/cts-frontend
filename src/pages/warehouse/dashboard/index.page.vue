@@ -17,6 +17,8 @@
       <div class="grid grid-cols-1 gap-4 items-start lg:grid-cols-3 lg:gap-8">
         <!-- Left column -->
         <div class="grid grid-cols-1 gap-4 lg:col-span-4">
+
+          
           <!-- Welcome panel -->
           <section aria-labelledby="profile-overview-title">
             <div class="rounded-lg bg-white overflow-hidden shadow">
@@ -46,24 +48,78 @@
                   </div>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                <!-- Total Stock Prepositioned Card -->
+           
+              <div class="bg-gray-100 p-5">
                 <div
-                  class="bg-white border m-4 border-gray-200 rounded-lg shadow-sm p-4 flex items-center justify-between">
-                  <div>
-                    <h3 class="text-sm font-medium text-gray-600">Total Stock Prepositioned</h3>
-                    <p class="text-2xl font-medium text-gray-900 mt-2">{{ totals.totalTonnagePlanned }} MT</p>
+                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+                >
+                  <!-- Stats Cards -->
+                  <div
+                    v-for="stat in stats"
+                    :key="stat.label"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between"
+                  >
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl font-semibold text-gray-800">{{
+                          stat.value
+                        }}</span>
+                        <component
+                          v-if="stat.label == 'Dispatch Status'"
+                          :is="
+                            stat.progress >= 50
+                              ? CheckCircleIcon
+                              : ExclamationCircleIcon
+                          "
+                          :class="`h-6 w-6 text-${
+                            stat.progress >= 50 ? 'green-500' : 'red-500'
+                          }`"
+                        />
+                        <component
+                          v-else
+                          :is="stat.icon"
+                          :class="`h-6 w-6 text-${stat.iconColor}`"
+                        />
+                      </div>
+
+                      <div class="text-sm font-medium text-gray-600 mt-2">
+                        {{ stat.label }}
+                      </div>
+                    </div>
+                    <div v-if="stat.percentageText" class="mt-4">
+                      <div class="flex items-center justify-between">
+                        <span
+                          :class="
+                            stat.progress >= 50
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                          "
+                          >{{ stat.percentageText }}</span
+                        >
+                        <component
+                          :is="
+                            stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon
+                          "
+                          class="h-5 w-5"
+                          :class="
+                            stat.progress >= 50
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                          "
+                        />
+                      </div>
+
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div
+                          :class="
+                            stat.progress >= 50 ? 'bg-gray-500' : 'bg-red-500'
+                          "
+                          class="h-2 rounded-full"
+                          :style="{ width: stat.progress + '%' }"
+                        ></div>
+                      </div>
+                    </div>
                   </div>
-                  <OfficeBuildingIcon class="h-8 w-8 text-blue-500" />
-                </div>
-                <!-- Total Dispatched Card -->
-                <div
-                  class="bg-white border m-4 border-gray-200 rounded-lg shadow-sm p-4 flex items-center justify-between">
-                  <div>
-                    <h3 class="text-sm font-medium text-gray-600">Total Dispatched (In Transit)</h3>
-                    <p class="text-2xl font-medium text-gray-900 mt-2">{{ totals.totalTonnageDispatched }} MT</p>
-                  </div>
-                  <TruckIcon class="h-8 w-8 text-green-500" />
                 </div>
               </div>
 
@@ -153,6 +209,27 @@ onMounted(() => {
   getWarehouses();
   getPrepositionedStock();
 });
+
+
+const stats = computed(() => [
+  {
+    label: "Total Stock Prepositioned",
+    value: `${totals.value.totalTonnagePlanned} MT`,
+    icon: ClipboardListIcon,
+    iconColor: "green-500",
+    percentageText: null,
+  },
+  {
+    label: "Total Dispatched (In Transit)",
+    value: `${totals.value.totalTonnageDispatched} MT`,
+    icon: TruckIcon,
+    iconColor: "blue-400",
+    percentageText: "",
+    textColor: "blue-600",
+    showProgress: false,
+  },
+]);
+
 
 
 </script>

@@ -235,7 +235,7 @@
 import { inject, ref, watch, reactive, onMounted, toRefs, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
-import createInstructionReceiptForm from "../../../components/pages/instruction/receipt.component.vue";
+import createInstructionReceiptForm from "../../../components/pages/instruction/receipt-warehouse.component.vue";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -247,7 +247,7 @@ import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.brea
 import { useUserStore } from "../../../stores/user.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
-import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
+import { useWarehouseDispatchesStore } from "../../../stores/warehousedispatches.store";
 import ChartComponent from "../../../components/pages/charts/dashboardcharts.vue"; // Adjust path as needed
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDisasterstore } from "../../../stores/disaster.store";
@@ -472,54 +472,66 @@ const columns = ref([
 const columns2 = ref([
   {
     label: "#",
-    field: (row) => row.originalIndex + 1,
+    field: (row) => row.id, // Use the id as the index for each row
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
   },
 
   {
-    label: "From Warehouse",
-    field: (row) => {
-      const warehouses = row.warehouses
-        ?.map((warehouse) => warehouse?.Name)
-        .join(", ");
-      const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
-      return `${warehouseFormatted}`;
-    },
-    sortable: true,
-    firstSortType: "asc",
-    tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
-    thClass: "w-1/6", // Set width to 1/6th of the table
-    html: true,
-    tdAttr: { "v-html": true },
-  },
-
-  {
-    label: "Dispatched By",
-    field: (row) => row.Dispatcher?.username.replace(/\./g, " "),
+    label: "Delivery Note",
+    field: (row) => row.DeliveryNote,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
   },
+
+  {
+    label: "Final Destination",
+    field: (row) => row.FinalDestinationPoint,
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize",
+  },
+
+  {
+    label: "Driver Name",
+    field: (row) => row.DriverName || "—",
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize",
+  },
+
+  {
+    label: "Truck Number",
+    field: (row) => row.TruckNumber || "—",
+    sortable: true,
+    firstSortType: "asc",
+    tdClass: "capitalize",
+  },
+
+ 
 
   {
     label: "Status",
     field: (row) => {
-      const today = moment().startOf("day"); // Start of today
-      const createdOn = moment(row.createdOn).startOf("day"); // Start of the created date
+      const today = moment().startOf("day");
+      const created = row.Date ? moment(row.Date).startOf("day") : null;
 
-      if (createdOn.isSame(today)) {
-        // If CreatedOn is today, show "Pending"
+      if (!created) return "—";
+
+      if (created.isSame(today)) {
         return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800'>Pending</span>";
-      } else if (createdOn.isBefore(today)) {
-        const diffDays = today.diff(createdOn, "days");
+      } else if (created.isBefore(today)) {
+        const diffDays = today.diff(created, "days");
         if (diffDays <= 3) {
           return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800'>Delayed Receipt</span>";
         } else {
           return "<span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800'>Long overdue</span>";
         }
       }
+
+      return "—";
     },
     sortable: true,
     firstSortType: "asc",
@@ -531,6 +543,7 @@ const columns2 = ref([
     label: "Options",
     field: (row) => row,
     sortable: false,
+    tdClass: "text-center",
   },
 ]);
 
@@ -564,7 +577,7 @@ const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const userStore = useUserStore();
 
-const dispatchStore = useInstructedDispatchesStore();
+const dispatchStore = useWarehouseDispatchesStore();
 
 const leanseasondispatchStore = useDispatcherStore();
 
@@ -671,30 +684,8 @@ const getDispatches = async () => {
     dispaches.length = 0; // Clear existing dispatches
     const reversedData = sortedDispatches.reverse();
 
-    // Filter and map the dispatches
-    const filteredDispatches = reversedData
-      .filter(
-        (item) =>
-          !item.IsArchived &&
-          item.instruction.district?.Name === user.value.district
-      )
-      .map((dispatch) => {
-        // Map warehouse IDs to warehouse objects
-        const warehouseArray = dispatch.instruction?.warehouseIds
-          ?.map((warehouseId) => {
-            return warehouses.find((warehouse) => warehouse.id === warehouseId);
-          })
-          .filter((warehouse) => warehouse); // Filter out undefined results
+    dispaches.push(...reversedData.filter(item => item.IsArchived == false && item.district?.Name == user.value.district));
 
-        // Add the warehouse array to the dispatch object
-        return {
-          ...dispatch,
-          warehouses: warehouseArray,
-        };
-      });
-
-    // Update dispatches with the mapped data
-    dispaches.push(...filteredDispatches);
   } catch (error) {
     console.error("Error fetching dispatches:", error);
   } finally {
@@ -996,21 +987,6 @@ const getLoadingPlansPending = async () => {
     pendingplans.value = result.count;
   });
 };
-
-/* const getdispatchSummary = async () => {
-  // isLoading.value = true;
-  dispatchStore
-    .getdispatchSummary()
-    .then(result => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` receipient
-
-      totalDispatched.value = result.totalDispatched.toLocaleString() + " MT"
-      totalReceived.value = result.totalReceived
-      receivedPercentageFormated.value = result.dispatchPercentage.toFixed(2) + '% received'
-
-      receivedPercentage.value = result.dispatchPercentage.toFixed(2)
-    })
-} */
 
 const getloadingplansSummary = async () => {
   // isLoading.value = true;

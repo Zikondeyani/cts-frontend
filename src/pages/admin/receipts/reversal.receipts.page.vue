@@ -120,6 +120,11 @@
             </span>
           </template>
         </vue-good-table>
+
+        <ReceiptViewDialog :isOpen="isReceiptDialogOpen" :receipt="selectedReceipt" @close="closeReceiptDialog"
+          v-on:update="reloadPage" />
+
+      
       </div>
     </div>
   </main>

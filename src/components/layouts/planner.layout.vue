@@ -49,7 +49,6 @@
               {{ user?.district }}
             </span>
           </div>
-         
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
@@ -88,7 +87,6 @@
             <div
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
-              
               @click="openDropdown"
               @mouseenter="openDropdown"
               @mouseleave="closeDropdown"
@@ -385,9 +383,14 @@ import eventBus from "../../services/events/eventbus";
 import { userequisitionstore } from "../../stores/requisition.store";
 import { useinstructionstore } from "../../stores/instructions.store";
 import { useloadingplanstore } from "../../stores/loadingplans.store";
+import { useWarehouseRequisitionsStore } from "../../stores/warehouserequisition.store";
 
 const requisitionsStore = userequisitionstore();
 const requisitions = reactive([]);
+
+const warehouserequisitionsStore = useWarehouseRequisitionsStore();
+const warehouserequisitions = reactive([]);
+
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 
@@ -425,6 +428,7 @@ const toggleNotifications = () => {
 const newRequisitionsCount = ref(0);
 
 const newRejectedInstructionsCount = ref(0);
+const newWarehouseReqCount = ref(0);
 
 const newRejectedLoadingPlanCount = ref(0);
 
@@ -449,7 +453,6 @@ const closeDropdown = () => {
   isDropdownOpen.value = false;
 };
 
-
 function signOut() {
   userStore.signOut(); // Your sign-out logic
   isDropdownOpen.value = false;
@@ -463,6 +466,7 @@ const isLoading = ref(false);
 
 onMounted(() => {
   startSignOutTimer();
+  getWarehouseRequisitions();
   getRequisitions();
   getInstructions();
   getLoadingPlans();
@@ -472,6 +476,7 @@ onMounted(() => {
     getInstructions();
     getLoadingPlans();
     updateNotifications();
+    getWarehouseRequisitions();
     addEventListeners();
   });
 });
@@ -578,7 +583,6 @@ const itemClasses = (item) => [
   "group flex items-center px-2 py-2 text-sm font-medium rounded-md",
 ];
 
-
 const onSignout = async () => {
   try {
     await sessionStore.signOut();
@@ -626,6 +630,13 @@ const updateNotifications = () => {
       href: "/planner/rejected-instruction-management",
     });
   }
+
+  if (newWarehouseReqCount.value > 0) {
+    notifications.value.push({
+      message: `Warehouse Requisitions (${newWarehouseReqCount.value})`,
+      href: "/planner/warehouserequisitions",
+    });
+  }
 };
 
 const getInstructions = async () => {
@@ -643,6 +654,26 @@ const getInstructions = async () => {
     });
 };
 
+const getWarehouseRequisitions = async () => {
+  isLoading.value = true;
+  warehouserequisitionsStore
+    .get()
+    .then((result) => {
+  
+      warehouserequisitions.length = 0;
+      warehouserequisitions.push(
+        ...result.filter((item) => item.isApproved == false)
+      );
+      newWarehouseReqCount.value = warehouserequisitions.length;
+
+
+     updateNotifications();
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplanStore
@@ -651,7 +682,10 @@ const getLoadingPlans = async () => {
       loadingplans.length = 0;
       loadingplans.push(
         ...result.filter(
-          (item) => item.IsRejected == true && item.IsArchived == false && item.IsDeleted == false
+          (item) =>
+            item.IsRejected == true &&
+            item.IsArchived == false &&
+            item.IsDeleted == false
         )
       );
       newRejectedLoadingPlanCount.value = loadingplans.length;

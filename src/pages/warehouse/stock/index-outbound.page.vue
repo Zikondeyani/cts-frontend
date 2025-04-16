@@ -9,15 +9,11 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Stock Register
+            Outbound Stock
           </h2>
         </div>
       </div>
 
-      <!-- Tabs Section -->
-
-      <!-- Tabs Section -->
-      <!-- Tabs + Actions Section -->
       <div class="my-4 border-b border-gray-400">
         <div class="flex flex-wrap justify-between items-center gap-2">
           <!-- Tabs -->
@@ -51,13 +47,26 @@
               class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
             >
               <i class="fas fa-file-alt mr-2"></i>
-              Non Food Items
+              NFIs
               <span
                 v-if="nfisCount > 0"
                 class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
               >
                 {{ nfisCount }}
               </span>
+            </button>
+
+            <button
+              @click="activeTab = 'Transfers'"
+              :class="{
+                'tab-button text-white': activeTab === 'Transfers',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'Transfers',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
+              <i class="fas fa-file-alt mr-2"></i>
+              Stock Transfers
             </button>
           </div>
 
@@ -67,15 +76,15 @@
               v-if="activeTab === 'FoodItems'"
               @click="exportFoodItems"
               class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-              >
-              Export Food Items Data
+            >
+              Export Food Items
             </button>
             <button
               v-else-if="activeTab === 'NFIS'"
               @click="exportNFIS"
               class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-              >
-              Export Non Food Item Data
+            >
+              Export NFIs
             </button>
 
             <!-- New Stock Register -->
@@ -143,11 +152,11 @@
                   <span v-if="props.column.label == 'Options'">
                     <button
                       type="button"
-                      @click="openGroupedItemsModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+                      @click="openTransferModal(props.row)"
+                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150"
                     >
-                      <EyeIcon class="h-5 w-5 mr-2" />
-                      View Stock Breakdown
+                      <ArrowCircleRightIcon class="h-5 w-5 mr-2" />
+                      Transfer Stock
                     </button>
                   </span>
                 </template>
@@ -157,81 +166,119 @@
         </section>
       </div>
 
+      <div v-if="activeTab === 'Transfers'" class="mt-5">
+        <section class="bg-transparent mt-6 rounded-table">
+          <div class="container mx-auto min-w-full shadow-xl rounded-table">
+            <!-- Export Button -->
+
+            <div class="overflow-x-auto">
+              <vue-good-table
+                :columns="columns1"
+                :rows="transfers"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
+                <template #table-actions> </template>
+
+                <template #table-row="props">
+                  <span v-if="props.column.label == 'Status'">
+                    <span
+                      v-if="!props.row.IsReceived"
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                    >
+                      <XCircleIcon class="h-4 w-4 mr-1" /> Not Received
+                    </span>
+                    <span
+                      v-else
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                    >
+                      <CheckCircleIcon class="h-4 w-4 mr-1" /> Received
+                    </span>
+                  </span>
+                </template>
+              </vue-good-table>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <!-- Modal for Grouped Items -->
-      <template v-if="openGroupedItems">
-        <div id="content">
-          <div
-            class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
-          >
-            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Grouped Stock Items</h3>
+      <template v-if="showTransferModal">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
+            <h3 class="text-lg font-semibold mb-4">Transfer Stock</h3>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium">Commodity </label>
+                <input
+                  type="text"
+                  :value="selectedInventory?.commodity?.Name"
+                  readonly
+                  class="w-full border rounded px-3 py-2 bg-gray-100"
+                />
               </div>
 
-              <div class="overflow-auto max-h-96">
-                <table class="min-w-full table-auto border-collapse">
-                  <thead>
-                    <tr class="bg-blue-100">
-                      <th
-                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                      >
-                        Commodity
-                      </th>
-                      <th
-                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                      >
-                        Stock From
-                      </th>
-                      <th
-                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                      >
-                        Quantity
-                      </th>
-                      <th
-                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                      >
-                        Type
-                      </th>
-                      <th
-                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                      >
-                        Created On
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="item in groupedItemsToView" :key="item.id">
-                      <td class="px-4 py-2 text-sm text-gray-900">
-                        {{ item.commodity?.Name }}
-                      </td>
-                      <td class="px-4 py-2 text-sm text-gray-900">
-                        {{ item.StockFrom }}
-                      </td>
-                      <td class="px-4 py-2 text-sm text-gray-900">
-                        {{ item.Quantity }} {{ item.commodity?.Container_type }}
-                      </td>
-                      <td class="px-4 py-2 text-sm text-gray-900">
-                        {{ item.type }}
-                      </td>
-                      <td class="px-4 py-2 text-sm text-gray-900">
-                        {{
-                          moment(item.CreatedOn).format("MMMM Do YYYY, h:mm a")
-                        }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div>
+                <label class="block text-sm font-medium mb-1">
+                  Quantity to Transfer
+                  <span
+                    v-if="selectedInventory?.commodity?.Container_type"
+                    class="text-gray-500"
+                  >
+                    ({{ selectedInventory?.commodity?.Container_type }})
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  v-model="transferForm.quantity"
+                  class="w-full border rounded px-3 py-2"
+                />
               </div>
 
-              <div class="flex justify-end mt-4">
-                <button
-                  type="button"
-                  class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                  @click="closeGroupedItems"
+              <div>
+                <label class="block text-sm font-medium"
+                  >Transfer To Warehouse</label
                 >
-                  Close
-                </button>
+                <select
+                  v-model="transferForm.toWarehouseId"
+                  class="w-full border rounded px-3 py-2"
+                >
+                  <option disabled value="">Select Warehouse</option>
+                  <option
+                    v-for="wh in warehouses.filter(
+                      (wh) => wh.id !== selectedInventory?.warehouse?.id
+                    )"
+                    :key="wh.id"
+                    :value="wh.id"
+                  >
+                    {{ wh.Name }}
+                  </option>
+                </select>
               </div>
+            </div>
+
+            <div class="flex justify-end mt-6 space-x-2">
+              <button
+                @click="closeTransferModal"
+                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+
+              <button
+                @click="transferStock"
+                style="background-color: #096eb4"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+              >
+                Transfer
+              </button>
             </div>
           </div>
         </div>
@@ -244,6 +291,7 @@
 // import the styles
 import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
+
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import {
@@ -251,18 +299,27 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   EyeIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ArrowCircleRightIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createStockForm from "../../../components/pages/stocks/create.component-admin.vue";
+import createStockForm from "../../../components/pages/stocks/create.component.vue";
 //SCHEMA//AND//STORES
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
+import { usecommoditytransfersservice } from "../../../stores/commoditytransfters.store";
+
+import { usewarehousestore } from "../../../stores/warehouse.store";
+import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
 const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
 
+const sessionStore = useSessionStore();
+const user = ref(sessionStore.getUser);
 // Variables
 const isLoading = ref(false);
 const activeTab = ref("FoodItems"); // Default tab
@@ -273,9 +330,16 @@ const openGroupedItems = ref(false);
 const groupedItemsToView = ref([]);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Stock Register", href: "#", current: true },
+  { name: "Outbound Stock", href: "#", current: true },
 ];
 const commodityInventorieStore = usecommodityinventoriestore();
+
+const commodityTransferStore = usecommoditytransfersservice();
+const transfers = reactive([]);
+
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([]);
+
 const inventories = reactive([]);
 const columns = ref([
   {
@@ -303,7 +367,7 @@ const columns = ref([
   },
   {
     label: "Warehouse",
-    field: (row) => row.warehouse?.Name,
+    field: (row) => row.warehouse.Name,
     sortable: true,
     firstSortType: "asc",
   },
@@ -316,15 +380,52 @@ const columns = ref([
   { label: "Options", field: (row) => row, sortable: false },
 ]);
 
+const columns1 = ref([
+  {
+    label: "#",
+    field: (row) => row.originalIndex + 1,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "Commodity",
+    field: (row) => row.commodityInventory?.commodity.Name,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "From",
+    field: (row) => row.fromwarehouse?.Name,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "To",
+    field: (row) => row.towarehouse?.Name,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "Quantity",
+    field: (row) =>
+      `${row.quantity} ${row.commodityInventory?.commodity?.Container_type}`,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  { label: "Status", field: (row) => row, sortable: false },
+]);
+
 onMounted(() => {
   getCommodityInventories();
+  getWarehouses();
+  getCommodityTransfers();
 });
 
 // Fetching data for NFIS and Food Items
 const getCommodityInventories = async () => {
   isLoading.value = true;
   try {
-    const result = await commodityInventorieStore.get();
+    const result = await commodityInventorieStore.getAll();
     inventories.length = 0; // Clear inventories
     nfisData.length = 0;
     foodItemsData.length = 0;
@@ -335,11 +436,15 @@ const getCommodityInventories = async () => {
       ...inventories.filter((item) => item.commodity?.commodityTypeId == 2)
     );
     foodItemsData.push(
-      ...inventories.filter((item) => item.commodity?.commodityTypeId == 1)
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId == 1 &&
+          item.warehouse?.district?.Name == user.value.district
+      )
     );
   } catch (error) {
     Swal.fire({
-      title: "Inventory Retrieval Failed",
+      title: "Organisation Retrieval Failed",
       text: "Failed to get Commodity Inventories (Please refresh to try again)",
       icon: "error",
       confirmButtonText: "Ok",
@@ -348,6 +453,7 @@ const getCommodityInventories = async () => {
     isLoading.value = false;
   }
 };
+
 const openGroupedItemsModal = (row) => {
   groupedItemsToView.value = row.groupedItems || [];
   openGroupedItems.value = true;
@@ -420,6 +526,90 @@ const exportFoodItems = () => {
 
 const exportNFIS = () => {
   exportToExcel(nfisData, "NFIS_Stock");
+};
+
+const showTransferModal = ref(false);
+const selectedInventory = ref(null);
+const transferForm = reactive({
+  quantity: null,
+  toWarehouseId: null,
+});
+
+const openTransferModal = (row) => {
+  selectedInventory.value = row;
+  transferForm.quantity = null;
+  transferForm.toWarehouseId = null;
+  showTransferModal.value = true;
+};
+
+const closeTransferModal = () => {
+  showTransferModal.value = false;
+  selectedInventory.value = null;
+};
+
+const transferStock = async () => {
+  if (!transferForm.quantity || !transferForm.toWarehouseId) {
+    Swal.fire("Error", "Please fill all fields", "error");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    await commodityTransferStore.create({
+      commodityInventoryId: selectedInventory.value.id,
+      quantity: transferForm.quantity,
+      towarehouseId: transferForm.toWarehouseId,
+      fromwarehouseId: selectedInventory.value.warehouse?.id,
+    });
+    Swal.fire("Success", "Stock transferred successfully", "success");
+    closeTransferModal();
+    getCommodityInventories(); // Refresh table
+  } catch (error) {
+    Swal.fire("Error", "Transfer failed", "error");
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const getCommodityTransfers = async () => {
+  commodityTransferStore
+    .get()
+    .then((result) => {
+      transfers.length = 0; //empty array
+
+      transfers.push(
+        ...result.filter(
+          (item) => item.fromwarehouse?.district?.Name == user.value.district
+        )
+      );
+    })
+    .catch((error) => {})
+    .finally(() => {});
+};
+
+const getWarehouses = async () => {
+  warehouseStore
+    .get()
+    .then((result) => {
+      warehouses.length = 0; //empty array
+
+      warehouses.push(
+        ...result.filter((item) => item.organisation.Name == "DODMA")
+      );
+    })
+    .catch((error) => {})
+    .finally(() => {});
+};
+
+const getCommodities = async () => {
+  commodityStore
+    .get()
+    .then((result) => {
+      commodities.length = 0; //empty array
+      commodities.push(...result);
+    })
+    .catch((error) => {})
+    .finally(() => {});
 };
 </script>
 

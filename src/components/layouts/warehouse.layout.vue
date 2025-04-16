@@ -376,6 +376,10 @@ import {
 } from "@heroicons/vue/solid";
 import { useinstructionstore } from "../../stores/instructions.store";
 import { useloadingplanstore } from "../../stores/loadingplans.store";
+
+import { useWarehouseRequisitionsStore } from "../../stores/warehouserequisition.store";
+
+import { usecommoditytransfersservice } from "../../stores/commoditytransfters.store";
 import {
   saveDataOffline,
   getDataOffline,
@@ -399,11 +403,22 @@ const role = ref(sessionStore.getRole);
 const isDropdownOpen = ref(false);
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
-
+const warehouseReq = reactive([]);
 const loadingStore = useloadingplanstore();
+
+const warehouseReqStore = useWarehouseRequisitionsStore();
+
+const commodityTransferStore = usecommoditytransfersservice();
+
 const loadingplans = reactive([]);
 const signOutTimeout = ref(null);
+const newInstructionsCount = ref(0);
 
+const newWarehouseReqCount = ref(0);
+const newLoadingPlanCount = ref(0);
+
+const newTransfersCount = ref(0);
+const transfers = reactive([]);
 const menuItemClasses = (active, isButton = false) => [
   active ? "bg-gray-100 text-gray-900" : "text-gray-700",
   "block px-4 py-2 text-sm",
@@ -414,7 +429,26 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
+const getCommodityTransfers = async () => {
+  try {
+    const result = await commodityTransferStore.get();
 
+    transfers.length = 0; // Clear array
+
+    transfers.push(
+      ...result.filter(
+        (item) =>
+          item.towarehouse?.district?.Name === user.value.district &&
+          (item.IsReceived === null || item.IsReceived === false)
+      )
+    );
+
+    newTransfersCount.value = transfers.length;
+  } catch (error) {
+    console.error("Error fetching commodity transfers:", error);
+    // Optionally show a toast/notification
+  }
+};
 
 let dropdownTimeout;
 
@@ -454,6 +488,8 @@ const iconClasses = (item) => [
 ];
 
 onMounted(() => {
+  getcommodityInventory();
+  getCommodityTransfers();
   getInstructions();
   getLoadingPlans();
   eventBus.on("instructionArchived", (instructionId) => {
@@ -467,11 +503,25 @@ onMounted(() => {
     getLoadingPlans();
     updateNotifications();
   });
+
+  eventBus.on("warehouseReqArchived", (lpId) => {
+    // Update the notification count
+    getcommodityInventory();
+    updateNotifications();
+  });
+
+  eventBus.on("TransfersArchived", (lpId) => {
+    // Update the notification count
+    getCommodityTransfers();
+    updateNotifications();
+  });
 });
 
 onBeforeUnmount(() => {
   eventBus.off("instructionArchived");
   eventBus.off("loadingplanArchived");
+  eventBus.off("warehouseReqArchived");
+  eventBus.off("TransfersArchived");
 });
 
 const notifications = ref([]);
@@ -489,6 +539,20 @@ const updateNotifications = () => {
     notifications.value.push({
       message: `Lean Season Loading Plans (${newLoadingPlanCount.value})`,
       href: "/warehouse/loadingplans",
+    });
+  }
+
+  if (newWarehouseReqCount.value > 0) {
+    notifications.value.push({
+      message: `Warehouse Requisitions (${newWarehouseReqCount.value})`,
+      href: "/warehouse/warehouserequisitions",
+    });
+  }
+
+  if (newTransfersCount.value > 0) {
+    notifications.value.push({
+      message: `Unconfirmed Stock Transfers (${newTransfersCount.value})`,
+      href: "/warehouse/stock-transfer-management",
     });
   }
 };
@@ -590,6 +654,24 @@ const itemClasses = (item) => [
   "group flex items-center px-2 py-2 text-sm font-medium rounded-md",
 ];
 
+
+
+const getcommodityInventory = async () => {
+  try {
+    const result = await warehouseReqStore.get();
+    warehouseReq.length = 0;
+    warehouseReq.push(
+      ...result.filter(
+        (item) => item.warehouse?.district?.Name == user.value.district  && !item.isClosed
+      )
+    );
+    newWarehouseReqCount.value = warehouseReq.length;
+    updateNotifications();
+  } catch (error) {
+    console.error("Error fetching Inventory Requestions:", error);
+  }
+};
+
 const onSignout = async () => {
   try {
     await sessionStore.signOut();
@@ -617,10 +699,6 @@ const onSignout = async () => {
 const onAbout = async () => {
   $router.push({ path: "/warehouse/about-system" });
 };
-
-const newInstructionsCount = ref(0);
-
-const newLoadingPlanCount = ref(0);
 
 const getInstructions = async () => {
   try {
