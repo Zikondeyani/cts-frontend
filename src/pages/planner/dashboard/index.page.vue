@@ -490,30 +490,34 @@
                               <div class="text-2xl font-bold text-[#0b8ad8]">
                                 {{ loadingplansCount }}
                               </div>
+
                               <div class="text-sm text-gray-600 mt-1">
                                 <!-- Show pending count if there are pending approvals -->
-                                <span
-                                  class="font-bold text-[#ff6f61]"
-                                  v-if="loadingplansCountPending > 0"
-                                >
-                                  {{ loadingplansCountPending }}
+                                <div v-if="loadingplansCountPending > 0">
                                   <span
-                                    class="font-semibold text-sm text-[#0b8ad8]"
-                                    >Pending Approval</span
+                                    class="font-semibold text-sm text-[#d9534f] block"
                                   >
-                                </span>
+                                    <span
+                                      class="font-bold text-sm text-[#0b8ad8]"
+                                    >
+                                      {{ loadingplansCountPending }}
+                                    </span>
+                                    Pending Approval
+                                  </span>
+                                </div>
 
                                 <!-- Show rejected count if there are rejected loading plans -->
-                                <span
-                                  class="font-bold text-[#d9534f]"
-                                  v-if="loadingplansCountRejected > 0"
-                                >
-                                  {{ loadingplansCountRejected }}
+                                <div v-if="loadingplansCountRejected > 0">
                                   <span
-                                    class="font-semibold text-sm text-[#d9534f]"
-                                    >Rejected</span
-                                  >
-                                </span>
+                                    class="font-semibold text-sm text-[#d9534f] block"
+                                    ><span
+                                      class="font-bold text-sm text-[#0b8ad8]"
+                                    >
+                                      {{ loadingplansCountRejected }}</span
+                                    >
+                                    Rejected
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1055,11 +1059,13 @@
                       <div class="text-lg font-medium text-gray-800">
                         {{ stat.commodity }}
                       </div>
-                   
 
-                      <router-link v-if="stat.link" :to="stat.href"
-                        class="text-blue-500 hover:underline mt-4">View
-                        Details</router-link>
+                      <router-link
+                        v-if="stat.link"
+                        :to="stat.href"
+                        class="text-blue-500 hover:underline mt-4"
+                        >View Details</router-link
+                      >
                     </div>
                   </div>
                 </div>
@@ -1689,7 +1695,7 @@ const stats2 = ref([
     moreInfo: true,
     progress: dispatchPercentage,
     isProgressPositive: dispatchPercentage >= 50,
-      link: true,
+    link: true,
     href: "/planner/stats",
     progressColor: dispatchPercentage < 50 ? "green-500" : "red-500",
   },
@@ -1719,8 +1725,8 @@ const stats2 = ref([
     textColor: "blue-600",
     showProgress: false,
     moreInfo: true,
-     link: true,
-    href: "/planner/stock-prepositioning"
+    link: true,
+    href: "/planner/stock-prepositioning",
   },
 ]);
 

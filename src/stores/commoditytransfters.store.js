@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
-import ActivitiesService from "../services/api/commodityinventories.service";
-const commodityinventoriesService = new ActivitiesService();
+import TransfersService from "../services/api/commoditytransfers.service";
+const commodityTransfersService = new TransfersService();
 
-export const usecommodityinventoriestore = defineStore({
-  id: 'commodityinventories',
+export const usecommoditytransfersservice = defineStore({
+  id: 'commoditytransfers',
   state: () => ({
-     commodityinventories: [],
+     commoditytransfers: [],
   }),
   getters: {
 
   },
   actions: {
     async get() {
-      return await commodityinventoriesService.get().then((result) => {
+      return await commodityTransfersService.get().then((result) => {
         if (result) {
           var response = result;
           return response
@@ -21,43 +21,10 @@ export const usecommodityinventoriestore = defineStore({
     },
 
 
-    async getAll() {
-      return await commodityinventoriesService.getAll().then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
-
-
-    async check(filter) {
-      return await commodityinventoriesService.checkInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
-
-
-    async deduct(filter) {
-      return await commodityinventoriesService.deductInventory(filter).then((result) => {
-        if (result) {
-          var response = result;
-          return response
-        }
-      });
-    },
-
- 
- 
 
     
     async getByReference(data) {
-      return await commodityinventoriesService.getByReference(data).then((result => {
+      return await commodityTransfersService.getByReference(data).then((result => {
           if (result) {
               return result
           }
@@ -70,7 +37,7 @@ export const usecommodityinventoriestore = defineStore({
   },
 
     async getOne(id) {
-      return await commodityinventoriesService
+      return await commodityTransfersService
         .get(id)
         .then((result) => {
           if (result) {
@@ -85,7 +52,7 @@ export const usecommodityinventoriestore = defineStore({
         });
     },
     async create(data) {
-      return await commodityinventoriesService
+      return await commodityTransfersService
         .create(data)
         .then((result) => {
           if (result) {
@@ -103,7 +70,7 @@ export const usecommodityinventoriestore = defineStore({
 
 
     async update(data) {
-      return await commodityinventoriesService
+      return await commodityTransfersService
         .update(data)
         .then((result) => {
           if (result) {
@@ -121,7 +88,7 @@ export const usecommodityinventoriestore = defineStore({
 
 
     async remove(id) {
-      return await commodityinventoriesService
+      return await commodityTransfersService
         .remove(id)
         .then((result) => {
           if (result) {
@@ -137,7 +104,7 @@ export const usecommodityinventoriestore = defineStore({
     },
 
     async count() {
-      return await commodityinventoriesService
+      return await commodityTransfersService
         .count()
         .then((result) => {
           if (result) {

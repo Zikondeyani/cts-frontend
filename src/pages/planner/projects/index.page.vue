@@ -64,7 +64,7 @@ import { ref } from 'vue';
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import { 
   TruckIcon, MapIcon, UserIcon, HomeIcon, LocationMarkerIcon, 
-  TemplateIcon, HeartIcon, LightningBoltIcon 
+  TemplateIcon, HeartIcon, LightningBoltIcon ,OfficeBuildingIcon
 } from "@heroicons/vue/outline";
 
 const isLoading = ref(false); // Example reactive state
@@ -76,6 +76,7 @@ const breadcrumbs = [
 const options = ref([
   { label: 'Lean Season Response & Emergency Assistance', icon: TemplateIcon, path: '/planner/dispatch-management', showDropdown: false },
   { label: 'Donation Management', icon: HeartIcon, path: '/planner/donations' },
+  { label: 'Warehouse Requisitions', icon: OfficeBuildingIcon, path: '/planner/warehouserequisitions' },
   // Add more options as needed
 ]);
 

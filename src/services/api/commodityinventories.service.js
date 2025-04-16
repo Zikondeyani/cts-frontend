@@ -8,7 +8,9 @@ export default class CommodityInventoriesService {
         .get(
           resource +
             `?filter={"include": [
-              "user","warehouse", "commodity"
+              "user", "commodity",
+              {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
+
             ]}`,
           {
             headers: {
@@ -35,8 +37,69 @@ export default class CommodityInventoriesService {
             `/` +
             id +
             `?filter={"include": [
-          "user","warehouse", "commodity"
-        ]}`,
+              "user", "commodity",
+              {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
+
+            ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    }
+  }
+
+  getAll(id) {
+    if (id == null) {
+      return axios
+        .get(
+          resource  + "/all" +
+            `?filter={"include": [
+            "user", "commodity",
+            {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
+
+          ]}`,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Content-type": "Application/json",
+              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+            },
+          }
+        )
+        .then((response) => {
+          var result = response.data;
+
+          return result;
+        })
+        .catch((error) => {
+          if (error.response) {
+            throw error.response.data.error;
+          }
+        });
+    } else if (id != null) {
+      return axios
+        .get(
+          resource +
+           "/all" +
+            id +
+            `?filter={"include": [
+              "user", "commodity",
+              {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
+
+            ]}`,
           {
             headers: {
               "Access-Control-Allow-Origin": "*",

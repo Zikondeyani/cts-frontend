@@ -98,7 +98,7 @@
                           }})</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                           <span class="inline-block w-3 h-3 rounded-full"
-                            :class="dispatch?.received ? 'bg-gray-500' : 'bg-red-500'">
+                            :class="dispatch?.received ? 'bg-green-500' : 'bg-red-500'">
                           </span>
                         </td> <!-- Received status with dot -->
                       </tr>

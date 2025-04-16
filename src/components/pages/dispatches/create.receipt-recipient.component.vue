@@ -134,6 +134,22 @@
                       class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
                   </div>
+
+                  <div class="mb-4">
+                    <label
+                      for="actual-receipt-date"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Please enter actual receipt date
+                    </label>
+                    <input
+                      type="date"
+                      id="actual-receipt-date"
+                      v-model="actual_receipt_date"
+                      class="mt-1 block w-full p-2 border border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      required
+                    />
+                  </div>
                   <!-- Destination Points -->
                   <div class="mb-6">
                     <label
@@ -453,6 +469,7 @@ const FDPs = reactive([]);
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const pdn = ref("");
+const actual_receipt_date = ref("")
 const emit = defineEmits(["create", "close", "update", "draft"]);
 const Swal = inject("Swal");
 // Props
@@ -465,7 +482,6 @@ const props = defineProps({
 const multipleDestinations = ref(false);
 
 const customDestination = ref("");
-
 
 const destinations = reactive([
   {
@@ -774,6 +790,7 @@ const submitReceipt = async () => {
               ? destination.customName
               : destination.name,
           PhysicalDeliveryNote: pdn.value,
+          actual_receipt_date: actual_receipt_date.value
         });
       }
     }

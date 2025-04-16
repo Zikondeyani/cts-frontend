@@ -214,7 +214,7 @@ const getExpected = async () => {
       expected.length = 0; //empty array
       let sorteddata = result.reverse();
 
-      expected.push(...sorteddata);
+      expected.push(...sorteddata.filter(item => item.IsArchived == false));
     })
 
     .finally(() => {

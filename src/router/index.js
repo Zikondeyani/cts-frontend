@@ -773,6 +773,13 @@ const routes = [
         name: "warehouse-warehouses-management",
         component: () => import("../pages/warehouse/warehouses/index.page.vue"),
       },
+
+      {
+        path: "/warehouse/warehouserequisitions",
+        name: "warehouse-warehouserequisitions",
+        component: () => import("../pages/warehouse/warehouserequisitions/index.page.vue"),
+      },
+
       {
         path: "/warehouse/warehouses/manage/:id",
         name: "warehouse-manage-warehouses",
@@ -795,6 +802,25 @@ const routes = [
         path: "/warehouse/stock-management",
         name: "warehouse-stock-management",
         component: () => import("../pages/warehouse/stock/index.page.vue"),
+      },
+
+      {
+        path: "/warehouse/stock-transfer-management",
+        name: "warehouse-stock-transfer-management",
+        component: () => import("../pages/warehouse/stock/index-stock-transfers.page.vue"),
+      },
+
+      {
+        path: "/warehouse/requisition-dispatch-management",
+        name: "warehouse-requisition-dispatch-managemen",
+        component: () => import("../pages/warehouse/warehouserequisitions/index-requisition.page.vue"),
+      },
+
+
+      {
+        path: "/warehouse/outbound-stock-management",
+        name: "warehouse-stock-management-all",
+        component: () => import("../pages/warehouse/stock/index-outbound.page.vue"),
       },
       {
         path: "/warehouse/stock-management/manage/:id",
@@ -946,6 +972,12 @@ const routes = [
       },
 
       {
+        path: "/planner/stock-management",
+        name: "planner-stock-management",
+        component: () => import("../pages/planner/stock/index.page.vue"),
+      },
+
+      {
         path: "/planner/stock-prepositioning",
         name: "planner-stock-prepositioning",
         component: () =>
@@ -1086,12 +1118,20 @@ const routes = [
         name: "planner-project-management",
         component: () => import("../pages/planner/projects/index.page.vue"),
       },
+      
 
       {
         path: "/planner/instruction-management",
         name: "planner-instruction-management",
         component: () => import("../pages/planner/instruction/index.page.vue"),
       },
+
+      {
+        path: "/planner/warehouserequisitions",
+        name: "planner-warehouserequisitions",
+        component: () => import("../pages/planner/warehouserequisitions/index.page.vue"),
+      },
+
 
       {
         path: "/planner/rejected-instruction-management",
