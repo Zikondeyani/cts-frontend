@@ -11,7 +11,7 @@
         </div>
 
         <router-link
-          to="/warehouse/stock-management"
+          to="/planner/stock-management"
           class="ml-4 font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white text-xs rounded shadow-md hover:bg-gray-600 transition"
         >
           View Stocks
