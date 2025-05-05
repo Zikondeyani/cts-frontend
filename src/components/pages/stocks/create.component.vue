@@ -166,6 +166,45 @@
                       </select>
                     </div>
 
+                    <!-- Optional Batch Number -->
+                    <div class="col-span-6 sm:col-span-3">
+                      <label
+                        for="batch-number"
+                        class="block text-sm font-medium text-gray-700"
+                      >
+                        Batch Number (optional)
+                      </label>
+                      <input
+                        type="text"
+                        id="batch-number"
+                        v-model="BatchNumber"
+                        placeholder="Enter batch number"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                      />
+                      <p class="text-red-500 text-xs italic pt-1">
+                        {{ BatchNumberError }}
+                      </p>
+                    </div>
+
+                    <!-- Optional Expiry Date -->
+                    <div class="col-span-6 sm:col-span-3">
+                      <label
+                        for="expiry-date"
+                        class="block text-sm font-medium text-gray-700"
+                      >
+                        Expiry Date (optional)
+                      </label>
+                      <input
+                        type="date"
+                        id="expiry-date"
+                        v-model="ExpiryDate"
+                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                      />
+                      <p class="text-red-500 text-xs italic pt-1">
+                        {{ ExpiryDateError }}
+                      </p>
+                    </div>
+
                     <div class="col-span-6 sm:col-span-3">
                       <label
                         for="from-who-search"
@@ -309,6 +348,8 @@ const { meta } = useForm({
     ExpiryDate: "",
     commodityId: "",
     warehouseId: "",
+    ExpiryDate: "",
+    BatchNumber: "",
     userId: "",
   },
 });
@@ -373,12 +414,15 @@ const onSubmit = useSubmitForm((values, actions) => {
     commodityId: commodityId.value,
     warehouseId: warehouseId.value,
     StockFrom: fromWhoInput.value,
+
+    ExpiryDate: ExpiryDate.value,
+    BatchNumber: BatchNumber.value,
     type: stockType.value,
     userId: user.value.id,
   };
 
   emit("create", model);
-  actions.resetForm()
+  actions.resetForm();
   open.value = false;
   resetFormFields();
 });

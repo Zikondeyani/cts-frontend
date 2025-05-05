@@ -109,9 +109,7 @@
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit
                         </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock
-                            Pending Dispatch</th>
+                       
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -126,10 +124,10 @@
                                 {{ row.expiryDate }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.stockAvailable.toFixed(2) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.commodityType == "Food" ? "MT" : "# of Units" }}
+                        <td class="px-6 py-4 whitespace-nowrap">{{ row.stockAvailable }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ row.containerType }} 
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ row.stockPendingDispatch.toFixed(2) }}</td>
+                      
                     </tr>
                 </tbody>
             </table>

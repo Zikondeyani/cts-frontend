@@ -463,6 +463,7 @@ import {
   TruckIcon,
   CheckCircleIcon,
 } from "@heroicons/vue/solid";
+import eventBus from '../../../services/events/eventbus';
 
 import spinnerWidget from "@/components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "@/components/widgets/breadcrumbs/admin.breadcrumb.vue";
@@ -809,6 +810,7 @@ const submitDispatch = async () => {
     });
 
     showDispatchModal.value = false;
+    eventBus.emit('warehouseReqArchived', selectedRequisition.value.id);
 
     getLoadingplans();
   } catch (error) {

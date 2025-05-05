@@ -98,7 +98,7 @@
                           }})</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                           <span class="inline-block w-3 h-3 rounded-full"
-                            :class="dispatch.received ? 'bg-gray-500' : 'bg-red-500'">
+                            :class="dispatch.received ? 'bg-green-500' : 'bg-red-500'">
                           </span>
                         </td> <!-- Received status with dot -->
                       </tr>
@@ -108,7 +108,7 @@
 
                 <div class="flex justify-end mt-4">
                   <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0"
-                    class="mr-3 bg-gray-500 text-white px-4 py-2 rounded-md no-print">Print</button>
+                    class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
                   <button type="button" id="closeButton"
                     class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
                     @click="closeRecentDispatches">Close</button>

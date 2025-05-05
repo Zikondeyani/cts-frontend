@@ -444,6 +444,7 @@ const getCommodityTransfers = async () => {
     );
 
     newTransfersCount.value = transfers.length;
+    updateNotifications()
   } catch (error) {
     console.error("Error fetching commodity transfers:", error);
     // Optionally show a toast/notification
@@ -549,6 +550,7 @@ const updateNotifications = () => {
     });
   }
 
+  console.log(newTransfersCount.value , "kdd")
   if (newTransfersCount.value > 0) {
     notifications.value.push({
       message: `Unconfirmed Stock Transfers (${newTransfersCount.value})`,
