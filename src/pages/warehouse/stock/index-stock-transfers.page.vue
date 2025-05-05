@@ -244,8 +244,7 @@ const markAsReceived = async (row) => {
   try {
     isLoading.value = true;
     await commodityTransferStore.update({ id: row.id, IsReceived: true });
-    eventBus.emit("TransfersArchived", row.id);
-
+  
     await Swal.fire({
       title: "Success!",
       text: "Transfer marked as received.",
@@ -254,7 +253,12 @@ const markAsReceived = async (row) => {
       showConfirmButton: false,
     });
 
+ 
+    eventBus.emit("TransfersArchived", row.id);
+
     getCommodityTransfers(); // Refresh table
+
+
   } catch (error) {
     console.error(error);
     Swal.fire("Error", "Failed to update status", "error");

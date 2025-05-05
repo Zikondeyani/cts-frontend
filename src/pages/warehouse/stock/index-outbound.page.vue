@@ -88,7 +88,6 @@
             </button>
 
             <!-- New Stock Register -->
-            <create-stock-form v-on:create="createStock" />
           </div>
         </div>
       </div>
@@ -116,11 +115,11 @@
                   <span v-if="props.column.label == 'Options'">
                     <button
                       type="button"
-                      @click="openGroupedItemsModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+                      @click="openTransferModal(props.row)"
+                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150"
                     >
-                      <EyeIcon class="h-5 w-5 mr-2" />
-                      View Stock Breakdown
+                      <ArrowCircleRightIcon class="h-5 w-5 mr-2" />
+                      Transfer Stock
                     </button>
                   </span>
                 </template>
@@ -433,7 +432,11 @@ const getCommodityInventories = async () => {
     inventories.sort((a, b) => new Date(b.created) - new Date(a.created));
 
     nfisData.push(
-      ...inventories.filter((item) => item.commodity?.commodityTypeId == 2)
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId == 2 &&
+          item.warehouse?.district?.Name == user.value.district
+      )
     );
     foodItemsData.push(
       ...inventories.filter(
