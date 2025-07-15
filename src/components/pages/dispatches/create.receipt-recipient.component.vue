@@ -213,9 +213,9 @@
                         <option
                           v-for="fdp in FDPs"
                           :key="fdp.id"
-                          :value="fdp.name"
+                          :value="fdp.location_name"
                         >
-                          {{ fdp.name }}
+                          {{ fdp.location_name }}
                         </option>
                         <option value="custom">Other (Enter manually)</option>
                       </select>
@@ -505,7 +505,7 @@ const getFDPs = async () => {
     .then((result) => {
       FDPs.length = 0; //empty array
       FDPs.push(
-        ...result.filter((item) => item.district == user.value.district)
+        ...result.filter((item) => item.admin_level_2 == user.value.district)
       );
     })
     .catch((error) => {})

@@ -12,9 +12,17 @@
           </h2>
         </div>
 
-        <!-- <div class="mt-5 flex ml-4 sm:mt-0">
-          <create-report-form @create="createReport" />
-        </div> -->
+        <div class="mt-5 flex ml-4 sm:mt-0">
+          <button
+            type="button"
+            class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
+            @click="exportToExcel()"
+          >
+            <i class="fas fa-file-export mr-2"></i>
+            <!-- Icon (Font Awesome used as an example) -->
+            Export Data
+          </button>
+        </div>
       </div>
 
       <section class="bg-transparent mt-6 rounded-table">
@@ -30,11 +38,263 @@
               styleClass="vgt-table striped"
               compactMode
             >
+              <template #table-actions> </template>
+              <template #table-row="props">
+                <span
+                  v-if="props.column.label === 'Options'"
+                  class="flex gap-2"
+                >
+                  <button
+                    class="text-blue-600 text-sm hover:underline"
+                    @click="openEditDispatch(props.row)"
+                  >
+                    Edit
+                  </button>
+                </span></template
+              >
             </vue-good-table>
           </div>
         </div>
       </section>
     </div>
+    <TransitionRoot as="template" :show="showDispatchModal">
+      <Dialog as="div" class="relative z-50" @close="closeDispatchDialog">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black bg-opacity-25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-50 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all w-full max-w-2xl sm:p-6"
+              >
+                <DialogTitle
+                  as="h3"
+                  class="text-lg font-medium leading-6 text-gray-900 mb-4"
+                >
+                  {{ dispatchForm.id ? "Edit Dispatch" : "Create Dispatch" }}
+                </DialogTitle>
+
+                <!-- Dispatch Form Fields -->
+                <!-- Professional Dispatch Form Layout -->
+                <div class="space-y-6">
+                  <!-- Dispatch Details -->
+                  <div>
+                    <h4 class="text-md font-semibold text-gray-700 mb-2">
+                      Dispatch Details
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Delivery Note</label
+                        >
+                        <input
+                          v-model="dispatchForm.DeliveryNote"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter delivery note"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Driver Name</label
+                        >
+                        <input
+                          v-model="dispatchForm.DriverName"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter driver's name"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Driver License</label
+                        >
+                        <input
+                          v-model="dispatchForm.DriverLicense"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter license number"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Phone Number</label
+                        >
+                        <input
+                          v-model="dispatchForm.PhoneNumber"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter phone number"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Truck Number</label
+                        >
+                        <input
+                          v-model="dispatchForm.TruckNumber"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter truck number"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Destination Point</label
+                        >
+                        <input
+                          v-model="dispatchForm.FinalDestinationPoint"
+                          type="text"
+                          class="mt-1 w-full input"
+                          placeholder="Enter final destination"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Dispatch Date</label
+                        >
+                        <input
+                          v-model="dispatchForm.Date"
+                          type="date"
+                          class="mt-1 w-full input"
+                        />
+                      </div>
+
+                      <div>
+                        <label class="block text-sm font-medium text-gray-700"
+                          >District</label
+                        >
+                        <select
+                          v-model="dispatchForm.districtId"
+                          class="mt-1 w-full input"
+                        >
+                          <option disabled value="">Select District</option>
+                          <option
+                            v-for="d in districts"
+                            :key="d.id"
+                            :value="d.id"
+                          >
+                            {{ d.Name }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Items Section -->
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <h4 class="text-md font-semibold text-gray-700">
+                        Items to Dispatch
+                      </h4>
+                      <button
+                        @click="addItem"
+                        type="button"
+                        class="text-blue-600 text-sm hover:underline"
+                      >
+                        + Add Item
+                      </button>
+                    </div>
+                    <div
+                      v-for="(item, index) in dispatchForm.items"
+                      :key="index"
+                      class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4 items-end"
+                    >
+                      <div class="md:col-span-6">
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Commodity</label
+                        >
+                        <select
+                          v-model="item.commodityId"
+                          class="mt-1 w-full input"
+                        >
+                          <option disabled value="">Select Commodity</option>
+                          <option
+                            v-for="c in selectedRequisition?.items || []"
+                            :key="c.commodity.id"
+                            :value="c.commodity.id"
+                          >
+                            {{ c.commodity.Name }}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="md:col-span-4">
+                        <label class="block text-sm font-medium text-gray-700"
+                          >Quantity</label
+                        >
+                        <input
+                          v-model.number="item.quantity"
+                          type="number"
+                          class="mt-1 w-full input"
+                          placeholder="Enter quantity"
+                        />
+                      </div>
+
+                      <div class="md:col-span-2 flex justify-end">
+                        <button
+                          @click="removeItem(index)"
+                          type="button"
+                          class="text-red-500 hover:text-red-700 font-semibold text-lg"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div
+                    class="flex justify-end gap-3 pt-4 border-t border-gray-200"
+                  >
+                    <button
+                      type="button"
+                      @click="closeDispatchDialog"
+                      class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 shadow-sm"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      @click="submitDispatch"
+                      class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+                    >
+                      {{ dispatchForm.id ? "Update" : "Submit" }}
+                    </button>
+                  </div>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </main>
 </template>
 
@@ -48,16 +308,9 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import {
-  DocumentIcon,
-  TrashIcon,
-  TruckIcon,
-  CheckCircleIcon,
-} from "@heroicons/vue/solid";
 
 import spinnerWidget from "@/components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "@/components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createReportForm from "@/components/pages/reports/create.component-warehousereq.vue";
 import { useWarehouseRequisitionsStore } from "@/stores/warehouserequisition.store";
 import { useWarehouseDispatchesStore } from "@/stores/warehousedispatches.store";
 
@@ -69,7 +322,7 @@ const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 import html2pdf from "html2pdf.js";
 const WarehouseRequisitionStore = useWarehouseRequisitionsStore();
-
+import * as XLSX from "xlsx";
 const WarehouseDispathcesStore = useWarehouseDispatchesStore();
 
 const districtstore = usedistrictstore();
@@ -92,6 +345,7 @@ const columns = ref([
     field: (row) => row.warehouserequisitions?.referenceNumber,
   },
   { label: "Commodity", field: (row) => row.commodity?.Name },
+
   { label: "FDP", field: (row) => row.FinalDestinationPoint },
   {
     label: "Quantity",
@@ -99,6 +353,7 @@ const columns = ref([
     sortable: true,
     firstSortType: "asc",
   },
+  { label: "Options", field: (row) => row, sortable: false },
 ]);
 const loadingplans = reactive([]);
 // Props
@@ -110,26 +365,29 @@ const props = defineProps({
 // Emits
 const emit = defineEmits(["update:showLetterModal"]);
 
-// Function to close modal
-const showLetterModal = ref(props.showLetterModal);
-watch(
-  () => props.showLetterModal,
-  (val) => (showLetterModal.value = val)
-);
-watch(showLetterModal, (val) => emit("update:showLetterModal", val));
+const openEditDispatch = (dispatch) => {
+  dispatchForm.id = dispatch?.id;
+  dispatchForm.DeliveryNote = dispatch?.DeliveryNote || "";
+  dispatchForm.DriverName = dispatch?.DriverName || "";
+  dispatchForm.DriverLicense = dispatch?.DriverLicense || "";
+  dispatchForm.FinalDestinationPoint = dispatch?.FinalDestinationPoint || "";
+  dispatchForm.TruckNumber = dispatch?.TruckNumber || "";
+  dispatchForm.PhoneNumber = dispatch?.PhoneNumber || "";
+  dispatchForm.Date = dispatch?.Date || "";
+  dispatchForm.districtId = dispatch?.districtId || "";
+  dispatchForm.warehouserequisitionsId =
+    dispatch?.warehouserequisitionsId || "";
+  dispatchForm.warehouserequisitions = dispatch?.warehouserequisitions || "";
 
-// PDF Download
-const downloadPDF = () => {
-  const element = document.getElementById("letterContent");
-  html2pdf()
-    .set({
-      margin: 1,
-      filename: "Warehouse_Requisition_Letter.pdf",
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    })
-    .from(element)
-    .save();
+  dispatchForm.items = [
+    {
+      commodityId: dispatch?.commodity?.id || null,
+      quantity: dispatch?.Quantity || null,
+    },
+  ];
+
+  selectedRequisition.value = dispatch?.warehouserequisitions || null;
+  showDispatchModal.value = true;
 };
 
 onMounted(async () => {
@@ -137,6 +395,22 @@ onMounted(async () => {
   await getLoadingplans();
   await getDistricts();
 });
+
+const exportToExcel = () => {
+  const formattedData = dispatches.map((row, index) => ({
+    "#": index + 1,
+    "Document Ref #": row.warehouserequisitions?.referenceNumber || "",
+    Commodity: row.commodity?.Name || "",
+    FDP: row.FinalDestinationPoint || "",
+    Quantity: `${row.Quantity} ${row.commodity?.Container_type || ""}`,
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(formattedData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Dispatches");
+
+  XLSX.writeFile(workbook, "Warehouse_Requisitions_Dispatches.xlsx");
+};
 
 const getDistricts = async () => {
   isLoading.value = true;
@@ -159,8 +433,6 @@ const getDispatches = async () => {
       dispatches.length,
       ...data.reverse() // to prevent mutating the original array
     );
-
-    console.log(dispatches, "ddddd");
   } catch (e) {
     console.error(e);
   } finally {
@@ -190,46 +462,11 @@ const getLoadingplans = async () => {
   }
 };
 
-const createReport = async (reportData) => {
-  isLoading.value = true;
-  try {
-    await WarehouseRequisitionStore.create(reportData);
-    await getLoadingplans();
-  } catch (e) {
-    console.error(e);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const deleteItem = async (id) => {
-  const confirm = window.confirm("Delete this requisition?");
-  if (!confirm) return;
-  try {
-    await WarehouseRequisitionStore.remove(id);
-    await getLoadingplans();
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const openViewLetterModal = (row) => {
-  selectedLetter.value = row;
-  showLetterModal.value = true;
-};
-
 const showDispatchModal = ref(false);
 const selectedRequisition = ref(null);
 
-const openDispatchDialog = (row) => {
-  selectedRequisition.value = row;
-  showDispatchModal.value = true;
-};
-
-const closeDispatchDialog = () => {
-  showDispatchModal.value = false;
-};
-const getRemainingBalance = (commodityId) => {
+const getRemainingBalance = (commodityId, qty) => {
+  console.log(selectedRequisition.value, "commodityId in getRemainingBalance");
   const reqItem = selectedRequisition.value.items.find(
     (item) => item.commodity.id === commodityId
   );
@@ -241,6 +478,7 @@ const dispatchForm = reactive({
   DriverName: "",
   DriverLicense: "",
   FinalDestinationPoint: "",
+  warehouserequisitionsId: "",
   TruckNumber: "",
   PhoneNumber: "",
   Date: "",
@@ -256,8 +494,21 @@ const removeItem = (index) => {
   dispatchForm.items.splice(index, 1);
 };
 
+const closeDispatchDialog = () => {
+  showDispatchModal.value = false;
+  dispatchForm.id = null;
+  dispatchForm.DeliveryNote = "";
+  dispatchForm.DriverName = "";
+  dispatchForm.DriverLicense = "";
+  dispatchForm.FinalDestinationPoint = "";
+  dispatchForm.TruckNumber = "";
+  dispatchForm.PhoneNumber = "";
+  dispatchForm.Date = "";
+  dispatchForm.districtId = "";
+  dispatchForm.items = [];
+};
+
 const submitDispatch = async () => {
-  // Check if at least one item exists
   if (!dispatchForm.items || dispatchForm.items.length === 0) {
     Swal.fire({
       title: "No Items",
@@ -267,7 +518,6 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Check for duplicates
   const commodityIds = dispatchForm.items.map((item) => item.commodityId);
   const uniqueIds = new Set(commodityIds);
   if (commodityIds.length !== uniqueIds.size) {
@@ -279,7 +529,6 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Check if all required base fields are filled
   const requiredFields = [
     "DeliveryNote",
     "FinalDestinationPoint",
@@ -300,7 +549,6 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Validate each item
   const invalidItem = dispatchForm.items.find(
     (item) => !item.commodityId || !item.quantity || item.quantity <= 0
   );
@@ -313,21 +561,6 @@ const submitDispatch = async () => {
     return;
   }
 
-  // ✅ Check if any quantity exceeds the item's balance
-  const overLimitItem = dispatchForm.items.find((item) => {
-    const remaining = getRemainingBalance(item.commodityId);
-    return item.quantity > remaining;
-  });
-  if (overLimitItem) {
-    Swal.fire({
-      title: "Quantity Exceeded",
-      text: "One or more items exceed the allowed remaining balance.",
-      icon: "warning",
-    });
-    return;
-  }
-
-  // Proceed with dispatch creation
   const baseDispatchDetails = {
     DeliveryNote: dispatchForm.DeliveryNote,
     FinalDestinationPoint: dispatchForm.FinalDestinationPoint,
@@ -341,27 +574,47 @@ const submitDispatch = async () => {
   };
 
   try {
-    const dispatchPromises = dispatchForm.items.map((item) => {
+    if (dispatchForm.id) {
+      // UPDATE LOGIC
       const payload = {
         ...baseDispatchDetails,
-        commodityId: item.commodityId,
-        Quantity: item.quantity,
+        commodityId: dispatchForm.items[0].commodityId,
+        Quantity: dispatchForm.items[0].quantity,
+        id: dispatchForm.id,
       };
-      return WarehouseDispathcesStore.create(payload);
-    });
 
-    await Promise.all(dispatchPromises);
+      await WarehouseDispathcesStore.update(payload);
 
-    Swal.fire({
-      title: "Success",
-      text: "Dispatches created for all items successfully.",
-      icon: "success",
-      confirmButtonText: "Ok",
-    });
+      Swal.fire({
+        title: "Success",
+        text: "Dispatch updated successfully.",
+        icon: "success",
+      });
+    } else {
+      // CREATE LOGIC
+      const dispatchPromises = dispatchForm.items.map((item) => {
+        const payload = {
+          ...baseDispatchDetails,
+          commodityId: item.commodityId,
+          Quantity: item.quantity,
+        };
+        return WarehouseDispathcesStore.create(payload);
+      });
+
+      await Promise.all(dispatchPromises);
+
+      Swal.fire({
+        title: "Success",
+        text: "Dispatches created for all items successfully.",
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
+    }
 
     showDispatchModal.value = false;
-
-    getLoadingplans();
+    await getLoadingplans();
+    await getDispatches();
+    closeDispatchDialog();
   } catch (error) {
     console.error("Dispatch submission failed", error);
     Swal.fire({
@@ -370,8 +623,6 @@ const submitDispatch = async () => {
       icon: "error",
     });
   }
-
-  console.log("Dispatch Submitted", dispatchForm);
 };
 
 const selectedCommodityIds = computed(() => {

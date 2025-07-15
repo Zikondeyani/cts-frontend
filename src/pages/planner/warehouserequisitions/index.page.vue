@@ -88,7 +88,7 @@
             as="div"
             class="relative z-10"
             @close="showLetterModalFrom = false"
-          >
+          > 
             <div
               class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
             />
@@ -117,7 +117,7 @@
                           alt="DODMA Logo"
                           class="h-20 mx-auto mb-4"
                         />
-                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
+                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS 
                       </DialogTitle>
 
                       <div
@@ -241,7 +241,7 @@
                         <p class="mt-4 uppercase">
                           <strong>To:</strong>
                           {{
-                            selectedLetter?.toName ||
+                            selectedLetter.district?.id ||
                             "Warehouse Officer and Stores Assistant"
                           }}
                         </p>
@@ -913,10 +913,11 @@ const submitDispatch = async () => {
     DriverLicense: dispatchForm.DriverLicense,
     PhoneNumber: dispatchForm.PhoneNumber,
     TruckNumber: dispatchForm.TruckNumber,
-    districtId: dispatchForm.districtId,
+    districtId: dispatchForm.districtId?.id,
     warehouserequisitionsId: selectedRequisition.value.id,
   };
 
+ 
   try {
     const dispatchPromises = dispatchForm.items.map((item) => {
       const payload = {
@@ -924,6 +925,7 @@ const submitDispatch = async () => {
         commodityId: item.commodityId,
         Quantity: item.quantity,
       };
+
       return WarehouseDispathcesStore.create(payload);
     });
 
@@ -947,7 +949,6 @@ const submitDispatch = async () => {
       icon: "error",
     });
   }
-
 };
 
 const selectedCommodityIds = computed(() => {

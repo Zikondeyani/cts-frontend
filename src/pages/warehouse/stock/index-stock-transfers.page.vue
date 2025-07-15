@@ -64,21 +64,15 @@
                           : 'bg-red-100 text-red-800',
                       ]"
                     >
-                      <component
-                        :is="
-                          props.row.IsReceived ? CheckCircleIcon : XCircleIcon
-                        "
-                        class="h-4 w-4 mr-1"
-                      />
-                      {{ props.row.IsReceived ? "Received" : "Not Received" }}
+                      {{ props.row.IsReceived ? "Received" : "In Transit" }}
                     </span>
 
                     <button
                       v-if="!props.row.IsReceived"
-                      @click="markAsReceived(props.row)"
+                      @click="openReceiveModal(props.row)"
                       class="text-xs border border-blue-500 text-blue-500 rounded-md px-2 py-1 hover:bg-blue-500 hover:text-white transition"
                     >
-                      Mark as Received
+                      Receive
                     </button>
                   </span>
                 </template>
@@ -88,6 +82,144 @@
         </section>
       </div>
     </div>
+
+    <Dialog :open="showReceiveModal" @close="closeModal">
+      <div
+        class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white rounded-2xl p-6 w-full max-w-2xl space-y-6 shadow-xl"
+        >
+          <div class="flex justify-between items-center border-b pb-3">
+            <h2 class="text-xl font-semibold text-gray-800">
+              Receive Stock Transfer (GRN)
+            </h2>
+            <button
+              @click="closeModal"
+              class="text-gray-500 hover:text-red-500 text-lg font-bold"
+            >
+              &times;
+            </button>
+          </div>
+
+          <!-- Transfer Details -->
+          <!-- Transfer Details -->
+          <div
+            class="bg-gray-100 p-4 rounded-lg space-y-2 text-sm text-gray-700"
+          >
+            <div>
+              <strong>Commodity:</strong>
+              {{
+                selectedTransfer?.commodityInventory?.commodity?.Name || "N/A"
+              }}
+            </div>
+            <div>
+              <strong>Batch No:</strong>
+              {{ selectedTransfer?.BatchNumber || "N/A" }}
+            </div>
+            <div>
+              <strong>From:</strong>
+              {{ selectedTransfer?.fromwarehouse?.Name || "N/A" }}
+            </div>
+            <div>
+              <strong>To:</strong>
+              {{ selectedTransfer?.towarehouse?.Name || "N/A" }}
+            </div>
+            <div>
+              <strong>Quantity:</strong>
+              {{ selectedTransfer?.quantity || "N/A" }}
+              {{
+                selectedTransfer?.commodityInventory?.commodity
+                  ?.Container_type || ""
+              }}
+            </div>
+          </div>
+
+          <!-- GRN Entries -->
+          <div
+            v-for="(entry, index) in grnEntries"
+            :key="index"
+            class="space-y-4 border-b pb-6"
+          >
+            <div class="flex justify-between items-center">
+              <h3 class="text-sm font-semibold text-gray-600">
+                Entry {{ index + 1 }}
+              </h3>
+              <button
+                @click="removeEntry(index)"
+                v-if="grnEntries.length > 1"
+                class="text-red-500 text-xs hover:underline"
+              >
+                Remove
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Quantity</label
+                >
+                <input
+                  type="number"
+                  v-model.number="entry.quantity"
+                  class="input"
+                  placeholder="Quantity"
+                  min="1"
+                />
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Condition</label
+                >
+                <select v-model="entry.condition" class="input">
+                  <option disabled value="">Select condition</option>
+                  <option>Good</option>
+                  <option>Damaged</option>
+                  <option>Expired</option>
+                </select>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Remarks</label
+                >
+                <input
+                  type="text"
+                  v-model="entry.remarks"
+                  class="input"
+                  placeholder="Enter remarks"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Date Received</label
+                >
+                <input type="date" v-model="entry.receivedon" class="input" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="flex justify-between items-center pt-2">
+            <button
+              @click="addEntry"
+              class="text-blue-600 text-sm font-medium hover:underline"
+            >
+              + Add Another Entry
+            </button>
+
+            <button
+              @click="submitGRN"
+              class="bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-md hover:bg-green-700 transition"
+            >
+              Submit GRN
+            </button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
   </main>
 </template>
 
@@ -116,9 +248,105 @@ import { usecommodityinventoriestore } from "../../../stores/commodityinventorie
 import { usecommoditytransfersservice } from "../../../stores/commoditytransfters.store";
 
 import { usewarehousestore } from "../../../stores/warehouse.store";
+
+import { usecommoditytransfersreceiptsservice } from "../../../stores/commoditytransftersreceipts.store";
+
 import { useSessionStore } from "../../../stores/session.store";
 
 import eventBus from "../../../services/events/eventbus";
+
+const props = defineProps({
+  transfer: Object,
+  showReceiveModal: Boolean,
+});
+
+const selectedTransfer = ref(null);
+const showReceiveModal = ref(false);
+
+const emit = defineEmits(["close", "refresh"]);
+
+const grnEntries = ref([
+  {
+    id: null, // This will be set when the transfer is selected
+    quantity: null,
+    condition: "",
+    remarks: "",
+    receivedon: new Date().toISOString().substring(0, 10),
+  },
+]);
+
+const openReceiveModal = (transfer) => {
+  selectedTransfer.value = transfer;
+  // Set the id of all existing grn entries to the transfer id
+  grnEntries.value = [
+    {
+      id: transfer.id, // <-- Set id here
+      quantity: null,
+      condition: "",
+      remarks: "",
+      receivedon: new Date().toISOString().substring(0, 10),
+    },
+  ];
+  showReceiveModal.value = true;
+};
+
+const addEntry = () => {
+  grnEntries.value.push({
+    id: selectedTransfer.value ? selectedTransfer.value.id : null, // <-- Set id here
+    quantity: null,
+    condition: "",
+    remarks: "",
+    receivedon: new Date().toISOString().substring(0, 10),
+  });
+};
+
+const removeEntry = (index) => {
+  grnEntries.value.splice(index, 1);
+};
+
+const closeModal = () => {
+  showReceiveModal.value = false; // close modal
+  emit("close");
+  grnEntries.value = [
+    {
+      quantity: null,
+      condition: "",
+      remarks: "",
+      receivedon: new Date().toISOString().substring(0, 10),
+    },
+  ];
+};
+
+const submitGRN = async () => {
+  const allValid = grnEntries.value.every(
+    (e) => e.quantity && e.condition && e.receivedon
+  );
+  if (!allValid) {
+    Swal.fire("Error", "Please fill all required GRN fields.", "error");
+    return;
+  }
+
+  try {
+    for (const entry of grnEntries.value) {
+      await commodityTransferReceiptsStore.create({
+        commoditytransfersId: entry.id,
+        quantity: entry.quantity,
+        condition: entry.condition,
+        remarks: entry.remarks,
+        receivedon: entry.receivedon,
+      });
+    }
+
+    Swal.fire("Success", "GRN entries submitted.", "success");
+    closeModal();
+
+    // Refresh the list
+    await getCommodityTransfers();
+  } catch (error) {
+    console.error("GRN submission failed:", error);
+    Swal.fire("Error", "Submission failed. Try again.", "error");
+  }
+};
 
 //INJENCTIONS
 const $router = useRouter();
@@ -142,6 +370,9 @@ const breadcrumbs = [
 const commodityInventorieStore = usecommodityinventoriestore();
 
 const commodityTransferStore = usecommoditytransfersservice();
+
+const commodityTransferReceiptsStore = usecommoditytransfersreceiptsservice();
+
 const transfers = reactive([]);
 
 const warehouseStore = usewarehousestore();
@@ -158,6 +389,12 @@ const columns = ref([
   {
     label: "Commodity",
     field: (row) => row.commodity.Name,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "Batch No",
+    field: (row) => row.BatchNumber,
     sortable: true,
     firstSortType: "asc",
   },
@@ -201,6 +438,12 @@ const columns1 = ref([
     firstSortType: "asc",
   },
   {
+    label: "Batch No",
+    field: (row) => row.BatchNumber,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
     label: "From",
     field: (row) => row.fromwarehouse?.Name,
     sortable: true,
@@ -227,45 +470,6 @@ onMounted(() => {
   getWarehouses();
   getCommodityTransfers();
 });
-
-const markAsReceived = async (row) => {
-  const result = await Swal.fire({
-    title: "Mark as Received?",
-    text: "This transfer will be marked as received.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#16a34a",
-    cancelButtonColor: "#6b7280",
-    confirmButtonText: "Yes, mark it!",
-  });
-
-  if (!result.isConfirmed) return;
-
-  try {
-    isLoading.value = true;
-    await commodityTransferStore.update({ id: row.id, IsReceived: true });
-  
-    await Swal.fire({
-      title: "Success!",
-      text: "Transfer marked as received.",
-      icon: "success",
-      timer: 2000,
-      showConfirmButton: false,
-    });
-
- 
-    eventBus.emit("TransfersArchived", row.id);
-
-    getCommodityTransfers(); // Refresh table
-
-
-  } catch (error) {
-    console.error(error);
-    Swal.fire("Error", "Failed to update status", "error");
-  } finally {
-    isLoading.value = false;
-  }
-};
 
 // Fetching data for NFIS and Food Items
 const getCommodityInventories = async () => {
@@ -503,5 +707,9 @@ button.bg-blue-500 {
   /* Adjust the radius as needed */
   overflow: hidden;
   /* This is important to apply rounded corners to child elements */
+}
+
+.input {
+  @apply w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
 </style>

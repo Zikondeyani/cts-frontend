@@ -8,7 +8,7 @@ export default class WarehouseRequisitionsService {
       return axios
         .get(
           resource +
-            `?filter={"include": [ {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}]
+            `?filter={"include": [ "district", {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}]
           }`,
           {
             headers: {
@@ -34,7 +34,7 @@ export default class WarehouseRequisitionsService {
           resource +
             `/` +
             id +
-            `?filter={"include": [ {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
+            `?filter={"include": ["district", {"relation":"warehouse","scope":{"include":[{"relation":"district"}]}}
         ]}`,
           {
             headers: {
@@ -121,17 +121,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansClean(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -144,19 +140,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -360,18 +350,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansPending(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/pending" +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/pending" + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -384,19 +369,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -535,18 +514,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansSummaryPrepo(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/stock-summary/prepositioned" +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/stock-summary/prepositioned" + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -559,19 +533,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/stock-summary` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/stock-summary` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -587,18 +555,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansSummaryEMR(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/stock-summary/emr" +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/stock-summary/emr" + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -611,19 +574,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/stock-summary` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/stock-summary` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -639,18 +596,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansSummary(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/stock-summary" +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/stock-summary" + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -663,19 +615,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/stock-summary` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/stock-summary` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -691,18 +637,13 @@ export default class WarehouseRequisitionsService {
   getloadingplansSummaryByCommodity(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/stock-summary-by-commodity" +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/stock-summary-by-commodity" + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
 
@@ -715,19 +656,13 @@ export default class WarehouseRequisitionsService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/stock-summary-by-commodity` +
-            id +
-            `?filter={}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/stock-summary-by-commodity` + id + `?filter={}`, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -782,18 +717,13 @@ export default class WarehouseRequisitionsService {
 
   count() {
     return axios
-      .get(
-        resource +
-          `/count` +
-          `?filter={}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        }
-      )
+      .get(resource + `/count` + `?filter={}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
       .then((response) => {
         var result = response.data;
         return result;
@@ -827,17 +757,13 @@ export default class WarehouseRequisitionsService {
 
   getByReference(data) {
     return axios
-      .get(
-        resource +
-          `?filter={}`,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-type": "Application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-          },
-        }
-      )
+      .get(resource + `?filter={}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
       .then((response) => {
         var result = response.data;
         return result;

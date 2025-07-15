@@ -22,7 +22,7 @@
           </button>
           <!-- Admin Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block">DODMA CTS | District Council
-            <span class="text-xs font-normal">(v2.0)</span>
+            <span class="text-xs font-normal">(v3.0)</span>
           </span>
           <div class="flex items-center ml-2 hidden lg:flex">
             <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
@@ -33,7 +33,7 @@
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden">DODMA CTS | District Council
-          <span class="text-xs font-normal">(v2.0)</span>
+          <span class="text-xs font-normal">(v3.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div class="flex flex-col lg:flex-row lg:space-x-4 mt-2 lg:mt-0 w-full lg:w-auto hidden lg:flex">
@@ -200,7 +200,7 @@
             </div>
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | District Council
-              <span class="text-xs font-normal">(v2.0)</span>
+              <span class="text-xs font-normal">(v3.0)</span>
             </span>
           </div>
 

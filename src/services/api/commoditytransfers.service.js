@@ -7,7 +7,7 @@ export default class CommodityTransfersService {
       return axios
         .get(
           resource +
-            `?filter={"include": [
+            `?filter={"include": ["actionrequestors",
                   {"relation":"commodityInventory","scope":{"include":[{"relation":"commodity"}]}},
                    {"relation":"fromwarehouse","scope":{"include":[{"relation":"district"}]}},
                    {"relation":"towarehouse","scope":{"include":[{"relation":"district"}]}}
@@ -36,7 +36,7 @@ export default class CommodityTransfersService {
           resource +
             `/` +
             id +
-            `?filter={"include": [
+            `?filter={"include": ["actionrequestors",
               {"relation":"commodityInventory","scope":{"include":[{"relation":"commodity"}]}},
                {"relation":"fromwarehouse","scope":{"include":[{"relation":"district"}]}},
                {"relation":"towarehouse","scope":{"include":[{"relation":"district"}]}}

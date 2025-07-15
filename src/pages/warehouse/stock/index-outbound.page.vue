@@ -47,7 +47,7 @@
               class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
             >
               <i class="fas fa-file-alt mr-2"></i>
-              NFIs
+              Non-Food Items
               <span
                 v-if="nfisCount > 0"
                 class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
@@ -214,16 +214,48 @@
             <h3 class="text-lg font-semibold mb-4">Transfer Stock</h3>
 
             <div class="space-y-4">
+              <!-- Commodity Info -->
               <div>
-                <label class="block text-sm font-medium">Commodity </label>
+                <label class="block text-sm font-medium">Commodity</label>
                 <input
                   type="text"
                   :value="selectedInventory?.commodity?.Name"
                   readonly
                   class="w-full border rounded px-3 py-2 bg-gray-100"
                 />
+
+                <label class="block text-sm font-medium mt-2"
+                  >Batch Number</label
+                >
+                <input
+                  type="text"
+                  :value="selectedInventory?.BatchNumber"
+                  readonly
+                  class="w-full border rounded px-3 py-2 bg-gray-100"
+                />
               </div>
 
+
+                 <div>
+                <label class="block text-sm font-medium"
+                  >Action Requestor</label
+                >
+                <select
+                  v-model="transferForm.actionrequestorsId"
+                  class="w-full border rounded px-3 py-2"
+                >
+                  <option disabled value="">Select Action Requestor</option>
+                  <option
+                    v-for="wh in actionrequestor"
+                    :key="wh.id"
+                    :value="wh.id"
+                  >
+                    {{ wh.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Quantity to Transfer -->
               <div>
                 <label class="block text-sm font-medium mb-1">
                   Quantity to Transfer
@@ -241,6 +273,33 @@
                 />
               </div>
 
+              <!-- Reason for Transfer -->
+              <div>
+                <label class="block text-sm font-medium mb-1"
+                  >Reason for Transfer</label
+                >
+                <textarea
+                  v-model="transferForm.reason"
+                  class="w-full border rounded px-3 py-2"
+                  rows="3"
+                  placeholder="Enter reason for transfer"
+                ></textarea>
+              </div>
+
+              <!-- Delivery Note -->
+              <div>
+                <label class="block text-sm font-medium mb-1"
+                  >Delivery Note</label
+                >
+                <input
+                  type="text"
+                  v-model="transferForm.deliveryNote"
+                  class="w-full border rounded px-3 py-2"
+                  placeholder="Enter delivery note (e.g. Transporter, vehicle details)"
+                />
+              </div>
+
+              <!-- Destination Warehouse -->
               <div>
                 <label class="block text-sm font-medium"
                   >Transfer To Warehouse</label
@@ -263,6 +322,7 @@
               </div>
             </div>
 
+            <!-- Buttons -->
             <div class="flex justify-end mt-6 space-x-2">
               <button
                 @click="closeTransferModal"
@@ -311,6 +371,10 @@ import { usecommodityinventoriestore } from "../../../stores/commodityinventorie
 import { usecommoditytransfersservice } from "../../../stores/commoditytransfters.store";
 
 import { usewarehousestore } from "../../../stores/warehouse.store";
+
+
+import { useactionrequestorstore } from "../../../stores/action.requestor.store";
+
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
 const $router = useRouter();
@@ -336,6 +400,10 @@ const commodityInventorieStore = usecommodityinventoriestore();
 const commodityTransferStore = usecommoditytransfersservice();
 const transfers = reactive([]);
 
+
+const actionrequestorstore = useactionrequestorstore();
+const actionrequestor = reactive([]);
+
 const warehouseStore = usewarehousestore();
 const warehouses = reactive([]);
 
@@ -350,6 +418,12 @@ const columns = ref([
   {
     label: "Commodity",
     field: (row) => row.commodity.Name,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "Batch No",
+    field: (row) => row.BatchNumber,
     sortable: true,
     firstSortType: "asc",
   },
@@ -392,6 +466,13 @@ const columns1 = ref([
     sortable: true,
     firstSortType: "asc",
   },
+
+  {
+    label: "Batch No",
+    field: (row) => row.BatchNumber,
+    sortable: true,
+    firstSortType: "asc",
+  },
   {
     label: "From",
     field: (row) => row.fromwarehouse?.Name,
@@ -415,6 +496,7 @@ const columns1 = ref([
 ]);
 
 onMounted(() => {
+  getActionRequestors()
   getCommodityInventories();
   getWarehouses();
   getCommodityTransfers();
@@ -536,6 +618,11 @@ const selectedInventory = ref(null);
 const transferForm = reactive({
   quantity: null,
   toWarehouseId: null,
+  actionrequestorsId: null,
+  reason: "",
+  deliveryNote: "",
+  IsApproved: false,  
+  IsReceived: false,
 });
 
 const openTransferModal = (row) => {
@@ -573,6 +660,21 @@ const transferStock = async () => {
     isLoading.value = false;
   }
 };
+
+const getActionRequestors = async () => {
+  actionrequestorstore
+    .get()
+    .then((result) => {
+      actionrequestor.length = 0; //empty array
+
+      actionrequestor.push(
+        ...result
+      );
+    })
+    .catch((error) => {})
+    .finally(() => {});
+};
+
 
 const getCommodityTransfers = async () => {
   commodityTransferStore

@@ -308,6 +308,12 @@ const columns = ref([
     firstSortType: "asc",
   },
   {
+    label: "Batch No",
+    field: (row) => row.BatchNumber,
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
     label: "Quantity",
     field: (row) => `${row.Quantity} ${row.commodity?.Container_type}`,
     sortable: true,
