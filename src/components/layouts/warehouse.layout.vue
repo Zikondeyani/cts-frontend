@@ -41,7 +41,7 @@
           <!-- Admin Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block"
             >DODMA CTS | Warehouse Officer
-            <span class="text-xs font-normal">(v2.0)</span>
+            <span class="text-xs font-normal">(v3.0)</span>
           </span>
           <div class="flex items-center ml-2 hidden lg:flex">
             <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
@@ -53,7 +53,7 @@
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
           >DODMA CTS | Warehouse Officer
-          <span class="text-xs font-normal">(v2.0)</span>
+          <span class="text-xs font-normal">(v3.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div
@@ -285,7 +285,7 @@
             </div>
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | Warehouse
-              <span class="text-xs font-normal">(v2.0)</span>
+              <span class="text-xs font-normal">(v3.0)</span>
             </span>
           </div>
 
@@ -439,17 +439,19 @@ const getCommodityTransfers = async () => {
       ...result.filter(
         (item) =>
           item.towarehouse?.district?.Name === user.value.district &&
-          (item.IsReceived === null || item.IsReceived === false)
+          item.IsApproved === true && // ✅ Only approved items
+          (item.IsReceived === null || item.IsReceived === false) // ✅ Not yet received
       )
     );
 
     newTransfersCount.value = transfers.length;
-    updateNotifications()
+    updateNotifications();
   } catch (error) {
     console.error("Error fetching commodity transfers:", error);
     // Optionally show a toast/notification
   }
 };
+
 
 let dropdownTimeout;
 

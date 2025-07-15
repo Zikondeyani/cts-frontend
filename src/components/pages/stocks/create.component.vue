@@ -163,6 +163,9 @@
                         <option value="Third Party Stock">
                           Third Party Stock
                         </option>
+                        <option value="Obsolete Stock">
+                          Obsolete Stock
+                        </option>
                       </select>
                     </div>
 
@@ -210,7 +213,7 @@
                         for="from-who-search"
                         class="block text-sm font-medium text-gray-700"
                       >
-                        From Who
+                        Source
                       </label>
                       <input
                         type="text"

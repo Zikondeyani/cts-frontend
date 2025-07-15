@@ -107,6 +107,31 @@
                     <label
                       for="warehouse"
                       class="block text-sm font-bold text-gray-700"
+                      >Action Requestor</label
+                    >
+
+                    <select
+                      id="requestor"
+                      name="requestor"
+                      v-model="reports.actionrequestorsId"
+                      autocomplete="warehouse-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    >
+                      <option
+                        v-for="actionrequestor in actionrequestors"
+                        :key="actionrequestor"
+                        :value="actionrequestor"
+                        class="uppercase"
+                      >
+                        {{ actionrequestor?.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-span-12 sm:col-span-3 mb-5">
+                    <label
+                      for="warehouse"
+                      class="block text-sm font-bold text-gray-700"
                       >Warehouse</label
                     >
 
@@ -265,6 +290,9 @@ import { usedistrictstore } from "../../../stores/districts.store";
 import { usetransporterstore } from "../../../stores/transporter.store";
 import { useprojectstore } from "../../../stores/project.store";
 import { useactivitiestore } from "../../../stores/activity.store";
+
+import { useactionrequestorstore } from "../../../stores/action.requestor.store";
+
 import { useSessionStore } from "../../../stores/session.store";
 
 ///FIELDS
@@ -299,6 +327,10 @@ const activitiestore = useactivitiestore();
 const activities = reactive([]);
 const districtstore = usedistrictstore();
 const districts = reactive([]);
+
+const actionrequestorstore = useactionrequestorstore();
+const actionrequestors = reactive([]);
+
 const projectstore = useprojectstore();
 const projects = reactive([]);
 const transporterStore = usetransporterstore();
@@ -323,6 +355,7 @@ const filteredCommoditiesList = ref([]);
 
 //MOUNTED
 onMounted(() => {
+  getActionRequestors();
   getCommodityInventories();
   getActivities();
   getCommodities();
@@ -344,6 +377,7 @@ const reports = ref({
   subject: "",
   description: "",
   warehouseId: "",
+  actionrequestorsId: "",
   driverName: "",
   vehicleRegistration: "",
   items: [
@@ -388,6 +422,8 @@ const onSubmit = () => {
   reports.value.toName = reports.value.warehouseId?.district?.Name;
   reports.value.signedBy = user.value.firstname + " " + user.value.lastname;
   reports.value.warehouseId = reports.value.warehouseId.id;
+  reports.value.districtId = reports.value.warehouseId?.district?.id;
+  reports.value.actionrequestorsId = reports.value.actionrequestorsId.id;
 
   emit("create", reports.value);
   reports.value = {}; // Reset form
@@ -400,6 +436,17 @@ const getLoadingplan = async () => {
     .then((result) => {
       loadingplans.length = 0; //empty array
       loadingplans.push(...result);
+    })
+    .catch((error) => {})
+    .finally(() => {});
+};
+
+const getActionRequestors = async () => {
+  actionrequestorstore
+    .get()
+    .then((result) => {
+      actionrequestors.length = 0; //empty array
+      actionrequestors.push(...result);
     })
     .catch((error) => {})
     .finally(() => {});

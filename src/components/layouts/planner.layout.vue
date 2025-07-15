@@ -41,7 +41,7 @@
           <!-- Admin Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block"
             >DODMA CTS | Planner
-            <span class="text-xs font-normal">(v2.0)</span>
+            <span class="text-xs font-normal">(v3.0)</span>
           </span>
           <div class="flex items-center ml-2 hidden lg:flex">
             <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
@@ -53,7 +53,7 @@
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
           >DODMA CTS | Planner
-          <span class="text-xs font-normal">(v2.0)</span>
+          <span class="text-xs font-normal">(v3.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div
@@ -285,7 +285,7 @@
             </div>
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | Planner
-              <span class="text-xs font-normal">(v2.0)</span>
+              <span class="text-xs font-normal">(v3.0)</span>
             </span>
           </div>
 
@@ -385,11 +385,17 @@ import { useinstructionstore } from "../../stores/instructions.store";
 import { useloadingplanstore } from "../../stores/loadingplans.store";
 import { useWarehouseRequisitionsStore } from "../../stores/warehouserequisition.store";
 
+import { usecommoditytransfersservice } from "../../stores/commoditytransfters.store";
+
+
 const requisitionsStore = userequisitionstore();
 const requisitions = reactive([]);
 
 const warehouserequisitionsStore = useWarehouseRequisitionsStore();
 const warehouserequisitions = reactive([]);
+
+const commodityTransferStore = usecommoditytransfersservice();
+const commodityTransfers = reactive([]);
 
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
@@ -430,6 +436,10 @@ const newRequisitionsCount = ref(0);
 const newRejectedInstructionsCount = ref(0);
 const newWarehouseReqCount = ref(0);
 
+
+const newWarehouseTransferCount = ref(0);
+
+
 const newRejectedLoadingPlanCount = ref(0);
 
 const menuItemClasses = (active, isButton = false) => [
@@ -467,6 +477,7 @@ const isLoading = ref(false);
 onMounted(() => {
   startSignOutTimer();
   getWarehouseRequisitions();
+  getCommodityTransfers();
   getRequisitions();
   getInstructions();
   getLoadingPlans();
@@ -637,6 +648,15 @@ const updateNotifications = () => {
       href: "/planner/warehouserequisitions",
     });
   }
+
+
+
+  if (newWarehouseTransferCount.value > 0) {
+    notifications.value.push({
+      message: `Unapproved Transfers (${newWarehouseTransferCount.value})`,
+      href: "/planner/unapprovedtransfers",
+    });
+  }
 };
 
 const getInstructions = async () => {
@@ -659,7 +679,7 @@ const getWarehouseRequisitions = async () => {
   warehouserequisitionsStore
     .get()
     .then((result) => {
-  
+
       warehouserequisitions.length = 0;
       warehouserequisitions.push(
         ...result.filter((item) => item.isApproved == false)
@@ -689,6 +709,27 @@ const getLoadingPlans = async () => {
         )
       );
       newRejectedLoadingPlanCount.value = loadingplans.length;
+      updateNotifications();
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
+
+const getCommodityTransfers = async () => {
+  isLoading.value = true;
+  commodityTransferStore
+    .get()
+    .then((result) => {
+      commodityTransfers.length = 0;
+      commodityTransfers.push(
+        ...result.filter(
+          (item) =>
+            !item.isApproved
+        )
+      );
+      newWarehouseTransferCount.value = commodityTransfers.length;
       updateNotifications();
     })
     .finally(() => {

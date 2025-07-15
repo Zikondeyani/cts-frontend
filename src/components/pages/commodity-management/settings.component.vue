@@ -12,34 +12,78 @@
           </p>
         </div>
         <div class="mt-5 md:mt-0 md:col-span-2">
-          <form class="" @submit="onSubmit" :validation-schema="UpdateUserSchema">
-
-
+          <form
+            class=""
+            @submit="onSubmit"
+            :validation-schema="UpdateUserSchema"
+          >
             <div class="overflow-hidden sm:rounded-md">
               <div class="px-4 py-5 bg-white sm:p-6">
                 <div class="grid grid-cols-6 gap-2">
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="organisation-Name" class="block text-sm font-medium text-gray-700">Organisation
-                      Name</label>
-                    <input type="text" Name="organisation-Name" id="organisation-Name" v-model="Name"
+                    <label
+                      for="organisation-Name"
+                      class="block text-sm font-medium text-gray-700"
+                      >Organisation Name</label
+                    >
+                    <input
+                      type="text"
+                      Name="organisation-Name"
+                      id="organisation-Name"
+                      v-model="Name"
                       autocomplete="given-Name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ NameError }}
                     </p>
                   </div>
-
                 </div>
-
 
                 <div class="grid grid-cols-6 gap-2">
                   <div class="col-span-3 sm:col-span-3">
-
-                    <label for="unit" class="block text-sm font-medium text-gray-700">
-                      Select Unit</label>
-                    <select id="district" name="unit" v-model="Unit" autocomplete="unit-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
-                      <option v-for="item in ['Kg', 'Litres']" :key="item" :value="item" class="uppercase">
+                    <label
+                      for="unit"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Select Unit</label
+                    >
+                    <select
+                      id="district"
+                      name="unit"
+                      v-model="Unit"
+                      autocomplete="unit-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    >
+                      <option
+                        v-for="item in [
+                          'Bails',
+                          'Bags',
+                          'Boxes',
+                          'Pails',
+                          'Units', // Represents individual pieces
+                          'Cartons',
+                          'Drums',
+                          'Crates',
+                          'Sacks',
+                          'Tins',
+                          'Barrels',
+                          'Bundles',
+                          'Packs',
+                          'Rolls',
+                          'Jars',
+                          'Trays',
+                          'Cans',
+                          'Reels',
+                          'Cases',
+                          'Totes',
+                          'Pallets',
+                          'Piece', // Often used to refer to a single unit
+                        ]"
+                        :key="item"
+                        :value="item"
+                        class="uppercase"
+                      >
                         {{ item }}
                       </option>
                     </select>
@@ -49,13 +93,25 @@
                   </div>
 
                   <div class="col-span-3 sm:col-span-3">
-
-                    <label for="unit" class="block text-sm font-medium text-gray-700">
-                      Select Commodity Type</label>
-                    <select id="commodityTypeId" name="commodityTypeId" v-model="commodityTypeId"
+                    <label
+                      for="unit"
+                      class="block text-sm font-medium text-gray-700"
+                    >
+                      Select Commodity Type</label
+                    >
+                    <select
+                      id="commodityTypeId"
+                      name="commodityTypeId"
+                      v-model="commodityTypeId"
                       autocomplete="commodityTypeId"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
-                      <option v-for="item in commodity" :key="item.id" :value="item.id" class="uppercase">
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    >
+                      <option
+                        v-for="item in commoditytypes"
+                        :key="item.id"
+                        :value="item.id"
+                        class="uppercase"
+                      >
                         {{ item.Name }}
                       </option>
                     </select>
@@ -64,21 +120,30 @@
                     </p>
                   </div>
                   <div class="col-span-6 sm:col-span-4">
-                    <label for="PackSize" class="block text-sm font-medium text-gray-700">Pack Size</label>
-                    <input type="number" v-model="PackSize" name="pack-size" id="pack-size" autocomplete="off"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
+                    <label
+                      for="PackSize"
+                      class="block text-sm font-medium text-gray-700"
+                      >Pack Size</label
+                    >
+                    <input
+                      type="number"
+                      v-model="PackSize"
+                      name="pack-size"
+                      id="pack-size"
+                      autocomplete="off"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    />
                     <p class="text-red-500 text-xs italic pt-1">
                       {{ PackSizeError }}
                     </p>
                   </div>
-
-
                 </div>
-
               </div>
               <div class="px-4 py-3 text-right sm:px-6">
-                <button type="submit"
-                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                <button
+                  type="submit"
+                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
                   Update
                 </button>
               </div>
@@ -88,9 +153,10 @@
       </div>
     </div>
 
-
-
-    <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6" v-if="user.roleId == 'ADMIN1'">
+    <div
+      class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6"
+      v-if="user.roleId == 'ADMIN1'"
+    >
       <div class="md:grid md:grid-cols-3 md:gap-6">
         <div class="md:col-span-1">
           <h3 class="text-lg font-medium leading-6 text-gray-900">
@@ -102,9 +168,11 @@
         </div>
         <div class="mt-5 md:mt-0 md:col-span-2">
           <div class="px-4 py-3 text-right sm:px-6">
-            <button type="button"
+            <button
+              type="button"
               class="bg-white py-2 px-4 border border-gray-400 rounded-md shadow-sm text-sm font-medium text-red-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-              @click="deleteAcc()">
+              @click="deleteAcc()"
+            >
               Delete Commodity
             </button>
           </div>
@@ -122,6 +190,8 @@ import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 import { UpdateUserSchema } from "../../../services/schema/commodity-mngt.schema";
 import { useRoleStore } from "../../../stores/role.store";
 import { useorganisationstore } from "../../../stores/organisations.store";
+
+import { usecommoditytypestore } from "../../../stores/commodity-type.store";
 
 import { usecommoditiestore } from "../../../stores/commodity.store";
 import { useSessionStore } from "../../../stores/session.store";
@@ -145,7 +215,10 @@ const roleStore = useRoleStore();
 const OrganisationStore = useorganisationstore();
 
 const commodityStore = usecommoditiestore();
-const commodity = reactive([])
+const commodity = reactive([]);
+
+const commoditytypeStore = usecommoditytypestore();
+const commoditytypes = reactive([]);
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -166,13 +239,11 @@ const { meta } = useForm({
   // },
 });
 ///FIELDS
-const { value: Name, errorMessage: NameError } =
-  useField("Name");
+const { value: Name, errorMessage: NameError } = useField("Name");
 const { value: Unit, errorMessage: UnitError } = useField("Unit");
-const { value: commodityTypeId, errorMessage: CommodityTypeIdError } = useField("commodityTypeId");
+const { value: commodityTypeId, errorMessage: CommodityTypeIdError } =
+  useField("commodityTypeId");
 const { value: PackSize, errorMessage: PackSizeError } = useField("PackSize");
-
-
 
 //WATCH
 // watch(model, (currentValue, oldValue) => {
@@ -189,32 +260,26 @@ onMounted(() => {
 
   PackSize.value = model.value.PackSize;
 
-  getCommodityTypes()
+  getCommodityTypes();
 });
 //FUNCTIONS
 const onSubmit = useSubmitForm((values, actions) => {
-
   let newValues = {
     id: model.value.id,
     Name: Name.value,
     commodityTypeId: commodityTypeId.value,
     Unit: Unit.value,
     PackSize: PackSize.value,
-
   };
 
   emit("update", newValues);
 });
 
-
 const getCommodityTypes = async (id) => {
-  commodityStore
-    .get(id)
-    .then((result) => {
-      commodity.push(...result.reverse());
-    })
+  commoditytypeStore.get(id).then((result) => {
+    commoditytypes.push(...result.reverse());
+  });
 };
-
 
 const deleteAcc = async () => {
   let id = model.value.id;
@@ -246,8 +311,6 @@ const deleteAcc = async () => {
         icon: "error",
         confirmButtonText: "Ok",
       });
-    })
+    });
 };
-
-
 </script>

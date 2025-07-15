@@ -104,11 +104,38 @@
                 <template #table-actions> </template>
 
                 <template #table-row="props">
-                  <span v-if="props.column.label == 'Options'">
+                  <span
+                    v-if="props.column.label === 'Options'"
+                    class="flex gap-2"
+                  >
+                    <!-- Edit Button -->
+
+                    <span v-if="props.column.label === 'State'">
+                      <span
+                        class="px-2 py-1 text-xs font-semibold rounded-full"
+                        :class="[
+                          !props.row.state || props.row.state === 'Ready'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800',
+                        ]"
+                      >
+                        {{ props.row.state || "Ready" }}
+                      </span>
+                    </span>
+
+                    <button
+                      @click="editStockState(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150"
+                    >
+                      <PencilIcon class="h-4 w-4 mr-1 text-green-600" />
+                      Edit State
+                    </button>
+
+                    <!-- View Breakdown Button -->
                     <button
                       type="button"
                       @click="openGroupedItemsModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-150"
                     >
                       <EyeIcon class="h-5 w-5 mr-2" />
                       View Stock Breakdown
@@ -140,11 +167,48 @@
                 <template #table-actions> </template>
 
                 <template #table-row="props">
-                  <span v-if="props.column.label == 'Options'">
+
+                  
+
+                  
+                  <span v-if="props.column.label === 'Warehouse'">
+                    <span
+                      class="whitespace-normal break-words text-sm text-gray-800"
+                    >
+                      {{ props.row.warehouse?.Name }}
+                    </span>
+                  </span>
+                  <span v-if="props.column.label === 'State'">
+                    <span
+                      class="px-2 py-1 text-xs font-semibold rounded-full"
+                      :class="[
+                        !props.row.state || props.row.state === 'Ready'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800',
+                      ]"
+                    >
+                      {{ props.row.state || "Ready" }}
+                    </span>
+                  </span>
+
+                  <span
+                    v-if="props.column.label === 'Options'"
+                    class="flex gap-2"
+                  >
+                    <!-- Edit Stock State Button -->
+                    <button
+                      @click="editStockState(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150"
+                    >
+                      <PencilIcon class="h-4 w-4 mr-1 text-green-600" />
+                      Edit State
+                    </button>
+
+                    <!-- View Stock Breakdown Button -->
                     <button
                       type="button"
                       @click="openGroupedItemsModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-150 ease-in-out"
                     >
                       <EyeIcon class="h-5 w-5 mr-2" />
                       View Stock Breakdown
@@ -236,6 +300,65 @@
           </div>
         </div>
       </template>
+
+      <!-- Edit Stock State Modal -->
+      <template v-if="editItem">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
+          <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">
+              Edit Stock State
+            </h3>
+
+            <div class="space-y-4 text-sm text-gray-700">
+              <div>
+                <strong>Commodity:</strong> {{ selectedStock?.commodity?.Name }}
+              </div>
+              <div>
+                <strong>Warehouse:</strong> {{ selectedStock?.warehouse?.Name }}
+              </div>
+              <div>
+                <strong>Quantity:</strong> {{ selectedStock?.Quantity }}
+                {{ selectedStock?.commodity?.Container_type }}
+              </div>
+              <div><strong>Stock Type:</strong> {{ selectedStock?.type }}</div>
+
+              <div class="mt-4">
+                <label for="stockState" class="block font-medium"
+                  >Update Stock State</label
+                >
+                <select
+                  id="stockState"
+                  v-model="selectedStock.state"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+                >
+                  <option disabled value="">Select new state</option>
+                  <option value="Ready">Ready</option>
+                  <option value="Fumigation">Fumigation</option>
+                  <option value="Rebagging">Rebagging</option>
+                  <option value="Repacking">Repacking</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+              <button
+                @click="cancelEdit"
+                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                @click="saveStockState"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </main>
 </template>
@@ -251,6 +374,8 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ArrowsRightLeftIcon,
+  PencilIcon,
   EyeIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
@@ -274,6 +399,10 @@ const activeTab = ref("FoodItems"); // Default tab
 const nfisData = reactive([]); // Placeholder for NFIS data
 const foodItemsData = reactive([]); // Placeholder for Food Items data
 
+const editItem = ref(null);
+const editItemState = ref("");
+const selectedStock = ref(null);
+
 const openGroupedItems = ref(false);
 const groupedItemsToView = ref([]);
 const breadcrumbs = [
@@ -284,33 +413,45 @@ const commodityInventorieStore = usecommodityinventoriestore();
 const inventories = reactive([]);
 const columns = ref([
   {
-    label: "#",
-    field: (row) => row.originalIndex + 1,
-    sortable: true,
-    firstSortType: "asc",
-  },
-  {
     label: "Commodity",
     field: (row) => row.commodity.Name,
     sortable: true,
     firstSortType: "asc",
   },
-  {
-    label: "From",
-    field: (row) => {
-      if (row.groupedItems && row.groupedItems.length > 1) {
-        return "Multiple";
-      }
-      return row.StockFrom;
-    },
-    sortable: true,
-    firstSortType: "asc",
-  },
+
   {
     label: "Warehouse",
     field: (row) => row.warehouse.Name,
     sortable: true,
     firstSortType: "asc",
+  },
+  {
+    label: "Batch",
+    field: (row) => row.BatchNumber,
+    sortable: true,
+    firstSortType: "asc",
+  },
+
+  {
+    label: "State",
+    field: (row) => row.state || "Ready",
+    sortable: true,
+    firstSortType: "asc",
+  },
+  {
+    label: "Age",
+    field: (row) => {
+      const ageInDays = moment().diff(moment(row.CreatedOn), "days");
+      return `${ageInDays} days`;
+    },
+    tdClass: (row) => {
+      const ageInDays = moment().diff(moment(row.CreatedOn), "days");
+      if (ageInDays > 180) return "text-red";
+      if (ageInDays > 90) return "text-orange";
+      return "text-green";
+    },
+    sortable: true,
+    firstSortType: "desc",
   },
   {
     label: "Quantity",
@@ -325,6 +466,51 @@ onMounted(() => {
   getCommodityInventories();
 });
 
+const editStockState = (item) => {
+  selectedStock.value = { ...item }; // shallow clone
+  editItem.value = item;
+  editItemState.value = item.state || "";
+};
+
+const cancelEdit = () => {
+  editItem.value = null;
+  editItemState.value = "";
+};
+
+const saveStockState = async () => {
+  console.log("Stock state updated:");
+
+  if (editItem.value) {
+    // Update locally
+    editItem.value.state = selectedStock.value.state;
+
+    // Optionally, send update to API
+    try {
+      await commodityInventorieStore.update({
+        id: editItem.value.id,
+        state: editItem.value.state,
+      });
+
+      console.log("Stock state updated:", editItem.value.state);
+      Swal.fire({
+        title: "Updated",
+        text: "Stock state successfully updated",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to update stock state",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+
+    cancelEdit();
+  }
+};
+
 // Fetching data for NFIS and Food Items
 const getCommodityInventories = async () => {
   isLoading.value = true;
@@ -337,9 +523,11 @@ const getCommodityInventories = async () => {
     inventories.sort((a, b) => new Date(b.created) - new Date(a.created));
 
     nfisData.push(
-      ...inventories.filter((item) => item.commodity?.commodityTypeId == 2
-      &&
-      item.warehouse?.district?.Name == user.value.district)
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId == 2 &&
+          item.warehouse?.district?.Name == user.value.district
+      )
     );
     foodItemsData.push(
       ...inventories.filter(
@@ -348,7 +536,6 @@ const getCommodityInventories = async () => {
           item.warehouse?.district?.Name == user.value.district
       )
     );
-
   } catch (error) {
     Swal.fire({
       title: "Organisation Retrieval Failed",

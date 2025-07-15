@@ -41,13 +41,13 @@
           <!-- Commissioner Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block"
             >DODMA CTS | Commissioner
-            <span class="text-xs font-normal">(v2.0)</span>
+            <span class="text-xs font-normal">(v3.0)</span>
           </span>
         </div>
         <!-- Mobile Commissioner Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
           >DODMA CTS | Commissioner
-          <span class="text-xs font-normal">(v2.0)</span>
+          <span class="text-xs font-normal">(v3.0)</span>
         </span>
 
         <!-- Navigation Items -->
@@ -295,7 +295,7 @@
             </div>
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | Commissioner
-              <span class="text-xs font-normal">(v2.0)</span>
+              <span class="text-xs font-normal">(v3.0)</span>
             </span>
           </div>
 

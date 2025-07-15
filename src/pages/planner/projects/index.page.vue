@@ -35,6 +35,16 @@
             </router-link>
           </div>
 
+
+          <router-link
+            v-if="option.label === 'Warehouse Requisitions'"
+            to="/planner/stock-transfer-management"
+            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap"
+          >
+            ➔ View Stock Transfers
+          </router-link>
+
+
           <!-- Dropdown for Lean Season Response -->
           <div 
             v-if="option.label.includes('Lean Season Response')" 

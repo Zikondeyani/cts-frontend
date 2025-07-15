@@ -65,6 +65,325 @@ const routes = [
     ],
   },
 
+    {
+    path: "/fdpmanager",
+    name: "fdpmanager",
+    component: () => import("../components/layouts/fdpmanager.layout.vue"),
+    children: [
+      //Dashboard
+      {
+        path: "",
+        name: "fdpmanager-home",
+        redirect: { name: "fdpmanager-dashboard" },
+      },
+
+      {
+        path: "/fdpmanager/reversals",
+        name: "fdpmanager-reversals",
+        component: () =>
+          import("../pages/fdpmanager/receipts/reversal.receipts.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/dashboard",
+        name: "fdpmanager-dashboard",
+        component: () => import("../pages/fdpmanager/dashboard/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/report-management",
+        name: "fdpmanager-report-management",
+        component: () => import("../pages/fdpmanager/reports/index.page.vue"),
+      },
+      //Users
+      {
+        path: "/fdpmanager/users",
+        name: "fdpmanager-users",
+        component: () => import("../pages/fdpmanager/users/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/mailinggroups",
+        name: "fdpmanager-mailinggroups",
+        component: () => import("../pages/fdpmanager/mailinggroups/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/mailinggroups/manage/:id",
+        name: "fdpmanager-manage-mailinggroups",
+        component: () => import("../pages/fdpmanager/mailinggroups/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/users/manage/:id",
+        name: "fdpmanager-manage-user",
+        component: () => import("../pages/fdpmanager/users/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/dispatch-management",
+        name: "fdpmanager-dispatch-management",
+        component: () => import("../pages/fdpmanager/dispatch/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/dispatches",
+        name: "fdpmanager-dispatches",
+        component: () => import("../pages/fdpmanager/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/loadingplans",
+        name: "fdpmanager-loadingplans",
+        component: () => import("../pages/fdpmanager/loadingplans/index.page.vue"),
+      },
+      {
+        path: "/fdpmanager/dispatch-management/manage/:id",
+        name: "fdpmanager-manage-catalogue",
+        component: () => import("../pages/fdpmanager/dispatch/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/commodity-tracking",
+        name: "fdpmanager-commodity-tracking",
+        component: () => import("../pages/fdpmanager/commodities/index.page.vue"),
+      },
+      {
+        path: "/fdpmanager/commodity-tracking/manage/:id",
+        name: "fdpmanager-manage-commodity-tracking",
+        component: () => import("../pages/fdpmanager/commodities/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/receipt-management",
+        name: "fdpmanager-receipt-management",
+        component: () => import("../pages/fdpmanager/receipts/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/receipts",
+        name: "fdpmanager-receipts",
+        component: () => import("../pages/fdpmanager/receipts/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/receipts/emergency",
+        name: "fdpmanager-receipts-emergency",
+        component: () =>
+          import("../pages/fdpmanager/receipts/emergency.receipts.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/receipts/leanseason",
+        name: "fdpmanager-receipts-leanseason",
+        component: () =>
+          import("../pages/fdpmanager/receipts/leanseason.receipts.page.vue"),
+      },
+      {
+        path: "/fdpmanager/change-password",
+        name: "fdpmanager-change-password",
+        component: () =>
+          import("../components/pages/users/change.password.vue"),
+      },
+      {
+        path: "/fdpmanager/receipt-management/manage/:id",
+        name: "fdpmanager-manage-receipt-management",
+        component: () => import("../pages/fdpmanager/receipts/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/requisition-management",
+        name: "fdpmanager-requisition-management",
+        component: () => import("../pages/fdpmanager/requisitions/index.page.vue"),
+      },
+      {
+        path: "/fdpmanager/receipt-management/manage/:id",
+        name: "fdpmanager-manage-requisition-management",
+        component: () => import("../pages/fdpmanager/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/system",
+        name: "fdpmanager-system",
+        component: () => import("../pages/fdpmanager/system/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/feedback",
+        name: "fdpmanager-feedback",
+        component: () => import("../pages/fdpmanager/feedback/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/user-dispatches",
+        name: "fdpmanager-user-dispatches",
+        component: () => import("../pages/fdpmanager/users/dispatches.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/logs",
+        name: "fdpmanager-logs",
+        component: () => import("../pages/fdpmanager/logs/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/userroles",
+        name: "fdpmanager-userroles",
+        component: () => import("../pages/fdpmanager/usersroles/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/districts",
+        name: "fdpmanager-districts",
+        component: () => import("../pages/fdpmanager/districts/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/fdps",
+        name: "fdpmanager-fdps",
+        component: () => import("../pages/fdpmanager/fdps/index.page.vue"),
+      },
+
+         {
+        path: "/fdpmanager/fdps/manage/:id",
+        name: "fdpmanager-manage-user",
+        component: () => import("../pages/fdpmanager/fdps/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/organisations",
+        name: "fdpmanager-organisations",
+        component: () => import("../pages/fdpmanager/organisations/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/stock-management",
+        name: "fdpmanager-stock-management",
+        component: () => import("../pages/fdpmanager/stock/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/stock-management/manage/:id",
+        name: "fdpmanager-manage-stock",
+        component: () => import("../pages/fdpmanager/stock/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/warehouse-management",
+        name: "fdpmanager-warehouse-management",
+        component: () => import("../pages/fdpmanager/warehouses/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/warehouse-management/manage/:id",
+        name: "fdpmanager-manage-warehouse",
+        component: () => import("../pages/fdpmanager/warehouses/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/transporter-management",
+        name: "fdpmanager-transporter-management",
+        component: () => import("../pages/fdpmanager/transporters/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/transporter-management/manage/:id",
+        name: "fdpmanager-manage-transporter",
+        component: () => import("../pages/fdpmanager/transporters/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/commodity-types",
+        name: "fdpmanager-commodity-types",
+        component: () => import("../pages/fdpmanager/commoditytypes/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/requestors",
+        name: "fdpmanager-requestors",
+        component: () => import("../pages/fdpmanager/requestors/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/commodity-types/manage/:id",
+        name: "fdpmanager-manage-commodity-types",
+        component: () =>
+          import("../pages/fdpmanager/commoditytypes/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/commodity-management",
+        name: "fdpmanager-commodity-management",
+        component: () =>
+          import("../pages/fdpmanager/commoditymanagement/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/commodity-management/manage/:id",
+        name: "fdpmanager-manage-commodity-management",
+        component: () =>
+          import("../pages/fdpmanager/commoditymanagement/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/activity-management",
+        name: "fdpmanager-activity-management",
+        component: () => import("../pages/fdpmanager/activities/index.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/activity-management/manage/:id",
+        name: "fdpmanager-manage-activity-management",
+        component: () => import("../pages/fdpmanager/activities/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/organisations/manage/:id",
+        name: "fdpmanager-manage-organisations",
+        component: () => import("../pages/fdpmanager/organisations/manage.page.vue"),
+      },
+
+      {
+        path: "/fdpmanager/project-management",
+        name: "fdpmanager-project-management",
+        component: () => import("../pages/fdpmanager/projects/index.page.vue"),
+      },
+      {
+        path: "/fdpmanager/about-system",
+        name: "fdpmanager-about-system",
+        component: () => import("../pages/about/index.page.vue"),
+      },
+      {
+        path: "/fdpmanager/reminders",
+        name: "fdpmanager-reminders",
+        component: () => import("../pages/fdpmanager/reminders/reminders.page.vue"),
+      },
+      {
+        path: "/fdpmanager/performance-stats",
+        name: "fdpmanager-performance-stats",
+        component: () => import("../pages/fdpmanager/reports/performance-stats.vue"),
+      },
+
+      {
+        path: "/fdpmanager/usage-stats",
+        name: "fdpmanager-usage-stats",
+        component: () => import("../pages/fdpmanager/reports/usage-stats.vue"),
+      },
+    ],
+    beforeEnter: (to, from, next) => {
+      let role = JSON.parse(sessionStorage.getItem("RLE"));
+      if (role != null && typeof role.name != "undefined") {
+        if (role.name == "fdpmanager") {
+          next();
+        } else {
+          next({ name: "portal-signin" });
+        }
+      } else {
+        next({ name: "portal-signin" });
+      }
+    },
+  },
+
   //Admin
   {
     path: "/admin",
@@ -291,6 +610,12 @@ const routes = [
         path: "/admin/commodity-types",
         name: "admin-commodity-types",
         component: () => import("../pages/admin/commoditytypes/index.page.vue"),
+      },
+
+      {
+        path: "/admin/requestors",
+        name: "admin-requestors",
+        component: () => import("../pages/admin/requestors/index.page.vue"),
       },
 
       {
@@ -971,6 +1296,16 @@ const routes = [
         component: () => import("../pages/planner/users/dispatches.page.vue"),
       },
 
+      {
+        path: "/planner/stock-transfer-management",
+        name: "planner-stock-transfer-management",
+        component: () => import("../pages/planner/stock/index-stock-transfers.page.vue"),
+      },
+       {
+        path: "/planner/unapprovedtransfers",
+        name: "planner-stock-transfer-management-unapproved",
+        component: () => import("../pages/planner/warehouserequisitions/index-transfers.page.vue"),
+      },
       {
         path: "/planner/stock-management",
         name: "planner-stock-management",

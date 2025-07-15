@@ -28,10 +28,12 @@
           />
         </div>
       </div>
-      
+
       <!-- Progress Bar -->
       <div v-show="uploadProgress !== null" class="mt-4">
-        <label for="progress" class="text-sm font-medium text-white">Upload Progress</label>
+        <label for="progress" class="text-sm font-medium text-white"
+          >Upload Progress</label
+        >
         <progress
           id="progress"
           max="100"
@@ -42,7 +44,9 @@
         </progress>
       </div>
       <!-- Table -->
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+      <div
+        class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+      >
         <vue-good-table
           :columns="columns"
           :rows="FDPs"
@@ -102,7 +106,7 @@ const columns = ref([
   },
   {
     label: "Name",
-    field: (row) => row.name,
+    field: (row) => row.location_name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
@@ -110,7 +114,7 @@ const columns = ref([
 
   {
     label: "District",
-    field: (row) => row.district,
+    field: (row) => row.admin_level_2,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
@@ -118,7 +122,7 @@ const columns = ref([
 
   {
     label: "Coordinates",
-    field: (row) => [row.lat, row.long].filter(Boolean).join(", "),
+    field: (row) => [row.latitude, row.longitude].filter(Boolean).join(", "),
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
@@ -142,22 +146,20 @@ const handleCsvUpload = (event) => {
       const skipped = [];
 
       for (const row of rows) {
-        // Omit 'id' and skip rows without lat/long
-        if (!row.lat || !row.long) {
+        // Skip rows without latitude/longitude
+        if (!row.latitude || !row.longitude) {
           skipped.push(row);
           continue;
         }
 
         const { id, ...rowWithoutId } = row;
 
-        // Check if the row already exists
+        // Check for existing entry (based on key identifiers like location_name, latitude, longitude)
         const match = FDPs.find(
           (f) =>
-            f.name === rowWithoutId.name &&
-            f.district === rowWithoutId.district &&
-            f.type === rowWithoutId.type &&
-            f.lat === rowWithoutId.lat &&
-            f.long === rowWithoutId.long
+            f.location_name === rowWithoutId.location_name &&
+            f.latitude === rowWithoutId.latitude &&
+            f.longitude === rowWithoutId.longitude
         );
 
         if (match) {
@@ -174,21 +176,19 @@ const handleCsvUpload = (event) => {
         title: "Upload Complete",
         html: `
           <p><strong>${added.length}</strong> FDPs added.</p>
-          <p><strong>${skipped.length}</strong> skipped (already exist or missing lat/long).</p>
+          <p><strong>${skipped.length}</strong> skipped (already exist or missing latitude/longitude).</p>
         `,
         icon: "success",
       });
     },
     progress: (progress) => {
-      uploadProgress.value = progress.percent; // Update progress value
+      uploadProgress.value = progress.percent;
     },
     error: (error) => {
       Swal.fire("Upload Error", error.message, "error");
     },
   });
 };
-
-
 
 //FUNCTIONS
 const getFDPs = async () => {
@@ -201,6 +201,7 @@ const getFDPs = async () => {
       FDPs.length = 0; //empty array
       FDPs.push(...result);
 
+      console.log("FDPs", FDPs);
       FDPs.sort((a, b) => new Date(b.created) - new Date(a.created));
     })
     .catch((error) => {

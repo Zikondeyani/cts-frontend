@@ -77,7 +77,7 @@
                     <div id="letterContent">
                       <DialogTitle class="text-xl font-bold text-center text-gray-900 mb-6">
                         <img src="../../../assets/images/images.png" alt="DODMA Logo" class="h-20 mx-auto mb-4" />
-                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
+                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS 
                       </DialogTitle>
 
                       <div class="text-left text-gray-800 leading-relaxed text-[15px] font-[Times New Roman]">
@@ -147,6 +147,7 @@
                       <DialogTitle class="text-xl font-bold text-center text-gray-900 mb-6">
                         <img src="../../../assets/images/images.png" alt="DODMA Logo" class="h-20 mx-auto mb-4" />
                         DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
+                    
                       </DialogTitle>
 
                       <div class="text-left text-gray-800 leading-relaxed text-[15px] font-[Times New Roman]">
@@ -273,13 +274,13 @@
 
                             <!-- Row 3 -->
                             <div class="flex gap-4">
-                              <div class="w-1/2">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                              <div class="w-full">
+                                <label class="block text-sm font-medium text-gray-700 mb-1"> Driver Phone #</label>
                                 <input v-model="dispatchForm.PhoneNumber"
                                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                   placeholder="Phone Number" />
                               </div>
-                              <div class="w-1/2">
+                         <!--      <div class="w-1/2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
                                 <select id="district" name="district" v-model="dispatchForm.districtId"
                                   autocomplete="district-name"
@@ -290,7 +291,7 @@
                                     {{ district.Name }}
                                   </option>
                                 </select>
-                              </div>
+                              </div> -->
                             </div>
 
                             <!-- Row 4 -->
@@ -310,44 +311,69 @@
 
 
                             <!-- Commodity List -->
-                            <div class="mt-4">
-                              <h3 class="text-lg font-semibold mb-2 text-blue-400">
-                                Items to Dispatch
-                              </h3>
-                              <div v-for="(item, index) in dispatchForm.items" :key="index"
-                                class="flex gap-2 items-center mt-2">
-                                <select v-model="item.commodityId"
-                                  class="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                  <option disabled value="">
-                                    Select Commodity
-                                  </option>
-                                  <option v-for="reqItem in selectedRequisition.items" :key="reqItem.commodity.id"
-                                    :value="reqItem.commodity.id" :disabled="selectedCommodityIds.includes(
-                                      reqItem.commodity.id
-                                    ) &&
-                                      item.commodityId !== reqItem.commodity.id
-                                      ">
-                                    {{ reqItem.commodity?.Name }}
-                                  </option>
-                                </select>
+  <div class="mt-4">
+  <h3 class="text-lg font-semibold mb-2 text-blue-400">
+    Items to Dispatch
+  </h3>
+  <div v-for="(item, index) in dispatchForm.items" :key="index" class="mb-4">
+    <!-- Main row -->
+    <div class="flex gap-2 items-center">
+      <select
+        v-model="item.commodityId"
+        class="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option disabled value="">Select Commodity</option>
+        <option
+          v-for="reqItem in selectedRequisition.items"
+          :key="reqItem.commodity.id"
+          :value="reqItem.commodity.id"
+          :disabled="
+            selectedCommodityIds.includes(reqItem.commodity.id) &&
+            item.commodityId !== reqItem.commodity.id
+          "
+        >
+          {{ reqItem.commodity?.Name }}
+        </option>
+      </select>
 
-                                <input v-model.number="item.quantity" type="number" min="0"
-                                  :max="getRemainingBalance(item.commodityId)"
-                                  class="w-1/3 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  placeholder="Qty" />
-                                <span v-if="item.commodityId" class="text-xs text-gray-500 ml-1">
-                                  (Max:
-                                  {{ getRemainingBalance(item.commodityId) }})
-                                </span>
+      <input
+        v-model.number="item.quantity"
+        type="number"
+        min="0"
+        :max="getRemainingBalance(item.commodityId)"
+        class="w-1/3 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Qty"
+      />
+      <span v-if="item.commodityId" class="text-xs text-gray-500 ml-1">
+        (Max: {{ getRemainingBalance(item.commodityId) }})
+      </span>
 
-                                <button @click.prevent="removeItem(index)" class="text-red-500 hover:underline">
-                                  Remove
-                                </button>
-                              </div>
-                              <button @click.prevent="addItem" class="mt-2 text-sm font-semibold mb-2 text-blue-400">
-                                + Add Commodity
-                              </button>
-                            </div>
+      <button
+        @click.prevent="removeItem(index)"
+        class="text-red-500 hover:underline"
+      >
+        Remove
+      </button>
+    </div>
+
+    <!-- New row for optional configuration -->
+    <div class="mt-2">
+      <input
+        v-model="item.configuration"
+        type="text"
+        placeholder="Configuration (optional)"
+        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  </div>
+
+  <button
+    @click.prevent="addItem"
+    class="mt-2 text-sm font-semibold mb-2 text-blue-400"
+  >
+    + Add Commodity
+  </button>
+</div>
 
                             <!-- Submit Buttons -->
                             <div class="flex gap-2 mt-4">
@@ -545,7 +571,7 @@ const downloadPDF = () => {
 };
 
 onMounted(async () => {
-  await getLoadingplans();
+  await getrequisitions();
   await getDistricts();
 });
 
@@ -561,10 +587,12 @@ const getDistricts = async () => {
   }
 };
 
-const getLoadingplans = async () => {
+const getrequisitions = async () => {
   isLoading.value = true;
   try {
     const data = await WarehouseRequisitionStore.get();
+
+    console.log("Requisitions Data:", data);
     loadingplans.splice(
       0,
       loadingplans.length,
@@ -615,8 +643,8 @@ const createReport = async (reportData) => {
       isApproved: false,
     };
 
-    await WarehouseRequisitionStore.create(payload);
-    await getLoadingplans();
+   await WarehouseRequisitionStore.create(payload);
+    await getrequisitions();
 
     await Swal.fire({
       title: "Success!",
@@ -640,7 +668,7 @@ const deleteItem = async (id) => {
   if (!confirm) return;
   try {
     await WarehouseRequisitionStore.remove(id);
-    await getLoadingplans();
+    await getrequisitions();
   } catch (e) {
     console.error(e);
   }
@@ -686,9 +714,45 @@ const dispatchForm = reactive({
   items: [],
 });
 
+
 const addItem = () => {
+  // Prevent adding if there's already an empty item
+  const hasEmptyItem = dispatchForm.items.some(
+    (item) => item.commodityId === null || item.commodityId === undefined
+  );
+  if (hasEmptyItem) {
+    Swal.fire({
+      title: "Incomplete Item",
+      text: "Please complete the existing item before adding a new one.",
+      icon: "warning",
+    });
+    return;
+  }
+
+  // Prevent adding if all available commodities are already selected
+  const selectedCommodityIds = dispatchForm.items.map(item => item.commodityId);
+
+  const availableCommodityIds = selectedRequisition.value.items.map(
+    (reqItem) => reqItem.commodity.id
+  );
+
+  const unusedCommodityIds = availableCommodityIds.filter(
+    id => !selectedCommodityIds.includes(id)
+  );
+
+  if (unusedCommodityIds.length === 0) {
+    Swal.fire({
+      title: "No More Commodities",
+      text: "All available commodities have already been added.",
+      icon: "info",
+    });
+    return;
+  }
+
+  // Add a new empty row
   dispatchForm.items.push({ commodityId: null, quantity: null });
 };
+
 
 const removeItem = (index) => {
   dispatchForm.items.splice(index, 1);
@@ -719,7 +783,7 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Check for duplicates
+  // Check for duplicate commodity IDs
   const commodityIds = dispatchForm.items.map((item) => item.commodityId);
   const uniqueIds = new Set(commodityIds);
   if (commodityIds.length !== uniqueIds.size) {
@@ -731,7 +795,9 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Check if all required base fields are filled
+  
+
+  // Required base dispatch fields
   const requiredFields = [
     "DeliveryNote",
     "FinalDestinationPoint",
@@ -740,7 +806,6 @@ const submitDispatch = async () => {
     "DriverLicense",
     "PhoneNumber",
     "TruckNumber",
-    "districtId",
   ];
   const missingField = requiredFields.find((field) => !dispatchForm[field]);
   if (missingField) {
@@ -764,6 +829,8 @@ const submitDispatch = async () => {
     });
     return;
   }
+
+  // Check against available inventory
   const overLimitItem = dispatchForm.items.find((item) => {
     const remaining = getRemainingBalance(item.commodityId);
     return item.quantity > remaining;
@@ -777,7 +844,10 @@ const submitDispatch = async () => {
     return;
   }
 
-  // Proceed with dispatch creation
+  // Prepare base dispatch data
+
+
+
   const baseDispatchDetails = {
     DeliveryNote: dispatchForm.DeliveryNote,
     FinalDestinationPoint: dispatchForm.FinalDestinationPoint,
@@ -786,9 +856,12 @@ const submitDispatch = async () => {
     DriverLicense: dispatchForm.DriverLicense,
     PhoneNumber: dispatchForm.PhoneNumber,
     TruckNumber: dispatchForm.TruckNumber,
-    districtId: dispatchForm.districtId,
+    districtId: selectedRequisition.value.districtId,
     warehouserequisitionsId: selectedRequisition.value.id,
   };
+
+
+  console.log("Creating report with data:", selectedRequisition.value);
 
   try {
     const dispatchPromises = dispatchForm.items.map((item) => {
@@ -809,10 +882,23 @@ const submitDispatch = async () => {
       confirmButtonText: "Ok",
     });
 
-    showDispatchModal.value = false;
-    eventBus.emit('warehouseReqArchived', selectedRequisition.value.id);
+    // ✅ Clear the form after success
+    Object.assign(dispatchForm, {
+      DeliveryNote: "",
+      FinalDestinationPoint: "",
+      Date: "",
+      DriverName: "",
+      DriverLicense: "",
+      PhoneNumber: "",
+      TruckNumber: "",
+      districtId: null,
+      items: [],
+    });
 
-    getLoadingplans();
+    // ✅ Close modal and refresh
+    showDispatchModal.value = false;
+    eventBus.emit("warehouseReqArchived", selectedRequisition.value.id);
+    getrequisitions();
   } catch (error) {
     console.error("Dispatch submission failed", error);
     Swal.fire({
@@ -825,9 +911,16 @@ const submitDispatch = async () => {
   console.log("Dispatch Submitted", dispatchForm);
 };
 
-const selectedCommodityIds = computed(() => {
-  return dispatchForm.items.map((item) => item.commodityId).filter(Boolean);
-});
+
+const selectedCommodityIds = computed(() =>
+  dispatchForm.items
+    .map((item) => item.commodityId)
+    .filter((id) => id !== null && id !== undefined)
+);
+
+
+
+
 </script>
 
 <style scoped>

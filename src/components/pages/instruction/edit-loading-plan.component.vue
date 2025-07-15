@@ -389,6 +389,7 @@ const updateLoadingPlan = async () => {
       dispatches,
       ApprovedBy,
       IsApproved,
+      vgtSelected,
       RejectionComment,
       ...updatedLoadingPlan
     } = loadingPlan.value;

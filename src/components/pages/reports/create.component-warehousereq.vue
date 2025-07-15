@@ -107,8 +107,8 @@
                     <label
                       for="warehouse"
                       class="block text-sm font-bold text-gray-700"
-                      >Warehouse</label
-                    >
+                      >Warehouse
+                    </label>
 
                     <select
                       id="warehouse"
@@ -124,6 +124,31 @@
                         class="uppercase"
                       >
                         {{ warehouse.Name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="col-span-12 sm:col-span-3 mb-5">
+                    <label
+                      for="warehouse"
+                      class="block text-sm font-bold text-gray-700"
+                      >Destination District</label
+                    >
+
+                    <select
+                      id="district"
+                      name="district"
+                      v-model="reports.districtId"
+                      autocomplete="warehouse-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                    >
+                      <option
+                        v-for="district in districts"
+                        :key="district"
+                        :value="district"
+                        class="uppercase"
+                      >
+                        {{ district.Name }}
                       </option>
                     </select>
                   </div>
@@ -172,7 +197,7 @@
 
                       <!-- Quantity -->
 
-                      <div class="col-span-6 sm:col-span-3 relative">
+                      <div class="col-span-6 sm:col-span-3 relative mt-5">
                         <input
                           type="number"
                           v-model.number="item.quantity"
@@ -185,6 +210,14 @@
                         >
                           {{ unitOfMeasures[index] }}
                         </span>
+
+                        <!-- Show stock available -->
+                        <p class="text-xs text-gray-600 mt-1">
+                          Available:
+                          {{
+                            getAvailableStock(filteredCommoditiesList[index])
+                          }}
+                        </p>
                       </div>
 
                       <div class="col-span-6 sm:col-span-3">
@@ -404,9 +437,7 @@ function removeItem(index) {
 }
 
 const onSubmit = () => {
-  const hasMissingPriority = reports.value.items.some(
-    (item) => !item.priority
-  );
+  const hasMissingPriority = reports.value.items.some((item) => !item.priority);
 
   if (hasMissingPriority) {
     Swal.fire({
@@ -423,12 +454,12 @@ const onSubmit = () => {
   reports.value.toName = reports.value.warehouseId?.district?.Name;
   reports.value.signedBy = user.value.firstname + " " + user.value.lastname;
   reports.value.warehouseId = reports.value.warehouseId.id;
+  reports.value.districtId = reports.value.districtId.id;
 
   emit("create", reports.value);
   reports.value = {}; // Reset form
   open.value = false;
 };
-
 
 const getLoadingplan = async () => {
   loadingplanstore
@@ -663,8 +694,22 @@ function filterCommodities(index) {
 
 function selectCommodity(commodity, index) {
   reports.value.items[index].commodity = commodity;
-  getUnitOfMeasure(commodity.id, index); // <-- FIXED
+  console.log(commodity);
+  reports.value.items[index].commodityId = commodity.id;
+  getUnitOfMeasure(commodity.id, index);
   commodityInputs.value[index] = commodity.Name;
   filteredCommoditiesList.value[index] = [];
+}
+
+function getAvailableStock(commodityId) {
+  const warehouseId = this.reports.warehouseId;
+  const commodity = this.commodities.find((c) => c.id === commodityId);
+  if (!commodity || !commodity.commodityInventories) return null;
+
+  const inventory = commodity.commodityInventories.find(
+    (inv) => inv.warehouseId === warehouseId
+  );
+
+  return inventory ? inventory.quantity : 0;
 }
 </script>

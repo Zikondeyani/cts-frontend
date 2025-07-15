@@ -41,13 +41,13 @@
           <!-- Admin Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block"
             >DODMA CTS | Admin
-            <span class="text-xs font-normal">(v2.0)</span>
+            <span class="text-xs font-normal">(v3.0)</span>
           </span>
         </div>
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
           >DODMA CTS | Admin
-          <span class="text-xs font-normal">(v2.0)</span>
+          <span class="text-xs font-normal">(v3.0)</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div
@@ -253,7 +253,7 @@
 
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | Admin
-              <span class="text-xs font-normal">(v2.0)</span>
+              <span class="text-xs font-normal">(v3.0)</span>
             </span>
           </div>
 
