@@ -9,7 +9,7 @@
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate mb-3">
-            Manage FDP
+            Manage Stock
           </h2>
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
@@ -35,9 +35,9 @@
             <a href="#user-settings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
-              aria-controls="user-settings" aria-selected="false">Details</a>
+              aria-controls="user-settings" aria-selected="false">Stock Management</a>
           </li>
-       
+         
         </ul>
         <div class="tab-content" id="tabs-user-options">
           <!-- <div
@@ -46,15 +46,14 @@
             role="tabpanel"
             aria-labelledby="tabs-user-profile"
           >
-            <user-profile v-bind:model="model" v-on:update="updateUser" :key="model.id+'profile'"/>
+            <user-profile v-bind:model="model" v-on:update="updateInventory" :key="model.id+'profile'"/>
           </div> -->
-
           <div class="tab-pane fade show active" id="user-settings" role="tabpanel"
             aria-labelledby="tabs-user-settings">
-            <user-settings v-bind:model="model" v-on:update="updateUser" :key="model.id + 'settings'" />
+            <user-settings v-bind:model="model" v-on:update="updateInventory" :key="model.id + 'settings'" />
           </div>
 
-        
+         
         </div>
       </div>
     </div>
@@ -69,10 +68,13 @@ import spinnerWidget from "../../../components/widgets/spinners/default.spinner.
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import UserProfile from "../../../components/pages/users/profile.component.vue";
 import UserLogs from "../../../components/pages/users/logs.component.vue";
-import UserSettings from "../../../components/pages/users/settings.component-fdp.vue";
+import UserSettings from "../../../components/pages/stocks/settings.component.vue";
 //SCHEMA//AND//STORES
 import { UpdateUserSchema } from "../../../services/schema/user.schema";
-import { useFDPstore } from "../../../stores/fdps.store";
+import { usecommoditytypestore } from "../../../stores/commodity-type.store";
+
+import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
+
 //INJENCTIONS
 const $router = useRouter();
 const $route = useRoute();
@@ -82,34 +84,31 @@ const Swal = inject("Swal");
 const id = ref(null);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/fdpmanager/dashboard", current: false },
-  { name: "FDPs", href: "/fdpmanager/fdps", current: false },
-  { name: "Manage", href: "/fdpmanager/fdps/manage", current: true },
+  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Stock Management", href: "/admin/stock-management", current: false },
+  { name: "Manage", href: "#", current: true },
 ];
-const userStore = useFDPstore();
+
+const InventoryStore = usecommodityinventoriestore();
+
 const model = ref({
-  firstName: "",
-  lastName: "",
-  phone: "",
-  email: "",
-  status: "",
-  roleId: "",
-  nameOfOrg: "",
-  OrgDescription: ""
+  Name: ""
+  
 });
 //MOUNTED
 onMounted(() => {
   id.value = $route.params.id;
-  getUser();
+  getInventories();
 });
 ///FORM
 
 ///FIELDS
 
 //FUNCTIONS
-const getUser = async () => {
+
+const getInventories = async () => {
   isLoading.value = true;
-  userStore
+  InventoryStore
     .getOne(id.value)
     .then((result) => {
       model.value = result;
@@ -117,7 +116,7 @@ const getUser = async () => {
     .catch((error) => {
       Swal.fire({
         title: "Failed",
-        text: "Failed to get FDP error (" + error + ")",
+        text: "failed to get commodity types error (" + error + ")",
         icon: "error",
         confirmButtonText: "Ok",
       });
@@ -127,21 +126,21 @@ const getUser = async () => {
     });
 };
 
-const updateUser = async (newValues) => {
+const updateInventory = async (newValues) => {
   isLoading.value = true;
-  userStore
+  InventoryStore
     .update(newValues)
     .then((result) => {
       Swal.fire({
         title: "Success",
-        text: "Updated fdp details",
+        text: "updated commodity inventory",
         icon: "success",
       });
     })
     .catch((error) => {
       Swal.fire({
         title: "Failed",
-        text: "Failed to update user (" + error + ")",
+        text: "failed to update commodity inventory (" + error + ")",
         icon: "error",
         confirmButtonText: "Ok",
       });

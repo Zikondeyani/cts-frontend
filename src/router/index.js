@@ -65,7 +65,7 @@ const routes = [
     ],
   },
 
-    {
+  {
     path: "/fdpmanager",
     name: "fdpmanager",
     component: () => import("../components/layouts/fdpmanager.layout.vue"),
@@ -105,13 +105,15 @@ const routes = [
       {
         path: "/fdpmanager/mailinggroups",
         name: "fdpmanager-mailinggroups",
-        component: () => import("../pages/fdpmanager/mailinggroups/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/mailinggroups/index.page.vue"),
       },
 
       {
         path: "/fdpmanager/mailinggroups/manage/:id",
         name: "fdpmanager-manage-mailinggroups",
-        component: () => import("../pages/fdpmanager/mailinggroups/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/mailinggroups/manage.page.vue"),
       },
 
       {
@@ -129,13 +131,15 @@ const routes = [
       {
         path: "/fdpmanager/dispatches",
         name: "fdpmanager-dispatches",
-        component: () => import("../pages/fdpmanager/dispatch/dispatches.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/dispatch/dispatches.page.vue"),
       },
 
       {
         path: "/fdpmanager/loadingplans",
         name: "fdpmanager-loadingplans",
-        component: () => import("../pages/fdpmanager/loadingplans/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/loadingplans/index.page.vue"),
       },
       {
         path: "/fdpmanager/dispatch-management/manage/:id",
@@ -146,12 +150,14 @@ const routes = [
       {
         path: "/fdpmanager/commodity-tracking",
         name: "fdpmanager-commodity-tracking",
-        component: () => import("../pages/fdpmanager/commodities/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/commodities/index.page.vue"),
       },
       {
         path: "/fdpmanager/commodity-tracking/manage/:id",
         name: "fdpmanager-manage-commodity-tracking",
-        component: () => import("../pages/fdpmanager/commodities/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/commodities/manage.page.vue"),
       },
 
       {
@@ -194,12 +200,14 @@ const routes = [
       {
         path: "/fdpmanager/requisition-management",
         name: "fdpmanager-requisition-management",
-        component: () => import("../pages/fdpmanager/requisitions/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/requisitions/index.page.vue"),
       },
       {
         path: "/fdpmanager/receipt-management/manage/:id",
         name: "fdpmanager-manage-requisition-management",
-        component: () => import("../pages/fdpmanager/requisitions/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/requisitions/manage.page.vue"),
       },
 
       {
@@ -217,7 +225,8 @@ const routes = [
       {
         path: "/fdpmanager/user-dispatches",
         name: "fdpmanager-user-dispatches",
-        component: () => import("../pages/fdpmanager/users/dispatches.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/users/dispatches.page.vue"),
       },
 
       {
@@ -229,7 +238,8 @@ const routes = [
       {
         path: "/fdpmanager/userroles",
         name: "fdpmanager-userroles",
-        component: () => import("../pages/fdpmanager/usersroles/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/usersroles/index.page.vue"),
       },
 
       {
@@ -244,7 +254,7 @@ const routes = [
         component: () => import("../pages/fdpmanager/fdps/index.page.vue"),
       },
 
-         {
+      {
         path: "/fdpmanager/fdps/manage/:id",
         name: "fdpmanager-manage-user",
         component: () => import("../pages/fdpmanager/fdps/manage.page.vue"),
@@ -253,7 +263,8 @@ const routes = [
       {
         path: "/fdpmanager/organisations",
         name: "fdpmanager-organisations",
-        component: () => import("../pages/fdpmanager/organisations/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/organisations/index.page.vue"),
       },
 
       {
@@ -271,37 +282,43 @@ const routes = [
       {
         path: "/fdpmanager/warehouse-management",
         name: "fdpmanager-warehouse-management",
-        component: () => import("../pages/fdpmanager/warehouses/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/warehouses/index.page.vue"),
       },
 
       {
         path: "/fdpmanager/warehouse-management/manage/:id",
         name: "fdpmanager-manage-warehouse",
-        component: () => import("../pages/fdpmanager/warehouses/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/warehouses/manage.page.vue"),
       },
 
       {
         path: "/fdpmanager/transporter-management",
         name: "fdpmanager-transporter-management",
-        component: () => import("../pages/fdpmanager/transporters/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/transporters/index.page.vue"),
       },
 
       {
         path: "/fdpmanager/transporter-management/manage/:id",
         name: "fdpmanager-manage-transporter",
-        component: () => import("../pages/fdpmanager/transporters/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/transporters/manage.page.vue"),
       },
 
       {
         path: "/fdpmanager/commodity-types",
         name: "fdpmanager-commodity-types",
-        component: () => import("../pages/fdpmanager/commoditytypes/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/commoditytypes/index.page.vue"),
       },
 
       {
         path: "/fdpmanager/requestors",
         name: "fdpmanager-requestors",
-        component: () => import("../pages/fdpmanager/requestors/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/requestors/index.page.vue"),
       },
 
       {
@@ -328,19 +345,22 @@ const routes = [
       {
         path: "/fdpmanager/activity-management",
         name: "fdpmanager-activity-management",
-        component: () => import("../pages/fdpmanager/activities/index.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/activities/index.page.vue"),
       },
 
       {
         path: "/fdpmanager/activity-management/manage/:id",
         name: "fdpmanager-manage-activity-management",
-        component: () => import("../pages/fdpmanager/activities/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/activities/manage.page.vue"),
       },
 
       {
         path: "/fdpmanager/organisations/manage/:id",
         name: "fdpmanager-manage-organisations",
-        component: () => import("../pages/fdpmanager/organisations/manage.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/organisations/manage.page.vue"),
       },
 
       {
@@ -356,12 +376,14 @@ const routes = [
       {
         path: "/fdpmanager/reminders",
         name: "fdpmanager-reminders",
-        component: () => import("../pages/fdpmanager/reminders/reminders.page.vue"),
+        component: () =>
+          import("../pages/fdpmanager/reminders/reminders.page.vue"),
       },
       {
         path: "/fdpmanager/performance-stats",
         name: "fdpmanager-performance-stats",
-        component: () => import("../pages/fdpmanager/reports/performance-stats.vue"),
+        component: () =>
+          import("../pages/fdpmanager/reports/performance-stats.vue"),
       },
 
       {
@@ -565,6 +587,12 @@ const routes = [
       },
 
       {
+        path: "/admin/fdps/manage/:id",
+        name: "admin-manage-fdps",
+        component: () => import("../pages/admin/fdps/manage.page.vue"),
+      },
+
+      {
         path: "/admin/organisations",
         name: "admin-organisations",
         component: () => import("../pages/admin/organisations/index.page.vue"),
@@ -574,6 +602,18 @@ const routes = [
         path: "/admin/stock-management",
         name: "admin-stock-management",
         component: () => import("../pages/admin/stock/index.page.vue"),
+      },
+
+       {
+        path: "/admin/stock-management/ByWarehouse/:id",
+        name: "admin-stock-management-by-warehouse",
+        component: () => import("../pages/admin/stockByWarehouse/index.page.vue"),
+      },
+
+       {
+        path: "/admin/stock-management/warehouses",
+        name: "admin-stock-management",
+        component: () => import("../pages/admin/warehouseView/index.page.vue"),
       },
 
       {
@@ -1102,7 +1142,8 @@ const routes = [
       {
         path: "/warehouse/warehouserequisitions",
         name: "warehouse-warehouserequisitions",
-        component: () => import("../pages/warehouse/warehouserequisitions/index.page.vue"),
+        component: () =>
+          import("../pages/warehouse/warehouserequisitions/index.page.vue"),
       },
 
       {
@@ -1132,20 +1173,24 @@ const routes = [
       {
         path: "/warehouse/stock-transfer-management",
         name: "warehouse-stock-transfer-management",
-        component: () => import("../pages/warehouse/stock/index-stock-transfers.page.vue"),
+        component: () =>
+          import("../pages/warehouse/stock/index-stock-transfers.page.vue"),
       },
 
       {
         path: "/warehouse/requisition-dispatch-management",
         name: "warehouse-requisition-dispatch-managemen",
-        component: () => import("../pages/warehouse/warehouserequisitions/index-requisition.page.vue"),
+        component: () =>
+          import(
+            "../pages/warehouse/warehouserequisitions/index-requisition.page.vue"
+          ),
       },
-
 
       {
         path: "/warehouse/outbound-stock-management",
         name: "warehouse-stock-management-all",
-        component: () => import("../pages/warehouse/stock/index-outbound.page.vue"),
+        component: () =>
+          import("../pages/warehouse/stock/index-outbound.page.vue"),
       },
       {
         path: "/warehouse/stock-management/manage/:id",
@@ -1273,8 +1318,7 @@ const routes = [
       {
         path: "/planner/stats",
         name: "planner-stats",
-        component: () =>
-          import("../pages/planner/stats/stats.page.vue"),
+        component: () => import("../pages/planner/stats/stats.page.vue"),
       },
 
       {
@@ -1299,12 +1343,16 @@ const routes = [
       {
         path: "/planner/stock-transfer-management",
         name: "planner-stock-transfer-management",
-        component: () => import("../pages/planner/stock/index-stock-transfers.page.vue"),
+        component: () =>
+          import("../pages/planner/stock/index-stock-transfers.page.vue"),
       },
-       {
+      {
         path: "/planner/unapprovedtransfers",
         name: "planner-stock-transfer-management-unapproved",
-        component: () => import("../pages/planner/warehouserequisitions/index-transfers.page.vue"),
+        component: () =>
+          import(
+            "../pages/planner/warehouserequisitions/index-transfers.page.vue"
+          ),
       },
       {
         path: "/planner/stock-management",
@@ -1453,7 +1501,6 @@ const routes = [
         name: "planner-project-management",
         component: () => import("../pages/planner/projects/index.page.vue"),
       },
-      
 
       {
         path: "/planner/instruction-management",
@@ -1464,9 +1511,9 @@ const routes = [
       {
         path: "/planner/warehouserequisitions",
         name: "planner-warehouserequisitions",
-        component: () => import("../pages/planner/warehouserequisitions/index.page.vue"),
+        component: () =>
+          import("../pages/planner/warehouserequisitions/index.page.vue"),
       },
-
 
       {
         path: "/planner/rejected-instruction-management",
@@ -1949,10 +1996,8 @@ const routes = [
       {
         path: "/commissioner/stats",
         name: "commissioner-stats",
-        component: () =>
-          import("../pages/commissioner/stats/stats.page.vue"),
+        component: () => import("../pages/commissioner/stats/stats.page.vue"),
       },
-
 
       {
         path: "/commissioner/stock-prepositioning",

@@ -26,23 +26,30 @@
             @change="handleCsvUpload"
             class="hidden"
           />
+
+          <button
+            @click="exportToExcel"
+            class="bg-gray-500 text-white px-4 py-2 ml-3 rounded text-sm hover:bg-gray-600"
+          >
+            Export to Excel
+          </button>
         </div>
       </div>
 
       <!-- Progress Bar -->
       <div v-show="uploadProgress !== null" class="mt-4">
         <label for="progress" class="text-sm font-medium text-white"
-          >Upload Progress</label
-        >
-        <progress
-          id="progress"
-          max="100"
-          :value="uploadProgress"
-          class="w-full mt-2 h-2 bg-gray-300 rounded-full"
-        >
-          {{ uploadProgress }}%
-        </progress>
+          >Upload Progress: {{ uploadProgress }}%
+        </label>
+
+        <div class="w-full bg-gray-300 rounded-full h-3 mt-2 overflow-hidden">
+          <div
+            class="bg-green-500 h-3 transition-all duration-300"
+            :style="{ width: uploadProgress + '%' }"
+          ></div>
+        </div>
       </div>
+
       <!-- Table -->
       <div
         class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
@@ -57,6 +64,20 @@
           styleClass="vgt-table striped"
           compactMode
         >
+          <template #table-row="props">
+            <span v-if="props.column.label == 'Options'">
+              <router-link
+                :to="{ path: '/admin/fdps/manage/' + props.row.id }"
+              >
+                <a
+                  href="#"
+                  class="text-blue-500 text-sm hover:text-gray-600 transition duration-300"
+                >
+                  Manage
+                </a>
+              </router-link>
+            </span>
+          </template>
         </vue-good-table>
       </div>
     </div>
@@ -65,6 +86,7 @@
 
 <script setup>
 // import the styles
+import * as XLSX from "xlsx";
 
 import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -127,15 +149,37 @@ const columns = ref([
     firstSortType: "asc",
     tdClass: "capitalize",
   },
+
+  {
+    label: "Options",
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 //MOUNTED
 onMounted(() => {
   getFDPs();
 });
 
+const exportToExcel = () => {
+  if (!FDPs.length) {
+    Swal.fire("No data", "There are no FDPs to export.", "info");
+    return;
+  }
+
+  // Convert full FDP objects directly
+  const worksheet = XLSX.utils.json_to_sheet(FDPs);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "FDPs");
+
+  XLSX.writeFile(workbook, "FDPs_DATA.xlsx");
+};
+
 const handleCsvUpload = (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  uploadProgress.value = 0;
 
   Papa.parse(file, {
     header: true,
@@ -145,16 +189,15 @@ const handleCsvUpload = (event) => {
       const added = [];
       const skipped = [];
 
-      for (const row of rows) {
-        // Skip rows without latitude/longitude
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+
         if (!row.latitude || !row.longitude) {
           skipped.push(row);
           continue;
         }
 
         const { id, ...rowWithoutId } = row;
-
-        // Check for existing entry (based on key identifiers like location_name, latitude, longitude)
         const match = FDPs.find(
           (f) =>
             f.location_name === rowWithoutId.location_name &&
@@ -165,9 +208,12 @@ const handleCsvUpload = (event) => {
         if (match) {
           skipped.push(row);
         } else {
-          await FDPsStore.create(rowWithoutId); // Send row without 'id' to backend
+          await FDPsStore.create(rowWithoutId);
           added.push(row);
         }
+
+        // Update progress manually
+        uploadProgress.value = Math.round(((i + 1) / rows.length) * 100);
       }
 
       await getFDPs();
@@ -180,12 +226,15 @@ const handleCsvUpload = (event) => {
         `,
         icon: "success",
       });
-    },
-    progress: (progress) => {
-      uploadProgress.value = progress.percent;
+
+      // Close progress after short delay
+      setTimeout(() => {
+        uploadProgress.value = null;
+      }, 1000);
     },
     error: (error) => {
       Swal.fire("Upload Error", error.message, "error");
+      uploadProgress.value = null;
     },
   });
 };

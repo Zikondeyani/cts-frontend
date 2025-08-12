@@ -21,6 +21,17 @@ export const usecommodityinventoriestore = defineStore({
     },
 
 
+      async getClassification() {
+      return await commodityinventoriesService.getClassification().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
+
     async getAll() {
       return await commodityinventoriesService.getAll().then((result) => {
         if (result) {
