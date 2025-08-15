@@ -8,12 +8,7 @@
       </div>
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="
-              font-bold
-              leading-7
-              text-white
-              sm:text-2xl sm:truncate
-            ">
+          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Instructions
           </h2>
         </div>
@@ -21,25 +16,47 @@
 
       <!-- Tabs -->
       <div class="tabs">
-        <button @click="currentTab = 'leanSeason'" class="rounded-md" :class="{ active: currentTab === 'leanSeason' }">
-          Lean Season  & Emergency Assistance Instructions
-          <span v-if="emergencyResponseInstructions.length > 0" class="badge badge-red">{{
-            emergencyResponseInstructions.length }}</span>
+        <button
+          @click="currentTab = 'leanSeason'"
+          class="rounded-md"
+          :class="{ active: currentTab === 'leanSeason' }"
+        >
+          Lean Season & Emergency Assistance Instructions
+          <span
+            v-if="emergencyResponseInstructions.length > 0"
+            class="badge badge-red"
+            >{{ emergencyResponseInstructions.length }}</span
+          >
         </button>
-        <button @click="currentTab = 'emergencyResponse'" class="rounded-md"
-          :class="{ active: currentTab === 'emergencyResponse' }">
+        <button
+          @click="currentTab = 'emergencyResponse'"
+          class="rounded-md"
+          :class="{ active: currentTab === 'emergencyResponse' }"
+        >
           Emergency Response Instructions
-          <span v-if="leanSeasonInstructions.length > 0" class="badge badge-red">{{ leanSeasonInstructions.length
-            }}</span>
+          <span
+            v-if="leanSeasonInstructions.length > 0"
+            class="badge badge-red"
+            >{{ leanSeasonInstructions.length }}</span
+          >
         </button>
       </div>
 
       <!-- Content for Tabs -->
       <div v-if="currentTab === 'emergencyResponse'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-          <vue-good-table :columns="columns" :rows="leanSeasonInstructions" :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-            styleClass="vgt-table striped" compactMode>
+        <div
+          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+        >
+          <vue-good-table
+            :columns="columns"
+            :rows="leanSeasonInstructions"
+            :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4"
+            :pagination-options="{ enabled: true }"
+            theme="polar-bear"
+            styleClass="vgt-table striped"
+            compactMode
+          >
             <template #table-actions> </template>
 
             <template #table-row="props">
@@ -56,27 +73,33 @@
                     </span>
                   </span> -->
                   <span>
-                    <span v-if="props.row.IsApproved"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                    <span
+                      v-if="props.row.IsApproved"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+                    >
                       Approved
                     </span>
-                    <span v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    <span
+                      v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+                    >
                       Pending
                     </span>
                   </span>
                 </div>
               </span>
               <span v-if="props.column.label == 'Options'">
-
                 <div class="flex space-x-2">
-
                   <!-- Create Instruction Button -->
 
-                  <create-instruction-dispatch-form :row-id="props.row.id" v-on:create="updateInstruction"
-                    :instruction="props.row" :commodities="filteredCommodities(props.row.id)" :commodity="commodity"
-                    v-on:reject="rejectInstruction" />
-
+                  <create-instruction-dispatch-form
+                    :row-id="props.row.id"
+                    v-on:create="updateInstruction"
+                    :instruction="props.row"
+                    :commodities="filteredCommodities(props.row.id)"
+                    :commodity="commodity"
+                    v-on:reject="rejectInstruction"
+                  />
                 </div>
               </span>
             </template>
@@ -85,39 +108,52 @@
       </div>
 
       <div v-if="currentTab === 'leanSeason'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-          <vue-good-table :columns="columns2" :rows="emergencyResponseInstructions" :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-            styleClass="vgt-table striped" compactMode>
+        <div
+          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+        >
+          <vue-good-table
+            :columns="columns2"
+            :rows="emergencyResponseInstructions"
+            :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4"
+            :pagination-options="{ enabled: true }"
+            theme="polar-bear"
+            styleClass="vgt-table striped"
+            compactMode
+          >
             <template #table-actions> </template>
 
             <template #table-row="props">
               <span v-if="props.column.label === 'Status'">
                 <div>
-
                   <span>
-                    <span v-if="props.row.isApproved"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                    <span
+                      v-if="props.row.isApproved"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+                    >
                       Approved
                     </span>
-                    <span v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                    <span
+                      v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
+                    >
                       Pending
                     </span>
                   </span>
                 </div>
               </span>
               <span v-if="props.column.label == 'Options'">
-
                 <div class="flex space-x-2">
-
                   <!-- Create Instruction Button -->
 
-
-                  <create-approval-loadingplan :row-id="props.row.id" v-on:create="updateApproval"
-                    :emergencyResponseInstructions="props.row" :commodities="filteredCommodities(props.row.id)"
-                    :commodity="commodity" v-on:reject="rejectLoadingPlan" />
-
+                  <create-approval-loadingplan
+                    :row-id="props.row.id"
+                    v-on:create="updateApproval"
+                    :emergencyResponseInstructions="props.row"
+                    :commodities="filteredCommodities(props.row.id)"
+                    :commodity="commodity"
+                    v-on:reject="rejectLoadingPlan"
+                  />
                 </div>
               </span>
             </template>
@@ -128,23 +164,22 @@
   </main>
 </template>
 <script setup>
-import { ref, reactive, onMounted, inject } from 'vue';
-import { useRouter } from 'vue-router';
-import spinnerWidget from '../../../components/widgets/spinners/default.spinner.vue';
-import breadcrumbWidget from '../../../components/widgets/breadcrumbs/admin.breadcrumb.vue';
-import createInstructionDispatchForm from '../../../components/pages/instruction/instructionApproval.component.vue';
-import createApprovalLoadingplan from '../../../components/pages/instruction/instructionApprovalER.component.vue';
+import { ref, reactive, onMounted, inject } from "vue";
+import { useRouter } from "vue-router";
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
+import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
+import createInstructionDispatchForm from "../../../components/pages/instruction/instructionApproval.component.vue";
+import createApprovalLoadingplan from "../../../components/pages/instruction/instructionApprovalER.component.vue";
 
-import { useloadingplanstore } from '../../../stores/loadingplans.store';
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
-import { useinstructionstore } from '../../../stores/instructions.store';
-import { useSessionStore } from '../../../stores/session.store';
-import { useInstructedCommoditiesStore } from '../../../stores/instructedCommodities.store';
-import { usecommoditiestore } from '../../../stores/commodity.store';
-import { useInstructedDispatchesStore } from '../../../stores/instructedDispatches.store';
-import { useDispatchedCommoditiesStore } from '../../../stores/dispatchedCommodities.store';
-import { usewarehousestore } from '../../../stores/warehouse.store';
-
+import { useinstructionstore } from "../../../stores/instructions.store";
+import { useSessionStore } from "../../../stores/session.store";
+import { useInstructedCommoditiesStore } from "../../../stores/instructedCommodities.store";
+import { usecommoditiestore } from "../../../stores/commodity.store";
+import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
+import { useDispatchedCommoditiesStore } from "../../../stores/dispatchedCommodities.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -156,20 +191,16 @@ const Swal = inject("Swal");
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/planner/dashboard", current: false },
-  { name: "Instructions", href: "#", current: true }
+  { name: "Instructions", href: "#", current: true },
 ];
-
-
 
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 
-
 const warehouseStore = usewarehousestore();
 const warehouses = reactive([]);
 
-
-const loadingplansStore = useloadingplanstore()
+const loadingplansStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
 const leanSeasonInstructions = reactive([]);
@@ -182,8 +213,7 @@ const instructedCommodityStore = useInstructedCommoditiesStore();
 const commodities = reactive([]);
 const CommodityStore = usecommoditiestore();
 const commodity = reactive([]);
-import eventBus from '../../../services/events/eventbus';
-
+import eventBus from "../../../services/events/eventbus";
 
 const columns = ref([
   {
@@ -197,23 +227,32 @@ const columns = ref([
   {
     label: "Details",
     field: (row) => {
-      const warehouses = row.warehouses?.map(warehouse => warehouse?.name).join(', ');
+      const warehouses = row.warehouses?.map((w) => w?.name).join(", ");
       const warehouseFormatted = `<span style="color: #096eb4; display: inline-block; max-width: 250px; white-space: normal; word-wrap: break-word;">From: ${warehouses}</span>`;
-      const districtFormatted = `<span style="color: green;">To: ${row.district.Name}</span>`;
-      return `${warehouseFormatted}<br/>${districtFormatted}`;
+
+      const districtName = row.district?.Name;
+      const showDistrict =
+        districtName && districtName.toLowerCase() !== "unknown district";
+
+      const districtFormatted = showDistrict
+        ? `<span style="color: green;">To: ${districtName}</span>`
+        : "";
+
+      return `${warehouseFormatted}${
+        showDistrict ? "<br/>" + districtFormatted : ""
+      }`;
     },
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize whitespace-normal break-words", // Ensure wrapping and breaking words
-    thClass: "w-1/6", // Set width to 1/6th of the table
+    tdClass: "capitalize whitespace-normal break-words",
+    thClass: "w-1/6",
     html: true,
     tdAttr: { "v-html": true },
   },
 
-
   {
     label: "Transporter",
-    field: row => row.transporter?.Name,
+    field: (row) => row.transporter?.Name,
     sortable: true,
     firstSortType: "asc",
     thClass: "w-1/6", // Set width to 1/6th of the table
@@ -221,7 +260,7 @@ const columns = ref([
   {
     label: "District",
     hidden: false,
-    field: row => row.district.Name,
+    field: (row) => row.district.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
@@ -229,13 +268,13 @@ const columns = ref([
   },
   {
     label: "Options",
-    field: row => row,
+    field: (row) => row,
     sortable: false,
     thClass: "w-1/6", // Set width to 1/6th of the table
-  }
+  },
 ]);
 
-const currentTab = ref('leanSeason');
+const currentTab = ref("leanSeason");
 
 // Fetch instructions based on their type
 onMounted(() => {
@@ -246,26 +285,24 @@ onMounted(() => {
   getWarehouses();
 });
 
-
 const getWarehouses = async () => {
   isLoading.value = true;
   warehouseStore
     .get()
-    .then(result => {
+    .then((result) => {
       // Clear the leanSeasonInstructions array
       warehouses.length = 0;
 
       // Filter instructions where IsApproved and IsRejected are false,
       // and requestCommodities is not empty
       warehouses.push(...result);
-
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Instruction Retrieval Failed",
         text: "Failed to get instructions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
@@ -278,55 +315,55 @@ const getInstructions = async () => {
   isLoading.value = true;
   instructionsStore
     .get()
-    .then(result => {
+    .then((result) => {
       // Clear the leanSeasonInstructions array
       leanSeasonInstructions.length = 0;
 
       // Filter instructions where IsApproved and IsRejected are false,
       // and requestCommodities is not empty
-      leanSeasonInstructions.push(...result.filter(item => {
-        return !item.IsApproved &&
-          !item.IsRejected && item.instructedCommodities
-      }));
+      leanSeasonInstructions.push(
+        ...result.filter((item) => {
+          return (
+            !item.IsApproved && !item.IsRejected && item.instructedCommodities
+          );
+        })
+      );
 
       console.log(leanSeasonInstructions, "Filtered Lean Season Instructions");
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Instruction Retrieval Failed",
         text: "Failed to get instructions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
       isLoading.value = false;
     });
 };
-
-
 
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplansStore
     .getloadingplansByATC()
-    .then(result => {
+    .then((result) => {
       // for (let i = 0; i < 100; i++) {
       //   instructions.push(...result);
       // }
       emergencyResponseInstructions.length = 0;
 
-
-      emergencyResponseInstructions.push(...result.filter(item => !item.isApproved && !item.isRejected));
-
-
+      emergencyResponseInstructions.push(
+        ...result.filter((item) => !item.isApproved && !item.isRejected)
+      );
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Instruction Retrieval Failed",
         text: "failed to get Emergency Response Instructions (Please refresh to try again)",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
@@ -334,42 +371,38 @@ const getLoadingPlans = async () => {
     });
 };
 
-
 const getCommodity = async () => {
   isLoading.value = true;
-  CommodityStore.get()
-    .then(result => {
-      commodity.length = 0;
-      commodity.push(...result);
-    });
+  CommodityStore.get().then((result) => {
+    commodity.length = 0;
+    commodity.push(...result);
+  });
 };
 
 const getInstructedCommodities = async () => {
   isLoading.value = true;
-  instructedCommodityStore.get()
-    .then(result => {
-      commodities.length = 0;
-      commodities.push(...result);
-    });
+  instructedCommodityStore.get().then((result) => {
+    commodities.length = 0;
+    commodities.push(...result);
+  });
 };
-
-
 
 const updateInstruction = async (newValues) => {
   isLoading.value = true;
-  instructionsStore.update(newValues)
-    .then(result => {
+  instructionsStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Successfully updated instruction",
         icon: "success",
       });
 
-      eventBus.emit('instructionArchived', newValues.id);
+      eventBus.emit("instructionArchived", newValues.id);
 
       getInstructions();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to update instruction (" + error + ")",
@@ -382,22 +415,22 @@ const updateInstruction = async (newValues) => {
     });
 };
 
-
 const rejectInstruction = async (newValues) => {
   isLoading.value = true;
-  instructionsStore.update(newValues)
-    .then(result => {
+  instructionsStore
+    .update(newValues)
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Instruction Rejected!",
         icon: "success",
       });
 
-      eventBus.emit('instructionArchived', newValues.id);
+      eventBus.emit("instructionArchived", newValues.id);
 
       getInstructions();
     })
-    .catch(error => {
+    .catch((error) => {
       Swal.fire({
         title: "Failed",
         text: "Failed to update instruction (" + error + ")",
@@ -409,7 +442,6 @@ const rejectInstruction = async (newValues) => {
       isLoading.value = false;
     });
 };
-
 
 const updateApproval = async (newValues) => {
   isLoading.value = true;
@@ -419,7 +451,9 @@ const updateApproval = async (newValues) => {
     const allLoadingPlans = await loadingplansStore.get();
 
     // Filter loading plans where ATCNumber matches newValues.ATCNUMBER
-    const loadingPlans = allLoadingPlans.filter(plan => plan.ATCNumber === newValues.ATCNumber);
+    const loadingPlans = allLoadingPlans.filter(
+      (plan) => plan.ATCNumber === newValues.ATCNumber
+    );
 
     // Check if any loading plans were found
     if (loadingPlans.length === 0) {
@@ -429,7 +463,7 @@ const updateApproval = async (newValues) => {
     // Sequentially update each loading plan with the details from newValues
     for (const loadingPlan of loadingPlans) {
       console.log("Updating loading plan", loadingPlan);
-      
+
       // Create an updated object that includes the loading plan ID and new values
       const updatedLoadingPlan = { id: loadingPlan.id, ...newValues };
 
@@ -443,7 +477,7 @@ const updateApproval = async (newValues) => {
       icon: "success",
     });
 
-    eventBus.emit('loadingplanArchived', newValues.id);
+    eventBus.emit("loadingplanArchived", newValues.id);
 
     getLoadingPlans();
   } catch (error) {
@@ -458,8 +492,6 @@ const updateApproval = async (newValues) => {
   }
 };
 
-
-
 const rejectLoadingPlan = async (newValues) => {
   isLoading.value = true;
 
@@ -468,7 +500,9 @@ const rejectLoadingPlan = async (newValues) => {
     const allLoadingPlans = await loadingplansStore.get();
 
     // Filter loading plans where ATCNumber matches newValues.ATCNUMBER
-    const loadingPlans = allLoadingPlans.filter(plan => plan.ATCNumber === newValues.ATCNumber);
+    const loadingPlans = allLoadingPlans.filter(
+      (plan) => plan.ATCNumber === newValues.ATCNumber
+    );
 
     // Check if any loading plans were found
     if (loadingPlans.length === 0) {
@@ -478,7 +512,7 @@ const rejectLoadingPlan = async (newValues) => {
     // Sequentially reject each loading plan
     for (const loadingPlan of loadingPlans) {
       console.log("Rejecting loading plan", loadingPlan);
-      
+
       // Create an updated object that includes the loading plan ID and new values for rejection
       const updatedLoadingPlan = { id: loadingPlan.id, ...newValues };
 
@@ -492,7 +526,7 @@ const rejectLoadingPlan = async (newValues) => {
       icon: "success",
     });
 
-    eventBus.emit('loadingplanArchived', newValues.id);
+    eventBus.emit("loadingplanArchived", newValues.id);
 
     getLoadingPlans();
   } catch (error) {
@@ -507,38 +541,45 @@ const rejectLoadingPlan = async (newValues) => {
   }
 };
 
-
-
 const filteredCommodities = (instructionID) => {
   return commodities.filter((item) => item.instructionId === instructionID);
 };
 
-
 const columns2 = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Commodity",
-    field: row => row.commodityName,
+    field: (row) => row.commodityName,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Details",
     field: (row) => {
       const atcNumber = `<span style="color: #096eb4; font-weight: bold;">ATCNUMBER: ${row.ATCNUMBER}</span>`;
-      const district = `<span style="color: green;">District: ${row.district}</span>`;
-      const plannedBy = `<span style="color: #0b8ad8;">Planned By: ${row.plannedBy}</span>`;
-      const date = `<span style="color: #555;">Date: ${new Date(row.date).toLocaleDateString()}</span>`;
 
-      return `${atcNumber}<br/>${district}<br/>${plannedBy}<br/>${date}`;
+      // Only show district if it is defined, not null, and not "Unknown" (case-insensitive)
+      const district =
+        row.district && row.district.toLowerCase() !== "unknown district"
+          ? `<span style="color: green;">District: ${row.district}</span>`
+          : "";
+
+      const plannedBy = `<span style="color: #0b8ad8;">Planned By: ${row.plannedBy}</span>`;
+      const date = `<span style="color: #555;">Date: ${new Date(
+        row.date
+      ).toLocaleDateString()}</span>`;
+
+      // Only include district if it passed the check
+      return `${atcNumber}${
+        district ? "<br/>" + district : ""
+      }<br/>${plannedBy}<br/>${date}`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -547,38 +588,37 @@ const columns2 = ref([
     html: true,
     tdAttr: { "v-html": true },
   },
-
-
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.totalQuantity.toFixed(2)} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.totalQuantity.toFixed(2)}</span>`,
+    field: (row) =>
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">Qty: ${row.totalQuantity.toFixed(
+        2
+      )} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800">Bal: ${row.totalQuantity.toFixed(
+        2
+      )}</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
   {
     label: "Status",
     hidden: false,
-    field: row => row.isApproved,
+    field: (row) => row.isApproved,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
 
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
-
-
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
-
 </script>
 <style scoped>
 .tabs {

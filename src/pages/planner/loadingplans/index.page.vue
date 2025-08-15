@@ -194,7 +194,7 @@ const breadcrumbs = [
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
-
+import { useactivitiestore } from "../../../stores/activity.store";
 import * as XLSX from "xlsx";
 
 const loadingPlanStore = useloadingplanstore();
@@ -203,7 +203,11 @@ const commodityinventoriesStore = usecommodityinventoriestore();
 
 const warehousesStore = usewarehousestore();
 
+const activitiesStore = useactivitiestore();
+
 const sessionStore = useSessionStore();
+
+const activities = reactive([]);
 
 const user = ref(sessionStore.getUser);
 const columns = ref([
@@ -224,7 +228,6 @@ const columns = ref([
   {
     label: "Details",
     field: (row) => {
-      // Get the matching warehouse name for 'From' and 'To'
       const fromWarehouse = warehouses.find(
         (w) => w.id === row.moveFromWarehouseId
       );
@@ -233,14 +236,12 @@ const columns = ref([
       );
       const warehouse = row.warehouse?.Name;
 
-      // Build the "From" and "To" details conditionally
       let details = `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
         From: ${fromWarehouse ? fromWarehouse.Name : warehouse}
       </span><br>
     `;
 
-      // Add "To" details only if isPrepositioned is true
       if (row.IsPrepositioned) {
         details += `
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
@@ -249,14 +250,25 @@ const columns = ref([
       `;
       }
 
-      // Add district and transporter details
+      // Show District if defined
+      if (row.district?.Name) {
+        details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          District: ${row.district.Name}
+        </span><br>
+      `;
+      }
+
+      // Show TP if defined
+      if (row.transporter?.Name) {
+        details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+          TP: ${row.transporter.Name}
+        </span><br>
+      `;
+      }
+
       details += `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
-        District: ${row.district?.Name}
-      </span><br>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
-        TP: ${row.transporter?.Name}
-      </span><br>
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-gray-100 text-gray-800">
         ATC #: ${row.ATCNumber}
       </span>
@@ -266,7 +278,7 @@ const columns = ref([
     },
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
+    html: true,
     tdClass: "capitalize",
   },
 
@@ -361,9 +373,31 @@ onMounted(async () => {
   await getLoadingplans();
 
   await getWarehouses();
+
+  await getActivities();
 });
 //FUNCTIONS
 
+const getActivities = async () => {
+  try {
+    isLoading.value = true;
+    let data = [];
+
+    /* if (isOnline.value) {
+      data = await activitiesStore.get();
+    } else {
+      data = await getOfflineLoadingPlans();
+    } */
+    data = await activitiesStore.get();
+
+    // Clear existing data and push new data
+    activities.splice(0, activities.length, ...data.reverse());
+  } catch (error) {
+    console.error("Error fetching activities:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 // Function to check the online status and update the message
 const updateOnlineStatusMessage = async () => {
   try {
@@ -466,23 +500,31 @@ const createReport = async (reportData) => {
       quantity: reportData.Quantity,
     });
 
-    // Remove moveToWarehouseId and moveFromWarehouseId from the reportData (if they exist)
-
     const data = prepareReportData(reportData);
     const inventory = prepareInventoryData(reportData);
 
-    // Create the loading plan, proceed even if warehouseId is invalid (undefined or 0)
+    // Create the loading plan
     await loadingPlanStore.create(data);
 
-    // Only deduct if warehouseId is valid (not undefined or 0)
-    if (reportData.warehouseId && reportData.warehouseId !== 0) {
+    // Find activity name (assuming activities list is available in scope)
+    const selectedActivity = activities.find(
+      (a) => a.id === reportData.activityId
+    );
+    const activityName = selectedActivity ? selectedActivity.Name : "";
+
+    // Only deduct if warehouseId is valid AND activity is NOT "Partner Commodity Loan"
+    if (
+      reportData.warehouseId &&
+      reportData.warehouseId !== 0 &&
+      activityName !== "Partner Commodity Loan"
+    ) {
       await commodityinventoriesStore.deduct(inventory);
     }
 
-    // Refresh loading plans after operations
+    // Refresh loading plans
     await getLoadingplans();
 
-    // Only show success message if warehouseId is not 0 (since it was successfully created)
+    // Success messages
     if (reportData.warehouseId !== 0) {
       Swal.fire({
         icon: "success",
@@ -503,7 +545,6 @@ const createReport = async (reportData) => {
     );
     console.error(error.stack);
 
-    // Show error if warehouseId is not 0 and an error occurs during inventory deduction
     if (reportData.warehouseId !== 0) {
       Swal.fire({
         icon: "error",

@@ -1,82 +1,221 @@
 <template>
   <div>
-    <button @click="open = true" class="
-        inline-flex
-        items-center
-        px-3
-        py-2
-        text-sm
-        font-medium
-        text-green-600
-        hover:text-green-900
-        bg-white
-        rounded-md
-        border
-        border-gray-200
-        hover:bg-gray-100
-      ">
+    <button
+      @click="open = true"
+      class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-600 hover:text-green-900 bg-white rounded-md border border-gray-200 hover:bg-gray-100"
+    >
       <!-- Heroicon PlusCircle (Create Instruction) -->
       <CheckCircleIcon class="h-5 w-5 mr-1" />
       View & Approve
     </button>
     <TransitionRoot as="template" :show="open">
-      <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
-        <div class="flex min-h-screen text-center md:block md:px-2 lg:px-4" style="font-size: 0">
-          <TransitionChild v-if="open" as="template" enter="ease-out duration-300" enter-from="opacity-0"
-            enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-            <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+      <Dialog
+        as="div"
+        class="fixed inset-0 z-10 overflow-y-auto"
+        @close="closeDialog"
+        static
+      >
+        <div
+          class="flex min-h-screen text-center md:block md:px-2 lg:px-4"
+          style="font-size: 0"
+        >
+          <TransitionChild
+            v-if="open"
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <DialogOverlay
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
           </TransitionChild>
 
           <!-- Centering element -->
-          <span class="hidden md:inline-block md:align-middle md:h-screen" aria-hidden="true">&#8203;</span>
+          <span
+            class="hidden md:inline-block md:align-middle md:h-screen"
+            aria-hidden="true"
+            >&#8203;</span
+          >
 
-          <TransitionChild as="template" enter="ease-out duration-300"
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
             enter-from="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-            enter-to="opacity-100 translate-y-0 md:scale-100" leave="ease-in duration-200"
+            enter-to="opacity-100 translate-y-0 md:scale-100"
+            leave="ease-in duration-200"
             leave-from="opacity-100 translate-y-0 md:scale-100"
-            leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
+            leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+          >
             <div
-              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl">
+              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl"
+            >
               <div
-                class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
+                class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white"
+              >
                 <h5 class="text-md font-medium leading-normal text-gray-800">
                   Approve Loading Plan
                 </h5>
-                <button type="button" @click="closeDialog"
-                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline">
+                <button
+                  type="button"
+                  @click="closeDialog"
+                  class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                >
                   <XIcon class="h-4 w-4" />
                 </button>
               </div>
 
-              <form @submit.prevent="onSubmit" class="bg-white px-4 pb-4 sm:p-6 sm:pb-4">
-
+              <form
+                @submit.prevent="onSubmit"
+                class="bg-white px-4 pb-4 sm:p-6 sm:pb-4"
+              >
                 <div class="text-center mb-4">
-                  <img src="../../../assets/images/images.png" alt="Department Logo" class="w-20 mx-auto mb-2">
-                  <h3 class="font-bold text-xl">DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS</h3>
+                  <img
+                    src="../../../assets/images/images.png"
+                    alt="Department Logo"
+                    class="w-20 mx-auto mb-2"
+                  />
+                  <h3 class="font-bold text-xl">
+                    DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
+                  </h3>
                   <h3 class="font-bold text-md mb-2">Loading Plan</h3>
-
                 </div>
                 <!-- Instruction Details -->
                 <div class="flex gap-8">
                   <!-- Left: Instructions Panel -->
                   <div class="flex-1 bg-white rounded-table">
-                    <h3 class="text-xl font-semibold mb-4">Loading Plan Details</h3>
-                    <p class="mb-4"><strong>ATC Number:</strong> {{ emergencyResponseInstructions.ATCNUMBER }}</p>
+                    <h3 class="text-xl font-semibold mb-4">
+                      Loading Plan Details
+                    </h3>
+                    <p class="mb-4">
+                      <strong>ATC Number:</strong>
+                      {{ emergencyResponseInstructions.ATCNUMBER }}
+                    </p>
 
-                    <p class="mb-4"><strong>Quantity:</strong> {{ emergencyResponseInstructions.totalQuantity }} MT </p>
-                    <p class="mb-4"><strong>Warehouse (From):</strong>
-                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseFrom : emergencyResponseInstructions?.warehouseName }}
+                    <p class="mb-4">
+                      <strong>Quantity:</strong>
+                      {{ emergencyResponseInstructions.totalQuantity }} MT
                     </p>
-                    <p class="mb-4" v-if="emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse'"><strong>Warehouse (To):</strong>
-                       {{ emergencyResponseInstructions?.warehouseName == 'Unknown Warehouse' ? emergencyResponseInstructions.warehouseTo : emergencyResponseInstructions?.warehouseName }}
+                    <p class="mb-4">
+                      <strong>Warehouse (From):</strong>
+                      {{
+                        emergencyResponseInstructions?.warehouseName ==
+                        "Unknown Warehouse"
+                          ? emergencyResponseInstructions.warehouseFrom
+                          : emergencyResponseInstructions?.warehouseName
+                      }}
                     </p>
-                    <p class="mb-4"><strong>Activity:</strong> {{ emergencyResponseInstructions.activityName == "Unknown Activity"? 'Stock Prepositioning' :  emergencyResponseInstructions.activityName }}</p>
-                    <p class="mb-4"><strong>Transporter:</strong> {{ emergencyResponseInstructions.transporterName == "Unknown Transporter"? 'N/A' :  emergencyResponseInstructions.transporterName }}</p>
-                    <p class="mb-4"><strong>Handled By:</strong> {{ emergencyResponseInstructions.handledBy}}</p>
-                 
-                
-                    <p class="mb-4"><strong>District (To):</strong> {{ emergencyResponseInstructions.district }}</p>
-                    <p class="mb-4"><strong>Planned By:</strong> {{ emergencyResponseInstructions?.plannedBy }}</p>
+                    <p
+                      class="mb-4"
+                      v-if="
+                        emergencyResponseInstructions?.warehouseName ==
+                        'Unknown Warehouse'
+                      "
+                    >
+                      <strong>Warehouse (To):</strong>
+                      {{
+                        emergencyResponseInstructions?.warehouseName ==
+                        "Unknown Warehouse"
+                          ? emergencyResponseInstructions.warehouseTo
+                          : emergencyResponseInstructions?.warehouseName
+                      }}
+                    </p>
+                    <p class="mb-4">
+                      <strong>Activity:</strong>
+                      {{
+                        emergencyResponseInstructions.activityName ==
+                        "Unknown Activity"
+                          ? "Stock Prepositioning"
+                          : emergencyResponseInstructions.activityName
+                      }}
+                    </p>
+                    <p
+                      class="mb-4"
+                      v-if="
+                        emergencyResponseInstructions.activityName !==
+                        'Partner Commodity Loan'
+                      "
+                    >
+                      <strong>Transporter:</strong>
+                      {{
+                        emergencyResponseInstructions.transporterName ==
+                        "Unknown Transporter"
+                          ? "N/A"
+                          : emergencyResponseInstructions.transporterName
+                      }}
+                    </p>
+                    <p
+                      class="mb-4"
+                      v-if="
+                        emergencyResponseInstructions.activityName !==
+                        'Partner Commodity Loan'
+                      "
+                    >
+                      <strong>Handled By:</strong>
+                      {{ emergencyResponseInstructions.handledBy }}
+                    </p>
+
+                    <p
+                      class="mb-4"
+                      v-if="
+                        emergencyResponseInstructions.activityName !==
+                        'Partner Commodity Loan'
+                      "
+                    >
+                      <strong>District (To):</strong>
+                      {{ emergencyResponseInstructions.district }}
+                    </p>
+                    <p class="mb-4">
+                      <strong>Planned By:</strong>
+                      {{ emergencyResponseInstructions?.plannedBy }}
+                    </p>
+
+                    <!-- Show loan info if activityName is Partner Commodity Loan -->
+                    <div
+                      v-if="
+                        emergencyResponseInstructions.activityName ===
+                        'Partner Commodity Loan'
+                      "
+                    >
+                      <p class="mb-4">
+                        <strong>Loan Start:</strong>
+                        {{
+                          emergencyResponseInstructions.loadingPlans[0]
+                            ?.LoanStart
+                        }}
+                      </p>
+                      <p class="mb-4">
+                        <strong>Loan Description:</strong>
+                        {{
+                          emergencyResponseInstructions.loadingPlans[0]
+                            ?.LoanDescription
+                        }}
+                      </p>
+                      <p class="mb-4">
+                        <strong>Loan Timeline:</strong>
+                        {{
+                          emergencyResponseInstructions.loadingPlans[0]
+                            ?.LoanTimeline
+                        }}
+                      </p>
+                      <p class="mb-4">
+                        <strong>Loan To:</strong>
+                        {{
+                          emergencyResponseInstructions.loadingPlans[0]?.LoanTo
+                        }}
+                      </p>
+                      <p class="mb-4">
+                        <strong>Quantity:</strong>
+                        {{
+                          emergencyResponseInstructions.loadingPlans[0]
+                            ?.Quantity
+                        }} MT
+                      </p>
+                     
+                    </div>
 
                     <!--    <p class="mb-4" v-if="emergencyResponseInstructions.IsRejected !== null"><strong>Comments (If Rejected):</strong> {{ emergencyResponseInstructions?.RejectionComment }}</p>
                  -->
@@ -85,31 +224,52 @@
 
                 <!-- Comments Section (only show when rejecting) -->
                 <div v-if="isRejecting" class="mt-4">
-                  <textarea v-model="RejectionComment" placeholder="Add comments here..." rows="3"
-                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-400 rounded-md"></textarea>
+                  <textarea
+                    v-model="RejectionComment"
+                    placeholder="Add comments here..."
+                    rows="3"
+                    class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-400 rounded-md"
+                  ></textarea>
                 </div>
 
                 <!-- Footer Buttons -->
                 <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
-                  <button type="button" @click="closeDialog"
-                    class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">Close</button>
-                  <button type="submit" v-if="!isRejecting"
-                    class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 inline-flex items-center">
+                  <button
+                    type="button"
+                    @click="closeDialog"
+                    class="mr-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="submit"
+                    v-if="!isRejecting"
+                    class="px-4 py-2 mr-3 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400 inline-flex items-center"
+                  >
                     <CheckCircleIcon class="h-5 w-5 mr-1" />
                     Approve Loading Plan
                   </button>
-                  <button @click.prevent="startRejection" v-if="!isRejecting"
-                    class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
+                  <button
+                    @click.prevent="startRejection"
+                    v-if="!isRejecting"
+                    class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center"
+                  >
                     <XIcon class="h-5 w-5 mr-1" />
                     Reject Loading Plan
                   </button>
-                  <button @click="submitRejection" v-if="isRejecting"
-                    class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
+                  <button
+                    @click="submitRejection"
+                    v-if="isRejecting"
+                    class="px-4 py-2 mr-3 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center"
+                  >
                     <XIcon class="h-5 w-5 mr-1" />
                     Confirm Rejection
                   </button>
-                  <button @click="cancelRejection" v-if="isRejecting"
-                    class="px-4 py-2 mr-3 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center">
+                  <button
+                    @click="cancelRejection"
+                    v-if="isRejecting"
+                    class="px-4 py-2 mr-3 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 inline-flex items-center"
+                  >
                     Cancel Rejection
                   </button>
                 </div>
@@ -129,7 +289,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CheckCircleIcon,
-  PencilIcon, PlusCircleIcon
+  PencilIcon,
+  PlusCircleIcon,
 } from "@heroicons/vue/solid";
 import {
   Dialog,
@@ -167,7 +328,7 @@ const showForm = ref(false);
 const props = defineProps({
   rowId: {
     type: [String, Number],
-    required: true
+    required: true,
   },
   emergencyResponseInstructions: Object,
 });
@@ -184,7 +345,7 @@ const RejectionComment = ref("");
 const requisitionStore = userequisitionstore();
 const requisitions = reactive([]);
 const warehouseStore = usewarehousestore();
-const warehouses = reactive([])
+const warehouses = reactive([]);
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 
@@ -196,7 +357,7 @@ const { meta } = useForm({
     ExpiryDate: "",
     commodityId: "",
     warehouseId: "",
-    userId: ""
+    userId: "",
   },
 });
 
@@ -208,48 +369,52 @@ onMounted(() => {
 
 // FUNCTIONS
 const getRequisition = async () => {
-  requisitionStore.get().then(result => {
-    requisitions.length = 0; // empty array
-    requisitions.push(...result);
-  }).catch(error => {
-    console.error(error);
-  }).finally(() => {
-  });
+  requisitionStore
+    .get()
+    .then((result) => {
+      requisitions.length = 0; // empty array
+      requisitions.push(...result);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {});
 };
 
 const getWarehouses = async () => {
-  warehouseStore.get().then(result => {
-    warehouses.length = 0; // empty array
-    warehouses.push(...result);
-  }).catch(error => {
-    console.error(error);
-  }).finally(() => {
-  });
+  warehouseStore
+    .get()
+    .then((result) => {
+      warehouses.length = 0; // empty array
+      warehouses.push(...result);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {});
 };
 
-
-
 const onSubmit = useSubmitForm((values, actions) => {
-  let approvedBy = user.value.username.replace('.', ' ')
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+  let approvedBy = user.value.username
+    .replace(".", " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   // Add (d) if the user is delegated
   if (user.value.isDelegated) {
-    approvedBy += ' (d)';
+    approvedBy += " (d)";
   }
 
   let model = {
     IsApproved: true,
     ApprovedBy: approvedBy,
-    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER
+    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER,
   };
 
   emit("create", model);
   open.value = false;
 });
-
 
 const startRejection = () => {
   isRejecting.value = true;
@@ -259,7 +424,7 @@ const submitRejection = async () => {
   let model = {
     IsRejected: true,
     RejectionComment: RejectionComment.value,
-    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER
+    ATCNumber: props?.emergencyResponseInstructions.ATCNUMBER,
   };
   emit("reject", model);
   isRejecting.value = false;
@@ -278,6 +443,6 @@ const closeDialog = () => {
 };
 
 const formatDate = (dateString) => {
-  return moment(dateString).format('MMMM Do YYYY');
+  return moment(dateString).format("MMMM Do YYYY");
 };
 </script>

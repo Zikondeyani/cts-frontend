@@ -1,5 +1,6 @@
 <template>
   <main class="mt-1 pb-8 font-bold">
+     <spinner-widget v-bind:open="isLoading" />
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
@@ -201,6 +202,7 @@ import "jspdf-autotable";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import { useUserStore } from "../../../stores/user.store";
 
+import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
 import { useListingStore } from "../../../stores/catalogue.store";
@@ -457,7 +459,6 @@ const getDispatches = async () => {
       let reversedData = sortedDispatches.reverse();
       dispaches.push(...reversedData);
 
-      console.log(dispaches, "SJSJS");
     })
     .finally(() => {
       isLoading.value = false;

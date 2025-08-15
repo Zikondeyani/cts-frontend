@@ -9,10 +9,7 @@
       <div class="md:w-1/2">
         <h3 class="text-xl font-semibold mb-2 flex items-center">
           Movement Summary
-          <span
-            title="Distribution of commodities by movement speed: fast, slow, and no movement."
-            class="ml-2 text-gray-400 cursor-help select-none"
-            >ℹ️</span
+      
           >
         </h3>
         <canvas ref="summaryChartRef" class="max-w-w- h-64 md:h-72"></canvas>
@@ -43,11 +40,7 @@
       >
         <h3 class="text-xl font-semibold mb-4 flex items-center justify-between">
           Top Fast-Moving Commodities
-          <span
-            title="Top 10 commodities with fastest movement based on recent counts."
-            class="text-gray-400 cursor-help select-none"
-            >ℹ️</span
-          >
+        
         </h3>
         <div class="overflow-x-auto">
           <canvas ref="fastChartRef" class="min-w-[320px] h-48 md:h-64"></canvas>
@@ -60,11 +53,7 @@
       >
         <h3 class="text-xl font-semibold mb-4 flex items-center justify-between">
           Top Slow-Moving Commodities
-          <span
-            title="Top 10 commodities with slowest movement based on recent counts."
-            class="text-gray-400 cursor-help select-none"
-            >ℹ️</span
-          >
+     
         </h3>
         <div class="overflow-x-auto">
           <canvas ref="slowChartRef" class="min-w-[320px] h-48 md:h-64"></canvas>
@@ -77,11 +66,7 @@
       >
         <h3 class="text-xl font-semibold mb-4 flex items-center justify-between">
           Top No Movement Commodities
-          <span
-            title="Top 10 commodities with no movement in inventory."
-            class="text-gray-400 cursor-help select-none"
-            >ℹ️</span
-          >
+        
         </h3>
         <div class="overflow-x-auto">
           <canvas ref="noMovementChartRef" class="min-w-[320px] h-48 md:h-64"></canvas>

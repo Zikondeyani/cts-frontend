@@ -9,23 +9,50 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Action Requestors
+            Commodity Loans
           </h2>
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
-         
-      <create-requestor-form v-on:create="createRequestor" />
-       
-        </div>
+          <!-- <router-link :to="{ name: 'admin-create-loadingPlans' }">
+            <button
+              type="button"
+              class="
+                ml-3
+                inline-flex
+                items-center
+                px-4
+                py-2
+                border border-transparent
+                rounded
+                shadow-sm
+                text-sm
+                font-medium
+                text-white
+                bg-blue-500
+                hover:bg-blue-400
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-blue-500
+                capitalize
+              "
+            >
+              new warehouse
+            </button>
+          </router-link> -->
+         </div>
       </div>
       <!-- table  -->
+
+      <!-- Key Stats Row -->
+  
 
       <div
         class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
       >
         <vue-good-table
           :columns="columns"
-          :rows="requestors"
+          :rows="loadingPlans"
           :search-options="{ enabled: true }"
           style="font-weight: bold; color: #096eb4"
           :pagination-options="{ enabled: true }"
@@ -33,21 +60,9 @@
           styleClass="vgt-table striped"
           compactMode
         >
+          <template #table-actions> </template>
 
-         <template #table-row="props">
-            <span v-if="props.column.label == 'Options'">
-              <router-link
-                :to="{ path: '/admin/requestors/manage/' + props.row.id }"
-              >
-                <a
-                  href="#"
-                  class="text-blue-500 text-sm hover:text-gray-600 transition duration-300"
-                >
-                  Manage
-                </a>
-              </router-link>
-            </span>
-          </template>
+
         </vue-good-table>
       </div>
     </div>
@@ -57,7 +72,7 @@
 <script setup>
 // import the styles
 
-import { inject, ref, reactive, onMounted } from "vue";
+import { inject, ref, reactive, onMounted, computed  } from "vue";
 import { useRouter } from "vue-router";
 import {
   SearchIcon,
@@ -67,10 +82,10 @@ import {
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createRequestorForm from "../../../components/pages/requestor/create.component.vue";
+import createWarehouseForm from "../../../components/pages/warehouse/create.component.vue";
 
 //SCHEMA//AND//STORES
-import { userequestorstore } from "../../../stores/requestors.store";
+import { useloadingplanstore } from "../../../stores/loadingplans.store";
 //INJENCTIONS
 const $router = useRouter();
 const moment = inject("moment");
@@ -79,11 +94,11 @@ const Swal = inject("Swal");
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Action Requestors", href: "#", current: true },
+  { name: "Home", href: "/planner/dashboard", current: false },
+  { name: "Commodity Loans", href: "#", current: true },
 ];
-const requestorStore = userequestorstore();
-const requestors = reactive([]);
+const loadingPlanStore = useloadingplanstore();
+const loadingPlans = reactive([]);
 const columns = ref([
   {
     label: "#",
@@ -93,75 +108,75 @@ const columns = ref([
     tdClass: "capitalize",
   },
   {
-    label: "Name",
-    field: (row) => row.name,
+    label: "Loaned Commodity",
+    field: (row) => row.commodity.Name,
     sortable: true,
     firstSortType: "asc",
     tdClass: "capitalize",
   },
 
   {
-    label: "Designation",
-    field: (row) => row.designation,
+    label: "Loaned Quantity (MT)",
+    field: (row) => row.Quantity,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize",
   },
+
   {
-    label: "Options",
-    field: (row) => row,
-    sortable: false,
+    label: "Loaned By",
+    hidden: false,
+    field: (row) => row.LoanTo,
+    sortable: true,
+    firstSortType: "asc",
   },
+
+
+   {
+    label: "Loan Date",
+    hidden: false,
+    field: (row) => row.LoanStart,
+    sortable: true,
+    firstSortType: "asc",
+  },
+
+  
+   {
+    label: "Loan Description",
+    hidden: false,
+    field: (row) => row.LoanDescription,
+    sortable: true,
+    firstSortType: "asc",
+  },
+
+ 
 ]);
 //MOUNTED
 onMounted(() => {
-  getRequestors();
+  getLoadingPlans();
 });
 
 
-const createRequestor = async model => {
-  isLoading.value = true;
-  requestorStore
-    .create(model)
-    .then(result => {
-      Swal.fire({
-        title: "Success",
-        text: "Created a new requestor successfully",
-        icon: "success",
-        confirmButtonText: "Ok"
-      });
-    })
-    .catch(error => {
-      /*  Swal.fire({
-         title: "Failed",
-         text: "failed to get create user (" + error + ")",
-         icon: "error",
-         confirmButtonText: "Ok"
-       }); */
-    })
-    .finally(() => {
-      isLoading.value = false;
-      getRequestors();
-    });
-};
 
 //FUNCTIONS
-const getRequestors = async () => {
+const getLoadingPlans = async () => {
   isLoading.value = true;
-  requestorStore
+  loadingPlanStore
     .get()
     .then((result) => {
       // for (let i = 0; i < 100; i++) {
-      //   requestors.push(...result);
+      //   loadingPlans.push(...result);
       // }
-      requestors.length = 0; //empty array
-      requestors.push(...result);
 
+      loadingPlans.length = 0; //empty array
+
+       loadingPlans.push(...result.filter((plan) => plan.activity?.Name == "Partner Commodity Loan"));
+
+    
     })
     .catch((error) => {
       Swal.fire({
-        title: "Requestors Retrieval Failed",
-        text: "failed to get requestors (Please refresh to try again)",
+        title: "LoadingPlan Retrieval Failed",
+        text: "failed to get loadingPlans (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok",
       });

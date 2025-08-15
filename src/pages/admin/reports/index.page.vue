@@ -122,6 +122,7 @@
               :dispatchesdataSummary="dispatchesdataSummary"
               :dispatchdata="dispatchesdata"
             />
+            
           </div>
           <div
             class="tab-pane fade"
@@ -225,6 +226,8 @@ onMounted(async () => {
     dispatchesdata.value = [...dispatchdata];
 
     const dispatchdataSummary = await dispatchStore.getdispatchSummary();
+
+ 
     dispatchesdataSummary.value = [...dispatchdataSummary.unsummarizedDispatches];
 
   
@@ -234,14 +237,6 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
-///FORM
-
-///FIELDS
-
-//FUNCTIONS
-
-
-
 
 const getWarehouseInventory = async () => {
   isLoading.value = true;

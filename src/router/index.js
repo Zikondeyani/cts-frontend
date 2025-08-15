@@ -612,7 +612,7 @@ const routes = [
 
        {
         path: "/admin/stock-management/warehouses",
-        name: "admin-stock-management",
+        name: "admin-stock-management-warehouses",
         component: () => import("../pages/admin/warehouseView/index.page.vue"),
       },
 
@@ -656,6 +656,14 @@ const routes = [
         path: "/admin/requestors",
         name: "admin-requestors",
         component: () => import("../pages/admin/requestors/index.page.vue"),
+      },
+
+   
+       {
+        path: "/admin/requestors/manage/:id",
+        name: "admin-manage-requestors",
+        component: () =>
+          import("../pages/admin/requestors/manage.page.vue"),
       },
 
       {
@@ -1340,6 +1348,13 @@ const routes = [
         component: () => import("../pages/planner/users/dispatches.page.vue"),
       },
 
+        {
+        path: "/planner/stock-management/warehouses",
+        name: "planner-stock-management-warehouses",
+        component: () => import("../pages/planner/warehouseView/index.page.vue"),
+      },
+
+
       {
         path: "/planner/stock-transfer-management",
         name: "planner-stock-transfer-management",
@@ -1385,12 +1400,27 @@ const routes = [
         component: () => import("../pages/planner/dispatch/index.page.vue"),
       },
 
+
+         {
+        path: "/planner/stock-management/ByWarehouse/:id",
+        name: "planner-stock-management-by-warehouse",
+        component: () => import("../pages/planner/stockByWarehouse/index.page.vue"),
+      },
+
       {
         path: "/planner/donations",
         name: "planner-donation-management",
         component: () =>
           import("../pages/planner/donations/donations.page.vue"),
       },
+
+        {
+        path: "/planner/loans",
+        name: "planner-loan-management",
+        component: () =>
+          import("../pages/planner/donations/loans.page.vue"),
+      },
+
 
       {
         path: "/planner/Lean-season-losses",
