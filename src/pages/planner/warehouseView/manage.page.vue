@@ -9,7 +9,7 @@
       <div class="mt-2 md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate mb-3">
-            Manage Action Requestor
+            Manage Warehouse
           </h2>
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
@@ -35,7 +35,7 @@
             <a href="#user-settings"
               class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
               id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
-              aria-controls="user-settings" aria-selected="false">Action Requestor Management</a>
+              aria-controls="user-settings" aria-selected="false">Warehouse Management</a>
           </li>
          
         </ul>
@@ -46,11 +46,11 @@
             role="tabpanel"
             aria-labelledby="tabs-user-profile"
           >
-            <user-profile v-bind:model="model" v-on:update="updateRequestors" :key="model.id+'profile'"/>
+            <user-profile v-bind:model="model" v-on:update="updateWarehouse" :key="model.id+'profile'"/>
           </div> -->
           <div class="tab-pane fade show active" id="user-settings" role="tabpanel"
             aria-labelledby="tabs-user-settings">
-            <Requestor-settings v-bind:model="model" v-on:update="updateRequestors" :key="model.id + 'settings'" />
+            <warehouse-settings v-bind:model="model" v-on:update="updateWarehouse" :key="model.id + 'settings'" />
           </div>
 
          
@@ -68,12 +68,12 @@ import spinnerWidget from "../../../components/widgets/spinners/default.spinner.
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import UserProfile from "../../../components/pages/users/profile.component.vue";
 import UserLogs from "../../../components/pages/users/logs.component.vue";
-import RequestorSettings from "../../../components/pages/requestor/settings.component.vue";
+import WarehouseSettings from "../../../components/pages/warehouse/settings.component.vue";
 //SCHEMA//AND//STORES
 import { UpdateUserSchema } from "../../../services/schema/user.schema";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";
 
-import { userequestorstore } from "../../../stores/requestors.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
 
 //INJENCTIONS
 const $router = useRouter();
@@ -85,11 +85,11 @@ const id = ref(null);
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Action Requestor Management", href: "/admin/Requestor-management", current: false },
+  { name: "Warehouse Management", href: "/admin/warehouse-management", current: false },
   { name: "Manage", href: "#", current: true },
 ];
 
-const RequestorStore = userequestorstore();
+const WarehouseStore = usewarehousestore();
 
 const model = ref({
   Name: ""
@@ -98,7 +98,7 @@ const model = ref({
 //MOUNTED
 onMounted(() => {
   id.value = $route.params.id;
-  getRequestors();
+  getWarehouses();
 });
 ///FORM
 
@@ -106,9 +106,9 @@ onMounted(() => {
 
 //FUNCTIONS
 
-const getRequestors = async () => {
+const getWarehouses = async () => {
   isLoading.value = true;
-  RequestorStore
+  WarehouseStore
     .getOne(id.value)
     .then((result) => {
       model.value = result;
@@ -116,7 +116,7 @@ const getRequestors = async () => {
     .catch((error) => {
       Swal.fire({
         title: "Failed",
-        text: "failed to get Requestor error (" + error + ")",
+        text: "failed to get warehouse error (" + error + ")",
         icon: "error",
         confirmButtonText: "Ok",
       });
@@ -126,21 +126,21 @@ const getRequestors = async () => {
     });
 };
 
-const updateRequestors = async (newValues) => {
+const updateWarehouse = async (newValues) => {
   isLoading.value = true;
-  RequestorStore
+  WarehouseStore
     .update(newValues)
     .then((result) => {
       Swal.fire({
         title: "Success",
-        text: "Updated Requestor",
+        text: "updated warehouse",
         icon: "success",
       });
     })
     .catch((error) => {
       Swal.fire({
         title: "Failed",
-        text: "failed to update Requestor (" + error + ")",
+        text: "failed to update warehouse (" + error + ")",
         icon: "error",
         confirmButtonText: "Ok",
       });

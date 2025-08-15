@@ -293,46 +293,13 @@ export default class DispatcherService {
   getdispatchSummary(id) {
     if (id == null) {
       return axios
-        .get(
-          resource +
-            "/summary" +
-            `?filter={"include": [
-        {
-          "relation": "loadingPlan",
-          "scope": {
-            "include": [
-              {
-                  "relation": "district"
-               },
-               {
-                "relation": "transporter"
-             },
-
-             {
-              "relation": "warehouse"
-           }
-           
-         ,  {"relation":"commodity","scope":{"include":[{"relation":"commodityType"}]}},
-
-         {
-          "relation": "activity"
-       },
-
-       {
-        "relation": "user"
-     }
-            ]
-          }
-        }
-        , "Dispatcher"]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + "/summary", {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -344,19 +311,13 @@ export default class DispatcherService {
         });
     } else if (id != null) {
       return axios
-        .get(
-          resource +
-            `/` +
-            id +
-            `?filter={"include":  ["loadingPlan", "Dispatcher"]}`,
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-type": "Application/json",
-              Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
-            },
-          }
-        )
+        .get(resource + `/` + id, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-type": "Application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+          },
+        })
         .then((response) => {
           var result = response.data;
           return result;
@@ -379,7 +340,6 @@ export default class DispatcherService {
         },
       })
       .then((response) => {
-      
         var result = response.data;
 
         return result;
