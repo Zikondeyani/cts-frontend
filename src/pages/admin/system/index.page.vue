@@ -157,6 +157,12 @@ const optionGroups = ref([
       { label: "Usage Stats", icon: TrendingUpIcon, path: "/admin/usage-stats" },
     ],
   },
+   {
+    title: "System",
+    options: [
+      { label: "System Documents", icon: DocumentTextIcon, path: "/admin/system-documents" }
+    ],
+  },
 ]);
 
 const dropdownVisible = ref({});

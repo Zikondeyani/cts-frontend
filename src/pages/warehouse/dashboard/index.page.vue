@@ -8,7 +8,7 @@
           <h2
             class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate"
           >
-            Inventory Dashboard 
+            Inventory Dashboard
           </h2>
         </div>
       </div>
@@ -23,19 +23,13 @@
               <div class="bg-white p-6 shadow-lg">
                 <div class="sm:flex sm:items-center sm:justify-between">
                   <div class="sm:flex sm:space-x-5">
-                    <div class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                      <p class="text-md font-medium font-heading text-gray-600">
-                        Welcome back,
-                      </p>
-                      <p
-                        class="text-xl font-bold text-gray-900 sm:text-2xl capitalize"
-                      >
+                    <div class="bg-white p-2 rounded-2xl shadow-0">
+                      <p class="text-2xl font-semibold text-gray-900">
+                        {{ greeting }},
                         {{ user.username.replace(/\./g, " ") }}
                       </p>
-                      <p
-                        class="text-sm font-medium text-gray-600 md:text-1xl pt-2 uppercase"
-                      >
-                        {{ role.name }}
+                      <p class="text-sm text-gray-500 mt-1">
+                        It's {{ today }} • {{ currentTime }}
                       </p>
                     </div>
                   </div>
@@ -49,7 +43,6 @@
               </div>
 
               <div class="bg-gray-100 p-5">
-                
                 <div
                   class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
                 >
@@ -80,8 +73,7 @@
                   </div>
                 </div>
 
-
-                 <div
+                <div
                   v-if="showExpiryDialog"
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                 >
@@ -90,7 +82,7 @@
                   >
                     <div class="flex justify-between items-center mb-4">
                       <h3 class="text-xl font-semibold">
-                       Commodities Nearing Expiry
+                        Commodities Nearing Expiry
                       </h3>
                       <button
                         class="text-gray-600 hover:text-gray-900"
@@ -149,9 +141,13 @@
                   v-if="showFastMovingDialog"
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                 >
-                  <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6">
+                  <div
+                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
+                  >
                     <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">Fast Moving Commodities</h3>
+                      <h3 class="text-xl font-semibold">
+                        Fast Moving Commodities
+                      </h3>
                       <button
                         class="text-gray-600 hover:text-gray-900"
                         @click="closeFastMovingDialog"
@@ -177,9 +173,13 @@
                   v-if="showSlowMovingDialog"
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                 >
-                  <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6">
+                  <div
+                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
+                  >
                     <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">Slow Moving Commodities</h3>
+                      <h3 class="text-xl font-semibold">
+                        Slow Moving Commodities
+                      </h3>
                       <button
                         class="text-gray-600 hover:text-gray-900"
                         @click="closeSlowMovingDialog"
@@ -203,7 +203,7 @@
                 <!-- Chart Section -->
                 <div class="mt-6">
                   <h3 class="text-lg font-semibold text-gray-800 mb-2">
-                   Inventory Movement Dashboard
+                    Inventory Movement Dashboard
                   </h3>
                   <div class="bg-white rounded-lg shadow-md p-4 h-120">
                     <MovementChart
@@ -238,6 +238,10 @@ import {
 
 import MovementChart from "@/components/MovementChart.vue";
 import { useRouter } from "vue-router";
+
+import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
+
+const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
 
 const router = useRouter();
 
@@ -293,15 +297,13 @@ const expiryColumns = [
   },
 ];
 
-
-
 const expiryRows = computed(() => {
-  return (
-    classificationData.value?.nearingExpiryCommodities || []
-  ).map((item) => ({
-    commodityName: item.commodityName,
-    expiryDate: item.expiryDate,
-  }));
+  return (classificationData.value?.nearingExpiryCommodities || []).map(
+    (item) => ({
+      commodityName: item.commodityName,
+      expiryDate: item.expiryDate,
+    })
+  );
 });
 
 const noMovementRows = computed(() => {
@@ -314,21 +316,21 @@ const noMovementRows = computed(() => {
 });
 
 const fastMovingRows = computed(() => {
-  return (
-    classificationData.value?.classificationCommodities?.fast || []
-  ).map((item) => ({
-    commodityName: item.commodityName,
-    status: "Fast Moving",
-  }));
+  return (classificationData.value?.classificationCommodities?.fast || []).map(
+    (item) => ({
+      commodityName: item.commodityName,
+      status: "Fast Moving",
+    })
+  );
 });
 
 const slowMovingRows = computed(() => {
-  return (
-    classificationData.value?.classificationCommodities?.slow || []
-  ).map((item) => ({
-    commodityName: item.commodityName,
-    status: "Slow Moving",
-  }));
+  return (classificationData.value?.classificationCommodities?.slow || []).map(
+    (item) => ({
+      commodityName: item.commodityName,
+      status: "Slow Moving",
+    })
+  );
 });
 
 function openNoMovementDialog() {
@@ -362,6 +364,8 @@ function closeExpiryDialog() {
 }
 
 onMounted(async () => {
+  updateTime();
+  setInterval(updateTime, 1000);
   const allWarehouses = await warehouseStore.get();
   warehouseCount.value = allWarehouses.filter(
     (w) => w.district.Name === user.value.district
@@ -384,7 +388,6 @@ onMounted(async () => {
 function goToPendingRequisitions() {
   router.push("/warehouse/warehouserequisitions");
 }
-
 
 function goToWarehouses() {
   router.push("/warehouse/warehouses");

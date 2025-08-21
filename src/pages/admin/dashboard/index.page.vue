@@ -28,22 +28,17 @@
               <div class="bg-white p-6 shadow-2xl">
                 <div class="sm:flex sm:items-center sm:justify-between">
                   <div class="sm:flex sm:space-x-5">
-                    <div class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                      <p class="text-md font-medium font-heading text-gray-600">
-                        Welcome back,
-                      </p>
-                      <p
-                        class="text-xl font-bold text-gray-900 sm:text-2xl capitalize"
-                      >
-                        {{ user.username?.replace(/\./g, " ") }}
-                      </p>
-                      <p
-                        class="text-sm font-medium text-gray-600 md:text-1xl pt-2 uppercase"
-                      >
-                        {{ role.name }}
-                      </p>
+                      <div class="bg-white p-1 rounded-2xl shadow-0">
+                        <p class="text-2xl font-semibold text-gray-900">
+                          {{ greeting }},
+                          {{ user.username.replace(/\./g, " ") }}
+                        </p>
+                        <p class="text-sm text-gray-500 mt-1">
+                          It's {{ today }}  • {{ currentTime }}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                 
                   <!--  <div class="mt-5 flex justify-center sm:mt-0">
                     <create-report-form v-on:create="createReport" />
                   </div> -->
@@ -196,6 +191,12 @@
 import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
+
+import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
+
+const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
+
+
 import jsPDF from "jspdf";
 
 import "jspdf-autotable";
@@ -386,6 +387,11 @@ const receiptcount = ref(0);
 const dispatchcount = ref(0);
 //MOUNTEDgetCatalogue
 onMounted(() => {
+
+  
+  updateTime();
+  setInterval(updateTime, 1000);
+
   getCatalogue();
   getWarehouses();
   getOrganisations();

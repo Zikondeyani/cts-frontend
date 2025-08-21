@@ -126,7 +126,7 @@
                             <!-- Red badge with percentage -->
                             <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"
                                 aria-label="Possible excess receipt">
-                                {{ Number(row.receiptCompletion).toFixed(2)}}%
+                                {{ Number(row.receiptCompletion).toFixed(2) }}%
                             </span>
 
                             <!-- Tooltip -->
@@ -135,7 +135,7 @@
                                 Possible excess receipt
                             </span>
                         </span>
-                        <span v-else>{{ Number(row.receiptCompletion).toFixed(2)}}%</span>
+                        <span v-else>{{ Number(row.receiptCompletion).toFixed(2) }}%</span>
                      
                     </td>
                 </tr>
@@ -203,6 +203,15 @@ const selectedHandleBy = ref('');
 
 const totalPages = computed(() => Math.ceil(props.data.length / pageSize.value));
 
+const flattenedData = computed(() => {
+    if (!props.data || props.data.length === 0) {
+        return []; // Return an empty array if data is not available
+    }
+
+    // Assume props.data is an array with a single object containing numerically indexed keys
+    const [dataObj] = props.data; // Extract the first object (your data)
+    return Object.values(dataObj); // Convert the object into an array of values
+});
 
 
 const filteredData = computed(() => {
@@ -213,6 +222,8 @@ const filteredData = computed(() => {
     }
 
     const filtered = data.filter(item => {
+
+
         return (!selectedDistrict.value || item.district === selectedDistrict.value) &&
             (!selectedCommodity.value || item.commodity === selectedCommodity.value) &&
             (!selectedActivity.value || item.activity === selectedActivity.value)&&
@@ -269,7 +280,7 @@ const getActivities = async () => {
     let activitydata = await activitystore.get();
     activities.length = 0;
     activities.push(
-        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency") && !activity.Name.includes("Partner Commodity Loan"))
     );
     return activities;
 };
@@ -278,14 +289,14 @@ const getActivities = async () => {
 const getCommodities = async () => {
     let commoditydata = await commoditystore.get()
     commodities.length = 0
-    commodities.push(...commoditydata)
+    commodities.push(...commoditydata.filter((item) => item.commodityType?.Name == "Food"))
     return commodities
 }
 
 const getDistricts = async () => {
     let districtsdata = await districtstore.get()
     districts.length = 0
-    districts.push(...districtsdata)
+    districts.push(...districtsdata.slice().sort((a, b) => a.Name.localeCompare(b.Name)))
     return districts
 }
 </script>

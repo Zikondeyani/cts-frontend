@@ -71,7 +71,7 @@ function createCharts() {
       responsive: true,
       plugins: {
         legend: { display: true, position: 'top' },
-        title: { display: true, text: 'Commodity Allocations per District Over Time' },
+        title: { display: true, text: 'Commodity Allocations per District Over Time (All Lean Seasons 2024 Onwards)' },
         datalabels: {
           display: false,
           color: 'gray',

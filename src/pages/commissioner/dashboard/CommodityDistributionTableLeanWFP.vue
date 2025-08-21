@@ -280,7 +280,7 @@ const getActivities = async () => {
     let activitydata = await activitystore.get();
     activities.length = 0;
     activities.push(
-        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency") && !activity.Name.includes("Partner Commodity Loan"))
     );
     return activities;
 };
@@ -289,7 +289,7 @@ const getActivities = async () => {
 const getCommodities = async () => {
     let commoditydata = await commoditystore.get()
     commodities.length = 0
-    commodities.push(...commoditydata)
+    commodities.push(...commoditydata.filter((item) => item.commodityType?.Name == "Food"))
     return commodities
 }
 

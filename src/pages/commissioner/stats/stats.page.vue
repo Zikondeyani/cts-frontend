@@ -68,6 +68,7 @@ onMounted(async () => {
     const result = await statsStore.getDataSummaryAll();
     stats.length = 0;
     stats.push(...result.activities);
+    console.log("Stats Data:", stats);
     filteredStats.value = stats.flatMap(act => 
       act.commodities.map(com => ({
         activity: act.activity,
