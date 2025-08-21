@@ -4,7 +4,7 @@
         <div class="flex justify-between items-center space-x-4 mb-4" :class="{ 'hidden': screenshotMode }">
             <!-- Left-aligned content: Commodity Distribution Update -->
             <div class="mb-4 mt-4 text-left">
-                <span class="font-bold text-sm"> Distribution Update</span>
+                <span class="font-bold text-sm"> Distribution Update </span>
             </div>
             <!-- Right-aligned filters -->
             <div class="flex space-x-4">
@@ -273,17 +273,16 @@ const getActivities = async () => {
     let activitydata = await activitystore.get();
     activities.length = 0;
     activities.push(
-        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency"))
+        ...activitydata.filter(activity => !activity.Name.toLowerCase().includes("emergency") && !activity.Name.includes("Partner Commodity Loan"))
     );
     return activities;
 };
 
 
-
 const getCommodities = async () => {
     let commoditydata = await commoditystore.get()
     commodities.length = 0
-    commodities.push(...commoditydata)
+    commodities.push(...commoditydata.filter((item) => item.commodityType?.Name == "Food"))
     return commodities
 }
 

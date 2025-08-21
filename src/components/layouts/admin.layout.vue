@@ -516,6 +516,7 @@ function navigation() {
         currentRouteBase.startsWith("/admin/receipts")) ||
       (navItem.name === "System" &&
         (currentRouteBase.startsWith("/admin/userroles") ||
+        currentRouteBase.startsWith("/admin/system-documents") ||
           currentRouteBase.startsWith("/admin/mailinggroups") ||
           currentRouteBase.startsWith("/admin/reminders") ||
           currentRouteBase.startsWith("/admin/about") ||   

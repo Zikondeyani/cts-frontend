@@ -83,26 +83,16 @@
                 <h2 class="sr-only" id="profile-overview-title">
                   Profile Overview
                 </h2>
-                <div class="bg-white p-6 shadow-2xl">
+                <div class="bg-white p-6 shadow-0">
                   <div class="sm:flex sm:items-center sm:justify-between">
                     <div class="sm:flex sm:space-x-5">
-                      <div
-                        class="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left"
-                      >
-                        <p
-                          class="text-md font-medium font-heading text-gray-600"
-                        >
-                          Welcome back,
-                        </p>
-                        <p
-                          class="text-xl font-bold text-gray-900 sm:text-2xl capitalize"
-                        >
+                      <div class="bg-white p-6 rounded-2xl shadow-0">
+                        <p class="text-2xl font-semibold text-gray-900">
+                          {{ greeting }},
                           {{ user.username.replace(/\./g, " ") }}
                         </p>
-                        <p
-                          class="text-sm font-medium text-gray-600 md:text-1xl pt-2 uppercase"
-                        >
-                          {{ role.name }}
+                        <p class="text-sm text-gray-500 mt-1">
+                          It's {{ today }}  • {{ currentTime }}
                         </p>
                       </div>
                     </div>
@@ -449,45 +439,66 @@
                       <!-- Row with Heading and Filter -->
                       <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-semibold text-[#096eb4]">
-                          Overall Stats (All Seasons)
+                          Overall Stats
+                          <span v-if="selectedActivity1"
+                            >({{ selectedActivity1 }})</span
+                          >
                         </h2>
-                        <!--  <div class="text-right">
-                          <select v-model="selectedFilter" @change="applyFilter"
-                            class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring focus:ring-[#0b8ad8]">
-                            <option value="all">All</option>
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="thisWeek">This Week</option>
-                            <option value="lastMonth">Last Month</option>
-                          </select>
-                        </div> -->
 
-                        <div class="text-right">
+                        <!-- Activity Filter -->
+                        <div class="flex justify-end items-center space-x-3">
+                          <!-- Activity Dropdown -->
+                          <div class="relative">
+                            <select
+                              v-model="selectedActivity1"
+                              @change="updateStats"
+                              class="appearance-none border border-gray-300 rounded-xl pl-4 pr-10 py-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0b8ad8] focus:border-[#0b8ad8] transition"
+                            >
+                              <option
+                                v-for="act in activities1"
+                                :key="act.activity"
+                                :value="act.activity"
+                              >
+                                {{ act.activity }}
+                              </option>
+                            </select>
+
+                            <!-- Dropdown Icon -->
+                            <span
+                              class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400"
+                            >
+                              ▼
+                            </span>
+                          </div>
+
+                          <!-- View More link -->
                           <router-link
                             to="/commissioner/stats/"
-                            class="text-blue-400 hover:underline"
-                            >View More</router-link
+                            class="text-[#0b8ad8] text-sm font-medium hover:text-[#096eb4] transition"
                           >
+                            View More →
+                          </router-link>
                         </div>
                       </div>
 
                       <!-- Stats Section -->
                       <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                        <!-- Total Commodities Dispatched -->
+                        <!-- Total Commodities Planned -->
                         <div
                           class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4"
                         >
                           <div class="flex items-center space-x-2">
                             <DocumentTextIcon class="w-5 h-5 text-[#096eb4]" />
                             <div class="text-[#096eb4] text-sm">
-                              Tonnage Planned
+                              Tonnage Planned 
                             </div>
                           </div>
                           <div class="text-2xl font-bold text-[#0b8ad8]">
-                            {{ totalStockPlanned }}
+                            {{ totalStockPlanned1?.toFixed(2) || 0 }}MT
                           </div>
                         </div>
 
+                        <!-- Tonnage Dispatched -->
                         <div
                           class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4"
                         >
@@ -498,10 +509,11 @@
                             </div>
                           </div>
                           <div class="text-2xl font-bold text-[#0b8ad8]">
-                            {{ totalDispatched }}
+                            {{ totalDispatched1?.toFixed(2) || 0 }}MT
                           </div>
                         </div>
 
+                        <!-- Tonnage Received -->
                         <div
                           class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4"
                         >
@@ -512,10 +524,11 @@
                             </div>
                           </div>
                           <div class="text-2xl font-bold text-[#0b8ad8]">
-                            {{ totalReceived }}
+                            {{ totalReceived1?.toFixed(2) || 0 }}MT
                           </div>
                         </div>
 
+                        <!-- Loading Plans -->
                         <router-link to="/commissioner/loadingplans">
                           <div
                             class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4 cursor-pointer"
@@ -528,26 +541,26 @@
                                 Loading Plans Created
                               </div>
                             </div>
-                            <div class="mt-2">
                               <div class="text-2xl font-bold text-[#0b8ad8]">
-                                {{ loadingplansCount }}
+                                {{ loadingplansCount1 || 0 }}
                               </div>
                               <div class="text-sm text-gray-600 mt-1">
                                 <span
                                   class="font-bold text-[#ff6f61]"
-                                  v-if="loadingplansCountPending > 0"
+                                  v-if="loadingplansCountPending1 > 0"
                                 >
-                                  {{ loadingplansCountPending }}
+                                  {{ loadingplansCountPending1 || 0 }}
                                   <span
                                     class="font-semibold text-sm text-[#0b8ad8]"
                                     >Pending Approval</span
                                   >
                                 </span>
-                              </div>
+                             
                             </div>
                           </div>
                         </router-link>
 
+                        <!-- % of Dispatches Received -->
                         <div
                           class="border border-transparent hover:border-[#0b8ad8] transition-colors rounded-lg p-4"
                         >
@@ -557,14 +570,13 @@
                               % of Dispatches Received
                             </div>
                           </div>
-                          <div class="text-lg mt-3 font-bold text-[#0b8ad8]">
-                            {{ receivedPercentageFormated }}
+                          <div class="text-lg font-bold text-[#0b8ad8]">
+                            {{ receivedPercentageFormated1 }}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
                   <div
                     class="col-span-3 flex flex-col justify-center items-center mt-2"
                   >
@@ -1012,7 +1024,7 @@
                 </div>
 
                 <!-- Stats Cards - only show when data is loaded -->
-                <div v-else class="col-span-2 mb-2">
+                <!--   <div v-else class="col-span-2 mb-2">
                   <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <div
                       v-for="stat in stats2"
@@ -1091,7 +1103,7 @@
                       >
                     </div>
                   </div>
-                </div>
+                </div> -->
 
                 <!-- Damaged Stock Stats - only show when data is loaded -->
                 <div
@@ -1137,6 +1149,7 @@ import {
   onMounted,
   toRefs,
   computed,
+  onUnmounted,
   toRaw,
 } from "vue";
 import { useRouter } from "vue-router";
@@ -1146,6 +1159,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
+
+import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
+
+const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
 
 import "jspdf-autotable";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
@@ -1272,7 +1289,6 @@ const toggleView = (view) => {
   currentView.value = view;
 };
 
-
 const columnsLoans = ref([
   {
     label: "#",
@@ -1304,8 +1320,7 @@ const columnsLoans = ref([
     firstSortType: "asc",
   },
 
-
-   {
+  {
     label: "Loan Date",
     hidden: false,
     field: (row) => row.LoanStart,
@@ -1313,16 +1328,13 @@ const columnsLoans = ref([
     firstSortType: "asc",
   },
 
-  
-   {
+  {
     label: "Loan Description",
     hidden: false,
     field: (row) => row.LoanDescription,
     sortable: true,
     firstSortType: "asc",
   },
-
- 
 ]);
 
 const showTooltip = ref(false);
@@ -1361,7 +1373,7 @@ const takeScreenshot = () => {
             .toDataURL("image/png")
             .replace("image/png", "image/octet-stream");
           const link = document.createElement("a");
-          link.download = "commodity-distribution.png";
+          link.download = "CTS-DASHBOARD.png";
           link.href = image;
           link.click();
           screenshotMode.value = false;
@@ -1428,12 +1440,34 @@ const LoanloadingPlans = reactive([]);
 //MOUNTEDgetCatalogue
 onMounted(async () => {
   isLoading.value = true;
+
+ updateTime();
+  setInterval(updateTime, 1000);
+
   try {
     await fetchFilteredData();
     await fetchFilteredDataAll();
     await fetchFilteredDataDodma();
     const data = await requisitionStore.getCommodityDistributionSummary();
     const dispatchdata = await dispatchesStore.getdispatchDamageSummary();
+
+    const activityData = await loadingPlanStore.getDataSummaryAll();
+    activities1.length = 0;
+
+    // Exclude "Partner Commodity Loan" and "Stock Prepositioning"
+    const filteredActivities = activityData.activities.filter(
+      (a) =>
+        a.activity !== "Partner Commodity Loan" &&
+        a.activity !== "Stock Prepositioning" &&
+        !a.activity.toLowerCase().includes("emergency response")
+    );
+
+    activities1.push(...filteredActivities);
+
+    // Force reset after loading
+    if (activities1.find((a) => a.activity === "LSR 2024 - 25")) {
+      selectedActivity1.value = "LSR 2024 - 25";
+    }
 
     const dispatchEmergencydata =
       await receivedcommoditiesstore.getdispatchDamageSummary();
@@ -1554,7 +1588,9 @@ const getCommodities = async () => {
     .get()
     .then((result) => {
       commodities.length = 0; //empty array
-      commodities.push(...result);
+      commodities.push(
+        ...result.filter((item) => item.commodityType?.Name == "Food")
+      );
     })
     .catch((error) => {
       console.error("Failed to load commodities:", error);
@@ -1583,13 +1619,17 @@ const getActivities = async () => {
       activities.length = 0; // empty array
       activities.push(
         ...result.filter(
-          (activity) => !activity.Name.toLowerCase().includes("emergency")
+          (activity) =>
+            !activity.Name.toLowerCase().includes("emergency") &&
+            !activity.Name.includes("Partner Commodity Loan")
         )
       );
 
       activitiesLsr.push(
         ...result.filter(
-          (activity) => !activity.Name.toLowerCase().includes("lsr")
+          (activity) =>
+            !activity.Name.toLowerCase().includes("lsr") &&
+            !activity.Name.includes("Partner Commodity Loan")
         )
       );
     })
@@ -1992,6 +2032,103 @@ const filteredLeanStockSummary = computed(() => {
     return matchCommodity && matchActivity && matchDistrict;
   });
 });
+
+const activities1 = reactive([]);
+
+const selectedActivity1 = ref("");
+
+// Stats state
+const totalStockPlanned1 = ref(0);
+const totalDispatched1 = ref(0);
+const totalReceived1 = ref(0);
+const loadingplansCount1 = ref(0);
+const loadingplansCountPending1 = ref(0); // for future use
+const receivedPercentageFormated1 = ref("0%");
+
+watch(
+  selectedActivity1,
+  (newVal) => {
+    if (!newVal) {
+      let allCommodities = activities1.flatMap((a) => a.commodities);
+      totalStockPlanned1.value = allCommodities.reduce(
+        (sum, c) => sum + c.totalStockPlanned,
+        0
+      );
+      totalDispatched1.value = allCommodities.reduce(
+        (sum, c) => sum + c.totalTonnageDispatched,
+        0
+      );
+      totalReceived1.value = allCommodities.reduce(
+        (sum, c) => sum + c.totalReceived,
+        0
+      );
+      loadingplansCount1.value = allCommodities.reduce(
+        (sum, c) => sum + c.totalLoadingPlans,
+        0
+      );
+      receivedPercentageFormated1.value =
+        totalDispatched1.value > 0
+          ? ((totalReceived1.value / totalDispatched1.value) * 100).toFixed(2) +
+            "%"
+          : "0%";
+    } else {
+      let act = activities1.find((a) => a.activity === newVal);
+      if (act) {
+        let c = act.commodities[0];
+        totalStockPlanned1.value = c.totalStockPlanned;
+        totalDispatched1.value = c.totalTonnageDispatched;
+        totalReceived1.value = c.totalReceived;
+        loadingplansCount1.value = c.totalLoadingPlans;
+        receivedPercentageFormated1.value =
+          c.dispatchesReceivedPercentage.toFixed(2) + "%";
+      }
+    }
+  },
+  { immediate: true } // ✅ ensures it runs on page load
+);
+
+const updateStats = computed(() => {
+  if (!selectedActivity1.value) {
+    // Aggregate ALL activities
+    let allCommodities = activities1.flatMap((a) => a.commodities);
+
+    totalStockPlanned1.value = allCommodities.reduce(
+      (sum, c) => sum + c.totalStockPlanned.toFixed(2),
+      0
+    );
+    totalDispatched1.value = allCommodities.reduce(
+      (sum, c) => sum + c.totalTonnageDispatched.toFixed(2),
+      0
+    );
+    totalReceived1.value = allCommodities.reduce(
+      (sum, c) => sum + c.totalReceived.toFixed(2),
+      0
+    );
+    loadingplansCount1.value = allCommodities.reduce(
+      (sum, c) => sum + c.totalLoadingPlans.toFixed(2),
+      0
+    );
+    receivedPercentageFormated1.value =
+      totalDispatched1.value > 0
+        ? ((totalReceived1.value / totalDispatched1.value) * 100).toFixed(2) +
+          "%"
+        : "0%";
+  } else {
+    // Filter for selected activity
+    let act = activities1.find((a) => a.activity === selectedActivity1.value);
+    if (act) {
+      let c = act.commodities[0]; // assume one commodity per activity
+      totalStockPlanned1.value = c.totalStockPlanned.toFixed(2);
+      totalDispatched1.value = c.totalTonnageDispatched.toFixed(2);
+      totalReceived1.value = c.totalReceived.toFixed(2);
+      loadingplansCount1.value = c.totalLoadingPlans.toFixed(2);
+      receivedPercentageFormated1.value =
+        c.dispatchesReceivedPercentage.toFixed(2) + "%";
+    }
+  }
+});
+
+
 </script>
 
 <style scoped>

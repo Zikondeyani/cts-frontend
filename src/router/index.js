@@ -568,6 +568,12 @@ const routes = [
         component: () => import("../pages/admin/logs/index.page.vue"),
       },
 
+         {
+        path: "/admin/system-documents",
+        name: "admin-system-documents",
+        component: () => import("../pages/admin/logs/system-documents.page.vue"),
+      },
+
       {
         path: "/admin/userroles",
         name: "admin-userroles",

@@ -513,7 +513,7 @@ const generateExcel = () => {
     }
 
     const wb = XLSX.utils.book_new();
-    const wsName = "LeanSeasonReceipts";
+    const wsName = "CTSReceipts";
 
     // Extract necessary details from nested objects
     const flattenedData = receipts.flatMap((item) =>
@@ -538,7 +538,7 @@ const generateExcel = () => {
     const ws = XLSX.utils.json_to_sheet(flattenedData);
     XLSX.utils.book_append_sheet(wb, ws, wsName);
 
-    XLSX.writeFile(wb, "LeanSeasonReceipts.xlsx");
+    XLSX.writeFile(wb, "CTSReceipts.xlsx");
     console.log("✅ Excel file generated successfully.");
   } catch (error) {
     console.error("❌ Error generating Excel file:", error);

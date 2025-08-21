@@ -13,25 +13,35 @@
             Receipts
           </h2>
         </div>
-        <button type="button"
+        <button
+          type="button"
           class="font-body inline-block px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
-          @click="generateExcel">
+          @click="generateExcel"
+        >
           Export Data
         </button>
-
       </div>
       <!-- table  -->
 
       <div class="my-4 border-b border-gray-400">
         <div class="flex flex-wrap">
-          <button @click="activeTab = 'submitted'"
-            :class="{ 'tab-button text-white': activeTab === 'submitted', 'bg-white text-blue-800 border border-blue-800': activeTab !== 'submitted' }"
-            style="background-color: #248cd6;"
-            class="relative flex items-center mr-1 py-2 px-4 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
-            <i class="fas fa-check-circle mr-2"></i> <!-- Submitted icon -->
+          <button
+            @click="activeTab = 'submitted'"
+            :class="{
+              'tab-button text-white': activeTab === 'submitted',
+              'bg-white text-blue-800 border border-blue-800':
+                activeTab !== 'submitted',
+            }"
+            style="background-color: #248cd6"
+            class="relative flex items-center mr-1 py-2 px-4 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+          >
+            <i class="fas fa-check-circle mr-2"></i>
+            <!-- Submitted icon -->
             Submitted Receipts
-            <span v-if="submittedCount > 0"
-              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center px-3">
+            <span
+              v-if="submittedCount > 0"
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center px-3"
+            >
               {{ submittedCount }}
             </span>
           </button>
@@ -46,20 +56,27 @@
               {{ draftCount }}
             </span>
           </button> -->
-
         </div>
       </div>
-
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
-        <vue-good-table v-if="activeTab == 'submitted'" :columns="columns" :rows="receipts"
-          :search-options="{ enabled: true }" style="font-weight: bold; color: blue;" :pagination-options="{
+      <div
+        class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
+      >
+        <vue-good-table
+          v-if="activeTab == 'submitted'"
+          :columns="columns"
+          :rows="receipts"
+          :search-options="{ enabled: true }"
+          style="font-weight: bold; color: blue"
+          :pagination-options="{
             enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+          }"
+          theme="polar-bear"
+          styleClass=" vgt-table striped "
+          compactMode
+        >
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
-
-
               <!-- Edit Button with Pencil Icon -->
               <!-- <button @click="openEditDialog(props.row)"
                 class="text-green-500 hover:text-green-700 transition duration-300">
@@ -69,14 +86,15 @@
 
               <!-- Delete Button with Trash Icon -->
 
-              <button @click="openDispatchDialog(props.row)"
-                class="text-blue-400 hover:text-blue-300 transition duration-300">
+              <button
+                @click="openDispatchDialog(props.row)"
+                class="text-blue-400 hover:text-blue-300 transition duration-300"
+              >
                 <EyeIcon class="h-5 w-5 inline-block" />
                 View
               </button>
 
-
-             <!--  <button @click="requestReversal(props.row)" v-if="props.row.receipts[0].status !== 4"
+              <!--  <button @click="requestReversal(props.row)" v-if="props.row.receipts[0].status !== 4"
                 class="text-orange-500 hover:text-orange-700 transition duration-300  ml-2 mr-2">
                 <XIcon class="h-5 w-5 inline-block" />
                 Request Reversal
@@ -91,34 +109,42 @@
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
                 Delete
               </button> -->
-
             </span>
           </template>
         </vue-good-table>
 
-
-        <vue-good-table v-if="activeTab == 'draft'" :columns="columns2" :rows="receiptsClean"
-          :search-options="{ enabled: true }" style="font-weight: bold; color: blue;" :pagination-options="{
+        <vue-good-table
+          v-if="activeTab == 'draft'"
+          :columns="columns2"
+          :rows="receiptsClean"
+          :search-options="{ enabled: true }"
+          style="font-weight: bold; color: blue"
+          :pagination-options="{
             enabled: true,
-          }" theme="polar-bear" styleClass=" vgt-table striped " compactMode>
+          }"
+          theme="polar-bear"
+          styleClass=" vgt-table striped "
+          compactMode
+        >
           <template #table-actions> </template>
           <template #table-row="props">
             <span v-if="props.column.label == 'Options'">
-
-
               <!-- Edit Button with Pencil Icon -->
 
-
-              <button @click="editDispatchDialog(props.row)"
-                class="text-blue-400 hover:text-blue-300 transition duration-300">
+              <button
+                @click="editDispatchDialog(props.row)"
+                class="text-blue-400 hover:text-blue-300 transition duration-300"
+              >
                 <PencilIcon class="h-5 w-5 mr-3 inline-block mx-3" />
 
                 Edit
               </button>
               <!-- Delete Button with Trash Icon -->
 
-              <button @click="openDispatchDialog(props.row)"
-                class="text-blue-400 hover:text-blue-300 transition duration-300">
+              <button
+                @click="openDispatchDialog(props.row)"
+                class="text-blue-400 hover:text-blue-300 transition duration-300"
+              >
                 <EyeIcon class="h-5 w-5 inline-block ml-4 mr-1" />
                 View
               </button>
@@ -128,15 +154,23 @@
                 <TrashIcon class="h-5 w-5 inline-block mr-1" />
                 Delete
               </button> -->
-
             </span>
           </template>
         </vue-good-table>
-        <ReceiptLoadingPlanDialog :isOpen="isEditDialogOpen" :dispatch="selectedDispatch" :receipts="receiptsClean"
-          @close="closeReceiptDialog" v-on:update="createLeanReceipt" v-on:draft="draftLeanReceipt" />
-        <ReceiptViewDialog :isOpen="isReceiptDialogOpen" :receipt="selectedReceipt" @close="closeReceiptDialog"
-          v-on:update="reloadPage" />
-
+        <ReceiptLoadingPlanDialog
+          :isOpen="isEditDialogOpen"
+          :dispatch="selectedDispatch"
+          :receipts="receiptsClean"
+          @close="closeReceiptDialog"
+          v-on:update="createLeanReceipt"
+          v-on:draft="draftLeanReceipt"
+        />
+        <ReceiptViewDialog
+          :isOpen="isReceiptDialogOpen"
+          :receipt="selectedReceipt"
+          @close="closeReceiptDialog"
+          v-on:update="reloadPage"
+        />
       </div>
     </div>
   </main>
@@ -160,24 +194,18 @@ import {
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 
-
 import ReceiptViewDialog from "../../../components/pages/dispatches/view.receipt.component.vue";
 
 import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/edit.receipt-recipient.component.vue";
 
 import EditReceiptDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
-const activeTab = ref('submitted');
+const activeTab = ref("submitted");
 
-
-
-
-import * as XLSX from 'xlsx';
-
+import * as XLSX from "xlsx";
 
 import createListingForm from "../../../components/pages/catalogue/create.component.vue";
 //SCHEMA//AND//STORES
 import { useListingStore } from "../../../stores/catalogue.store";
-
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -192,56 +220,53 @@ const breadcrumbs = [
   { name: "Lean Season Response", href: "#", current: true },
 ];
 
-
 import { usereceiptstore } from "../../../stores/receipt.store";
 import { XIcon } from "@heroicons/vue/outline";
 const draftCount = ref(0);
 const submittedCount = ref(0);
 
-
 const updateCounts = () => {
-  draftCount.value = receiptsClean.filter(r => r.status == 3).length;
+  draftCount.value = receiptsClean.filter((r) => r.status == 3).length;
   submittedCount.value = receipts.length;
 };
 const receiptStore = usereceiptstore();
 const receipts = reactive([]);
 const receiptsClean = reactive([]);
 
-
-
 const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
 
-
 const columns = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
 
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.createdOn).format("DD/MM/YYYY") !== null ? moment(row.createdOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: (row) =>
+      `<span> ${
+        moment(row.createdOn).format("DD/MM/YYYY") !== null
+          ? moment(row.createdOn).format("DD/MM/YYYY")
+          : "N/A"
+      }</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-    tdClass: "capitalize"
-  }
-  ,
-
+    tdClass: "capitalize",
+  },
   {
     label: "Delivery Note",
     hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
-      const physicalDeliveryNote = row.receipts.length > 0 ? row.receipts[0].PhysicalDeliveryNote : "N/A";
+      const physicalDeliveryNote =
+        row.receipts.length > 0 ? row.receipts[0].PhysicalDeliveryNote : "N/A";
       return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-blue-100 text-blue-800" >
               D.N: ${physicalDeliveryNote}
             </span><br>`;
@@ -250,31 +275,12 @@ const columns = ref([
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
-  }
-  ,
-
+    tdClass: "capitalize",
+  },
   {
     label: "District",
     hidden: false,
-    field: row => {
-      // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
-      const District = row.district;
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-yellow-100 text-yellow-800" > ${District}
-            </span><br>`;
-    },
-    sortable: true,
-    firstSortType: "asc",
-    html: true, // Important for rendering HTML
-
-    tdClass: "capitalize"
-  }
-  ,
-
-  {
-    label: "District",
-    hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
       const District = row.district;
       return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800" > ${District}
@@ -284,72 +290,68 @@ const columns = ref([
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
-  }
-  ,
-
+    tdClass: "capitalize",
+  },
   {
     label: "ATC #",
     hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
       const physicalDeliveryNote = row.atcNumber;
       return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-orange-100 text-orange-800" > ${physicalDeliveryNote}
             </span><br>`;
     },
 
-    
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
-  }
-  ,
-
+    tdClass: "capitalize",
+  },
   {
     label: "Expected",
     hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
       const totalExpected = row.totalExpected;
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-green-100 text-green-800" > ${totalExpected?.toFixed(2)} MT
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-green-100 text-green-800" > ${totalExpected?.toFixed(
+        2
+      )} MT
             </span><br>`;
     },
 
-    
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
 
   {
     label: "Received",
     hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
       const totalReceived = row.totalReceived;
-      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-green-100 text-green-800" > ${totalReceived?.toFixed(2)} MT
+      return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold bg-green-100 text-green-800" > ${totalReceived?.toFixed(
+        2
+      )} MT
             </span><br>`;
     },
 
-    
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
   {
     label: "Received By",
     hidden: false,
-    field: row => {
+    field: (row) => {
       // Extracting PhysicalDeliveryNote from the first receipt, assuming it's the relevant one
-      const physicalDeliveryNote =  row.recipient;
+      const physicalDeliveryNote = row.recipient;
       return `<span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-sm font-semibold bg-blue-100 text-blue-800" >
              ${physicalDeliveryNote}
             </span><br>`;
@@ -358,113 +360,109 @@ const columns = ref([
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
-  }
-  ,
-
-
+    tdClass: "capitalize",
+  },
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
-
-
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 
-
-
 const columns2 = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
 
   {
     label: "Date",
     hidden: false,
-    field: row => `<span> ${moment(row.createdOn).format("DD/MM/YYYY") !== null ? moment(row.createdOn).format("DD/MM/YYYY") : "N/A"}</span><br>`,
+    field: (row) =>
+      `<span> ${
+        moment(row.createdOn).format("DD/MM/YYYY") !== null
+          ? moment(row.createdOn).format("DD/MM/YYYY")
+          : "N/A"
+      }</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-    tdClass: "capitalize"
-  }
-  ,
-
+    tdClass: "capitalize",
+  },
   {
     label: "Details",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${row.deliveryNote !== undefined ? row.deliveryNote : "N/A"}</span><br>`,
+    field: (row) =>
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800" >D.N: ${
+        row.deliveryNote !== undefined ? row.deliveryNote : "N/A"
+      }</span><br>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
 
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
   {
     label: "Dispatcher",
-    field: row => {
+    field: (row) => {
       return `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"> ${row.dispatcher}</span><br>`;
     },
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
-
-
 
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
-
-
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 
-
-
 const requestReversal = async (row) => {
-
   const { value: reason } = await Swal.fire({
-    title: 'Request Reversal',
-    text: 'Are you sure you want to request a reversal? Please provide a reason:',
-    input: 'textarea',
-    inputLabel: 'Reason',
-    inputPlaceholder: 'Enter the reason for reversal here...',
+    title: "Request Reversal",
+    text: "Are you sure you want to request a reversal? Please provide a reason:",
+    input: "textarea",
+    inputLabel: "Reason",
+    inputPlaceholder: "Enter the reason for reversal here...",
     showCancelButton: true,
-    confirmButtonText: 'Submit Request',
-    cancelButtonText: 'Cancel',
+    confirmButtonText: "Submit Request",
+    cancelButtonText: "Cancel",
     inputValidator: (value) => {
       if (!value) {
-        return 'You need to provide a reason!';
+        return "You need to provide a reason!";
       }
-    }
+    },
   });
 
   if (reason) {
     // Process the reversal request here
 
     for (const item of row.receipts) {
-      await receiptStore.update({ id: item.id, ReversalComments: reason, status: 4, ReverserDistrict: user.value.district, ReversedBy: user?.value.username.replace(/\./g, ' ') });
+      await receiptStore.update({
+        id: item.id,
+        ReversalComments: reason,
+        status: 4,
+        ReverserDistrict: user.value.district,
+        ReversedBy: user?.value.username.replace(/\./g, " "),
+      });
     }
 
     Swal.fire({
-      icon: 'success',
-      title: 'Reversal Request Submitted',
+      icon: "success",
+      title: "Reversal Request Submitted",
       text: `Reversal request has been submitted successfully.`,
       timer: 3000,
       timerProgressBar: true,
       toast: true,
-      position: 'top-right',
+      position: "top-right",
       showConfirmButton: false,
     });
     getReceiptsClean();
@@ -472,31 +470,19 @@ const requestReversal = async (row) => {
   }
 };
 
-
 const isEditDialogOpen = ref(false);
 const selectedReceipt = ref(null);
 const selectedDispatch = ref(null);
-
 
 const openDispatchDialog = (receipt) => {
   selectedReceipt.value = receipt;
   isReceiptDialogOpen.value = true;
 };
 
-
-
-
-
 const editDispatchDialog = (receipt) => {
   selectedDispatch.value = receipt;
   isEditDialogOpen.value = true;
 };
-
-
-
-
-
-
 
 // Function to open the edit dialog
 const openEditDialog = (dispatch) => {
@@ -509,8 +495,6 @@ const closeReceiptDialog = () => {
   isReceiptDialogOpen.value = false;
 };
 
-
-
 const isReceiptDialogOpen = ref(false);
 
 // Function to open the edit dialog
@@ -521,38 +505,61 @@ const openReceiptDialog = (dispatch) => {
 
 // Function to close the edit dialog
 
-
-
 const generateExcel = () => {
-  const wb = XLSX.utils.book_new();
-  const wsName = 'LeanSeasonReceipts';
-  // Create a worksheet from the flattened data array
+  try {
+    if (!Array.isArray(receipts) || receipts.length === 0) {
+      console.error("❌ No data to export. `receipts` is empty.");
+      return;
+    }
 
+    const wb = XLSX.utils.book_new();
 
-  const dataToExport = receiptsClean;
+    /** =====================
+     *  1. DETAILS SHEET
+     * ===================== */
+    const detailedData = receipts.flatMap((item) =>
+      item.receipts.map((receipt) => ({
+        "Delivery Note": item.deliveryNote || receipt.dispatch?.DeliveryNote || "N/A",
+        "ATC #": item.atcNumber || receipt.dispatch?.loadingPlan?.ATCNumber || "N/A",
+        District: item.district || receipt.dispatch?.loadingPlan?.district?.Name || "N/A",
+        Activity: receipt.dispatch?.loadingPlan?.activity?.Name || "N/A",
+        Commodity: receipt.dispatch?.loadingPlan?.commodity?.Name || "N/A",
+        Unit: receipt.dispatch?.loadingPlan?.commodity?.Unit || "N/A",
 
-  // Map over the array to flatten each object
-  const flattenedData = dataToExport.map(receipt => ({
-    id: receipt.id,
-    ReceivedOn: moment(receipt.CreatedOn).format("DD/MM/YYYY"),
-    NoBags: receipt.NoBags,
-    Quantity: receipt.Quantity,
-    FinalDestinationPoint: receipt.FinalDestinationPoint,
-    Remarks: receipt.Remarks
-  }))
+        "Dispatcher": item.dispatcher || "N/A",
+        "Recipient": item.recipient || 
+          `${receipt.Recipient?.firstname || ""} ${receipt.Recipient?.lastname || ""}`.trim() || "N/A",
 
+        "Driver Name": receipt.dispatch?.DriverName || "N/A",
+        "Truck Number": receipt.dispatch?.TruckNumber || "N/A",
 
-  const ws = XLSX.utils.json_to_sheet(flattenedData);
-  XLSX.utils.book_append_sheet(wb, ws, wsName);
-  // Export the workbook
-  XLSX.writeFile(wb, 'LeanSeasonReceipts.xlsx');
+        "Receipt Date": moment(receipt.actual_receipt_date || receipt.CreatedOn).format("DD/MM/YYYY"),
+        "Final Destination": receipt.FinalDestinationPoint || "N/A",
+        "Delivery Note Ref": receipt.PhysicalDeliveryNote || receipt.dispatch?.DNote || "N/A",
+
+        "No. of Bags": receipt.NoBags || 0,
+        "Quantity Received": receipt.Quantity || 0,
+        Remarks: receipt.Remarks || "received in good condition",
+        Comments: receipt.Comments
+      }))
+    );
+
+    const wsDetails = XLSX.utils.json_to_sheet(detailedData);
+    XLSX.utils.book_append_sheet(wb, wsDetails, "Receipts");
+
+  
+    XLSX.writeFile(wb, "CTSReceipts.xlsx");
+    console.log("✅ Excel file generated successfully.");
+  } catch (error) {
+    console.error("❌ Error generating Excel file:", error);
+  }
 };
 
 
 //MOUNTED
-onMounted(() => {
-  getReceipts();
-  getReceiptsClean();
+onMounted(async () => {
+  await getReceipts();
+  await getReceiptsClean();
   // getLatest()
 });
 //FUNCTIONS
@@ -564,9 +571,8 @@ const getReceipts = async () => {
     // Fetch all receipts
     const allReceipts = await receiptStore.groupedbydeliverynote();
 
-    console.log(allReceipts, "AOL")
+    console.log(allReceipts, "AOL");
     // Filter receipts based on the current user's district and exclude those with status 3
-
 
     // Update the receipts array with the filtered results
     receipts.length = 0;
@@ -576,15 +582,11 @@ const getReceipts = async () => {
 
     updateCounts();
   } catch (error) {
-    console.error('Failed to fetch receipts:', error);
+    console.error("Failed to fetch receipts:", error);
   } finally {
     isLoading.value = false;
   }
 };
-
-
-
-
 
 const getReceiptsClean = async () => {
   isLoading.value = true;
@@ -593,13 +595,11 @@ const getReceiptsClean = async () => {
     // Fetch all receipts
     const allReceipts = await receiptStore.get();
 
-
     // Filter receipts based on the current user's ID
 
-    const filteredReceipts = allReceipts.filter(receipt =>
-
-      receipt.dispatch?.loadingPlan?.district.Name === user.value.district
-
+    const filteredReceipts = allReceipts.filter(
+      (receipt) =>
+        receipt.dispatch?.loadingPlan?.district.Name === user.value.district
     );
 
     // Update the receipts array with the filtered results
@@ -607,15 +607,13 @@ const getReceiptsClean = async () => {
 
     let sorteddata = filteredReceipts.reverse();
     receiptsClean.push(...sorteddata);
-    updateCounts()
+    updateCounts();
   } catch (error) {
-    console.error('Failed to fetch receipts:', error);
+    console.error("Failed to fetch receipts:", error);
   } finally {
     isLoading.value = false;
   }
 };
-
-
 
 const createReceipts = async (item) => {
   // Wait for the receipt creation promise to complete
@@ -627,7 +625,9 @@ const draftLeanReceipt = async (originalModel) => {
     // Fetch the clean receipts
 
     // Extract existing RefNO values from the receiptsClean array
-    const existingRefNOs = new Set(receiptsClean.map(receipt => receipt.RefNO));
+    const existingRefNOs = new Set(
+      receiptsClean.map((receipt) => receipt.RefNO)
+    );
 
     // Iterate through each item in the originalModel
     for (const item of originalModel) {
@@ -646,23 +646,20 @@ const draftLeanReceipt = async (originalModel) => {
     await getReceiptsClean();
 
     // Redirect to the receipts page
-    $router.push({ path: '/admin/receipts/leanseason' });
+    $router.push({ path: "/admin/receipts/leanseason" });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",
       text: `Failed to draft receipt(s): ${error.message}`,
       icon: "error",
-      confirmButtonText: "Ok"
+      confirmButtonText: "Ok",
     });
   } finally {
     isLoading.value = false;
   }
 };
 
-
-
 const createLeanReceipt = async (originalModel) => {
-
   // Separate relief items from the original model
 
   try {
@@ -678,23 +675,21 @@ const createLeanReceipt = async (originalModel) => {
       title: "Success",
       text: "Created receipt(s) successfully",
       icon: "success",
-      confirmButtonText: "Ok"
+      confirmButtonText: "Ok",
     });
-    await getReceipts()
-    $router.push({ path: '/admin/receipts/leanseason' });
+    await getReceipts();
+    $router.push({ path: "/admin/receipts/leanseason" });
   } catch (error) {
     Swal.fire({
       title: "Creation Failed",
       text: `Failed to create receipt(s): ${error}`,
       icon: "error",
-      confirmButtonText: "Ok"
+      confirmButtonText: "Ok",
     });
   } finally {
     isLoading.value = false;
   }
 };
-
-
 </script>
 
 <style scoped>
@@ -704,7 +699,6 @@ const createLeanReceipt = async (originalModel) => {
   overflow: hidden;
   /* This is important to apply rounded corners to child elements */
 }
-
 
 .from-color {
   color: #096eb4;
