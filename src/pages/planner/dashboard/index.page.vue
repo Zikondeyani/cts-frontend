@@ -51,10 +51,11 @@
               <TemplateIcon class="h-5 w-5 mr-2" />
               Lean Season Response Dashboard
             </button>
+
+          
           </div>
         </div>
 
-        <!-- Content -->
         <div class="lg:col-span-3">
           <div class="grid grid-cols-1 gap-4">
             <!-- Welcome panel -->
@@ -101,6 +102,8 @@
                           currentView !== 'dashboard' &&
                           currentView !== 'Donations' &&
                           currentView !== 'Loans'
+                          &&
+                          currentView !== 'charts'
                         "
                         type="button"
                         class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
@@ -132,13 +135,12 @@
               <div class="bg-gray-100 p-5" v-show="currentView === 'Loans'">
                 <div class="bg-gray-100 p-5">
                   <div
-                    class="align-middle inline-block min-w-full mt-5 shadow-0 rounded-table"
+                    class="align-middle inline-block min-w-full mt-5 shadow-0 rounded-table font-semibold"
                   >
                     <vue-good-table
                       :columns="columnsLoans"
                       :rows="LoanloadingPlans"
                       :search-options="{ enabled: true }"
-                      style="font-weight: bold; color: #096eb4"
                       :pagination-options="{ enabled: true }"
                       theme="polar-bear"
                       styleClass="vgt-table striped"
@@ -150,7 +152,7 @@
                 </div>
               </div>
 
-              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
+              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'"   >
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <!-- Aligned images in the center -->
                   <div
@@ -173,7 +175,7 @@
 
                   <div
                     class="col-span-3 flex flex-col justify-center items-center"
-                  >
+                   >
                     <div class="text-center mt-2">
                       <h1
                         class="text-lg font-semibold text-[#096eb4] text-blue-400 bg-white border border-blue-400 rounded-xl px-4 py-2 shadow-xs"
@@ -371,11 +373,11 @@
               <!-- Lean Season Response Dashboard -->
               <div
                 class="bg-gray-100 p-5"
-                id="screenshot-area"
+                   id="screenshot-area"
                 v-show="currentView === 'leanSeasonDashboard'"
-              >
+               >
                 <!-- Content for Lean Season Response Dashboard -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <!-- Aligned images in the center -->
                   <div
                     v-show="screenshotMode"
@@ -433,7 +435,6 @@
                             <select
                               v-model="selectedActivity1"
                               @change="updateStats"
-                              
                               :class="{ hidden: screenshotMode }"
                               class="appearance-none border border-gray-300 rounded-xl pl-4 pr-10 py-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0b8ad8] focus:border-[#0b8ad8] transition"
                             >
@@ -449,7 +450,6 @@
                             <!-- Dropdown Icon -->
                             <span
                               class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400"
-                              
                               :class="{ hidden: screenshotMode }"
                             >
                               ▼
@@ -460,8 +460,7 @@
                           <router-link
                             to="/planner/stats/"
                             class="text-[#0b8ad8] text-sm font-medium hover:text-[#096eb4] transition"
-                            
-                              :class="{ hidden: screenshotMode }"
+                            :class="{ hidden: screenshotMode }"
                           >
                             View More →
                           </router-link>
@@ -565,7 +564,7 @@
                   </div>
                   <div
                     class="col-span-3 flex flex-col justify-center items-center mt-2"
-                  >
+                   >
                     <div
                       class="flex flex-wrap items-center space-x-4 mb-4"
                       :class="{ hidden: screenshotMode }"
@@ -688,6 +687,7 @@
                     </div>
                   </div>
                 </div>
+             
               </div>
 
               <div
@@ -1141,14 +1141,14 @@ import {
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
 
-import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
-
-const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
-
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
+
+import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
+
+const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
 
 import "jspdf-autotable";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
@@ -1174,6 +1174,8 @@ import allocationTrends from "../../../components/pages/charts/allocation_trends
 import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
+
+import DonationsTable from "./DonationsTable.vue";
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import html2canvas from "html2canvas";
@@ -1355,7 +1357,7 @@ const takeScreenshot = () => {
       html2canvas(screenshotArea, {
         backgroundColor: "#ffffff",
         scale: 2,
-        useCORS: true, // allow images/fonts if server supports CORS
+        useCORS: true,   // allow images/fonts if server supports CORS
         allowTaint: true,
         ignoreElements: (el) => {
           // Skip <link rel="stylesheet"> tags (the cause of cssRules error)
@@ -1379,6 +1381,8 @@ const takeScreenshot = () => {
     }
   }, 300);
 };
+
+
 
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
@@ -2191,5 +2195,12 @@ const updateStats = computed(() => {
 img.img-fluid {
   max-width: 100%;
   height: auto;
+}
+
+.vgt-table td {
+  font-weight: normal !important;
+}
+.vgt-table th {
+  font-weight: normal !important;
 }
 </style>
