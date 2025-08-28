@@ -1,7 +1,7 @@
 <template>
   <div>
     <button type="button" style="background-color: #248cd6;"
-      class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-500 active:shadow-lg transition duration-100 ease-in-out capitalize"
+      class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
       @click="open = true">
       <PlusIcon class="h-5 w-5 mr-2" />
       Add Donation

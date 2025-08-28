@@ -37,7 +37,7 @@
           </button>
 
           <!-- <button @click="activeTab = 'draft'"
-            :class="{ 'bg-blue-500 text-white': activeTab === 'draft', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'draft' }"
+            :class="{ 'bg-[#096eb4] text-white': activeTab === 'draft', 'bg-white text-blue-500 border border-blue-500': activeTab !== 'draft' }"
             class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
             <i class="fas fa-file-alt mr-2"></i>
             Draft Receipts

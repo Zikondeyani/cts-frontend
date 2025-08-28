@@ -216,7 +216,7 @@
                     </button>
 
                     <button type="submit"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-500 text-white hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
+                      class="inline-flex items-center px-3 py-2 text-sm font-medium bg-[#096eb4] text-white hover:text-green-900 bg-white rounded-md border border-gray-400 hover:bg-gray-100">
                       Submit for action
                     </button>
                   </div>

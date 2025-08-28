@@ -28,7 +28,7 @@
                 text-sm
                 font-medium
                 text-white
-                bg-blue-500
+                bg-[#096eb4]
                 hover:bg-blue-400
                 focus:outline-none
                 focus:ring-2

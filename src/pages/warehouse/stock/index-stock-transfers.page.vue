@@ -70,7 +70,7 @@
                     <button
                       v-if="!props.row.IsReceived"
                       @click="openReceiveModal(props.row)"
-                      class="text-xs border border-blue-500 text-blue-500 rounded-md px-2 py-1 hover:bg-blue-500 hover:text-white transition"
+                      class="text-xs border border-blue-500 text-blue-500 rounded-md px-2 py-1 hover:bg-[#096eb4] hover:text-white transition"
                     >
                       Receive
                     </button>
@@ -697,7 +697,7 @@ const getCommodities = async () => {
   background-color: #0f6c97;
   color: white;
 }
-button.bg-blue-500 {
+button.bg-[#096eb4] {
   background-color: #3b82f6;
   color: white;
 }

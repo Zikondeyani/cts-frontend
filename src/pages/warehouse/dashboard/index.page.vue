@@ -446,7 +446,7 @@ const stats = computed(() => [
 </script>
 
 <style scoped>
-.bg-blue-500 {
+.bg-[#096eb4] {
   background-color: #096eb4;
 }
 </style>

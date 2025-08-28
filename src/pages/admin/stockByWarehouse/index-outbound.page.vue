@@ -752,7 +752,7 @@ const getCommodities = async () => {
   background-color: #0f6c97;
   color: white;
 }
-button.bg-blue-500 {
+button.bg-[#096eb4] {
   background-color: #3b82f6;
   color: white;
 }

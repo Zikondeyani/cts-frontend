@@ -48,7 +48,7 @@
 
                   <!-- Show Dispatch button if approved -->
                   <button v-if="props.row.isApproved" type="button" @click="openDispatchDialog(props.row)"
-                    class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
+                    class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-[#096eb4] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                     <TruckIcon class="h-5 w-5 mr-2" />
                     Dispatch
                   </button>

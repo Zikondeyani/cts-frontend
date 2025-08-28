@@ -15,7 +15,7 @@
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4">
           <label
             for="csv-upload"
-            class="inline-block bg-blue-500 text-white px-4 py-2 rounded cursor-pointer text-sm"
+            class="inline-block bg-[#096eb4] text-white px-4 py-2 rounded cursor-pointer text-sm"
           >
             Upload CSV
           </label>

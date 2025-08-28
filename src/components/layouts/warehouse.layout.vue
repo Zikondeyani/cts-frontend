@@ -270,7 +270,7 @@
                 :key="item.name"
                 :to="item.href"
                 @click="toggleMobileMenu"
-                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-blue-500"
+                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-[#096eb4]"
               >
                 {{ item.name }}
               </router-link>

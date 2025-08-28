@@ -44,11 +44,11 @@
           </router-link>
           <!-- Dropdown for the rest of the items -->
           <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0">
-            <button @click="toggleDropdown" @mouseenter="toggleDropdown" class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
+            <button   @click="isDropdownOpen = !isDropdownOpen"
+    class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
             </button>
-            <div v-if="isDropdownOpen"     @mouseenter="keepDropdownOpen"
-            @mouseleave="closeDropdown" class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
+            <div v-if="isDropdownOpen"     class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg">
               <router-link v-for="item in remainingItems" :key="item.name" :to="item.href" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
                 {{ item.name }}
               </router-link>
@@ -149,7 +149,7 @@
                 :key="item.name"
                 :to="item.href"
                 @click="toggleMobileMenu"
-                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-blue-500"
+                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-[#096eb4]"
               >
                 {{ item.name }}
               </router-link>

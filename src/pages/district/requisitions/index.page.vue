@@ -33,7 +33,7 @@
                 text-sm
                 font-medium
                 text-white
-                bg-blue-500
+                bg-[#096eb4]
                 hover:bg-blue-400
                 focus:outline-none
                 focus:ring-2
@@ -183,7 +183,7 @@
                   </div>
                   <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse">
                     <button @click="closeModal"
-                      class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-400">Close</button>
+                      class="no-print inline-flex justify-center py-2 px-4 text-sm font-medium text-white bg-[#096eb4] rounded-md hover:bg-blue-400">Close</button>
                     <button @click="printPDF"
                       class="mr-3 bg-gray-500 text-white px-4 py-2 rounded-md  no-print">Print</button>
                   </div>

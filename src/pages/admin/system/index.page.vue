@@ -43,7 +43,7 @@
               class="block"
             >
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-500 transition-all duration-300"
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300"
               >
                 <component :is="option.icon" class="h-6 w-6 mb-2" />
                 <span class="text-center text-sm sm:text-base">
@@ -55,7 +55,7 @@
             <!-- Stock Register tile with dropdown -->
             <div v-else class="relative">
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-500 transition-all duration-300"
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300"
               >
                 <component :is="option.icon" class="h-6 w-6 mb-2" />
                 <span class="text-center text-sm sm:text-base">

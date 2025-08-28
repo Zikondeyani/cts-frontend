@@ -92,7 +92,7 @@
             <button
               @click="onSubmit"
               type="button"
-              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#096eb4] hover:bg-blue-600 focus:outline-none"
             >
               Update
             </button>

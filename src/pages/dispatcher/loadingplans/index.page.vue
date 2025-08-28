@@ -15,17 +15,29 @@
         </div>
 
         <!-- Export Data Button -->
-        <button type="button"
+        <button
+          type="button"
           class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-          @click="generateExcel()">
-          <i class="fas fa-file-export mr-2"></i> <!-- Icon (Font Awesome used as an example) -->
+          @click="generateExcel()"
+        >
+          <i class="fas fa-file-export mr-2"></i>
+          <!-- Icon (Font Awesome used as an example) -->
           Export Data
         </button>
       </div>
       <!-- table  -->
-      <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mt-3">
-        <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
+      <div
+        class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mt-3"
+      >
+        <vue-good-table
+          :columns="columns"
+          :rows="loadingplans"
+          :search-options="{ enabled: true }"
+          :pagination-options="{ enabled: true }"
+          theme="polar-bear"
+          styleClass="vgt-table striped"
+          compactMode
+        >
           <!-- Custom Table Actions -->
           <template #table-actions>
             <!-- You can add custom actions here like export buttons, etc. -->
@@ -33,11 +45,17 @@
 
           <!-- Custom Table Row Template -->
           <template #table-row="props">
-            <div v-if="props.column.label === 'Options'" class="flex items-center space-x-3">
+            <div
+              v-if="props.column.label === 'Options'"
+              class="flex items-center space-x-3"
+            >
               <!-- Dispatch Button when balance is greater than 0 -->
               <template v-if="props.row.Balance > 0">
-                <button type="button" @click="openDispatchDialog(props.row)"
-                  class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
+                <button
+                  type="button"
+                  @click="openDispatchDialog(props.row)"
+                  class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-[#096eb4] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+                >
                   <TruckIcon class="h-5 w-5 mr-2" />
                   Dispatch
                 </button>
@@ -46,14 +64,18 @@
               <!-- Completed Badge when balance is 0 -->
               <template v-else>
                 <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                >
                   Completed
                 </span>
               </template>
 
               <!-- Show Recent Dispatches Button -->
-              <button type="button" @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
-                class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150">
+              <button
+                type="button"
+                @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
+                class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
+              >
                 <EyeIcon class="h-5 w-5 mr-2" />
                 Recent Dispatches
               </button>
@@ -65,66 +87,159 @@
 
         <template v-if="isRecentDispatchesOpen">
           <div id="content">
-            <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+            <div
+              class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
+            >
               <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
                 <div class="flex justify-between items-center mb-4">
                   <h3 class="text-lg font-semibold">Recent Dispatches</h3>
+
+                  <!-- ✅ Close Button -->
+                  <button
+                    @click="isRecentDispatchesOpen = false"
+                    class="text-gray-400 hover:text-gray-600 focus:outline-none"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
                 </div>
 
+                <!-- Table -->
                 <div class="overflow-auto max-h-96">
                   <table class="min-w-full table-auto border-collapse">
                     <thead>
-                      <tr class="bg-blue-100">
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Delivery Note</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ATC #</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Dispatcher</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Qty (MT)</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">FDP</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Created</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Driver (Truck #)</th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Received</th>
-                        <!-- New column -->
+                      <tr class="bg-gray-100">
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Delivery Note
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          ATC #
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Dispatcher
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Qty (MT)
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          FDP
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Created
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Driver (Truck #)
+                        </th>
+                        <th
+                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                        >
+                          Received
+                        </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                      <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.DeliveryNote }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.atc }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.dispatcher?.username?.replace(/\./g, '') }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.Quantity }} MT</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.FinalDestinationPoint }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-900">{{ moment(dispatch?.CreatedOn).format('MMMM Do YYYY,h:mm a') }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ dispatch?.DriverName }} ({{ dispatch?.TruckNumber
-                          }})</td>
+                      <tr
+                        v-for="dispatch in recentDispatches"
+                        :key="dispatch.id"
+                      >
                         <td class="px-4 py-2 text-sm text-gray-900">
-                          <span class="inline-block w-3 h-3 rounded-full"
-                            :class="dispatch?.received ? 'bg-green-500' : 'bg-red-500'">
+                          {{ dispatch?.DeliveryNote }}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{ dispatch?.atc }}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{
+                            dispatch?.dispatcher?.username?.replace(/\./g, "")
+                          }}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{ dispatch?.Quantity }} MT
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{ dispatch?.FinalDestinationPoint }}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{
+                            moment(dispatch?.CreatedOn).format(
+                              "MMMM Do YYYY,h:mm a"
+                            )
+                          }}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          {{ dispatch?.DriverName }} ({{
+                            dispatch?.TruckNumber
+                          }})
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                          <span
+                            class="inline-block w-3 h-3 rounded-full"
+                            :class="
+                              dispatch?.received ? 'bg-green-500' : 'bg-red-500'
+                            "
+                          >
                           </span>
-                        </td> <!-- Received status with dot -->
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
 
                 <div class="flex justify-end mt-4">
-                  <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0"
-                    class="mr-3 bg-green-500 text-white px-4 py-2 rounded-md no-print">Print</button>
-                  <button type="button" id="closeButton"
-                    class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                    @click="closeRecentDispatches">Close</button>
+                  <button
+                    @click="printPDF"
+                    id="printButton"
+                    v-if="recentDispatches.length > 0"
+                    class=" bg-gray-500 text-white px-4 py-2 rounded-md no-print"
+                  >
+                    Print
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </template>
 
-
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
-          v-on:update="reloadPage" />
+        <EditLoadingPlanDialog
+          :isOpen="isEditDialogOpen"
+          :loadingPlan="selectedLoadingPlan"
+          @close="closeEditDialog"
+          v-on:update="reloadPage"
+        />
 
-        <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
-          @close="closeDispatchDialog" v-on:update="reloadPage" />
+        <DispatchLoadingPlanDialog
+          :isOpen="isDispatchDialogOpen"
+          :loadingPlan="selectedLoadingPlan"
+          @close="closeDispatchDialog"
+          v-on:update="reloadPage"
+        />
       </div>
     </div>
   </main>
@@ -139,8 +254,10 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  PencilIcon, TrashIcon, TruckIcon,
-  EyeIcon
+  PencilIcon,
+  TrashIcon,
+  TruckIcon,
+  EyeIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
@@ -153,12 +270,10 @@ import createDispatchForm from "../../../components/pages/dispatch/create.compon
 
 import createReportForm from "../../../components/pages/reports/create.component.vue";
 
-
 import EditLoadingPlanDialog from "../../../components/pages/reports/edit-loading-plan.component.vue";
 
-
 import DispatchLoadingPlanDialog from "../../../components/pages/reports/create.dispatch-dispatcher.component.vue";
-import eventBus from '../../../services/events/eventbus';
+import eventBus from "../../../services/events/eventbus";
 
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
@@ -167,26 +282,27 @@ const moment = inject("moment");
 const Swal = inject("Swal");
 //VARIABLES
 
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/dispatcher/dashboard", current: false },
   { name: "Loading Plans", href: "#", current: true },
-  { name: "Lean Season Response & Emergency Assistance", href: "#", current: true },
-
+  {
+    name: "Lean Season Response & Emergency Assistance",
+    href: "#",
+    current: true,
+  },
 ];
 import { usewarehousestore } from "../../../stores/warehouse.store";
 const warehousesStore = usewarehousestore();
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
-
-
-const warehouses = reactive([])
+const warehouses = reactive([]);
 const loadingPlanStore = useloadingplanstore();
 const loadingplans = reactive([]);
 
@@ -194,49 +310,51 @@ const sessionStore = useSessionStore();
 
 const user = ref(sessionStore.getUser);
 const columns = ref([
-
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Commodity",
-    field: row => row.commodity?.Name,
+    field: (row) => row.commodity?.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
 
-
   {
-  label: "Details",
-  field: row => {
-    // Get the matching warehouse name for 'From' and 'To'
-    const fromWarehouse = warehouses.find(w => w.id === row.moveFromWarehouseId);
-    const toWarehouse = warehouses.find(w => w.id === row.moveToWarehouseId);
-    const warehouseName = row.warehouse?.Name;
+    label: "Details",
+    field: (row) => {
+      // Get the matching warehouse name for 'From' and 'To'
+      const fromWarehouse = warehouses.find(
+        (w) => w.id === row.moveFromWarehouseId
+      );
+      const toWarehouse = warehouses.find(
+        (w) => w.id === row.moveToWarehouseId
+      );
+      const warehouseName = row.warehouse?.Name;
 
-    // Build the "From" details
-    let details = `
+      // Build the "From" details
+      let details = `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
         From: ${fromWarehouse ? fromWarehouse.Name : warehouseName || "N/A"}
       </span><br>
     `;
 
-    // Add "To" details only if isPrepositioned is true
-    if (row.IsPrepositioned) {
-      details += `
+      // Add "To" details only if isPrepositioned is true
+      if (row.IsPrepositioned) {
+        details += `
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
           To: ${toWarehouse ? toWarehouse.Name : "N/A"}
         </span><br>
       `;
-    }
+      }
 
-    // Add district and transporter details
-    details += `
+      // Add district and transporter details
+      details += `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
         District: ${row.district?.Name || "Unknown"}
       </span><br>
@@ -245,43 +363,46 @@ const columns = ref([
       </span><br>
     `;
 
-    // Add the ATC Number
-    details += `
+      // Add the ATC Number
+      details += `
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-gray-100 text-gray-800">
         ATC #: ${row.ATCNumber || "N/A"}
       </span>
     `;
 
-    return details;
+      return details;
+    },
+    sortable: true,
+    firstSortType: "asc",
+    html: true, // This is important to render HTML
+    tdClass: "capitalize",
   },
-  sortable: true,
-  firstSortType: "asc",
-  html: true, // This is important to render HTML
-  tdClass: "capitalize"
-},
-
 
   {
     label: "Stocks",
     hidden: false,
-    field: row => `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance?.toFixed(2) !== null ? row.Balance?.toFixed(2) + " MT" : "Pending"}</span>`,
+    field: (row) =>
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${
+        row.Balance?.toFixed(2) !== null
+          ? row.Balance?.toFixed(2) + " MT"
+          : "Pending"
+      }</span>`,
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Options",
-    field: row => row,
-    sortable: false
-  }
+    field: (row) => row,
+    sortable: false,
+  },
 ]);
 
 const isEditDialogOpen = ref(false);
 
 const selectedLoadingPlan = ref(null);
-
 
 const isRecentDispatchesOpen = ref(false);
 const recentDispatches = ref([]);
@@ -296,7 +417,6 @@ const closeRecentDispatches = () => {
   isRecentDispatchesOpen.value = false;
 };
 
-
 const getWarehouses = async () => {
   try {
     let data = [];
@@ -310,7 +430,6 @@ const getWarehouses = async () => {
 
     // Clear existing data and push new data
     warehouses.splice(0, warehouses.length, ...data.reverse());
-
   } catch (error) {
     console.error("Error fetching loading plans:", error);
   } finally {
@@ -318,23 +437,20 @@ const getWarehouses = async () => {
   }
 };
 
-
 // Fetch Recent Dispatches
 const fetchRecentDispatches = async (id, atc) => {
   try {
     const result = await loadingPlanStore.getloadingplansDispatchesById(id);
 
     // Assign data to recentDispatches, including the atc parameter
-    recentDispatches.value = result.map(dispatch => ({
+    recentDispatches.value = result.map((dispatch) => ({
       ...dispatch,
       atc, // Add the atc to each dispatch object
     }));
-
   } catch (error) {
-    console.error('Failed to fetch recent dispatches:', error);
+    console.error("Failed to fetch recent dispatches:", error);
   }
 };
-
 
 // Function to open the edit dialog
 const openEditDialog = (loadingPlan) => {
@@ -374,7 +490,7 @@ const reloadPage = async () => {
   await getLoadingplans();
 
   // Navigate to the route after the data has been updated
-  $router.push('/dispatcher/loadingplans');
+  $router.push("/dispatcher/loadingplans");
 };
 
 const getLoadingplans = async () => {
@@ -384,30 +500,35 @@ const getLoadingplans = async () => {
     const result = await loadingPlanStore.get();
 
     // Check if user district is national or null
-    const isNationalOrNull = !user.value.district || user.value.district === 'National';
+    const isNationalOrNull =
+      !user.value.district || user.value.district === "National";
 
     // Separate loading plans that are not closed (isClosed == false) and the rest
-    const openLoadingPlans = result.filter(plan => plan.isClosed === false);
-    const closedLoadingPlans = result.filter(plan => plan.isClosed === true);
+    const openLoadingPlans = result.filter((plan) => plan.isClosed === false);
+    const closedLoadingPlans = result.filter((plan) => plan.isClosed === true);
 
     // Combine the open loading plans first, then the closed ones
     const sortedLoadingPlans = [...openLoadingPlans, ...closedLoadingPlans];
 
     // Filter based on user district if not national or null
     const filteredLoadingPlans = isNationalOrNull
-      ? sortedLoadingPlans.filter(item => item.IsApproved === true) // For national or null, include approved only
-      : sortedLoadingPlans.filter(item => item.IsApproved === true && item.district.Name === user.value.district && item.IsDivertedLoad == true); // For specific district, include approved and match district
+      ? sortedLoadingPlans.filter((item) => item.IsApproved === true) // For national or null, include approved only
+      : sortedLoadingPlans.filter(
+          (item) =>
+            item.IsApproved === true &&
+            item.district.Name === user.value.district &&
+            item.IsDivertedLoad == true
+        ); // For specific district, include approved and match district
 
     // Clear the loadingplans array and then push the sorted results
     loadingplans.length = 0;
     loadingplans.push(...filteredLoadingPlans);
 
     // Emit event after updating loading plans
-    eventBus.emit('loadingplanArchived', result.id);
-
+    eventBus.emit("loadingplanArchived", result.id);
   } catch (error) {
     // Handle any errors that occur during the get, filter, or reverse
-    console.error('Failed to fetch, filter, and sort loading plans:', error);
+    console.error("Failed to fetch, filter, and sort loading plans:", error);
   } finally {
     isLoading.value = false;
   }
@@ -415,10 +536,10 @@ const getLoadingplans = async () => {
 
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
-  const wsName = 'Loading Plan';
+  const wsName = "Loading Plan";
 
   // Map over the array to flatten each object
-  const flattenedData = loadingplans.reverse().map(plan => ({
+  const flattenedData = loadingplans.reverse().map((plan) => ({
     id: plan.id,
     CreatedOn: plan.CreatedOn,
     UpdatedOn: plan.UpdatedOn,
@@ -429,10 +550,10 @@ const generateExcel = () => {
     EndDate: plan.EndDate,
 
     "ATC #": plan.ATCNumber,
-    "Commodity": plan.commodity?.Name,
-    "From": plan.warehouse?.Name,
+    Commodity: plan.commodity?.Name,
+    From: plan.warehouse?.Name,
     "Transporter Name": plan.transporter?.Name,
-    "To": plan.district?.Name
+    To: plan.district?.Name,
   }));
 
   // Create a worksheet from the flattened data array
@@ -440,7 +561,7 @@ const generateExcel = () => {
   XLSX.utils.book_append_sheet(wb, ws, wsName);
 
   // Export the workbook
-  XLSX.writeFile(wb, 'LoadingPlans.xlsx');
+  XLSX.writeFile(wb, "LoadingPlans.xlsx");
 };
 
 const createReport = async (model) => {
@@ -457,17 +578,17 @@ const createReport = async (model) => {
 
   loadingPlanStore
     .create(model)
-    .then(result => {
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Created a new loading plan successfully",
         icon: "success",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
 
-      $router.push('/dispatcher/loadingplans'); // Use the router's push method to navigate
+      $router.push("/dispatcher/loadingplans"); // Use the router's push method to navigate
     })
-    .catch(error => {
+    .catch((error) => {
       // Handling error
     })
     .finally(() => {
@@ -475,8 +596,6 @@ const createReport = async (model) => {
       getLoadingplans();
     });
 };
-
-
 
 // Function to print the instruction details
 
@@ -529,17 +648,10 @@ const printPDF = () => {
     printWindow.print();
 
     window.location.reload(); // Reloads the page after the print or cancel action
-
   } else {
     console.error("Modal content not found!");
   }
 };
-
-
-
-
-
-
 </script>
 
 <style scoped>
@@ -564,7 +676,6 @@ const printPDF = () => {
     display: none !important;
   }
 }
-
 
 .rounded-table {
   border-radius: 10px;
