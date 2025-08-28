@@ -36,7 +36,7 @@ function createCharts() {
   // Extract data from props
   const dispatcherNames = props.dispatchData.map(item => item.dispatcherName);
   const totalDispatches = props.dispatchData.map(item => item.totalDispatches);
-  const totalQuantityMoved = props.dispatchData.map(item => item.totalQuantityMoved);
+  const totalQuantityMoved = props.dispatchData.map(item => item.totalQuantityMoved.toFixed(2));
 
   // Create Bar Chart - Total Dispatches
   const barCtx = barChartRef.value.getContext('2d');

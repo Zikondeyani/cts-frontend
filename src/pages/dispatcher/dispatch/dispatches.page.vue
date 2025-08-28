@@ -58,7 +58,7 @@
         </button>
       </div>
       <!-- table  -->
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table font-semibold">
 
         <vue-good-table :columns="columns" :rows="dispaches" v-if="activeTab == 'all'"
           :search-options="{ enabled: true }" style="font-weight: bold; color: blue;" :pagination-options="{

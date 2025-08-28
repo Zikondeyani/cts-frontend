@@ -12,7 +12,9 @@
       <!-- Header Section -->
       <div class="md:flex md:items-center md:justify-between mt-6">
         <div class="flex-1 min-w-0 text-center sm:text-left">
-          <h2 class="font-bold leading-7 text-white text-lg sm:text-2xl sm:truncate">
+          <h2
+            class="font-bold leading-7 text-white text-lg sm:text-2xl sm:truncate"
+          >
             System Management Panel
           </h2>
         </div>
@@ -120,26 +122,66 @@ const optionGroups = ref([
   {
     title: "Organizational Management",
     options: [
-      { label: "Organisations", icon: OfficeBuildingIcon, path: "/admin/organisations" },
+      {
+        label: "Organisations",
+        icon: OfficeBuildingIcon,
+        path: "/admin/organisations",
+      },
       { label: "User Roles", icon: UserGroupIcon, path: "/admin/userroles" },
       { label: "Users", icon: UserIcon, path: "/admin/users" },
-      { label: "Performance Stats", icon: ChartBarIcon, path: "/admin/performance-stats" },
+      {
+        label: "Performance Stats",
+        icon: ChartBarIcon,
+        path: "/admin/performance-stats",
+      },
       { label: "Reminders", icon: BellIcon, path: "/admin/reminders" },
       { label: "Mailing Groups", icon: MailIcon, path: "/admin/mailinggroups" },
-      { label: "Action Requestors", icon: DocumentTextIcon, path: "/admin/requestors" },
+      {
+        label: "Action Requestors",
+        icon: DocumentTextIcon,
+        path: "/admin/requestors",
+      },
       { label: "Feedback", icon: ChatIcon, path: "/admin/feedback" },
     ],
   },
   {
     title: "Commodity Management",
     options: [
-      { label: "Activities", icon: KeyIcon, path: "/admin/activity-management" },
-      { label: "User Dispatches", icon: TruckIcon, path: "/admin/user-dispatches" },
-      { label: "Stock Register", icon: ClipboardListIcon, path: "/admin/stock-management" },
-      { label: "Warehouses", icon: OfficeBuildingIcon, path: "/admin/warehouse-management" },
-      { label: "Transporters", icon: TruckIcon, path: "/admin/transporter-management" },
-      { label: "Commodities", icon: MapIcon, path: "/admin/commodity-management" },
-      { label: "Commodity Types", icon: ScaleIcon, path: "/admin/commodity-types" },
+      {
+        label: "Activities",
+        icon: KeyIcon,
+        path: "/admin/activity-management",
+      },
+      {
+        label: "User Dispatches",
+        icon: TruckIcon,
+        path: "/admin/user-dispatches",
+      },
+      {
+        label: "Stock Register",
+        icon: ClipboardListIcon,
+        path: "/admin/stock-management",
+      },
+      {
+        label: "Warehouses",
+        icon: OfficeBuildingIcon,
+        path: "/admin/warehouse-management",
+      },
+      {
+        label: "Transporters",
+        icon: TruckIcon,
+        path: "/admin/transporter-management",
+      },
+      {
+        label: "Commodities",
+        icon: MapIcon,
+        path: "/admin/commodity-management",
+      },
+      {
+        label: "Commodity Types",
+        icon: ScaleIcon,
+        path: "/admin/commodity-types",
+      },
       { label: "Receipts", icon: DocumentTextIcon, path: "/admin/receipts" },
     ],
   },
@@ -154,15 +196,19 @@ const optionGroups = ref([
     title: "Reporting and Logs",
     options: [
       { label: "Logs", icon: ArchiveIcon, path: "/admin/logs" },
-      { label: "Usage Stats", icon: TrendingUpIcon, path: "/admin/usage-stats" },
+      {
+        label: "Usage Stats",
+        icon: TrendingUpIcon,
+        path: "/admin/usage-stats",
+      },
     ],
-  },
+  } /* ,
    {
     title: "System",
     options: [
       { label: "System Documents", icon: DocumentTextIcon, path: "/admin/system-documents" }
     ],
-  },
+  }, */,
 ]);
 
 const dropdownVisible = ref({});

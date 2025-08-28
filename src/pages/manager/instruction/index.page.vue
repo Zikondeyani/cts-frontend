@@ -36,7 +36,7 @@
 
       <!-- Content for Tabs -->
       <div v-if="currentTab === 'emergencyResponse'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table font-semibold">
           <vue-good-table :columns="columns" :rows="leanSeasonInstructions" :search-options="{ enabled: true }"
             style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
             styleClass="vgt-table striped" compactMode>
@@ -85,7 +85,7 @@
       </div>
 
       <div v-if="currentTab === 'leanSeason'">
-        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table font-semibold">
           <vue-good-table :columns="columns2" :rows="emergencyResponseInstructions" :search-options="{ enabled: true }"
             style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
             styleClass="vgt-table striped" compactMode>

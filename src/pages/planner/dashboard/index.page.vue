@@ -51,9 +51,6 @@
               <TemplateIcon class="h-5 w-5 mr-2" />
               Lean Season Response Dashboard
             </button>
-
-
-          
           </div>
         </div>
 
@@ -75,7 +72,7 @@
                           {{ user.username.replace(/\./g, " ") }}
                         </p>
                         <p class="text-sm text-gray-500 mt-1">
-                          It's {{ today }}  • {{ currentTime }}
+                          It's {{ today }} • {{ currentTime }}
                         </p>
                       </div>
                     </div>
@@ -374,6 +371,7 @@
               <!-- Lean Season Response Dashboard -->
               <div
                 class="bg-gray-100 p-5"
+                id="screenshot-area"
                 v-show="currentView === 'leanSeasonDashboard'"
               >
                 <!-- Content for Lean Season Response Dashboard -->
@@ -435,6 +433,8 @@
                             <select
                               v-model="selectedActivity1"
                               @change="updateStats"
+                              
+                              :class="{ hidden: screenshotMode }"
                               class="appearance-none border border-gray-300 rounded-xl pl-4 pr-10 py-2 text-sm text-gray-700 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0b8ad8] focus:border-[#0b8ad8] transition"
                             >
                               <option
@@ -449,6 +449,8 @@
                             <!-- Dropdown Icon -->
                             <span
                               class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400"
+                              
+                              :class="{ hidden: screenshotMode }"
                             >
                               ▼
                             </span>
@@ -458,6 +460,8 @@
                           <router-link
                             to="/planner/stats/"
                             class="text-[#0b8ad8] text-sm font-medium hover:text-[#096eb4] transition"
+                            
+                              :class="{ hidden: screenshotMode }"
                           >
                             View More →
                           </router-link>
@@ -524,21 +528,20 @@
                                 Loading Plans Created
                               </div>
                             </div>
-                              <div class="text-2xl font-bold text-[#0b8ad8]">
-                                {{ loadingplansCount1 || 0 }}
-                              </div>
-                              <div class="text-sm text-gray-600 mt-1">
+                            <div class="text-2xl font-bold text-[#0b8ad8]">
+                              {{ loadingplansCount1 || 0 }}
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">
+                              <span
+                                class="font-bold text-[#ff6f61]"
+                                v-if="loadingplansCountPending1 > 0"
+                              >
+                                {{ loadingplansCountPending1 || 0 }}
                                 <span
-                                  class="font-bold text-[#ff6f61]"
-                                  v-if="loadingplansCountPending1 > 0"
+                                  class="font-semibold text-sm text-[#0b8ad8]"
+                                  >Pending Approval</span
                                 >
-                                  {{ loadingplansCountPending1 || 0 }}
-                                  <span
-                                    class="font-semibold text-sm text-[#0b8ad8]"
-                                    >Pending Approval</span
-                                  >
-                                </span>
-                             
+                              </span>
                             </div>
                           </div>
                         </router-link>
@@ -1172,7 +1175,6 @@ import { useListingStore } from "../../../stores/catalogue.store";
 import { usebookingstore } from "../../../stores/booking.store";
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
-
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import html2canvas from "html2canvas";
 import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
@@ -1346,10 +1348,20 @@ const commodityTable = ref(null);
 const takeScreenshot = () => {
   screenshotMode.value = true;
 
-  // Use a timeout to delay the screenshot taking
   setTimeout(() => {
-    if (commodityTable.value) {
-      html2canvas(commodityTable.value.$el || commodityTable.value)
+    const screenshotArea = document.querySelector("#screenshot-area");
+
+    if (screenshotArea) {
+      html2canvas(screenshotArea, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true, // allow images/fonts if server supports CORS
+        allowTaint: true,
+        ignoreElements: (el) => {
+          // Skip <link rel="stylesheet"> tags (the cause of cssRules error)
+          return el.tagName === "LINK" && el.rel === "stylesheet";
+        },
+      })
         .then((canvas) => {
           const image = canvas
             .toDataURL("image/png")
@@ -1362,6 +1374,7 @@ const takeScreenshot = () => {
         })
         .catch((error) => {
           console.error("Error taking screenshot:", error);
+          screenshotMode.value = false;
         });
     }
   }, 300);
@@ -2109,9 +2122,6 @@ const updateStats = computed(() => {
     }
   }
 });
-
-
-
 </script>
 
 <style scoped>

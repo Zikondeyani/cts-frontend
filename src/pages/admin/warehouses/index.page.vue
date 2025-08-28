@@ -43,33 +43,7 @@
           <create-warehouse-form v-on:create="createWarehouse" />
         </div>
       </div>
-      <!-- table  -->
-
-      <!-- Key Stats Row -->
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5 text-white"
-      >
-        <div class="bg-white p-4 rounded shadow text-center">
-          <div class="text-xs uppercase text-blue-500">Total Warehouses</div>
-          <div class="text-2xl font-bold text-blue-500">{{ warehouses.length }}</div>
-        </div>
-        <div class="bg-white p-4 rounded shadow text-center">
-          <div class="text-xs uppercase text-blue-500">Total Max Capacity (MT)</div>
-          <div class="text-2xl font-bold text-blue-500">
-            {{ totalMaxStorage.toLocaleString() }}
-          </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow text-center">
-          <div class="text-xs uppercase text-blue-500">Average Capacity Per Warehouse</div>
-          <div class="text-2xl font-bold text-blue-500">
-            {{ averageCapacity.toFixed(1) }}
-          </div>
-        </div>
-        <div class="bg-white p-4 rounded shadow text-center">
-          <div class="text-xs uppercase text-blue-500">Risk Flags (Coming Soon)</div>
-          <div class="text-2xl font-bold text-blue-500">--</div>
-        </div>
-      </div>
+ 
 
       <div
         class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"

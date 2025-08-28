@@ -359,7 +359,7 @@ const getInstructions = async () => {
     })
     .catch((error) => {
       Swal.fire({
-        title: "User Retrieval Failed",
+        title: "Instruction Retrieval Failed",
         text: "failed to get instructions (Please refresh to try again)",
         icon: "error",
         confirmButtonText: "Ok",
@@ -544,17 +544,24 @@ const columns2 = ref([
     firstSortType: "asc",
     tdClass: "capitalize",
   },
+
   {
     label: "Details",
-    field: (row) =>
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`,
+    field: (row) => {
+      if (row.activity?.Name === "Partner Commodity Loan") {
+        return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">Partner Commodity Loan</span>`;
+      }
+
+      return (
+        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">To: ${row.district?.Name}</span><br>` +
+        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">By: ${row.transporter?.Name}</span>`
+      );
+    },
     sortable: true,
     firstSortType: "asc",
-    html: true, // This is important to render HTML
+    html: true, // Important to render HTML
     tdClass: "capitalize",
   },
-
   {
     label: "Stocks",
     hidden: false,
