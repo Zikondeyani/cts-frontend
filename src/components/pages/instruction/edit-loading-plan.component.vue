@@ -58,13 +58,17 @@
 
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-6 gap-2">
-                <div class="col-span-6 sm:col-span-3">
+                <!-- Transporter (hidden if Partner Commodity Loan) -->
+                <div
+                  v-if="!isPartnerCommodityLoan"
+                  class="col-span-6 sm:col-span-3"
+                >
                   <label
                     for="transporter"
                     class="block text-sm font-bold text-gray-700"
                   >
-                    Select Transporter</label
-                  >
+                    Select Transporter
+                  </label>
                   <select
                     id="transporter"
                     name="transporter"
@@ -83,13 +87,14 @@
                   </select>
                 </div>
 
+                <!-- Commodity -->
                 <div class="col-span-6 sm:col-span-3">
                   <label
-                    for="transporter"
+                    for="commodity"
                     class="block text-sm font-bold text-gray-700"
                   >
-                    Select Commodity</label
-                  >
+                    Select Commodity
+                  </label>
                   <select
                     id="commodity"
                     name="commodity"
@@ -110,57 +115,17 @@
               </div>
 
               <div class="grid grid-cols-6 gap-2">
-                <div class="col-span-6 sm:col-span-3">
-                  <label
-                    for="quantity"
-                    class="block text-sm font-bold text-gray-700"
-                    >Quantity</label
-                  >
-
-                  <input
-                    type="number"
-                    name="quantity"
-                    v-model="loadingPlan.Quantity"
-                    id="reportFrom"
-                    autocomplete="quantity"
-                    class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                  />
-                </div>
-
-                <div class="col-span-6 sm:col-span-3">
-                  <label
-                    for="warehouse"
-                    class="block text-sm font-bold text-gray-700"
-                    >Warehouse</label
-                  >
-
-                  <select
-                    id="warehouse"
-                    name="warehouse"
-                    v-model="loadingPlan.warehouseId"
-                    autocomplete="warehouse-name"
-                    class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                  >
-                    <option
-                      v-for="warehouse in warehouses"
-                      :key="warehouse"
-                      :value="warehouse.id"
-                      class="uppercase"
-                    >
-                      {{ warehouse.Name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-6 gap-2">
-                <div class="col-span-6 sm:col-span-3">
+                <!-- District (hidden if Partner Commodity Loan) -->
+                <div
+                  v-if="!isPartnerCommodityLoan"
+                  class="col-span-6 sm:col-span-3"
+                >
                   <label
                     for="destination-district"
                     class="block text-sm font-bold text-gray-700"
-                    >Destination District</label
                   >
-
+                    Destination District
+                  </label>
                   <select
                     id="destination"
                     name="destination"
@@ -179,18 +144,20 @@
                   </select>
                 </div>
 
+                <!-- Activity (always visible but disabled if Partner Commodity Loan) -->
                 <div class="col-span-6 sm:col-span-3">
                   <label
-                    for="transporter"
+                    for="activity"
                     class="block text-sm font-bold text-gray-700"
                   >
-                    Select Activity</label
-                  >
+                    Select Activity
+                  </label>
                   <select
                     id="activity"
                     name="activity"
                     v-model="loadingPlan.activityId"
                     autocomplete="activity-name"
+                    :disabled="isPartnerCommodityLoan"
                     class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                   >
                     <option
@@ -206,6 +173,7 @@
               </div>
 
               <div class="grid grid-cols-6 gap-2 mt-3">
+                <!-- ATC Number (always visible) -->
                 <div class="col-span-3 sm:col-span-3">
                   <label
                     for="ATCNumber"
@@ -223,13 +191,17 @@
                   />
                 </div>
 
-                <div class="col-span-3 sm:col-span-3">
+                <!-- Start Date (hidden if Partner Commodity Loan) -->
+                <div
+                  v-if="!isPartnerCommodityLoan"
+                  class="col-span-3 sm:col-span-3"
+                >
                   <label
-                    for="project"
+                    for="StartDate"
                     class="block text-sm font-bold text-gray-700"
-                    >Start Date</label
                   >
-
+                    Start Date
+                  </label>
                   <input
                     type="date"
                     name="Start Date"
@@ -238,22 +210,42 @@
                   />
                 </div>
 
-                <div class="col-span-3 sm:col-span-3">
+                <!-- End Date (hidden if Partner Commodity Loan) -->
+                <div
+                  v-if="!isPartnerCommodityLoan"
+                  class="col-span-3 sm:col-span-3"
+                >
                   <label
-                    for="End Date"
+                    for="EndDate"
                     class="block text-sm font-bold text-gray-700"
-                    >End Date</label
                   >
-
+                    End Date
+                  </label>
                   <input
                     type="date"
                     name="End Date"
                     v-model="formattedEndDate"
-                    id="End Date"
+                    id="EndDate"
                     autocomplete="End Date"
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
                   />
                 </div>
+              </div>
+
+              <!-- Loan Description (only if Partner Commodity Loan) -->
+              <div v-if="isPartnerCommodityLoan" class="mt-4">
+                <label
+                  for="loanDescription"
+                  class="block text-sm font-bold text-gray-700"
+                >
+                  Loan Description
+                </label>
+                <textarea
+                  id="loanDescription"
+                  v-model="loadingPlan.LoanDescription"
+                  rows="3"
+                  class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
+                ></textarea>
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -349,6 +341,13 @@ watch(
   }
 );
 
+const isPartnerCommodityLoan = computed(() => {
+  const activity = activities.value.find(
+    (a) => a.id === loadingPlan.value.activityId
+  );
+  return activity?.Name === "Partner Commodity Loan";
+});
+
 // Stores
 const loadingPlanStore = useloadingplanstore();
 const transporterStore = usetransporterstore();
@@ -369,11 +368,11 @@ watch(
 const updateLoadingPlan = async () => {
   try {
     loadingPlan.value.UpdatedOn = new Date();
+
     const {
       commodity,
       district,
       transporter,
-      activity,
       warehouse,
       user,
       originalIndex,
@@ -393,53 +392,56 @@ const updateLoadingPlan = async () => {
       RejectionComment,
       ...updatedLoadingPlan
     } = loadingPlan.value;
+
     updatedLoadingPlan.ATCNumber =
       updatedLoadingPlan.ATCNumber?.toString() || "";
     updatedLoadingPlan.IsRejected = false;
     updatedLoadingPlan.IsApproved = false;
     updatedLoadingPlan.Balance = updatedLoadingPlan.Quantity;
-    /*   if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.activityId == null) {
-      await Swal.fire({
-        title: "Missing Information",
-        text: "Please select both a district and a project before updating.",
-        icon: "warning",
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: "Ok"
-      });
-      return;
-    } */
 
-    const isOnline = await checkOnlineStatus(); // Check online status
+    // ✅ Check if activity is "Partner Commodity Loan"
+    const activity = activities.value.find(
+      (a) => a.id === loadingPlan.value.activityId
+    );
 
-    if (!isOnline) {
-      await updateDataOffline(
-        "loading-plans",
-        updatedLoadingPlan.key,
-        updatedLoadingPlan
-      ); // Update locally
-      Swal.fire({
-        title: "Loading Plan Updated",
-        html: `<p>Your loading plan has been updated locally.</p>`,
-        icon: "success",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "View All Rejected Loading Plans",
-      });
+    if (activity?.Name === "Partner Commodity Loan") {
+      // Keep only the allowed fields for update
+      const partnerLoanUpdate = {
+        id: updatedLoadingPlan.id,
+        ATCNumber: updatedLoadingPlan.ATCNumber,
+        commodityId: updatedLoadingPlan.commodityId,
+        LoanDescription: updatedLoadingPlan.LoanDescription,
+        UpdatedOn: updatedLoadingPlan.UpdatedOn,
+        IsRejected: false
+      };
 
-      emit("close");
-      emit("update");
+      // Send only the reduced payload
+      console.log("Partner Commodity Loan Update:", partnerLoanUpdate);
+
+      if (await checkOnlineStatus()) {
+        await loadingPlanStore.update(partnerLoanUpdate);
+      } else {
+        await updateDataOffline("loading-plans", partnerLoanUpdate.key, partnerLoanUpdate);
+      }
     } else {
-      await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
-      Swal.fire({
-        title: "Loading Plan Updated",
-        html: `<p>Your loading plan has been successfully updated.</p>`,
-        icon: "success",
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "View All Rejected Loading Plans",
-      });
-      eventBus.emit("requisitionArchived", updatedLoadingPlan.id);
-      emit("update");
+      // ✅ Normal update for all other activities
+      if (await checkOnlineStatus()) {
+        await loadingPlanStore.update(updatedLoadingPlan);
+      } else {
+        await updateDataOffline("loading-plans", updatedLoadingPlan.key, updatedLoadingPlan);
+      }
     }
 
+    Swal.fire({
+      title: "Loading Plan Updated",
+      html: `<p>Your loading plan has been successfully updated.</p>`,
+      icon: "success",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "View All Rejected Loading Plans",
+    });
+
+    eventBus.emit("requisitionArchived", updatedLoadingPlan.id);
+    emit("update");
     emit("close");
   } catch (error) {
     console.error("Failed to update rejected loading plan:", error);

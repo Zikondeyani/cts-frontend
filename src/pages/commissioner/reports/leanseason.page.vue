@@ -232,7 +232,7 @@ const columns = ref([
 
     // Build the "From" details
     let details = `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs  bg-orange-100 text-orange-800">
         From: ${fromWarehouse ? fromWarehouse.Name : warehouseName || "N/A"}
       </span><br>
     `;
@@ -240,7 +240,7 @@ const columns = ref([
     // Add "To" details only if isPrepositioned is true
     if (row.IsPrepositioned) {
       details += `
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md  bg-blue-100 text-blue-800">
           To: ${toWarehouse ? toWarehouse.Name : "N/A"}
         </span><br>
       `;
@@ -248,10 +248,10 @@ const columns = ref([
 
     // Add district and transporter details
     details += `
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md  bg-blue-100 text-blue-800">
         District: ${row.district?.Name || "Unknown"}
       </span><br>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-green-100 text-green-800">
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md  bg-green-100 text-green-800">
         TP: ${row.transporter?.Name || "Unknown"}
       </span><br>
     `;

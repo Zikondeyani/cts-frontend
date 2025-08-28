@@ -25,6 +25,7 @@
         :search-options="{ enabled: true }"
         :pagination-options="{ enabled: true }"
         theme="polar-bear"
+        compactMode
         styleClass="vgt-table striped"
       >
         <!-- Table slots -->

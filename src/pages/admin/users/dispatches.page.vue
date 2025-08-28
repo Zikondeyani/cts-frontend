@@ -89,7 +89,7 @@
         </div>
 
         <!-- Table -->
-        <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto">
+        <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto font-semibold">
           <vue-good-table
             :columns="columns2"
             :rows="filteredDispatches"
