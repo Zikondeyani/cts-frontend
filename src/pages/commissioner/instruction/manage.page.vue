@@ -40,7 +40,7 @@
 
           <li class="nav-item ml-auto mb-4" role="presentation">
             <button @click="showPrintModal = true"
-              class="bg-blue-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
+              class="bg-[#096eb4] hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md">
               Print Goods Release Instruction
             </button>
 

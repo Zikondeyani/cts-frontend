@@ -251,7 +251,7 @@
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
               <button
                 @click="updateLoadingPlan"
-                style="background-color: #329ce7"
+                style="background-color: #096eb4;"
                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Save

@@ -347,7 +347,7 @@
               </button>
               <button
                 @click="saveStockState"
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                class="px-4 py-2 bg-[#096eb4] text-white rounded hover:bg-blue-700"
               >
                 Save
               </button>
@@ -645,7 +645,7 @@ const exportNFIS = () => {
   background-color: #0f6c97;
   color: white;
 }
-button.bg-blue-500 {
+button.bg-[#096eb4] {
   background-color: #3b82f6;
   color: white;
 }

@@ -100,7 +100,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <!-- Aligned images in the center -->
                   <div v-show="screenshotMode"
-                    class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5">
+                    class="col-span-3 flex flex-col justify-center items-center bg-[#096eb4] text-white p-5">
                     <div class="flex justify-center items-center">
                       <img class="mr-4 h-20" src="../../../assets/images/images.png" alt="MW-Govt" />
                       <img class="h-20" src="../../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
@@ -242,7 +242,7 @@
 
                   <!-- Aligned images in the center -->
                   <div v-show="screenshotMode"
-                    class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5">
+                    class="col-span-3 flex flex-col justify-center items-center bg-[#096eb4] text-white p-5">
                     <div class="flex justify-center items-center">
                       <img class="mr-4 h-20" src="../../../assets/images/images.png" alt="MW-Govt" />
                       <img class="h-20" src="../../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
@@ -1455,7 +1455,7 @@ const filteredLeanStockSummary = computed(() => {
   overflow: hidden;
 }
 
-.bg-blue-500 {
+.bg-[#096eb4] {
   background-color: #096eb4;
 }
 

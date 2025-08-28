@@ -90,10 +90,10 @@
           <div
             class="relative"
             v-if="user.district == null || user.district == 'National'"
-            @mouseenter="openDropdown"
-            @mouseleave="closeDropdown"
           >
             <button
+              @click="isDropdownOpen = !isDropdownOpen"
+   
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md"
             >
               More...
@@ -101,9 +101,7 @@
             <div
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
-              @mouseenter="keepDropdownOpen"
-              @mouseleave="closeDropdown"
-            >
+             >
               <router-link
                 v-for="item in dropdownItems"
                 :key="item.name"
@@ -287,7 +285,7 @@
                 :key="item.name"
                 :to="item.href"
                 @click="toggleMobileMenu"
-                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-blue-500"
+                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-[#096eb4]"
               >
                 {{ item.name }}
               </router-link>
@@ -528,12 +526,7 @@ function navigation() {
       icon: IdentificationIcon,
       current: false,
     },
-    {
-      name: "Reports",
-      href: "/dispatcher/report-management",
-      icon: DocumentTextIcon,
-      current: false,
-    },
+ 
     {
       name: "Dispatches",
       href: "/dispatcher/dispatches",

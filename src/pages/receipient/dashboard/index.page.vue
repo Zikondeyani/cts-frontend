@@ -1093,7 +1093,7 @@ const dispatchstatus = ref(0);
   /* This is important to apply rounded corners to child elements */
 }
 
-.bg-blue-500 {
+.bg-[#096eb4] {
   background-color: #096eb4;
   /* Tailwind CSS color, replace with your project's color if not using Tailwind */
 }

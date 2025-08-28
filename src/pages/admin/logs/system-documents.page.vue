@@ -62,7 +62,7 @@
               <a
                 :href="doc.url"
                 target="_blank"
-                class="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-700"
+                class="px-3 py-1 bg-[#096eb4] text-white rounded-lg text-sm hover:bg-blue-700"
               >
                 View
               </a>
@@ -88,7 +88,7 @@
                 <a
                   :href="props.row.url"
                   target="_blank"
-                  class="px-2 py-1 bg-blue-500 text-white rounded-lg text-xs hover:bg-blue-700"
+                  class="px-2 py-1 bg-[#096eb4] text-white rounded-lg text-xs hover:bg-blue-700"
                 >
                   View
                 </a>

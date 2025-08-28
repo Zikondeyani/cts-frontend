@@ -76,10 +76,11 @@
           <div
             v-if="remainingItems.length > 0"
             class="relative block lg:inline-block mt-2 lg:mt-0"
-            @mouseenter="openDropdown"
-            @mouseleave="closeDropdown"
+          
           >
             <button
+             @click="isDropdownOpen = !isDropdownOpen"
+   
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md"
             >
               More...
@@ -87,8 +88,7 @@
             <div
               v-if="isDropdownOpen"
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
-              @mouseenter="openDropdown"
-              @mouseleave="closeDropdown"
+            
             >
               <router-link
                 v-for="item in remainingItems"
@@ -268,7 +268,7 @@
                 :key="item.name"
                 :to="item.href"
                 @click="toggleMobileMenu"
-                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-blue-500"
+                class="flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-[#096eb4]"
               >
                 {{ item.name }}
               </router-link>
@@ -326,7 +326,7 @@
           placeholder="Enter your feedback here..."
         ></textarea>
         <div class="flex justify-end mt-4 space-x-2">
-          <button @click="submitFeedback" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+          <button @click="submitFeedback" class="bg-[#096eb4] text-white px-4 py-2 rounded-md hover:bg-blue-600">
             Submit
           </button>
           <button @click="isFeedbackOpen = false" class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">

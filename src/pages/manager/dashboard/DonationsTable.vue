@@ -50,7 +50,7 @@
             <td class="px-6 py-4 whitespace-nowrap">{{ row.warehouse?.Name }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ row.organisation?.Name }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <button @click="viewDetails(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button @click="viewDetails(row)" class="bg-[#096eb4] hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 View Details
               </button>
             </td>

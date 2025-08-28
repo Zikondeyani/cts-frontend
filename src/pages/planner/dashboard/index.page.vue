@@ -157,7 +157,7 @@
                   <!-- Aligned images in the center -->
                   <div
                     v-show="screenshotMode"
-                    class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5"
+                    class="col-span-3 flex flex-col justify-center items-center bg-[#096eb4] text-white p-5"
                   >
                     <div class="flex justify-center items-center">
                       <img
@@ -381,7 +381,7 @@
                   <!-- Aligned images in the center -->
                   <div
                     v-show="screenshotMode"
-                    class="col-span-3 flex flex-col justify-center items-center bg-blue-500 text-white p-5"
+                    class="col-span-3 flex flex-col justify-center items-center bg-[#096eb4] text-white p-5"
                   >
                     <div class="flex justify-center items-center">
                       <img
@@ -1111,7 +1111,7 @@
                   <div class="mt-4 mb-6">
                     <router-link
                       to="/planner/tracker"
-                      class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
+                      class="bg-[#096eb4] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
                     >
                       Go to Transporter Tracker
                     </router-link>
@@ -2180,7 +2180,7 @@ const updateStats = computed(() => {
   overflow: hidden;
 }
 
-.bg-blue-500 {
+.bg-[#096eb4] {
   background-color: #096eb4;
 }
 

@@ -30,7 +30,7 @@
           <div v-for="option in group.options" :key="option.label" class="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
             <router-link :to="option.path" class="block">
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-500 transition-all duration-300">
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300">
                 <component :is="option.icon" class="h-6 w-6 mb-2" />
                 <span class="text-center text-sm sm:text-base">{{ option.label }}</span>
               </div>

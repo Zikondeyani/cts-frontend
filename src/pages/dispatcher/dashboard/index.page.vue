@@ -164,7 +164,7 @@
               <div class="mt-4 mb-6">
                 <router-link
                   to="/dispatcher/tracker"
-                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
+                  class="bg-[#096eb4] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition"
                 >
                   Go to Transporter Tracker
                 </router-link>
@@ -597,7 +597,7 @@ const navigateToLeanSeasonLoadingPlans = () => {
   color: white;
 }
 
-.bg-blue-500 {
+.bg-[#096eb4] {
   background-color: #096eb4;
 }
 

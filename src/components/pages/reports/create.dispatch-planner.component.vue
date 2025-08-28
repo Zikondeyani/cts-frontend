@@ -60,7 +60,7 @@
 
                     <div class="flex justify-end mt-4 space-x-2">
                       <button @click="resetDispatch()" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-700 transition ease-in-out duration-150">Reset</button>
-                      <button @click="submitDispatch()" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 active:bg-blue-600 transition ease-in-out duration-150">Submit</button>
+                      <button @click="submitDispatch()" class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-[#096eb4] focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 active:bg-blue-600 transition ease-in-out duration-150">Submit</button>
                     </div>
                   </div>
 
