@@ -310,7 +310,7 @@
      <!-- Floating Feedback Button -->
      <button
       @click="isFeedbackOpen = true"
-      class="fixed bottom-6 right-6 bg-gray-600 text-white px-4 py-3 rounded-full shadow-lg hover:bg-gray-700 transition"
+      class="fixed bottom-6 right-6 bg-gray-500 text-white px-4 py-3 rounded-full shadow-lg hover:bg-gray-700 transition"
     >
       Submit Feedback
     </button>

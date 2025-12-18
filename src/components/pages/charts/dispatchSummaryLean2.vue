@@ -1,140 +1,106 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 Chart.register(...registerables, ChartDataLabels);
 
 const props = defineProps({
-  commodityDispatchData: Array,
+  commodityDispatchData: { type: Array, default: () => [] },
+  activity: { type: Array, default: () => [] }
 });
 
 const barChartRef = ref(null);
+let barChart = null;
 
-
+// ------------------------------
+// COMPUTED DATA
+// ------------------------------
 const processedBarChartData = computed(() => {
-  if (props.commodityDispatchData.length === 0) {
-    return { datasets: [] }; // Return an empty dataset if no flattened data
-  }
+  const data = props.commodityDispatchData;
+  if (!data.length) return { labels: [], datasets: [] };
 
-  const districts = [...new Set(props.commodityDispatchData.map(item => item.district))];
-
-  const tonnageAllocationData = districts.map(district => {
-    const data = props.commodityDispatchData.find(item => item.district === district);
-    return data ? data.tonnageAllocation.toFixed(2) : 0;
-  });
-
-  const dispatchedData = districts.map(district => {
-    const data = props.commodityDispatchData.find(item => item.district === district);
-    return data ? data.totalDispatched.toFixed(2) : 0;
-  });
-
-  const receivedData = districts.map(district => {
-    const data = props.commodityDispatchData.find(item => item.district === district);
-    return data ? data.totalReceived.toFixed(2) : 0;
-  });
+  const districts = [...new Set(data.map(i => i.district))];
 
   return {
     labels: districts,
     datasets: [
       {
         label: 'Tonnage Allocation',
-        data: tonnageAllocationData,
-        backgroundColor: '#096eb4', // Primary shade for allocation
+        data: districts.map(d => (data.find(i => i.district === d)?.tonnageAllocation || 0).toFixed(2)),
+        backgroundColor: '#096eb4'
       },
       {
         label: 'Total Dispatched',
-        data: dispatchedData,
-        backgroundColor: '#0b8ad8', // Lighter shade of #096eb4 for dispatched
+        data: districts.map(d => (data.find(i => i.district === d)?.totalDispatched || 0).toFixed(2)),
+        backgroundColor: '#0b8ad8'
       },
       {
         label: 'Total Received',
-        data: receivedData,
-        backgroundColor: '#0aa0f5', // Even lighter shade of #096eb4 for received
+        data: districts.map(d => (data.find(i => i.district === d)?.totalReceived || 0).toFixed(2)),
+        backgroundColor: '#0aa0f5'
       }
     ]
   };
 });
 
-onMounted(() => {
-  const barCtx = barChartRef.value.getContext('2d');
-  new Chart(barCtx, {
+// ------------------------------
+// RENDER / UPDATE CHART
+// ------------------------------
+function renderChart() {
+  if (!barChartRef.value) return;
+
+  const ctx = barChartRef.value.getContext('2d');
+
+  if (!processedBarChartData.value.labels.length) return;
+
+  if (barChart) {
+    barChart.data = processedBarChartData.value;
+    barChart.update();
+    return;
+  }
+
+  barChart = new Chart(ctx, {
     type: 'bar',
     data: processedBarChartData.value,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            padding: 20,
-            font: {
-              size: 14
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            label: function (tooltipItem) {
-              return `${tooltipItem.dataset.label}: ${tooltipItem.raw} MT`;
-            }
-          }
-        },
+        legend: { position: 'top' },
         title: {
           display: true,
-          text: 'Tonnage Allocation vs. Dispatched and Received',
-          font: {
-            size: 16
-          },
-          padding: {
-            top: 10,
-            bottom: 30
-          }
+          text: 'Tonnage Allocation vs. Dispatched and Received'
         },
-        datalabels: {
-          display: false, // Completely hide datalabels
-        },
-        plugins: {
-          tooltip: {
-            enabled: true, // Show tooltip on hover
-            callbacks: {
-              label: function (tooltipItem) {
-                return `${tooltipItem.dataset.label}: ${tooltipItem.raw} MT`;
-              }
-            }
-          }
-        }
-
-
-
+        datalabels: { display: false }
       },
       scales: {
-        x: {
-          stacked: true,
-          title: {
-            display: true,
-            text: 'District'
-          }
-        },
+        x: { stacked: true, title: { display: true, text: 'District' } },
         y: {
           stacked: true,
-          title: {
-            display: true,
-            text: 'Quantity (MT)'
-          },
           beginAtZero: true,
-          ticks: {
-            callback: (value) => `${value} MT` // Display quantity on y-axis
-          }
+          title: { display: true, text: 'Quantity (MT)' },
+          ticks: { callback: v => `${v} MT` }
         }
       }
     }
   });
-});
+}
+
+// ------------------------------
+// WATCHERS
+// ------------------------------
+watch([() => props.commodityDispatchData, () => props.activity], renderChart, { immediate: true });
+
+onMounted(renderChart);
+onBeforeUnmount(() => barChart?.destroy());
 </script>
 
 <template>
   <div>
-    <canvas ref="barChartRef" style="width: 100%; height: 400px;"></canvas>
+    <!-- FIXED HEIGHT WRAPPER -->
+    <div style="height: 400px; width: 100%;">
+      <canvas ref="barChartRef"></canvas>
+    </div>
   </div>
 </template>

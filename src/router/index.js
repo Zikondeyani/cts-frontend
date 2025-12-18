@@ -568,7 +568,7 @@ const routes = [
         component: () => import("../pages/admin/logs/index.page.vue"),
       },
 
-         {
+      {
         path: "/admin/system-documents",
         name: "admin-system-documents",
         component: () => import("../pages/admin/logs/system-documents.page.vue"),
@@ -610,13 +610,13 @@ const routes = [
         component: () => import("../pages/admin/stock/index.page.vue"),
       },
 
-       {
+      {
         path: "/admin/stock-management/ByWarehouse/:id",
         name: "admin-stock-management-by-warehouse",
         component: () => import("../pages/admin/stockByWarehouse/index.page.vue"),
       },
 
-       {
+      {
         path: "/admin/stock-management/warehouses",
         name: "admin-stock-management-warehouses",
         component: () => import("../pages/admin/warehouseView/index.page.vue"),
@@ -664,8 +664,8 @@ const routes = [
         component: () => import("../pages/admin/requestors/index.page.vue"),
       },
 
-   
-       {
+
+      {
         path: "/admin/requestors/manage/:id",
         name: "admin-manage-requestors",
         component: () =>
@@ -751,6 +751,189 @@ const routes = [
       }
     },
   },
+
+
+
+  //auditor
+  {
+    path: "/auditor",
+    name: "auditor",
+    component: () => import("../components/layouts/auditor.layout.vue"),
+    children: [
+      //Dashboard
+      {
+        path: "",
+        name: "auditor-home",
+        redirect: { name: "auditor-dashboard" },
+      },
+      {
+        path: "/auditor/dashboard",
+        name: "auditor-dashboard",
+        component: () => import("../pages/auditor/dashboard/index.page.vue"),
+      },
+      //Users
+      {
+        path: "/auditor/users",
+        name: "auditor-users",
+        component: () => import("../pages/auditor/users/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/stock-prepositioning",
+        name: "auditor-stock-prepositioning",
+        component: () =>
+          import("../pages/auditor/stock-prepositoning/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/Lean-season-losses",
+        name: "auditor-lean-season-damage-management",
+        component: () => import("../pages/auditor/damages/damages.page.vue"),
+      },
+
+         {
+        path: "/auditor/reminders",
+        name: "auditor-reminders",
+        component: () => import("../pages/auditor/reminders/reminders.page.vue"),
+      },
+      {
+        path: "/auditor/Emergency-season-losses",
+        name: "auditor-emergency-season-damage-management",
+        component: () => import("../pages/auditor/damages/er-damages.page.vue"),
+      },
+      {
+        path: "/auditor/users/manage/:id",
+        name: "auditor-manage-user",
+        component: () => import("../pages/auditor/users/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/dispatch-management",
+        name: "auditor-dispatch-management",
+        component: () => import("../pages/auditor/dispatch/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/instruction-management",
+        name: "auditor-instruction-management",
+        component: () => import("../pages/auditor/instruction/index.page.vue"),
+      },
+      {
+        path: "/auditor/instruction-management/manage/:id",
+        name: "auditor-manage-instruction-management",
+        component: () => import("../pages/auditor/instruction/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/loadingplans",
+        name: "auditor-loadingplans",
+        component: () => import("../pages/auditor/loadingplans/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/dispatches",
+        name: "auditor-dispatches",
+        component: () =>
+          import("../pages/auditor/dispatch/dispatches.page.vue"),
+      },
+
+      {
+        path: "/auditor/loadingplans",
+        name: "auditor-loadingplans",
+        component: () => import("../pages/auditor/loadingplans/index.page.vue"),
+      },
+      {
+        path: "/auditor/dispatch-management/manage/:id",
+        name: "auditor-manage-catalogue",
+        component: () => import("../pages/auditor/dispatch/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/commodity-tracking",
+        name: "auditor-commodity-tracking",
+        component: () => import("../pages/auditor/commodities/index.page.vue"),
+      },
+      {
+        path: "/auditor/commodity-tracking/manage/:id",
+        name: "auditor-manage-commodity-tracking",
+        component: () => import("../pages/auditor/commodities/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/receipt-management",
+        name: "auditor-receipt-management",
+        component: () => import("../pages/auditor/receipts/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/receipts",
+        name: "auditor-receipts",
+        component: () => import("../pages/auditor/receipts/receipts.page.vue"),
+      },
+
+      {
+        path: "/auditor/receipt-management/manage/:id",
+        name: "auditor-manage-receipt-management",
+        component: () => import("../pages/auditor/receipts/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/requisition-management",
+        name: "auditor-requisition-management",
+        component: () => import("../pages/auditor/requisitions/index.page.vue"),
+      },
+      {
+        path: "/auditor/receipt-management/manage/:id",
+        name: "auditor-manage-requisition-management",
+        component: () =>
+          import("../pages/auditor/requisitions/manage.page.vue"),
+      },
+
+      {
+        path: "/auditor/system",
+        name: "auditor-system",
+        component: () => import("../pages/auditor/system/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/project-management",
+        name: "auditor-project-management",
+        component: () => import("../pages/auditor/projects/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/change-password",
+        name: "auditor-change-password",
+        component: () =>
+          import("../components/pages/users/change.password.vue"),
+      },
+
+      {
+        path: "/auditor/report-management",
+        name: "auditor-report-management",
+        component: () => import("../pages/auditor/reports/index.page.vue"),
+      },
+
+      {
+        path: "/auditor/about-system",
+        name: "auditor-about-system",
+        component: () => import("../pages/about/index.page.vue"),
+      },
+    ],
+    beforeEnter: (to, from, next) => {
+      let role = JSON.parse(sessionStorage.getItem("RLE"));
+      if (role != null && typeof role.name != "undefined") {
+        if (role.name == "auditor") {
+          next();
+        } else {
+          next({ name: "portal-signin" });
+        }
+      } else {
+        next({ name: "portal-signin" });
+      }
+    },
+  },
+
 
   //Manager
   {
@@ -1354,7 +1537,7 @@ const routes = [
         component: () => import("../pages/planner/users/dispatches.page.vue"),
       },
 
-        {
+      {
         path: "/planner/stock-management/warehouses",
         name: "planner-stock-management-warehouses",
         component: () => import("../pages/planner/warehouseView/index.page.vue"),
@@ -1407,7 +1590,7 @@ const routes = [
       },
 
 
-         {
+      {
         path: "/planner/stock-management/ByWarehouse/:id",
         name: "planner-stock-management-by-warehouse",
         component: () => import("../pages/planner/stockByWarehouse/index.page.vue"),
@@ -1420,7 +1603,7 @@ const routes = [
           import("../pages/planner/donations/donations.page.vue"),
       },
 
-        {
+      {
         path: "/planner/loans",
         name: "planner-loan-management",
         component: () =>

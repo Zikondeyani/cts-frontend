@@ -15,29 +15,18 @@
         </div>
 
         <!-- Export Data Button -->
-        <button
-          type="button"
+        <button type="button"
           class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-          @click="generateExcel()"
-        >
+          @click="generateExcel()">
           <i class="fas fa-file-export mr-2"></i>
           <!-- Icon (Font Awesome used as an example) -->
           Export Data
         </button>
       </div>
       <!-- table  -->
-      <div
-        class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mt-3"
-      >
-        <vue-good-table
-          :columns="columns"
-          :rows="loadingplans"
-          :search-options="{ enabled: true }"
-          :pagination-options="{ enabled: true }"
-          theme="polar-bear"
-          styleClass="vgt-table striped"
-          compactMode
-        >
+      <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mt-3">
+        <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
+          :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
           <!-- Custom Table Actions -->
           <template #table-actions>
             <!-- You can add custom actions here like export buttons, etc. -->
@@ -45,17 +34,11 @@
 
           <!-- Custom Table Row Template -->
           <template #table-row="props">
-            <div
-              v-if="props.column.label === 'Options'"
-              class="flex items-center space-x-3"
-            >
+            <div v-if="props.column.label === 'Options'" class="flex items-center space-x-3">
               <!-- Dispatch Button when balance is greater than 0 -->
               <template v-if="props.row.Balance > 0">
-                <button
-                  type="button"
-                  @click="openDispatchDialog(props.row)"
-                  class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-[#096eb4] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150"
-                >
+                <button type="button" @click="openDispatchDialog(props.row)"
+                  class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-[#096eb4] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                   <TruckIcon class="h-5 w-5 mr-2" />
                   Dispatch
                 </button>
@@ -64,18 +47,14 @@
               <!-- Completed Badge when balance is 0 -->
               <template v-else>
                 <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                >
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Completed
                 </span>
               </template>
 
               <!-- Show Recent Dispatches Button -->
-              <button
-                type="button"
-                @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
-                class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150"
-              >
+              <button type="button" @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
+                class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                 <EyeIcon class="h-5 w-5 mr-2" />
                 Recent Dispatches
               </button>
@@ -87,31 +66,17 @@
 
         <template v-if="isRecentDispatchesOpen">
           <div id="content">
-            <div
-              class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
-            >
+            <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
               <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
                 <div class="flex justify-between items-center mb-4">
                   <h3 class="text-lg font-semibold">Recent Dispatches</h3>
 
                   <!-- ✅ Close Button -->
-                  <button
-                    @click="isRecentDispatchesOpen = false"
-                    class="text-gray-400 hover:text-gray-600 focus:outline-none"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                  <button @click="isRecentDispatchesOpen = false"
+                    class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -121,53 +86,34 @@
                   <table class="min-w-full table-auto border-collapse">
                     <thead>
                       <tr class="bg-gray-100">
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Delivery Note
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           ATC #
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Dispatcher
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Qty (MT)
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           FDP
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Created
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Driver (Truck #)
                         </th>
-                        <th
-                          class="px-4 py-2 text-left text-sm font-medium text-gray-700"
-                        >
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
                           Received
                         </th>
                       </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                      <tr
-                        v-for="dispatch in recentDispatches"
-                        :key="dispatch.id"
-                      >
+                      <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
                         <td class="px-4 py-2 text-sm text-gray-900">
                           {{ dispatch?.DeliveryNote }}
                         </td>
@@ -198,12 +144,8 @@
                           }})
                         </td>
                         <td class="px-4 py-2 text-sm text-gray-900">
-                          <span
-                            class="inline-block w-3 h-3 rounded-full"
-                            :class="
-                              dispatch?.received ? 'bg-green-500' : 'bg-red-500'
-                            "
-                          >
+                          <span class="inline-block w-3 h-3 rounded-full" :class="dispatch?.received ? 'bg-green-500' : 'bg-red-500'
+                            ">
                           </span>
                         </td>
                       </tr>
@@ -212,12 +154,8 @@
                 </div>
 
                 <div class="flex justify-end mt-4">
-                  <button
-                    @click="printPDF"
-                    id="printButton"
-                    v-if="recentDispatches.length > 0"
-                    class=" bg-gray-500 text-white px-4 py-2 rounded-md no-print"
-                  >
+                  <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md no-print">
                     Print
                   </button>
                 </div>
@@ -227,19 +165,11 @@
         </template>
 
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog
-          :isOpen="isEditDialogOpen"
-          :loadingPlan="selectedLoadingPlan"
-          @close="closeEditDialog"
-          v-on:update="reloadPage"
-        />
+        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
+          v-on:update="reloadPage" />
 
-        <DispatchLoadingPlanDialog
-          :isOpen="isDispatchDialogOpen"
-          :loadingPlan="selectedLoadingPlan"
-          @close="closeDispatchDialog"
-          v-on:update="reloadPage"
-        />
+        <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
+          @close="closeDispatchDialog" v-on:update="reloadPage" />
       </div>
     </div>
   </main>
@@ -383,10 +313,9 @@ const columns = ref([
     hidden: false,
     field: (row) =>
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${
-        row.Balance?.toFixed(2) !== null
-          ? row.Balance?.toFixed(2) + " MT"
-          : "Pending"
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance?.toFixed(2) !== null
+        ? row.Balance?.toFixed(2) + " MT"
+        : "Pending"
       }</span>`,
     sortable: true,
     firstSortType: "asc",
@@ -497,42 +426,51 @@ const getLoadingplans = async () => {
   isLoading.value = true;
 
   try {
-    const result = await loadingPlanStore.get();
+    const result = await loadingPlanStore.get(); // array of loading plans
 
     // Check if user district is national or null
     const isNationalOrNull =
       !user.value.district || user.value.district === "National";
 
-    // Separate loading plans that are not closed (isClosed == false) and the rest
-    const openLoadingPlans = result.filter((plan) => plan.isClosed === false);
-    const closedLoadingPlans = result.filter((plan) => plan.isClosed === true);
+    // Filter results
+    const filteredLoadingPlans = result.filter((item) => {
 
-    // Combine the open loading plans first, then the closed ones
-    const sortedLoadingPlans = [...openLoadingPlans, ...closedLoadingPlans];
+      // ❗ Exclude activityId 0
+      if (item.activityId === 0) return false;
 
-    // Filter based on user district if not national or null
-    const filteredLoadingPlans = isNationalOrNull
-      ? sortedLoadingPlans.filter((item) => item.IsApproved === true) // For national or null, include approved only
-      : sortedLoadingPlans.filter(
-          (item) =>
-            item.IsApproved === true &&
-            item.district.Name === user.value.district &&
-            item.IsDivertedLoad == true
-        ); // For specific district, include approved and match district
+      const isActivityOpen = item.activity?.IsClosed !== true;
+      const isApproved = item.IsApproved === true;
+      const isNotPartnerLoan = item.activity?.Name !== "Partner Commodity Loan";
 
-    // Clear the loadingplans array and then push the sorted results
+      if (isNationalOrNull) {
+        return isApproved && isActivityOpen && isNotPartnerLoan;
+      } else {
+        return (
+          isApproved &&
+          isActivityOpen &&
+          isNotPartnerLoan &&
+          item.district?.Name === user.value.district &&
+          item.IsDivertedLoad === true
+        );
+      }
+    });
+
+    // Reset reactive array correctly
     loadingplans.length = 0;
-    loadingplans.push(...filteredLoadingPlans);
+    loadingplans.push(...filteredLoadingPlans.reverse());
 
-    // Emit event after updating loading plans
-    eventBus.emit("loadingplanArchived", result.id);
+    console.log("Filtered Loading Plans:", loadingplans);
+
+    eventBus.emit("loadingplanArchived", filteredLoadingPlans);
+
   } catch (error) {
-    // Handle any errors that occur during the get, filter, or reverse
     console.error("Failed to fetch, filter, and sort loading plans:", error);
   } finally {
     isLoading.value = false;
   }
 };
+
+
 
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();

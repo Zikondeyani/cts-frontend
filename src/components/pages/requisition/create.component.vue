@@ -283,7 +283,7 @@
                         <button
                           type="button"
                           @click="addNewItem"
-                          class="mt-2 px-4 py-2 text-white bg-gray-600 hover:bg-green-700 rounded-md"
+                          class="mt-2 px-4 py-2 text-white bg-gray-500 hover:bg-gray-700 rounded-md"
                         >
                           + Add Relief Item
                         </button>

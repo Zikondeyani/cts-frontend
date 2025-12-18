@@ -6,14 +6,9 @@
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
       </div>
-      <div class=" md:flex md:items-center md:justify-between">
+      <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2 class="
-              font-bold
-              leading-7
-              text-white
-              sm:text-2xl sm:truncate
-            ">
+          <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Activities
           </h2>
         </div>
@@ -45,18 +40,38 @@
               new user
             </button>
           </router-link> -->
-         <create-user-form v-on:create="createUser" />
-        
+          <create-user-form v-on:create="createUser" />
         </div>
       </div>
       <!-- table  -->
 
+      <div
+        class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table font-semibold"
+      >
+        <vue-good-table
+          :columns="columns"
+          :rows="users"
+          :search-options="{ enabled: true }"
+          :pagination-options="{ enabled: true }"
+          theme="polar-bear"
+          styleClass="vgt-table striped"
+          compactMode
+        >
+          <template v-slot:table-row="props">
+            <span v-if="props.column.field === 'actions'">
+              <button
+                class="px-2 py-1 rounded text-xs text-white"
+                :class="props.row.IsClosed ? 'bg-green-600' : 'bg-red-600'"
+                @click="toggleClosed(props.row)"
+              >
+                {{ props.row.IsClosed ? "Reopen" : "Close" }}
+              </button>
+            </span>
 
-      <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table font-semibold">
-        <vue-good-table :columns="columns" :rows="users" :search-options="{ enabled: true }"
-          style="font-weight: bold; color: #096eb4;" :pagination-options="{ enabled: true }" theme="polar-bear"
-          styleClass="vgt-table striped" compactMode>
-          
+            <span v-else>
+              {{ props.formattedRow[props.column.field] }}
+            </span>
+          </template>
         </vue-good-table>
       </div>
     </div>
@@ -71,13 +86,12 @@ import { useRouter } from "vue-router";
 import {
   SearchIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import createUserForm from "../../../components/pages/activities/create.component.vue";
-
 
 //SCHEMA//AND//STORES
 import { useactivitiestore } from "../../../stores/activity.store";
@@ -86,65 +100,78 @@ const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
 
-
-
 //VARIABLES
 const isLoading = ref(false);
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
-  { name: "Activities", href: "#", current: true }
+  { name: "Activities", href: "#", current: true },
 ];
 const userStore = useactivitiestore();
 const users = reactive([]);
-const columns = ref([
 
+const columns = ref([
   {
     label: "#",
     field: (row) => row.originalIndex + 1,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
   {
     label: "Name",
-    field: row => row.Name,
+    field: (row) => row.Name,
     sortable: true,
     firstSortType: "asc",
-    tdClass: "capitalize"
+    tdClass: "capitalize",
   },
- 
-
-
+  {
+    label: "Closed?",
+    field: "IsClosed",
+    type: "boolean",
+    tdClass: "capitalize",
+    formatFn: (value) => (value ? "Yes" : "No"),
+  },
+  {
+    label: "Actions",
+    field: "actions",
+    sortable: false,
+  },
 ]);
+
 //MOUNTED
 onMounted(() => {
   getUsersRoles();
 });
 
-
-
-
-//FUNCTIONS
-const getUsersRoles = async () => {
+const toggleClosed = async (row) => {
   isLoading.value = true;
+
+  // construct clean object without vue-good-table props
+  const updated = {
+    id: row.id,
+    Name: row.Name,
+    IsClosed: !row.IsClosed,
+  };
+
   userStore
-    .get()
-    .then(result => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
-      users.length = 0; //empty array
-      users.push(...result);
-
-      users.reverse();
-
-    })
-    .catch(error => {
+    .update(updated) // pass only clean fields
+    .then(() => {
       Swal.fire({
-        title: "District Retrieval Failed",
-        text: "failed to get users (Please refresh to try again)",
+        title: "Success",
+        text: `Activity has been ${
+          updated.IsClosed ? "closed" : "reopened"
+        } successfully`,
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
+      getUsersRoles();
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Failed",
+        text: "Unable to update status (" + error + ")",
         icon: "error",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
     .finally(() => {
@@ -152,19 +179,46 @@ const getUsersRoles = async () => {
     });
 };
 
-const createUser = async model => {
+//FUNCTIONS
+const getUsersRoles = async () => {
+  isLoading.value = true;
+  userStore
+    .get()
+    .then((result) => {
+      // for (let i = 0; i < 100; i++) {
+      //   users.push(...result);
+      // }
+      users.length = 0; //empty array
+      users.push(...result);
+
+      users.reverse();
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "District Retrieval Failed",
+        text: "failed to get users (Please refresh to try again)",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
+const createUser = async (model) => {
   isLoading.value = true;
   userStore
     .create(model)
-    .then(result => {
+    .then((result) => {
       Swal.fire({
         title: "Success",
         text: "Created a new activity successfully",
         icon: "success",
-        confirmButtonText: "Ok"
+        confirmButtonText: "Ok",
       });
     })
-    .catch(error => {
+    .catch((error) => {
       /*  Swal.fire({
          title: "Failed",
          text: "failed to get create user (" + error + ")",

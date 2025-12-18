@@ -52,7 +52,7 @@
               </div>
 
               <form @submit="onSubmit" :validation-schema="CreateUserSchema"
-                v-if="roleId == 'ADMIN1' || roleId == 'ADMIN2' || roleId == 'ADMIN3' || roleId == 'ADMIN4' || roleId == 'ADMIN5' || roleId == 'ADMIN6' || roleId == 'ADMIN7' || roleId == 'ADMIN8' || roleId == 'ADMIN9'">
+                v-if="roleId == 'ADMIN1' || roleId == 'ADMIN2' || roleId == 'ADMIN3' || roleId == 'ADMIN4' || roleId == 'ADMIN5' || roleId == 'ADMIN6' || roleId == 'ADMIN7' || roleId == 'ADMIN8' || roleId == 'ADMIN9' || roleId == 'ADMIN10'">
                 <div class="px-4 py-5 bg-white sm:p-6">
                   <div class="grid grid-cols-6 gap-2">
                     <div class="col-span-6 sm:col-span-3">

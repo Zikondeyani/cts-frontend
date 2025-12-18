@@ -12,7 +12,7 @@
             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
               <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Loading Plan Attachments</h3>
               <div class="mt-2">
-                <input type="file" multiple @change="handleFileUpload" accept="application/pdf"
+                <input type="file" multiple @change="handleFileUpload" accept="application/pdf, image/*"
                   class="mt-1 p-2 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-400 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white" />
               </div>
               <div class="mt-4">
@@ -40,7 +40,7 @@
                         <div class="flex items-center">
                           <div>
                             <div class="text-sm font-medium text-gray-900">
-                              <a :href="file.url" target="_blank" class="text-blue-600 hover:underline">{{ file.name
+                              <a  target="_blank" class="text-blue-600 hover:underline">{{ file.name
                                 }}</a>
                             </div>
 

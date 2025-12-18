@@ -172,6 +172,11 @@ const optionGroups = ref([
         icon: TruckIcon,
         path: "/admin/transporter-management",
       },
+        {
+        label: "Loading Plans",
+        icon: ScaleIcon,
+        path: "/admin/loadingplans",
+      },
       {
         label: "Commodities",
         icon: MapIcon,
