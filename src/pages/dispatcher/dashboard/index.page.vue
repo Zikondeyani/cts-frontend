@@ -429,17 +429,23 @@ const getDispatchesCount = async () => {
     dispatchcount.value = result.count;
   });
 };
+
 const getLoadingPlans = async () => {
   loadingPlanStore.get().then((result) => {
     loadingplans.length = 0;
     loadingplans.push(
       ...result.filter(
-        (item) => !item.IsArchived && item.IsApproved && !item.isClosed
+        (item) =>
+          !item.IsArchived &&
+          item.IsApproved &&
+          item.activity?.IsClosed === false // 👈 only open activities
       )
     );
     newLoadingPlanCount.value = loadingplans.length;
   });
 };
+
+
 const pendingplans = ref(0);
 const totalBalance = ref(0);
 const totalStockPlanned = ref("");
@@ -455,7 +461,9 @@ const getLoadingPlansPending = async () => {
   });
 };
 const getdispatchSummary = async () => {
+      console.log("djjdkjd djdjjddj")
   dispatchStore.getdispatchSummary().then((result) => {
+
     totalDispatched.value = result.totalDispatched.toLocaleString() + " MT";
     totalReceived.value = result.totalReceived;
     receivedPercentageFormated.value =

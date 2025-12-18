@@ -1,6 +1,6 @@
 <template>
   <main class="mt-1 pb-8 font-bold">
-     <spinner-widget v-bind:open="isLoading" />
+    <spinner-widget v-bind:open="isLoading" />
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8">
       <div>
         <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
@@ -8,9 +8,7 @@
 
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2
-            class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate"
-          >
+          <h2 class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate">
             Dashboard
           </h2>
         </div>
@@ -28,42 +26,33 @@
               <div class="bg-white p-6 shadow-2xl">
                 <div class="sm:flex sm:items-center sm:justify-between">
                   <div class="sm:flex sm:space-x-5">
-                      <div class="bg-white p-1 rounded-2xl shadow-0">
-                        <p class="text-2xl font-semibold text-gray-900">
-                          {{ greeting }},
-                          {{ user.username.replace(/\./g, " ") }}
-                        </p>
-                        <p class="text-sm text-gray-500 mt-1">
-                          It's {{ today }}  • {{ currentTime }}
-                        </p>
-                      </div>
+                    <div class="bg-white p-1 rounded-2xl shadow-0">
+                      <p class="text-2xl font-semibold text-gray-900">
+                        {{ greeting }},
+                        {{ user.username.replace(/\./g, " ") }}
+                      </p>
+                      <p class="text-sm text-gray-500 mt-1">
+                        It's {{ today }} • {{ currentTime }}
+                      </p>
                     </div>
-                 
+                  </div>
+
                   <!--  <div class="mt-5 flex justify-center sm:mt-0">
                     <create-report-form v-on:create="createReport" />
                   </div> -->
                 </div>
               </div>
               <div class="bg-gray-100 p-5">
-                <div
-                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"
-                >
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                   <!-- Stats Cards -->
-                  <div
-                    v-for="stat in stats"
-                    :key="stat.label"
-                    @click="navigateTo(stat.href)"
-                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between"
-                  >
+                  <div v-for="stat in stats" :key="stat.label" @click="navigateTo(stat.href)"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between">
                     <div>
                       <div class="flex items-center justify-between">
                         <span class="text-2xl font-semibold text-gray-800">{{
                           stat.value
-                        }}</span>
-                        <component
-                          :is="stat.icon"
-                          :class="`h-6 w-6 text-${stat.iconColor}`"
-                        />
+                          }}</span>
+                        <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
                       </div>
                       <div class="text-sm font-medium text-gray-600 mt-2">
                         {{ stat.label }}
@@ -73,63 +62,34 @@
                       <div class="flex items-center justify-between">
                         <span :class="`text-${stat.textColor}`">{{
                           stat.percentageText
-                        }}</span>
-                        <component
-                          :is="
-                            stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon
-                          "
-                          class="h-5 w-5"
-                          :class="`text-${stat.textColor}`"
-                        />
+                          }}</span>
+                        <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon
+                          " class="h-5 w-5" :class="`text-${stat.textColor}`" />
                       </div>
                       <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                        <div
-                          v-if="stat.progress > 50"
-                          :class="`bg-gray-500 h-2 rounded-full`"
-                          :style="{ width: stat.progress + '%' }"
-                        ></div>
+                        <div v-if="stat.progress > 50" :class="`bg-gray-500 h-2 rounded-full`"
+                          :style="{ width: stat.progress + '%' }"></div>
 
-                        <div
-                          v-else
-                          :class="`bg-red-500 h-2 rounded-full`"
-                          :style="{ width: stat.progress + '%' }"
-                        ></div>
+                        <div v-else :class="`bg-red-500 h-2 rounded-full`" :style="{ width: stat.progress + '%' }">
+                        </div>
                       </div>
                     </div>
-                    <div
-                      class="relative flex justify-center mt-3"
-                      v-if="stat.moreInfo"
-                    >
-                      <span
-                        class="cursor-pointer text-blue-400 text-xs"
-                        @mouseover="showTooltip = true"
-                        @mouseleave="showTooltip = false"
-                      >
-                        <InformationCircleIcon
-                          class="h-6 w-6 text-blue-500 inline-block align-middle mr-1"
-                        />
+                    <div class="relative flex justify-center mt-3" v-if="stat.moreInfo">
+                      <span class="cursor-pointer text-blue-400 text-xs" @mouseover="showTooltip = true"
+                        @mouseleave="showTooltip = false">
+                        <InformationCircleIcon class="h-6 w-6 text-blue-500 inline-block align-middle mr-1" />
                         <span class="align-middle">More Info</span>
                       </span>
 
-                      <div
-                        v-if="showTooltip"
-                        class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10"
-                      >
-                        <div
-                          v-for="(summary, index) in loadingPlanSummary"
-                          :key="index"
-                          class="mb-4 last:mb-0"
-                        >
-                          <h5
-                            class="font-bold text-lg text-capitalize flex text-gray-600 items-center"
-                          >
+                      <div v-if="showTooltip"
+                        class="absolute bottom-full mb-2 w-64 p-4 bg-white border border-gray-200 rounded shadow-lg z-10">
+                        <div v-for="(summary, index) in loadingPlanSummary" :key="index" class="mb-4 last:mb-0">
+                          <h5 class="font-bold text-lg text-capitalize flex text-gray-600 items-center">
                             {{ summary.commodityName }}
                           </h5>
                           <div class="font-medium text-sm mt-2">
                             <div>
-                              <ClipboardListIcon
-                                class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top"
-                              />
+                              <ClipboardListIcon class="h-4 w-4 text-green-500 inline-block mr-1 align-text-top" />
                               <b>Total Stock Planned:</b> <br />
                               &nbsp; &nbsp; &nbsp; &nbsp;{{
                                 summary.totalStockPlanned.toLocaleString()
@@ -137,9 +97,7 @@
                               MT
                             </div>
                             <div>
-                              <ExclamationCircleIcon
-                                class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top"
-                              />
+                              <ExclamationCircleIcon class="h-4 w-4 text-red-500 inline-block mr-1 align-text-top" />
                               <b> Total Balance: </b><br />
                               &nbsp; &nbsp; &nbsp; &nbsp;{{
                                 summary.totalBalance.toLocaleString()
@@ -151,33 +109,30 @@
                       </div>
                     </div>
                   </div>
-                </div>
+
+
+                   </div>
+
+                     <h3 class="text-md font-semibold text-gray-700 mb-4 mt-2">
+                    Recent Dispatch Analytics
+                  </h3>
+
+                  <ChartComponent :dispatches="dispaches" />
               </div>
+              
+
+             
             </div>
           </section>
 
-          <section
-            aria-labelledby="quick-links-title"
-            class="shadow-3xl bg-white rounded-table"
-          >
-            <p
-              class="text-center text-gray-600 mt-4 mb-3 font-bold text-base sm:text-lg md:text-xl"
-            >
+          <section aria-labelledby="quick-links-title" class="shadow-3xl bg-white rounded-table">
+            <p class="text-center text-gray-600 mt-4 mb-3 font-bold text-base sm:text-lg md:text-xl">
               Recent Dispatches
             </p>
 
-            <div
-              class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto"
-            >
-              <vue-good-table
-                :columns="columns"
-                :rows="dispaches"
-                :search-options="{ enabled: true }"
-                :pagination-options="{ enabled: true }"
-                theme="polar-bear"
-                styleClass="vgt-table striped"
-                compactMode
-              >
+            <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto">
+              <vue-good-table :columns="columns" :rows="dispaches" :search-options="{ enabled: true }"
+                :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
               </vue-good-table>
             </div>
           </section>
@@ -191,7 +146,7 @@
 import { inject, ref, watch, reactive, onMounted, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { useSessionStore } from "../../../stores/session.store";
-
+import ChartComponent from "./dashboardcharts.vue"
 import timeGreetingMixin from "../../../services/utils/timeGreetingMixin";
 
 const { currentTime, greeting, today, updateTime } = timeGreetingMixin.setup();
@@ -388,7 +343,7 @@ const dispatchcount = ref(0);
 //MOUNTEDgetCatalogue
 onMounted(() => {
 
-  
+
   updateTime();
   setInterval(updateTime, 1000);
 
@@ -463,8 +418,9 @@ const getDispatches = async () => {
       // Clear the existing dispatches and push the sorted results
       dispaches.length = 0;
       let reversedData = sortedDispatches.reverse();
-      dispaches.push(...reversedData);
+      dispaches.push(...reversedData.filter(item => !item?.loadingPlan?.activity?.IsClosed));
 
+     
     })
     .finally(() => {
       isLoading.value = false;
@@ -655,7 +611,8 @@ const dispatchstatus = ref(0);
 .fade-enter,
 .fade-leave-to
 
-/* .fade-leave-active in <2.1.8 */ {
+/* .fade-leave-active in <2.1.8 */
+  {
   opacity: 0;
 }
 </style>

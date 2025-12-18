@@ -262,7 +262,7 @@ const currentPage = ref(1);
 const pageSize = ref(5);
 const selectedDistrict = ref("");
 const selectedCommodity = ref("");
-const selectedActivity = ref("");
+const selectedActivity = ref("LSR 2025 - 26");
 
 const selectedHandleBy = ref("");
 

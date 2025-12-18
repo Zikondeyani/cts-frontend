@@ -16,11 +16,9 @@
         </div>
 
         <!-- Export Data Button -->
-        <button
-          type="button"
+        <button type="button"
           class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-          @click="generateExcel()"
-        >
+          @click="generateExcel()">
           <i class="fas fa-file-export mr-2"></i>
           <!-- Icon (Font Awesome used as an example) -->
           Export Data
@@ -32,72 +30,45 @@
       </div>
       <!-- table  -->
 
-      <section
-        aria-labelledby="quick-links-title"
-        class="bg-transparent rounded-table"
-      >
-        <div
-          class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
-        >
+      <section aria-labelledby="quick-links-title" class="bg-transparent rounded-table">
+        <div class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
           <div class="overflow-x-auto">
-            <vue-good-table
-              :columns="columns"
-              :rows="loadingplans"
-              :search-options="{ enabled: true }"
-              style="font-weight: bold; color: #096eb4"
-              :pagination-options="{ enabled: true }"
-              theme="polar-bear"
-              styleClass="vgt-table striped"
-              compactMode
-            >
+            <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
+              style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
+              styleClass="vgt-table striped" compactMode>
               <template #table-actions> </template>
 
               <template #table-row="props">
                 <div v-if="props.column.label === 'Status'">
-                  <span
-                    v-if="props.row.IsApproved"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
-                  >
+                  <span v-if="props.row.IsApproved"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                     Approved
                   </span>
-                  <span
-                    v-else-if="props.row.IsRejected"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
-                  >
+                  <span v-else-if="props.row.IsRejected"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                     Rejected
                   </span>
-                  <span
-                    v-else
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800"
-                  >
+                  <span v-else
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
                     Not Approved
                   </span>
                 </div>
 
-                <div
-                  v-if="props.column.label == 'Options'"
-                  class="flex flex-col sm:flex-row sm:space-x-2"
-                >
-                  <button
-                    @click="openEditDialog(props.row)"
-                    class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0"
-                  >
+                <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
+                  <button @click="openEditDialog(props.row)"
+                    class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
                     Edit
                   </button>
 
-                  <button
-                    @click="openAttachmentDialog(props.row)"
-                    class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0"
-                  >
+                  <button @click="openAttachmentDialog(props.row)"
+                    class="text-blue-500 hover:text-blue-500 transition duration-300 mb-2 sm:mb-0">
                     <PaperclipIcon class="h-5 w-5 inline-block mr-1" />
                     Attachments
                   </button>
 
-                  <button
-                    @click="deleteItem(props.row.id)"
-                    class="text-red-500 hover:text-red-700 transition duration-300"
-                  >
+                  <button @click="deleteItem(props.row.id)"
+                    class="text-red-500 hover:text-red-700 transition duration-300">
                     <TrashIcon class="h-5 w-5 inline-block mr-1" />
                     Delete
                   </button>
@@ -107,26 +78,14 @@
           </div>
         </div>
         <!-- Edit Loading Plan Dialog -->
-        <EditLoadingPlanDialog
-          :isOpen="isEditDialogOpen"
-          :loadingPlan="selectedLoadingPlan"
-          @close="closeEditDialog"
-          v-on:update="reloadPage"
-        />
+        <EditLoadingPlanDialog :isOpen="isEditDialogOpen" :loadingPlan="selectedLoadingPlan" @close="closeEditDialog"
+          v-on:update="reloadPage" />
 
-        <DispatchLoadingPlanDialog
-          :isOpen="isDispatchDialogOpen"
-          :loadingPlan="selectedLoadingPlan"
-          @close="closeDispatchDialog"
-          v-on:update="reloadPage"
-        />
+        <DispatchLoadingPlanDialog :isOpen="isDispatchDialogOpen" :loadingPlan="selectedLoadingPlan"
+          @close="closeDispatchDialog" v-on:update="reloadPage" />
 
-        <AttachDocumentsDialog
-          :isOpen="isAttachmentDialogOpen"
-          :loadingPlan="selectedLoadingPlan"
-          @close="closeAttachmentForm"
-          @submit="submitAttachments"
-        />
+        <AttachDocumentsDialog :isOpen="isAttachmentDialogOpen" :loadingPlan="selectedLoadingPlan"
+          @close="closeAttachmentForm" @submit="submitAttachments" />
       </section>
     </div>
   </main>
@@ -289,8 +248,7 @@ const columns = ref([
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity.toFixed(
         2
       )} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${
-        row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"
       }</span>`,
     sortable: true,
     firstSortType: "asc",

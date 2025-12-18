@@ -97,7 +97,7 @@
               </div>
 
               <!-- Add Item Button -->
-              <button type="button" @click="addNewItem" class="mt-4 inline-flex items-center px-4 py-2 text-white bg-gray-600 rounded-md hover:bg-green-700">
+              <button type="button" @click="addNewItem" class="mt-4 inline-flex items-center px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-green-700">
                 + Add Relief Item
               </button>
               

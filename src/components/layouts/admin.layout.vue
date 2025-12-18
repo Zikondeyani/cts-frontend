@@ -86,15 +86,13 @@
             class="relative block lg:inline-block mt-2 lg:mt-0"
           >
             <button
-               @click="isDropdownOpen = !isDropdownOpen"
-   
+              @click="isDropdownOpen = !isDropdownOpen"
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md"
             >
               More...
             </button>
             <div
               v-if="isDropdownOpen"
-           
               class="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg"
             >
               <router-link
@@ -515,10 +513,10 @@ function navigation() {
         currentRouteBase.startsWith("/admin/receipts")) ||
       (navItem.name === "System" &&
         (currentRouteBase.startsWith("/admin/userroles") ||
-        currentRouteBase.startsWith("/admin/system-documents") ||
+          currentRouteBase.startsWith("/admin/system-documents") ||
           currentRouteBase.startsWith("/admin/mailinggroups") ||
           currentRouteBase.startsWith("/admin/reminders") ||
-          currentRouteBase.startsWith("/admin/about") ||   
+          currentRouteBase.startsWith("/admin/about") ||
           currentRouteBase.startsWith("/admin/change-password") ||
           currentRouteBase.startsWith("/admin/receipts/leanseason") ||
           currentRouteBase.startsWith("/admin/usage-stats") ||
@@ -528,9 +526,11 @@ function navigation() {
           currentRouteBase.startsWith("/admin/fdps") ||
           currentRouteBase.startsWith("/admin/feedback") ||
           currentRouteBase.startsWith("/admin/user-dispatches") ||
+          currentRouteBase.startsWith("/admin/loadingplans") ||
           currentRouteBase.startsWith("/admin/districts") ||
           currentRouteBase.startsWith("/admin/organisations") ||
           currentRouteBase.startsWith("/admin/commodity-types") ||
+          currentRouteBase.startsWith("/admin/stock-management/ByWarehouse/") ||
           currentRouteBase.startsWith("/admin/commodity-management")));
     navItem.current = isMatched;
   });

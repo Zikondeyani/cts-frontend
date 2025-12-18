@@ -26,6 +26,7 @@
       <div
         class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
       >
+  
         <vue-good-table
           :columns="columns"
           :rows="expected"
@@ -94,7 +95,7 @@ const columns = ref([
   },
 
   {
-    label: "Final Destination Point",
+    label: "FDP",
     field: (row) => row.FinalDestinationPoint,
     sortable: true,
     firstSortType: "asc",
@@ -102,7 +103,7 @@ const columns = ref([
   },
 
   {
-    label: "Delivery Note",
+    label: "DNote",
     field: (row) => row.DNote,
     sortable: true,
     firstSortType: "asc",
@@ -110,7 +111,7 @@ const columns = ref([
   },
 
   {
-    label: "Dispatched By",
+    label: "Dispatcher",
     field: (row) => row.Dispatcher?.username.replace(/\./g, " "),
     sortable: true,
     firstSortType: "asc",
@@ -134,7 +135,7 @@ const columns = ref([
   },
 
   {
-    label: "Status",
+    label: "Receipt Status",
     field: (row) => {
       const today = moment().startOf("day"); // Start of today
       const createdOn = moment(row.CreatedOn).startOf("day"); // Start of the created date
@@ -208,19 +209,21 @@ const getExpected = async () => {
   expectedStore
     .get()
     .then((result) => {
-      // for (let i = 0; i < 100; i++) {
-      //   users.push(...result);
-      // }
-      expected.length = 0; //empty array
-      let sorteddata = result.reverse();
+      expected.length = 0; // empty array
+      const sortedData = result.reverse();
 
-      expected.push(...sorteddata.filter(item => item.IsArchived == false));
+      // Filter for not archived and activity.Name === "LSR 2025 - 26"
+      expected.push(
+        ...sortedData.filter(
+          (item) => item.IsArchived === false && item.loadingPlan?.activity?.Name === 'LSR 2025 - 26'
+        )
+      );
     })
-
     .finally(() => {
       isLoading.value = false;
     });
 };
+
 </script>
 
 <style>

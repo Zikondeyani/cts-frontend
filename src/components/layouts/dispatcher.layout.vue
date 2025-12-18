@@ -89,7 +89,7 @@
 
           <div
             class="relative"
-            v-if="user.district == null || user.district == 'National'"
+            v-if="user.district == null || user?.district == 'National'"
           >
             <button
               @click="isDropdownOpen = !isDropdownOpen"
@@ -543,7 +543,7 @@ function navigation() {
 
   // Check if user.district is National or null
   const isNationalOrNull =
-    user.value.district === "National" || user.value.district === null;
+    user?.value?.district === "National" || user?.value?.district === null;
 
   // Remove "Reports", "Dispatches", and "Receipts" if user.district is not National or null
   if (!isNationalOrNull) {
@@ -684,23 +684,28 @@ const getLoadingPlans = async () => {
     loadingplans.length = 0;
 
     // Check if the user's district is "National" or null
-    if (user.value.district === "National" || user.value.district === null) {
-      // Fetch all loading plans where they are not archived, approved, and have a balance greater than 0
+    if (user?.value?.district === "National" || user?.value?.district === null) {
+      // National/null: not archived, approved, balance > 0, and activity not closed
       loadingplans.push(
-        ...result.filter(
-          (item) => !item.IsArchived && item.IsApproved && item.Balance > 0
-        )
-      );
-    } else {
-      // Filter loading plans based on the user's district
-      loadingplans.push(
-        ...result.filter(
+        ...result?.filter(
           (item) =>
             !item.IsArchived &&
             item.IsApproved &&
             item.Balance > 0 &&
-            item.district.Name === user.value.district &&
-            item.IsDivertedLoad == true
+            item.activity?.IsClosed === false // 👈 only open activities
+        )
+      );
+    } else {
+      // Specific district: same as above + district match + diverted load
+      loadingplans.push(
+        ...result?.filter(
+          (item) =>
+            !item.IsArchived &&
+            item.IsApproved &&
+            item.Balance > 0 &&
+            item.activity?.IsClosed === false && // 👈 only open activities
+            item.district?.Name === user.value.district &&
+            item.IsDivertedLoad === true
         )
       );
     }
@@ -711,6 +716,7 @@ const getLoadingPlans = async () => {
     console.error("Error fetching loading plans:", error);
   }
 };
+
 
 const startSignOutTimer = () => {
   clearSignOutTimer();

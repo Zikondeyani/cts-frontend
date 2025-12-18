@@ -256,7 +256,10 @@ watch(() => props.loadingPlan, (newVal) => {
 const updateLoadingPlan = async () => {
   try {
     // Ensure update reason is provided
-    if (!loadingPlan.value.UpdatedReason || loadingPlan.value.UpdatedReason.trim() === '') {
+    if (
+      !loadingPlan.value.UpdatedReason ||
+      loadingPlan.value.UpdatedReason.trim() === ''
+    ) {
       await Swal.fire({
         title: "Update Reason Required",
         text: "Please provide a reason for this update.",
@@ -270,24 +273,54 @@ const updateLoadingPlan = async () => {
     loadingPlan.value.UpdatedOn = new Date();
 
     const {
-      commodity, district, transporter, warehouse, activity, IsRejected, RejectionComment,
-      user, originalIndex, vgt_id, IsActive, IsArchived, NoBags,  dispatches, moveFromWarehouseId, moveToWarehouseId, warehouseFrom,warehouseTo,
-      ApprovedBy, IsApproved, vgtSelected,...updatedLoadingPlan
+      commodity,
+      district,
+      transporter,
+      warehouse,
+      activity,
+      IsRejected,
+      RejectionComment,
+      user,
+      originalIndex,
+      vgt_id,
+      IsActive,
+      IsArchived,
+      NoBags,
+      dispatches,
+      moveFromWarehouseId,
+      moveToWarehouseId,
+      warehouseFrom,
+      warehouseTo,
+      ApprovedBy,
+      IsApproved,
+      vgtSelected,
+      ...updatedLoadingPlan
     } = loadingPlan.value;
 
-    updatedLoadingPlan.ATCNumber = updatedLoadingPlan.ATCNumber?.toString() || '';
+    // ✅ Ensure empty-string defaults (no undefined / no nulls)
+    updatedLoadingPlan.LoanTimeline = updatedLoadingPlan.LoanTimeline ?? '';
+    updatedLoadingPlan.LoanDescription = updatedLoadingPlan.LoanDescription ?? '';
+    updatedLoadingPlan.LoanTo = updatedLoadingPlan.LoanTo ?? '';
+    updatedLoadingPlan.LoanStart = updatedLoadingPlan.LoanStart ?? '';
+
+    updatedLoadingPlan.ATCNumber =
+      updatedLoadingPlan.ATCNumber?.toString() || '';
 
     // Calculate the new balance
-    updatedLoadingPlan.Balance = (updatedLoadingPlan.Quantity - originalQuantity.value) + loadingPlan.value.Balance;
+    updatedLoadingPlan.Balance =
+      (updatedLoadingPlan.Quantity - originalQuantity.value) +
+      loadingPlan.value.Balance;
 
-    // Check for negative balance
+    // Prevent negative balance
     if (updatedLoadingPlan.Balance < 0) {
-      updatedLoadingPlan.Balance = 0; // Set balance to 0 if negative
-
+      updatedLoadingPlan.Balance = 0;
     }
 
     // Check for missing information
-    if (updatedLoadingPlan.districtId == null || updatedLoadingPlan.activityId == null) {
+    if (
+      updatedLoadingPlan.districtId == null ||
+      updatedLoadingPlan.activityId == null
+    ) {
       await Swal.fire({
         title: "Missing Information",
         text: "Please select both a district and an activity before updating.",
@@ -298,12 +331,18 @@ const updateLoadingPlan = async () => {
       return;
     }
 
-    // Check online status and update data
-    const isOnline = await checkOnlineStatus(); // Check online status
+    // Check online status
+    const isOnline = await checkOnlineStatus();
 
     if (!isOnline) {
-      await updateDataOffline('loading-plans', updatedLoadingPlan.key, updatedLoadingPlan); // Update locally
+      await updateDataOffline(
+        'loading-plans',
+        updatedLoadingPlan.key,
+        updatedLoadingPlan
+      );
+
       emit('update');
+
       Swal.fire({
         title: "Loading Plan Updated (Offline)",
         html: `<p>Your loading plan has been updated locally (offline mode).</p>`,
@@ -312,7 +351,8 @@ const updateLoadingPlan = async () => {
         confirmButtonText: "View All Loading Plans",
       });
     } else {
-      await loadingPlanStore.update(updatedLoadingPlan); // Update via API or backend service
+      await loadingPlanStore.update(updatedLoadingPlan);
+
       emit('update');
 
       Swal.fire({
@@ -327,6 +367,7 @@ const updateLoadingPlan = async () => {
     emit('close');
   } catch (error) {
     console.error('Failed to update loading plan:', error);
+
     await Swal.fire({
       title: "Error",
       text: "Failed to update loading plan. Please try again later.",

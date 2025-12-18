@@ -10,7 +10,7 @@
         <h3 class="text-xl font-semibold mb-2 flex items-center">
           Movement Summary
       
-          >
+          
         </h3>
         <canvas ref="summaryChartRef" class="max-w-w- h-64 md:h-72"></canvas>
       </div>

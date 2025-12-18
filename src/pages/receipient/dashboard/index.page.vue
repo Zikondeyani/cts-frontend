@@ -910,6 +910,7 @@ const getEMRReceipts = async () => {
 
 const totalReceipts = computed(() => {
   const emrCount = Array.isArray(emrReceiptCount) ? emrReceiptCount.length : 0;
+  
   const leanCount = Array.isArray(leanReceiptCount)
     ? leanReceiptCount.length
     : 0;

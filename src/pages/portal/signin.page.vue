@@ -3,69 +3,36 @@
     <spinner-widget :open="isLoading" />
 
     <!-- Left Section (Hidden on mobile) -->
-    <div
-      class="login-background hidden lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-2/3"
-      style="background-color: #096eb4"
-    >
+    <div class="login-background hidden lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-2/3"
+      style="background-color: #096eb4">
       <div class="flex justify-center items-center mb-4">
-        <img
-          class="h-24 mr-4"
-          src="../../assets/images/images.png"
-          alt="MW-Govt"
-        />
-        <img
-          class="h-24"
-          src="../../assets/images/wfp-logo-emblem-white.png"
-          alt="WFP"
-        />
+        <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
+        <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
       </div>
       <h2 class="mt-6 text-3xl font-extrabold text-white">
         DoDMA Commodity Tracking System
         <span class="text-sm font-normal">(v3.0)</span>
       </h2>
-      <h2
-        class="mt-6 text-3xl font-extrabold text-white"
-        v-if="system.mode == 'TRAINING'"
-      >
+      <h2 class="mt-6 text-3xl font-extrabold text-white" v-if="system.mode == 'TRAINING'">
         <span class="text-sm font-normal">({{ system.mode }})</span>
       </h2>
     </div>
 
     <!-- Right Section (Sign In Form) -->
 
-    <div
-      class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 lg:w-2/5 right-panel"
-    >
+    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24 lg:w-2/5 right-panel">
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <div
-            style="background-color: #096eb4"
-            class="flex justify-center items-center mb-4 lg:hidden rounded-md p-4"
-          >
-            <img
-              class="h-24 mr-4"
-              src="../../assets/images/images.png"
-              alt="MW-Govt"
-            />
-            <img
-              class="h-24"
-              src="../../assets/images/wfp-logo-emblem-white.png"
-              alt="WFP"
-            />
+          <div style="background-color: #096eb4" class="flex justify-center items-center mb-4 lg:hidden rounded-md p-4">
+            <img class="h-24 mr-4" src="../../assets/images/images.png" alt="MW-Govt" />
+            <img class="h-24" src="../../assets/images/wfp-logo-emblem-white.png" alt="WFP" />
           </div>
-          <h2
-            class="mt-6 text-md font-extrabold text-gray-700 text-center lg:hidden"
-          >
+          <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center lg:hidden">
             DoDMA Commodity Tracking System
             <span class="text-sm font-normal">(v3.0)</span>
           </h2>
           <div class="flex justify-center mt-8">
-            <img
-              class="img-fluid"
-              style="height: 100px"
-              src="../../assets/cts.png"
-              alt="Image 1"
-            />
+            <img class="img-fluid" style="height: 100px" src="../../assets/cts.png" alt="Image 1" />
           </div>
 
           <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
@@ -82,48 +49,27 @@
             </div>
           </div>
           <div class="mt-6">
-            <form
-              @submit="onSubmit"
-              :validation-schema="schema"
-              class="space-y-6"
-            >
+            <form @submit="onSubmit" :validation-schema="schema" class="space-y-6">
               <div>
-                <label
-                  for="email"
-                  class="block text-sm font-medium text-gray-700"
-                >
+                <label for="email" class="block text-sm font-medium text-gray-700">
                   Email address
                 </label>
                 <div class="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    v-model="email"
-                    autocomplete="email"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm"
-                  />
+                  <input id="email" name="email" type="email" v-model="email" autocomplete="email"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
                   <p class="text-red-500 text-xs italic pt-1">
                     {{ emailError }}
                   </p>
                 </div>
               </div>
               <div class="space-y-1">
-                <label
-                  for="password"
-                  class="block text-sm font-medium text-gray-700"
-                >
+                <label for="password" class="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <div class="mt-1">
-                  <input
-                    id="password"
-                    name="password"
-                    :type="isPwd ? 'text' : 'password'"
-                    autocomplete="current-password"
-                    v-model="password"
-                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm"
-                  />
+                  <input id="password" name="password" :type="isPwd ? 'text' : 'password'"
+                    autocomplete="current-password" v-model="password"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-400 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-400 focus:border-blue-400 sm:text-sm" />
                   <p class="text-red-500 text-xs italic pt-1">
                     {{ passwordError }}
                   </p>
@@ -131,38 +77,23 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <input
-                    id="hide-password"
-                    name="hide-password"
-                    v-model="isPwd"
-                    type="checkbox"
-                    style="color: #096eb4"
-                    class="h-4 w-4 focus:ring-blue-400 border-gray-400 rounded"
-                  />
-                  <label
-                    for="show-password"
-                    class="ml-2 block text-sm text-gray-900"
-                  >
+                  <input id="hide-password" name="hide-password" v-model="isPwd" type="checkbox" style="color: #096eb4"
+                    class="h-4 w-4 focus:ring-blue-400 border-gray-400 rounded" />
+                  <label for="show-password" class="ml-2 block text-sm text-gray-900">
                     Show password
                   </label>
                 </div>
                 <div class="text-sm">
                   <router-link :to="{ name: 'portal-forgot-password' }">
-                    <a
-                      style="color: #096eb4"
-                      class="font-medium hover:text-blue-400"
-                    >
+                    <a style="color: #096eb4" class="font-medium hover:text-blue-400">
                       Forgot your password?
                     </a>
                   </router-link>
                 </div>
               </div>
               <div>
-                <button
-                  type="submit"
-                  style="background-color: #096eb4"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
-                >
+                <button type="submit" style="background-color: #096eb4"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
                   Sign in
                 </button>
               </div>
@@ -398,7 +329,11 @@ const onSubmit = useSubmitForm((values, actions) => {
         $router.push({ path: "/commissioner" });
       } else if (result.role === "warehouse") {
         $router.push({ path: "/warehouse" });
-      } else if (result.role === "fdpmanager") {
+      }
+      else if (result.role === "auditor") {
+        $router.push({ path: "/auditor" });
+      }
+      else if (result.role === "fdpmanager") {
         $router.push({ path: "/fdpmanager" });
       } else {
         $router.push({ path: "/" + result.role });
@@ -470,8 +405,7 @@ const checkSession = async () => {
 
 <style scoped>
 .login-background {
-  background: url("../../assets/background.jpeg") center center / cover
-    no-repeat;
+  background: url("../../assets/background.jpeg") center center / cover no-repeat;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -480,7 +414,8 @@ const checkSession = async () => {
   padding: 20px;
   height: 100vh;
   opacity: 0;
-  transform: scale(0.95); /* Slightly scaled down initially */
+  transform: scale(0.95);
+  /* Slightly scaled down initially */
   animation: fadeInScale 1.5s ease-in-out forwards;
 }
 
@@ -488,11 +423,14 @@ const checkSession = async () => {
 @keyframes fadeInScale {
   0% {
     opacity: 0;
-    transform: scale(0.95); /* Initial smaller size */
+    transform: scale(0.95);
+    /* Initial smaller size */
   }
+
   100% {
     opacity: 1;
-    transform: scale(1); /* Full size */
+    transform: scale(1);
+    /* Full size */
   }
 }
 </style>

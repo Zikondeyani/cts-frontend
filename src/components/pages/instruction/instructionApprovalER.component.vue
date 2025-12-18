@@ -97,7 +97,7 @@
 
                     <p class="mb-4">
                       <strong>Quantity:</strong>
-                      {{ emergencyResponseInstructions.totalQuantity }} MT
+                      {{ emergencyResponseInstructions.totalQuantity?.toFixed(2) }} MT
                     </p>
                     <p class="mb-4">
                       <strong>Warehouse (From):</strong>

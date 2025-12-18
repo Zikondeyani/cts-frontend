@@ -16,47 +16,25 @@
 
       <!-- Tabs -->
       <div class="tabs">
-        <button
-          @click="currentTab = 'leanSeason'"
-          class="rounded-md"
-          :class="{ active: currentTab === 'leanSeason' }"
-        >
+        <button @click="currentTab = 'leanSeason'" class="rounded-md" :class="{ active: currentTab === 'leanSeason' }">
           Lean Season & Emergency Assistance Instructions
-          <span
-            v-if="emergencyResponseInstructions.length > 0"
-            class="badge badge-red"
-            >{{ emergencyResponseInstructions.length }}</span
-          >
+          <span v-if="emergencyResponseInstructions.length > 0" class="badge badge-red">{{
+            emergencyResponseInstructions.length }}</span>
         </button>
-        <button
-          @click="currentTab = 'emergencyResponse'"
-          class="rounded-md"
-          :class="{ active: currentTab === 'emergencyResponse' }"
-        >
+        <button @click="currentTab = 'emergencyResponse'" class="rounded-md"
+          :class="{ active: currentTab === 'emergencyResponse' }">
           Emergency Response Instructions
-          <span
-            v-if="leanSeasonInstructions.length > 0"
-            class="badge badge-red"
-            >{{ leanSeasonInstructions.length }}</span
-          >
+          <span v-if="leanSeasonInstructions.length > 0" class="badge badge-red">{{ leanSeasonInstructions.length
+            }}</span>
         </button>
       </div>
 
       <!-- Content for Tabs -->
       <div v-if="currentTab === 'emergencyResponse'">
-        <div
-          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
-        >
-          <vue-good-table
-            :columns="columns"
-            :rows="leanSeasonInstructions"
-            :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4"
-            :pagination-options="{ enabled: true }"
-            theme="polar-bear"
-            styleClass="vgt-table striped"
-            compactMode
-          >
+        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+          <vue-good-table :columns="columns" :rows="leanSeasonInstructions" :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
+            styleClass="vgt-table striped" compactMode>
             <template #table-actions> </template>
 
             <template #table-row="props">
@@ -73,16 +51,12 @@
                     </span>
                   </span> -->
                   <span>
-                    <span
-                      v-if="props.row.IsApproved"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
-                    >
+                    <span v-if="props.row.IsApproved"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                       Approved
                     </span>
-                    <span
-                      v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
-                    >
+                    <span v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                       Pending
                     </span>
                   </span>
@@ -92,14 +66,12 @@
                 <div class="flex space-x-2">
                   <!-- Create Instruction Button -->
 
-                  <create-instruction-dispatch-form
-                    :row-id="props.row.id"
-                    v-on:create="updateInstruction"
-                    :instruction="props.row"
-                    :commodities="filteredCommodities(props.row.id)"
-                    :commodity="commodity"
-                    v-on:reject="rejectInstruction"
-                  />
+
+
+
+                  <create-instruction-dispatch-form :row-id="props.row.id" v-on:create="updateInstruction"
+                    :instruction="props.row" :commodities="filteredCommodities(props.row.id)" :commodity="commodity"
+                    v-on:reject="rejectInstruction" />
                 </div>
               </span>
             </template>
@@ -108,35 +80,22 @@
       </div>
 
       <div v-if="currentTab === 'leanSeason'">
-        <div
-          class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
-        >
-          <vue-good-table
-            :columns="columns2"
-            :rows="emergencyResponseInstructions"
-            :search-options="{ enabled: true }"
-            style="font-weight: bold; color: #096eb4"
-            :pagination-options="{ enabled: true }"
-            theme="polar-bear"
-            styleClass="vgt-table striped"
-            compactMode
-          >
+        <div class="align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
+          <vue-good-table :columns="columns2" :rows="emergencyResponseInstructions" :search-options="{ enabled: true }"
+            style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
+            styleClass="vgt-table striped" compactMode>
             <template #table-actions> </template>
 
             <template #table-row="props">
               <span v-if="props.column.label === 'Status'">
                 <div>
                   <span>
-                    <span
-                      v-if="props.row.isApproved"
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
-                    >
+                    <span v-if="props.row.isApproved"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                       Approved
                     </span>
-                    <span
-                      v-else
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
-                    >
+                    <span v-else
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                       Pending
                     </span>
                   </span>
@@ -144,18 +103,20 @@
               </span>
               <span v-if="props.column.label == 'Options'">
                 <div class="flex space-x-2">
-                  <!-- Create Instruction Button -->
 
-                  <create-approval-loadingplan
-                    :row-id="props.row.id"
-                    v-on:create="updateApproval"
-                    :emergencyResponseInstructions="props.row"
-                    :commodities="filteredCommodities(props.row.id)"
-                    :commodity="commodity"
-                    v-on:reject="rejectLoadingPlan"
-                  />
+
+                  <button type="button" @click="handleDownload(props.row.loadingPlans[0].id)"
+                    class="text-blue-600 hover:text-blue-900">
+                    Download Attachments
+                  </button>
+
+
+                  <create-approval-loadingplan :row-id="props.row.id" @create="updateApproval"
+                    :emergencyResponseInstructions="props.row" :commodities="filteredCommodities(props.row.id)"
+                    :commodity="commodity" @reject="rejectLoadingPlan" />
                 </div>
               </span>
+
             </template>
           </vue-good-table>
         </div>
@@ -183,6 +144,15 @@ import { usewarehousestore } from "../../../stores/warehouse.store";
 
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
+
+import { useFileStore } from "../../../stores/file.store";
+import * as FileSaver from "file-saver";
+const system = reactive({
+  api: process.env.VUE_APP_ROOT_API,
+});
+
+const fileStore = useFileStore();
+const files = ref([]);
 
 const $router = useRouter();
 const moment = inject("moment");
@@ -238,9 +208,8 @@ const columns = ref([
         ? `<span style="color: green;">To: ${districtName}</span>`
         : "";
 
-      return `${warehouseFormatted}${
-        showDistrict ? "<br/>" + districtFormatted : ""
-      }`;
+      return `${warehouseFormatted}${showDistrict ? "<br/>" + districtFormatted : ""
+        }`;
     },
     sortable: true,
     firstSortType: "asc",
@@ -278,12 +247,84 @@ const currentTab = ref("leanSeason");
 
 // Fetch instructions based on their type
 onMounted(() => {
+  getFiles();
   getInstructions();
   getInstructedCommodities();
   getCommodity();
   getLoadingPlans();
   getWarehouses();
 });
+
+
+const download = (dataUrl, ext, title) => {
+  if (ext == "vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+    FileSaver.saveAs(dataUrl, `${title}.xlsx`);
+  } else if (
+    ext == "vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    FileSaver.saveAs(dataUrl, `${title}.docx`);
+  } else {
+    FileSaver.saveAs(dataUrl, `${title}.${ext}`);
+  }
+};
+
+const downloadFromUrl = (url, ext, title) => {
+  fetch(url).then(function (t) {
+    return t.blob().then((b) => {
+      download(URL.createObjectURL(b), ext, title);
+    });
+  });
+};
+
+
+const handleDownload = async (id) => {
+  if (!id) return;
+
+  try {
+    const result = await fileStore.getByReference({
+      id,
+      type: "LP-DOCUMENT",
+    });
+
+    // ❌ No attachments found
+    if (!result || result.length === 0) {
+      Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: "info",
+        title: "No attachments available",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      return;
+    }
+
+    // ✅ Attachments exist
+    files.value = result;
+
+    downloadFromUrl(
+      system.api + "/files/download/" + files.value[0].url,
+      files.value[0].url.substring(files.value[0].url.indexOf(".") + 1),
+      files.value[0].name +
+      "-" +
+      moment(files.value[0].metadata.publicationDate).format("DD/MM/YYYY")
+    );
+  } catch (error) {
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "error",
+      title: "Failed to retrieve attachments",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+
+    console.error("Failed to get files:", error);
+  }
+};
+
+
 
 const getWarehouses = async () => {
   isLoading.value = true;
@@ -317,6 +358,8 @@ const getInstructions = async () => {
     .get()
     .then((result) => {
       // Clear the leanSeasonInstructions array
+
+
       leanSeasonInstructions.length = 0;
 
       // Filter instructions where IsApproved and IsRejected are false,
@@ -344,6 +387,17 @@ const getInstructions = async () => {
     });
 };
 
+
+const getFiles = async () => {
+  fileStore.get()
+    .then((result) => {
+      files.value = result;
+    })
+    .catch((error) => {
+      console.error("Failed to get files:", error);
+    });
+};
+
 const getLoadingPlans = async () => {
   isLoading.value = true;
   loadingplansStore
@@ -357,6 +411,7 @@ const getLoadingPlans = async () => {
       emergencyResponseInstructions.push(
         ...result.filter((item) => !item.isApproved && !item.isRejected)
       );
+
     })
     .catch((error) => {
       Swal.fire({
@@ -511,7 +566,6 @@ const rejectLoadingPlan = async (newValues) => {
 
     // Sequentially reject each loading plan
     for (const loadingPlan of loadingPlans) {
-      console.log("Rejecting loading plan", loadingPlan);
 
       // Create an updated object that includes the loading plan ID and new values for rejection
       const updatedLoadingPlan = { id: loadingPlan.id, ...newValues };
@@ -577,9 +631,8 @@ const columns2 = ref([
       ).toLocaleDateString()}</span>`;
 
       // Only include district if it passed the check
-      return `${atcNumber}${
-        district ? "<br/>" + district : ""
-      }<br/>${plannedBy}<br/>${date}`;
+      return `${atcNumber}${district ? "<br/>" + district : ""
+        }<br/>${plannedBy}<br/>${date}`;
     },
     sortable: true,
     firstSortType: "asc",
