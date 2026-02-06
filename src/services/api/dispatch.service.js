@@ -130,7 +130,6 @@ export default class DispatcherService {
 
   getExtendedDispatchSummaryWFP(dateFilter) {
     const endpoint = `${resource}/filtered-summary`;
-
     return axios
       .get(endpoint, {
         params: dateFilter ? { dateFilter } : {}, // Adds the query parameter if provided

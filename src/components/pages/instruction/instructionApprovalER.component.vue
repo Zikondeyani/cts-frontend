@@ -139,12 +139,12 @@
                         'Partner Commodity Loan'
                       "
                     >
-                      <strong>Transporter:</strong>
+                      <strong>Transporter(s):</strong>
                       {{
-                        emergencyResponseInstructions.transporterName ==
+                        emergencyResponseInstructions.transporterNames?.join() ==
                         "Unknown Transporter"
                           ? "N/A"
-                          : emergencyResponseInstructions.transporterName
+                          : emergencyResponseInstructions.transporterNames?.join()
                       }}
                     </p>
                     <p

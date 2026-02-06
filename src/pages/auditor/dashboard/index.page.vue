@@ -39,7 +39,7 @@
               Lean Season Response Dashboard
             </button>
 
-          
+
           </div>
         </div>
 
@@ -80,7 +80,7 @@
                         Export to Excel
                       </button>
 
-                      <button @click="takeScreenshot" v-if="
+                      <!-- <button @click="takeScreenshot" v-if="
                         currentView !== 'dashboard' &&
                         currentView !== 'Donations' &&
                         currentView !== 'Loans'
@@ -91,7 +91,7 @@
                         :class="{ 'active-tab': false }">
                         <CameraIcon class="h-5 w-5 mr-2" />
                         Take Screenshot
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </div>
@@ -545,43 +545,50 @@
               </div>
               <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
                 <div class="bg-gray-100 p-5">
-                  <div class="tabs">
-                    <button @click="currentTab = 'all'" :class="{
-                      'tab-button text-white': currentTab === 'all',
-                      'bg-white text-blue-500 border border-blue-500':
-                        activeTab !== 'all',
-                    }"
-                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
-                      All Reports
+
+                  <div class="flex justify-between items-center mb-2">
+
+                    <!-- Tabs -->
+                    <div class="tabs flex">
+
+                      <button @click="currentTab = 'all'" :class="{
+                        'tab-button text-white': currentTab === 'all',
+                        'bg-white text-blue-500 border border-blue-500': currentTab !== 'all'
+                      }" class="relative flex items-center py-2 px-4 mr-1 rounded-t-lg font-semibold">
+                        All Reports
+                      </button>
+
+                      <button @click="currentTab = 'DoDMA'" :class="{
+                        'tab-button text-white': currentTab === 'DoDMA',
+                        'bg-white text-blue-500 border border-blue-500': currentTab !== 'DoDMA'
+                      }" class="relative flex items-center py-2 px-4 mr-1 rounded-t-lg font-semibold">
+                        DoDMA Reports
+                      </button>
+
+                      <button @click="currentTab = 'WFP'" :class="{
+                        'tab-button text-white': currentTab === 'WFP',
+                        'bg-white text-blue-500 border border-blue-500': currentTab !== 'WFP'
+                      }" class="relative flex items-center py-2 px-4 mr-1 rounded-t-lg font-semibold">
+                        WFP Reports
+                      </button>
+
+                      <button @click="currentTab = 'Allo'" :class="{
+                        'tab-button text-white': currentTab === 'Allo',
+                        'bg-white text-blue-500 border border-blue-500': currentTab !== 'Allo'
+                      }" class="relative flex items-center py-2 px-4 mr-1 rounded-t-lg font-semibold">
+                        Allocation Trends
+                      </button>
+
+                    </div>
+
+                    <!-- Dispatch Reminder Button (outside tabs) -->
+                    <button @click="sendDispatchReminder"
+                      class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold shadow">
+                      🔔 Send Dispatch Reminders
                     </button>
 
-                    <button @click="currentTab = 'DoDMA'" :class="{
-                      'tab-button text-white': currentTab === 'DoDMA',
-                      'bg-white text-blue-500 border border-blue-500':
-                        activeTab !== 'DoDMA',
-                    }"
-                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
-                      DoDMA Reports
-                    </button>
-
-                    <button @click="currentTab = 'WFP'" :class="{
-                      'tab-button text-white': currentTab === 'WFP',
-                      'bg-white text-blue-500 border border-blue-500':
-                        activeTab !== 'WFP',
-                    }"
-                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
-                      WFP Reports
-                    </button>
-
-                    <button @click="currentTab = 'Allo'" :class="{
-                      'tab-button text-white': currentTab === 'Allo',
-                      'bg-white text-blue-500 border border-blue-500':
-                        activeTab !== 'Allo',
-                    }"
-                      class="relative flex items-center py-2 px-4 mr-1 text-center rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
-                      Allocation Trends
-                    </button>
                   </div>
+
 
                   <div v-show="currentTab === 'Allo'">
                     <allocation-trends :allocationData="filteredLeanCommodityDispatchData3" :activities="activities1"
@@ -983,6 +990,43 @@ const commodityTypes = reactive([]);
 const warehouses = reactive([]);
 
 const commodityTable = ref(null);
+
+
+const sendDispatchReminder = async () => {
+  try {
+    Swal.fire({
+      title: 'Sending dispatch reminders...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    // Call your store action and wait for the result
+    const response = await loadingPlanStore.sendBacklogMail();
+
+    Swal.close();
+
+    if (response?.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Dispatch reminders sent!',
+        text: response.message || 'All dispatchers have been notified of the pending backlog.',
+      });
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'No reminders sent',
+        text: response?.message || 'There were no active dispatchers to notify.',
+      });
+    }
+  } catch (error) {
+    Swal.close();
+    Swal.fire({
+      icon: 'error',
+      title: 'Failed to send reminders',
+      text: error.message || 'Something went wrong while sending dispatch reminders.',
+    });
+  }
+};
 
 const takeScreenshot = async () => {
   screenshotMode.value = true;

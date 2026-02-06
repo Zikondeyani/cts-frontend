@@ -196,6 +196,7 @@ const exportToExcel = () => {
     item.dispatches.flatMap((dispatch) =>
       (dispatch?.receiptStats?.physicalDeliveryNotes || []).map((note) => ({
         "ATC Number": item.loadingPlan?.ATCNumber || "N/A",
+        
         District: item.district || "N/A",
         "Quantity (Mt)": parseFloat(dispatch?.totalDispatched || 0).toFixed(2),
         "Delivery Note": note.physicalDeliveryNote || "N/A",
@@ -208,6 +209,7 @@ const exportToExcel = () => {
     )
   );
 
+ 
   // Additional datasets for other sheets (Receipt by FDP, Dispatched per Transporter, etc.)
   const receiptByFDPData = filteredData.value.flatMap((item) =>
     item.dispatches.flatMap((dispatch) =>
@@ -245,6 +247,8 @@ const exportToExcel = () => {
     }))
     .filter((item) => parseFloat(item["Tonnage Drawn (Mt)"]) > 0);
 
+     console.log(props.dispatchesdataSummary, "5667776ACB CBCBCB")
+
   const dispatchesByDateData = props.dispatchesdataSummary.map((item) => ({
     Date: moment(item.dispatchdate).format("YYYY-MM-DD") || "N/A",
     District: item.district || "N/A",
@@ -256,6 +260,7 @@ const exportToExcel = () => {
     "Handled By": item.handledby,
   }));
 
+  
   // Create a new workbook and add sheets
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(

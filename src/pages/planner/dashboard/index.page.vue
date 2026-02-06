@@ -79,7 +79,7 @@
                         Export to Excel
                       </button>
 
-                      <button @click="takeScreenshot" v-if="
+                      <!-- <button @click="takeScreenshot" v-if="
                         currentView !== 'dashboard' &&
                         currentView !== 'Donations' &&
                         currentView !== 'Loans'
@@ -90,7 +90,7 @@
                         :class="{ 'active-tab': false }">
                         <CameraIcon class="h-5 w-5 mr-2" />
                         Take Screenshot
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </div>

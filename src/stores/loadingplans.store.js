@@ -135,6 +135,15 @@ export const useloadingplanstore = defineStore({
     },
 
 
+    async sendBacklogMail() {
+      return await loadingplansService.sendBacklogMail().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
     async getloadingplansSummary() {
       return await loadingplansService.getloadingplansSummary().then((result) => {
         if (result) {

@@ -20,7 +20,7 @@
                     </select>
                 </div>
 
-              <!--   <div>
+                <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
                     <select v-model="selectedHandleBy"
                         class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
@@ -56,18 +56,18 @@
                 </div>
 
                 <div class="flex space-x-4">
-                   
-                    
+
+
                     <button @click="resetFilters"
                         class="bg-gray-200 mt-5 hover:bg-gray-400 text-black font-medium py-1 px-2 text-sm rounded">
                         Reset
-                      </button>
+                    </button>
 
-                      <button @click="exportToExcel"
+                    <button @click="exportToExcel"
                         class="bg-gray-500 mt-5 hover:bg-gray-400 text-white font-medium py-1 px-2 text-sm rounded">
                         Export to Excel
-                      </button>
-                  
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -76,12 +76,10 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                     <th
-            scope="col"
-            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            #
-          </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        #
+                    </th>
                     <th scope="col"
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         District
@@ -118,19 +116,18 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="(row, index) in filteredData" :key="index">
-                       <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
 
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.district }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.commodity }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.tonnageAllocation.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.handledby }}</td>
-                  
+
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalDispatched.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.totalReceived.toFixed(2) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ row.dispatchCompletion?.toFixed(2) }}%</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span v-if="row.receiptCompletion > 100.001"
-                            class="relative inline-block cursor-pointer group">
+                        <span v-if="row.receiptCompletion > 100.001" class="relative inline-block cursor-pointer group">
                             <!-- Red badge with percentage -->
                             <span class="px-2 py-1 bg-red-500 text-white font-bold text-xs rounded"
                                 aria-label="Possible excess receipt">
@@ -144,7 +141,7 @@
                             </span>
                         </span>
                         <span v-else>{{ Number(row.receiptCompletion).toFixed(2) }}%</span>
-                     
+
                     </td>
                 </tr>
             </tbody>
@@ -234,9 +231,10 @@ const filteredData = computed(() => {
 
         return (!selectedDistrict.value || item.district === selectedDistrict.value) &&
             (!selectedCommodity.value || item.commodity === selectedCommodity.value) &&
-            (!selectedActivity.value || item.activity === selectedActivity.value)&&
+            (!selectedActivity.value || item.activity === selectedActivity.value) &&
             (!selectedHandleBy.value || item.HandledBy === selectedHandleBy.value);
     });
+
 
     // Apply pagination after filtering
     return filtered.slice((currentPage.value - 1) * pageSize.value, currentPage.value * pageSize.value);
@@ -251,7 +249,7 @@ function exportToExcel() {
         'Dispatched (Mt)': row.totalDispatched,
         'Received (Mt)': row.totalReceived,
         '% Dispatch': row.dispatchCompletion,
-        '% Receipt': row.receiptCompletion,    
+        '% Receipt': row.receiptCompletion,
         'Handled By': "WFP",
     }));
 

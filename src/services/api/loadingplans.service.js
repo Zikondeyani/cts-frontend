@@ -8,7 +8,7 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `?filter={"include": [
+          `?filter={"include": [
               "activity", "user", "district", "transporter", "warehouse", "commodity",
               {"relation":"dispatches","scope":{"include":[{"relation":"receipts"}]}}
             ]
@@ -35,9 +35,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/` +
-            id +
-            `?filter={"include": [
+          `/` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -127,7 +127,7 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `?filter={"include": [
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -152,9 +152,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/` +
-            id +
-            `?filter={"include": [
+          `/` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -370,8 +370,8 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            "/pending" +
-            `?filter={"include": [
+          "/pending" +
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -396,9 +396,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/` +
-            id +
-            `?filter={"include": [
+          `/` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -549,8 +549,8 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            "/stock-summary/prepositioned" +
-            `?filter={"include": [
+          "/stock-summary/prepositioned" +
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -575,9 +575,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/stock-summary` +
-            id +
-            `?filter={"include": [
+          `/stock-summary` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -605,8 +605,8 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            "/stock-summary/emr" +
-            `?filter={"include": [
+          "/stock-summary/emr" +
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -631,9 +631,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/stock-summary` +
-            id +
-            `?filter={"include": [
+          `/stock-summary` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -661,8 +661,8 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            "/stock-summary" +
-            `?filter={"include": [
+          "/stock-summary" +
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -687,9 +687,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/stock-summary` +
-            id +
-            `?filter={"include": [
+          `/stock-summary` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -717,8 +717,8 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            "/stock-summary-by-commodity" +
-            `?filter={"include": [
+          "/stock-summary-by-commodity" +
+          `?filter={"include": [
             "activity", "user", "district", "transporter", "warehouse", "commodity"
           ]}`,
           {
@@ -743,9 +743,9 @@ export default class LoadingPlanService {
       return axios
         .get(
           resource +
-            `/stock-summary-by-commodity` +
-            id +
-            `?filter={"include": [
+          `/stock-summary-by-commodity` +
+          id +
+          `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
           {
@@ -808,12 +808,34 @@ export default class LoadingPlanService {
       });
   }
 
+
+  sendBacklogMail(data) {
+    return axios
+      .post(resource + "/backlog_reminder", data, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
+
+
   count() {
     return axios
       .get(
         resource +
-          `/count` +
-          `?filter={"include": [
+        `/count` +
+        `?filter={"include": [
         "activity", "user", "district", "transporter", "warehouse", "commodity"
       ]}`,
         {
@@ -859,7 +881,7 @@ export default class LoadingPlanService {
     return axios
       .get(
         resource +
-          `?filter={"include": [
+        `?filter={"include": [
           "activity", "user", "district", "transporter", "warehouse", "commodity"
         ]}`,
         {

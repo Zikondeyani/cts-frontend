@@ -227,6 +227,7 @@ onMounted(async () => {
     const dispatchdataSummary = await dispatchStore.getdispatchSummary();
     dispatchesdataSummary.value = [...dispatchdataSummary.unsummarizedDispatches];
 
+    console.log(  dispatchesdataSummary.value , "ZVFF")
   
   } catch (error) {
     console.error("Failed to load commodity data:", error);
