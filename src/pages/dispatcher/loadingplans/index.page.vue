@@ -64,101 +64,103 @@
 
         <!-- Recent Dispatches Modal -->
 
+
+
         <template v-if="isRecentDispatchesOpen">
           <div id="content">
-            <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
-              <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
-                <div class="flex justify-between items-center mb-4">
-                  <h3 class="text-lg font-semibold">Recent Dispatches</h3>
+            <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div class="bg-white rounded-xl shadow-2xl max-w-5xl w-full p-6">
 
-                  <!-- ✅ Close Button -->
+                <!-- Header -->
+                <div class="flex justify-between items-center border-b pb-3 mb-4">
+                  <h3 class="text-xl font-semibold text-gray-800">
+                    Recent Dispatches
+                  </h3>
+
                   <button @click="isRecentDispatchesOpen = false"
-                    class="text-gray-400 hover:text-gray-600 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    class="text-gray-400 hover:text-gray-600 text-xl font-bold">
+                    ✕
                   </button>
                 </div>
 
+                <!-- Search -->
+                <div class="mb-4">
+                  <input v-model="searchQuery" placeholder="Search delivery note, driver, ATC..."
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring focus:ring-blue-200 focus:outline-none" />
+                </div>
+
                 <!-- Table -->
-                <div class="overflow-auto max-h-96">
-                  <table class="min-w-full table-auto border-collapse">
-                    <thead>
-                      <tr class="bg-gray-100">
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Delivery Note
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          ATC #
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Dispatcher
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Qty (MT)
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          FDP
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Created
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Driver (Truck #)
-                        </th>
-                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                          Received
-                        </th>
+                <div class="overflow-auto max-h-[400px] border rounded-lg">
+
+                  <table class="min-w-full text-sm">
+
+                    <!-- Header -->
+                    <thead class="bg-gray-100 sticky top-0 z-10">
+                      <tr>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Delivery Note</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">ATC</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Dispatcher</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Qty (MT)</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">FDP</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Created</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Driver</th>
+                        <th class="px-4 py-3 text-center font-semibold text-gray-600">Status</th>
                       </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                      <tr v-for="dispatch in recentDispatches" :key="dispatch.id">
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{ dispatch?.DeliveryNote }}
-                        </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{ dispatch?.atc }}
-                        </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
+
+                    <!-- Body -->
+                    <tbody class="divide-y">
+
+                      <tr v-for="dispatch in filteredDispatches" :key="dispatch.id" class="hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ dispatch.DNote }}</td>
+                        <td class="px-4 py-2">{{ dispatch.atc }}</td>
+                        <td class="px-4 py-2">
                           {{
-                            dispatch?.dispatcher?.username?.replace(/\./g, "")
+                            dispatch?.dispatcher?.username
+                              ?.replace(/\./g, '')
+                          ?.replace(/([a-z])([A-Z])/g, '$1 $2')
                           }}
                         </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{ dispatch?.Quantity }} MT
+
+                        <td class="px-4 py-2 font-medium">
+                          {{ dispatch.Quantity }}
                         </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{ dispatch?.FinalDestinationPoint }}
+                        <td class="px-4 py-2">{{ dispatch.FinalDestinationPoint }}</td>
+                        <td class="px-4 py-2">
+                          {{ moment(dispatch.CreatedOn).format("MMM DD, YYYY") }}
                         </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{
-                            moment(dispatch?.CreatedOn).format(
-                              "MMMM Do YYYY,h:mm a"
-                            )
-                          }}
+                        <td class="px-4 py-2">
+                          {{ dispatch.DriverName }} ({{ dispatch.TruckNumber }})
                         </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          {{ dispatch?.DriverName }} ({{
-                            dispatch?.TruckNumber
-                          }})
-                        </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                          <span class="inline-block w-3 h-3 rounded-full" :class="dispatch?.received ? 'bg-green-500' : 'bg-red-500'
-                            ">
+
+                        <!-- Status Badge -->
+                        <td class="px-4 py-2 text-center">
+                          <span class="px-2 py-1 rounded-full text-xs font-semibold" :class="dispatch.received
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'">
+                            {{ dispatch.received ? 'Received' : 'Pending' }}
                           </span>
                         </td>
                       </tr>
+
+                      <tr v-if="filteredDispatches.length === 0">
+                        <td colspan="8" class="text-center py-6 text-gray-400">
+                          No matching records found
+                        </td>
+                      </tr>
+
                     </tbody>
                   </table>
                 </div>
 
-                <div class="flex justify-end mt-4">
-                  <button @click="printPDF" id="printButton" v-if="recentDispatches.length > 0"
-                    class="bg-gray-500 text-white px-4 py-2 rounded-md no-print">
+                <!-- Footer -->
+                <div class="flex justify-end mt-5">
+                  <button @click="printPDF" v-if="filteredDispatches.length"
+                    class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-md text-sm">
                     Print
                   </button>
                 </div>
+
               </div>
             </div>
           </div>
@@ -178,7 +180,7 @@
 <script setup>
 // import the styles
 
-import { inject, ref, reactive, onMounted } from "vue";
+import { inject, ref, reactive, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import {
   SearchIcon,
@@ -211,6 +213,7 @@ const $router = useRouter();
 const moment = inject("moment");
 const Swal = inject("Swal");
 //VARIABLES
+const searchQuery = ref("");
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -365,6 +368,29 @@ const getWarehouses = async () => {
     isLoading.value = false;
   }
 };
+
+
+const filteredDispatches = computed(() => {
+  if (!searchQuery.value) return recentDispatches.value;
+
+  const q = searchQuery?.value?.toLowerCase();
+
+  return recentDispatches.value.filter(d =>
+    [
+      d?.DNote,
+      d?.atc,
+      d?.dispatcher?.username,
+      d?.Quantity,
+      d?.FinalDestinationPoint,
+      moment(d?.CreatedOn).format("MMMM Do YYYY"),
+      d?.DriverName,
+      d?.TruckNumber,
+    ]
+      .join(" ")
+      .toLowerCase()
+      .includes(q)
+  );
+});
 
 // Fetch Recent Dispatches
 const fetchRecentDispatches = async (id, atc) => {

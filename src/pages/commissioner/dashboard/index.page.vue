@@ -92,7 +92,7 @@
                         Export to Excel
                       </button>
 
-                      <button @click="takeScreenshot" v-if="
+                   <!--    <button @click="takeScreenshot" v-if="
                         currentView !== 'dashboard' &&
                         currentView !== 'Donations' &&
                         currentView !== 'Loans'
@@ -103,7 +103,7 @@
                         :class="{ 'active-tab': false }">
                         <CameraIcon class="h-5 w-5 mr-2" />
                         Take Screenshot
-                      </button>
+                      </button> -->
                     </div>
                   </div>
                 </div>
@@ -635,6 +635,7 @@
 
                     <commodity-distribution-table-lean-WFP :data="filteredLeanCommodityDispatchDataWFP"
                       :screenshotMode="screenshotMode" />
+
                   </div>
 
                   <div v-show="currentTab === 'DoDMA'">
@@ -1675,6 +1676,8 @@ const filteredLeanCommodityDispatchDataWFP = computed(() => {
     return matchActivity && matchCommodity && matchDistrict;
   });
 });
+
+console.log(filteredLeanCommodityDispatchDataWFP, "ABNC MCMCMCCM")
 
 const filteredLeanCommodityDispatchDataDodma = computed(() => {
   return commodityDispatchDataDoDMA.value.filter((item) => {
