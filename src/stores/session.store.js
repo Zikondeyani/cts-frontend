@@ -88,13 +88,46 @@ export const useSessionStore = defineStore({
           }
         });
     },
+
     async signOut() {
-      sessionStorage.clear();
-      sessionStorage.removeItem("JWT");
-      sessionStorage.removeItem("RLE");
-      sessionStorage.removeItem("USR");
-      return sessionStorage;
+      try {
+        await userService.signOut(); // hit backend signout endpoint
+      } catch (error) {
+        if (error === 401) {
+          console.warn("Session already expired.");
+        } else {
+          console.error("Error during sign out:", error);
+        }
+      } finally {
+        // Always clear local session
+        sessionStorage.removeItem("JWT");
+        sessionStorage.removeItem("RLE");
+        sessionStorage.removeItem("USR");
+        sessionStorage.clear();
+      }
     },
+
+    async activeusers() {
+      return await userService
+        .activeusers()
+        .then((result) => {
+          
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error) {
+            case 401:
+              throw new Error(
+                "invalid session token please sign in to refresh your session"
+              );
+              break;
+            default:
+              throw error.message;
+          }
+        });
+    },
+
     async check() {
       return await userService
         .ping()

@@ -27,6 +27,31 @@ export default class LogService {
 
     };
 
+     getAll(id) {
+        return axios
+            .get(
+                resource + "/all",
+                '?filter={}',
+                {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-type": "Application/json",
+                        Authorization: `Bearer ${sessionStorage.getItem("JWT")}`
+                    }
+                }
+            )
+            .then(response => {
+                var result = response.data;
+                return result;
+            })
+            .catch(error => {
+                if (error.response) {
+                    throw error.response.data.error;
+                }
+            });
+
+    };
+
     create(data) {
         return axios
             .post(resource, data, {

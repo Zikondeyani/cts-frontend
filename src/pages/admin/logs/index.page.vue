@@ -63,6 +63,8 @@ const props = defineProps({
 //VARIABLES
 const isLoading = ref(false);
 const logs = reactive([]);
+
+const logsAll = reactive([]);
 const { id } = toRefs(props);
 const logStore = useLogStore();
 
@@ -104,7 +106,7 @@ const columns = ref([
     hidden: false,
     firstSortType: "asc",
   },
-  
+
   {
     label: "Login Location",
     field: (row) => row.metadata?.location,
@@ -135,15 +137,38 @@ const columns = ref([
 //MOUNTED
 onMounted(() => {
   getLogs(props.id);
+
+  getLogsAll(props.id);
 });
 //FUNCTIONS
+
+const getLogsAll = async (id) => {
+
+  isLoading.value = true;
+  logStore
+    .getAll(id)
+    .then((result) => {
+      logsAll.push(...result);
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Failed",
+        text: "failed to get logs error (" + error + ")",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
 const getLogs = async (id) => {
 
   isLoading.value = true;
   logStore
     .get(id)
     .then((result) => {
-      logs.push(...result.reverse());
+      logs.push(...result.data);
     })
     .catch((error) => {
       Swal.fire({
@@ -161,10 +186,10 @@ const getLogs = async (id) => {
 
 const generateExcel = () => {
   const wb = XLSX.utils.book_new();
-  const wsName = 'Logs';
+  const wsName = 'All Logs';
 
   // Transform the logs data to include user name and email as one string
-  const dataToExport = logs.map(log => ({
+  const dataToExport = logsAll.map(log => ({
     ...log,
     user: log.user
       ? log.user.name
@@ -183,7 +208,7 @@ const generateExcel = () => {
 
 
 
-const showMetadata = (params)  => {
+const showMetadata = (params) => {
   Swal.fire({
     title: "Details",
     text: params.row.metadata,

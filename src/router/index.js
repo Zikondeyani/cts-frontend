@@ -737,6 +737,12 @@ const routes = [
         name: "admin-usage-stats",
         component: () => import("../pages/admin/reports/usage-stats.vue"),
       },
+
+        {
+        path: "/admin/user-activity",
+        name: "admin-user-activity",
+        component: () => import("../pages/admin/reports/user-activity.vue"),
+      },
     ],
     beforeEnter: (to, from, next) => {
       let role = JSON.parse(sessionStorage.getItem("RLE"));
