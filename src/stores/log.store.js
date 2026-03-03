@@ -24,5 +24,18 @@ export const useLogStore = defineStore({
                 }
             });
         },
+
+         async getAll(email) {
+            return await logService.getAll(email).then((result => {
+                if (result) {
+                    return  result;
+                }
+            })).catch(error => {
+                switch (error.statusCode) {
+                    default:
+                        throw error.message
+                }
+            });
+        },
     }
 })

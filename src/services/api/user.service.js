@@ -284,4 +284,46 @@ export default class UserService {
         }
       });
   }
+
+
+    signOut() {
+    return axios
+      .get(resource + `/logout`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
+
+
+    activeusers() {
+    return axios
+      .get(resource + `/active`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
 }
