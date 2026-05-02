@@ -41,7 +41,7 @@
           <!-- Admin Text and Location Info -->
           <span class="font-bold text-white mx-4 hidden lg:block"
             >DODMA CTS | Warehouse Officer
-            <span class="text-xs font-normal">(v3.0)</span>
+            <span class="text-xs font-normal">(v{{ versiondata.version }})</span>
           </span>
           <div class="flex items-center ml-2 hidden lg:flex">
             <LocationMarkerIcon class="h-5 w-5 text-white mr-2" />
@@ -53,7 +53,7 @@
         <!-- Mobile Admin Text -->
         <span class="font-bold text-white mx-4 block lg:hidden"
           >DODMA CTS | Warehouse Officer
-          <span class="text-xs font-normal">(v3.0)</span>
+          <span class="text-xs font-normal">(v{{ versiondata.version }})</span>
         </span>
         <!-- Navigation Items for Desktop -->
         <div
@@ -206,7 +206,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    @click="onSignout"
+                   @click="performLogout"
                     :class="menuItemClasses(active, true)"
                   >
                     Sign out
@@ -276,7 +276,7 @@
               </router-link>
 
               <button
-                @click="onSignout"
+                @click="performLogout"
                 class="text-white text-right text-xs flex-1 px-4 py-2 space-y-1"
               >
                 <hr />
@@ -285,7 +285,7 @@
             </div>
             <span class="font-medium text-white mx-4 block lg:hidden mb-5"
               >DODMA CTS | Warehouse
-              <span class="text-xs font-normal">(v3.0)</span>
+              <span class="text-xs font-normal">(v{{ versiondata.version }})</span>
             </span>
           </div>
 
@@ -335,6 +335,7 @@ import { useSessionStore } from "../../stores/session.store";
 import { useRouter } from "vue-router";
 import eventBus from "../../services/events/eventbus";
 
+import versiondata from "../../../public/version.json"
 import {
   Dialog,
   DialogOverlay,
@@ -677,29 +678,64 @@ const getcommodityInventory = async () => {
 };
 
 const onSignout = async () => {
+  let timerInterval;
+
+  const result = await Swal.fire({
+    title: "Session Expiring",
+    html: "You will automatically be logged out in <b></b> seconds.<br>Do you want to extend your session?",
+    icon: "warning",
+    timer: 90000, // 3 minutes
+    timerProgressBar: true,
+    showCancelButton: true,
+    confirmButtonText: "Extend Session",
+    cancelButtonText: "Sign Out",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+
+    didOpen: () => {
+      const b = Swal.getHtmlContainer().querySelector("b");
+      timerInterval = setInterval(() => {
+        b.textContent = Math.ceil(Swal.getTimerLeft() / 1000);
+      }, 1000);
+    },
+
+    willClose: () => {
+      clearInterval(timerInterval);
+    }
+  });
+
+  if (result.isConfirmed) {
+    // User chose to extend session
+    //resetSessionTimer(); // your session refresh logic
+  } else {
+    // User clicked Sign Out OR timer expired
+    await performLogout();
+  }
+};
+
+const performLogout = async () => {
   try {
     await sessionStore.signOut();
     await clearDataOffline("session");
-
+    clearSignOutTimer();
     sessionStore.$reset();
-    await $router.push({ path: "/portal/signin" }).then((res) => {
-      if (res === undefined) {
-        Swal.fire({
-          text: "Securely signed out",
-          icon: "success",
-          toast: true,
-          position: "top-right",
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-        });
-      }
+
+    await $router.push({ path: "/portal/signin" });
+
+    Swal.fire({
+      text: "Securely signed out.",
+      icon: "success",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
+
   } catch (error) {
     console.error("Sign out error:", error);
   }
 };
-
 const onAbout = async () => {
   $router.push({ path: "/warehouse/about-system" });
 };

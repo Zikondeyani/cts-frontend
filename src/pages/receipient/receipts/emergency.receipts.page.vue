@@ -159,9 +159,6 @@ import EditReceiptDialog from "../../../components/pages/dispatches/edit-dispatc
 
 import * as XLSX from "xlsx";
 
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 const activeTab = ref("submitted");
 
@@ -364,7 +361,7 @@ const getReceipts = async () => {
 
       const userDistrict = user.value?.district;
 
-      const filtered = result.filter(
+      const filtered =  result?.filter(
         (item) => item.district === userDistrict
       );
 

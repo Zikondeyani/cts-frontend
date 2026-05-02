@@ -828,8 +828,8 @@ import stockSummaryLeanTwo from "../../../components/pages/charts/stocksummaryle
 
 import allocationTrends from "../../../components/pages/charts/allocation_trends.vue"; // Adjust path as needed
 
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+ 
+
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
 import DonationsTable from "./DonationsTable.vue";
@@ -1054,10 +1054,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const sessionStore = useSessionStore();
 const userStore = useUserStore();
-const dispatchStore = useInstructedDispatchesStore();
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-const bookings = reactive([]);
+const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 

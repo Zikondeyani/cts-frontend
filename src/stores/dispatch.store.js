@@ -28,6 +28,23 @@ export const useDispatcherStore = defineStore({
         });
     },
 
+     async getLimited() {
+      return await dispatcherService
+        .getLimited()
+        .then((result) => {
+
+          return result;
+
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
+
+
 
 
     async getdispatchUserSummary() {

@@ -67,12 +67,13 @@
                 <div class="flex items-center justify-between mt-2">
                   <span class="px-2 py-1 text-xs rounded-full font-medium capitalize"
                     :class="roleBadgeClass(user.roleId)">
-                    {{ user.role?.name }}
+                    {{ user.roleName }}
                   </span>
 
                   <span class="text-xs text-gray-400  whitespace-nowrap">
-                    {{ formatDate(user.lastLoginAt) }}
+                    {{ formatDate(user.loginAt) }}
                   </span>
+                  
                 </div>
               </div>
             </div>
@@ -130,7 +131,8 @@ const getInitials = (name) => {
 };
 
 const formatDate = (date) => {
-  return moment(date).fromNow();
+  return new Date(date).toLocaleString()
+
 };
 
 /* Dynamic ADMIN1–ADMIN10 badge coloring */

@@ -7,7 +7,7 @@ export default class DispatcherService {
       return axios
         .get(
           resource +
-            `?filter={"include": [
+          `?filter={"include": [
           {
             "relation": "loadingPlan",
             "scope": {
@@ -57,9 +57,9 @@ export default class DispatcherService {
       return axios
         .get(
           resource +
-            `/` +
-            id +
-            `?filter={"include": [
+          `/` +
+          id +
+          `?filter={"include": [
           {
             "relation": "loadingPlan",
             "scope": {
@@ -107,6 +107,39 @@ export default class DispatcherService {
         });
     }
   }
+
+
+
+  getLimited() {
+    return axios.get(resource, {
+      params: {
+        filter: {
+          limit: 20,
+          order: "id DESC",
+          include: [
+            {
+              relation: "loadingPlan",
+              scope: {
+                include: [
+                  { relation: "district" },
+                  { relation: "transporter" },
+                  { relation: "warehouse" },
+                  { relation: "commodity", scope: { include: [{ relation: "commodityType" }] } },
+                  { relation: "activity" },
+                  { relation: "user" }
+                ]
+              }
+            },
+            "Dispatcher"
+          ]
+        }
+      },
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+      }
+    });
+  }
+
 
   getExtendedDispatchSummary(dateFilter) {
     const endpoint = `${resource}/dispatch-summary`;
@@ -394,8 +427,8 @@ export default class DispatcherService {
     return axios
       .get(
         resource +
-          "/damaged-summary" +
-          `?filter={"include": [
+        "/damaged-summary" +
+        `?filter={"include": [
         {
           "relation": "loadingPlan",
           "scope": {
@@ -450,9 +483,9 @@ export default class DispatcherService {
     return axios
       .get(
         resource +
-          `/expected-by-district/` +
-          districtname +
-          `?filter={"include": [
+        `/expected-by-district/` +
+        districtname +
+        `?filter={"include": [
         {
           "relation": "loadingPlan",
           "scope": {

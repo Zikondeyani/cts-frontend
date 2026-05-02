@@ -19,120 +19,114 @@
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
       </div>
 
-      <!-- Tabs Section -->
-      <div class="align-middle inline-block w-full">
-        <ul
-          class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300"
-          id="tabs-menu"
-          role="tablist"
-        >
-          <!-- Tabs -->
-          <li class="nav-item mr-1" role="presentation">
-            <a
-              href="#user-loadings"
-              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500 active
-              rounded-t-lg"
-              id="tabs-user-loadings"
-              data-bs-toggle="pill"
-              data-bs-target="#user-loadings"
-              role="tab"
-              aria-controls="user-loadings"
-              aria-selected="true"
-            >
-              LSR & Emergency Assistance Delivery Reports
-            </a>
-          </li>
-          <li class="nav-item mr-1" role="presentation">
-            <a
-              href="#user-lean"
-              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
-              id="tabs-user-lean"
-              data-bs-toggle="pill"
-              data-bs-target="#user-lean"
-              role="tab"
-              aria-controls="user-lean"
-              aria-selected="false"
-            >
-              Lean Season & Emergency Assistance Dispatch Reports
-            </a>
-          </li>
-          <li class="nav-item mr-1" role="presentation">
-            <a
-              href="#user-relief"
-              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
-              id="tabs-user-relief"
-              data-bs-toggle="pill"
-              data-bs-target="#user-relief"
-              role="tab"
-              aria-controls="user-relief"
-              aria-selected="false"
-            >
-              Stock Position
-            </a>
-          </li>
-          <li class="nav-item mr-1" role="presentation">
-            <a
-              href="#user-settings"
-              class="nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent rounded-t-lg px-6 py-3 my-1 hover:border-blue-500 hover:bg-blue-100 focus:border-blue-500"
-              id="tabs-user-settings"
-              data-bs-toggle="pill"
-              data-bs-target="#user-settings"
-              role="tab"
-              aria-controls="user-settings"
-              aria-selected="false"
-            >
-              Commodity Distribution Report
-            </a>
-          </li>
-        </ul>
+    
+       <div class="align-middle inline-block w-full">
 
-        <!-- Tab Content -->
-        <div class="tab-content" id="tabs-user-options">
-          <div
-            class="tab-pane fade mt-3"
-            id="user-relief"
-            role="tabpanel"
-            aria-labelledby="tabs-user-relief"
-          >
-            <user-relief
-              :data="warehousesinventory"
-              v-on:update="updateOrCreateReliefItems"
-            />
-          </div>
-          <div
-            class="tab-pane fade"
-            id="user-settings"
-            role="tabpanel"
-            aria-labelledby="tabs-user-settings"
-          >
-            <commodity-distribution-table
-              :data="commodityDistributionData"
-              :screenshotMode="screenshotMode"
-            />
-          </div>
-          <div
-            class="tab-pane fade show active"
-            id="user-loadings"
-            role="tabpanel"
-            aria-labelledby="tabs-user-loadings"
-          >
-            <loading-plan-distribution-table
-              :data="loadingplansdata"
-              :screenshotMode="screenshotMode"
-              :dispatchesdataSummary="dispatchesdataSummary"
-              :dispatchdata="dispatchesdata"
-            />
-          </div>
-          <div
-            class="tab-pane fade"
-            id="user-lean"
-            role="tabpanel"
-            aria-labelledby="tabs-user-lean"
-          >
-            <user-lean :screenshotMode="screenshotMode" />
-          </div>
-        </div>
+    <!-- Tabs -->
+    <ul
+      class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300"
+      role="tablist"
+    >
+
+      <!-- Tab 1 -->
+      <li class="nav-item mr-1">
+        <a
+          href="#"
+          @click.prevent="activeTab = 'user-loadings'"
+          :class="[
+            'nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg',
+            activeTab === 'user-loadings'
+              ? 'active border-blue-500 bg-blue-100'
+              : 'border-transparent hover:border-blue-500 hover:bg-blue-100'
+          ]"
+        >
+          LSR & Emergency Assistance Delivery Reports
+        </a>
+      </li>
+
+      <!-- Tab 2 -->
+      <li class="nav-item mr-1">
+        <a
+          href="#"
+          @click.prevent="activeTab = 'user-lean'"
+          :class="[
+            'nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg',
+            activeTab === 'user-lean'
+              ? 'active border-blue-500 bg-blue-100'
+              : 'border-transparent hover:border-blue-500 hover:bg-blue-100'
+          ]"
+        >
+          Lean Season & Emergency Assistance Dispatch Reports
+        </a>
+      </li>
+
+      <!-- Tab 3 -->
+      <li class="nav-item mr-1">
+        <a
+          href="#"
+          @click.prevent="activeTab = 'user-relief'"
+          :class="[
+            'nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg',
+            activeTab === 'user-relief'
+              ? 'active border-blue-500 bg-blue-100'
+              : 'border-transparent hover:border-blue-500 hover:bg-blue-100'
+          ]"
+        >
+          Stock Position
+        </a>
+      </li>
+
+      <!-- Tab 4 -->
+      <li class="nav-item mr-1">
+        <a
+          href="#"
+          @click.prevent="activeTab = 'user-settings'"
+          :class="[
+            'nav-link block font-bold text-xs sm:text-sm leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg',
+            activeTab === 'user-settings'
+              ? 'active border-blue-500 bg-blue-100'
+              : 'border-transparent hover:border-blue-500 hover:bg-blue-100'
+          ]"
+        >
+          Commodity Distribution Report
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="mt-3">
+
+      <div v-if="activeTab === 'user-loadings'">
+        <loading-plan-distribution-table
+          :data="loadingplansdata"
+          :screenshotMode="screenshotMode"
+          :dispatchesdataSummary="dispatchesdataSummary"
+          :dispatchdata="dispatchesdata"
+        />
       </div>
+
+      <div v-if="activeTab === 'user-lean'">
+        <user-lean :screenshotMode="screenshotMode" />
+      </div>
+
+      <div v-if="activeTab === 'user-relief'">
+        <user-relief
+          :data="warehousesinventory"
+          @update="updateOrCreateReliefItems"
+        />
+      </div>
+
+      <div v-if="activeTab === 'user-settings'">
+        <commodity-distribution-table
+          :data="commodityDistributionData"
+          :screenshotMode="screenshotMode"
+        />
+      </div>
+
+    </div>
+  </div>
+
     </div>
   </main>
 </template>
@@ -179,12 +173,13 @@ const moment = inject("moment");
 const Swal = inject("Swal");
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+const activeTab = ref('user-loadings');
 
 //VARIABLES
 const id = ref(null);
 const isLoading = ref(false);
 const breadcrumbs = [
-  { name: "Home", href: "/admin/dashboard", current: false },
+  { name: "Home", href: "/auditor/dashboard", current: false },
   { name: "Report Management", href: "#", current: false },
 ];
 
@@ -227,7 +222,8 @@ onMounted(async () => {
     const dispatchdataSummary = await dispatchStore.getdispatchSummary();
     dispatchesdataSummary.value = [...dispatchdataSummary.unsummarizedDispatches];
 
-  
+    console.log(dispatchesdataSummary.value, "ZVFF")
+
   } catch (error) {
     console.error("Failed to load commodity data:", error);
   } finally {

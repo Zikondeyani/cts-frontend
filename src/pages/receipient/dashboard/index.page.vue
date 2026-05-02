@@ -253,8 +253,8 @@ import ChartComponent from "../../../components/pages/charts/dashboardcharts.vue
 import { userequisitionstore } from "../../../stores/requisition.store";
 import { useDisasterstore } from "../../../stores/disaster.store";
 
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+ 
+
 
 import MaizeDistributionTable from "./MaizeDistributionTable.vue";
 
@@ -581,10 +581,7 @@ const dispatchStore = useWarehouseDispatchesStore();
 const leanseasondispatchStore = useDispatcherStore();
 
 const receivedCommodityStore = useReceivedCommoditiesStore();
-
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-
+  
 const bookings = reactive([]);
 const role = ref(sessionStore.getRole);
 
@@ -644,7 +641,7 @@ onMounted(async () => {
   setInterval(updateTime, 1000);
   await fetchUser();
   await getWarehouses(); // Ensure warehouses are fetched before dispatches
-  await getCatalogue();
+  await 
   await getExpectedDispatches();
   await getUsers();
   await getBookings();
@@ -875,16 +872,11 @@ const getExpectedDispatches = async () => {
     .catch((error) => {});
 };
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
-};
-
+ 
 const requisitionCount = ref(0);
 const getRequisitions = async () => {
   requisitionStore.get().then((result) => {
-    requisitionCount.value = result.filter(
+    requisitionCount.value =  result?.filter(
       (item) => item.requesterId == user.value.id
     ).length;
   });
@@ -893,7 +885,7 @@ const getRequisitions = async () => {
 const leanReceiptCount = ref(0);
 const getLeanReceipts = async () => {
   recieptStore.get().then((result) => {
-    leanReceiptCount.value = result.filter((item) => {
+    leanReceiptCount.value =  result?.filter((item) => {
       item.Recipient?.id == user.value.id;
     }).length;
   });
@@ -902,7 +894,7 @@ const getLeanReceipts = async () => {
 const emrReceiptCount = ref(0);
 const getEMRReceipts = async () => {
   instructedreceiptStore.get().then((result) => {
-    emrReceiptCount.value = result.filter(
+    emrReceiptCount.value =  result?.filter(
       (item) => item.recipientId == user.value.id
     ).length;
   });
@@ -920,7 +912,7 @@ const totalReceipts = computed(() => {
 const disasterCount = ref(0);
 const getDisasters = async () => {
   disasterStore.get().then((result) => {
-    disasterCount.value = result.filter(
+    disasterCount.value =  result?.filter(
       (item) => item.district == user.value.district
     ).length;
   });

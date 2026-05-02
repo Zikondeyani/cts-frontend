@@ -109,9 +109,6 @@ import {
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
 
@@ -506,8 +503,10 @@ const createReport = async (reportData) => {
     if (reportData.warehouseId !== 0) {
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: `An error occurred: ${error.message}`,
+        title: "Loading Plan Exists",
+        text: error?.message
+          ? `An error occurred: ${error.message}`
+          : "A loading plan already exists in the system. Please check by searching before creating a new one.",
       });
     }
   } finally {

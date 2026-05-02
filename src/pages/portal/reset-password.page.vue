@@ -8,7 +8,7 @@
         </div>
         <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center">
           DoDMA Commodity Tracking System
-          <span class="text-sm font-normal">(v3.0)</span>
+          <span class="text-sm font-normal">(v{{ versiondata.version }})</span>
         </h2>
       </div>
     </div>
@@ -75,6 +75,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '../../stores/user.store';
 import { EyeIcon, EyeOffIcon } from '@heroicons/vue/outline';
 
+import versiondata from "../../../public/version.json"
 const Swal = inject('Swal');
 
 const route = useRoute();

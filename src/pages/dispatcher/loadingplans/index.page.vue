@@ -14,19 +14,31 @@
           </h2>
         </div>
 
-        <!-- Export Data Button -->
-        <button type="button"
-          class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-          @click="generateExcel()">
-          <i class="fas fa-file-export mr-2"></i>
-          <!-- Icon (Font Awesome used as an example) -->
-          Export Data
-        </button>
+
       </div>
       <!-- table  -->
       <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mt-3">
-        <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
-          :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
+
+        <div class="flex space-x-2 mt-4 mb-3">
+
+          <button @click="activeTab = 'approved'" :class="activeTab === 'approved'
+            ? 'bg-[#248cd6] text-white border-[#096eb4]'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            class="flex items-center py-2 px-4 border rounded-t-lg font-semibold transition-all duration-200">
+            Approved Loading Plans
+          </button>
+
+          <button @click="activeTab = 'unapproved'" :class="activeTab === 'unapproved'
+            ? 'bg-[#248cd6] text-white border-[#096eb4]'
+            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
+            class="flex items-center py-2 px-4 border rounded-t-lg font-semibold transition-all duration-200">
+            Unapproved Loading Plans
+          </button>
+
+        </div>
+        <vue-good-table :columns="columns" :rows="activeTab === 'approved' ? loadingplans : unapprovedLoadingplans"
+          :search-options="{ enabled: true }" :pagination-options="{ enabled: true }" theme="polar-bear"
+          styleClass="vgt-table striped" compactMode>
           <!-- Custom Table Actions -->
           <template #table-actions>
             <!-- You can add custom actions here like export buttons, etc. -->
@@ -36,24 +48,36 @@
           <template #table-row="props">
             <div v-if="props.column.label === 'Options'" class="flex items-center space-x-3">
               <!-- Dispatch Button when balance is greater than 0 -->
-              <template v-if="props.row.Balance > 0">
-                <button type="button" @click="openDispatchDialog(props.row)"
+              <template v-if="props.row.Balance > 0 && activeTab === 'approved'">
+                <button type="button" v-if="activeTab === 'approved'" @click="openDispatchDialog(props.row)"
                   class="font-heading inline-flex items-center px-4 py-2 border border-blue-500 text-blue-500 font-semibold text-xs rounded-md shadow-sm hover:bg-[#096eb4] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                   <TruckIcon class="h-5 w-5 mr-2" />
                   Dispatch
                 </button>
+
               </template>
 
-              <!-- Completed Badge when balance is 0 -->
-              <template v-else>
+
+
+              <!-- Completed Badge -->
+              <template v-if="props.row.isClosed">
                 <span
                   class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Completed
                 </span>
               </template>
 
+              <!-- Pending Approval Badge (ONLY in unapproved tab) -->
+              <template v-else-if="activeTab === 'unapproved'">
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                  Pending Approval
+                </span>
+              </template>
+
               <!-- Show Recent Dispatches Button -->
-              <button type="button" @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
+              <button type="button" v-if="activeTab === 'approved'"
+                @click="openRecentDispatches(props.row.id, props.row.ATCNumber)"
                 class="font-heading inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition ease-in-out duration-150">
                 <EyeIcon class="h-5 w-5 mr-2" />
                 Recent Dispatches
@@ -118,7 +142,7 @@
                           {{
                             dispatch?.dispatcher?.username
                               ?.replace(/\./g, '')
-                          ?.replace(/([a-z])([A-Z])/g, '$1 $2')
+                              ?.replace(/([a-z])([A-Z])/g, '$1 $2')
                           }}
                         </td>
 
@@ -194,9 +218,7 @@ import {
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
+
 
 import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
 
@@ -217,6 +239,9 @@ const searchQuery = ref("");
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+const activeTab = ref("approved"); // approved | unapproved
+
+const unapprovedLoadingplans = reactive([]);
 
 const isLoading = ref(false);
 const breadcrumbs = [
@@ -448,54 +473,54 @@ const reloadPage = async () => {
   $router.push("/dispatcher/loadingplans");
 };
 
+
 const getLoadingplans = async () => {
   isLoading.value = true;
 
   try {
-    const result = await loadingPlanStore.get(); // array of loading plans
+    const result = await loadingPlanStore.get();
 
-    // Check if user district is national or null
     const isNationalOrNull =
       !user.value.district || user.value.district === "National";
 
-    // Filter results
-    const filteredLoadingPlans = result.filter((item) => {
+    const approved = [];
+    const unapproved = [];
 
-      // ❗ Exclude activityId 0
-      if (item.activityId === 0) return false;
+    result?.forEach((item) => {
+
+      if (item.activityId === 0) return;
 
       const isActivityOpen = item.activity?.IsClosed !== true;
-      const isApproved = item.IsApproved === true;
       const isNotPartnerLoan = item.activity?.Name !== "Partner Commodity Loan";
 
-      if (isNationalOrNull) {
-        return isApproved && isActivityOpen && isNotPartnerLoan;
-      } else {
-        return (
-          isApproved &&
-          isActivityOpen &&
-          isNotPartnerLoan &&
-          item.district?.Name === user.value.district &&
-          item.IsDivertedLoad === true
-        );
+      const districtMatch =
+        isNationalOrNull ||
+        (item.district?.Name === user.value.district &&
+          item.IsDivertedLoad === true);
+
+      if (isActivityOpen && isNotPartnerLoan && districtMatch) {
+
+        if (item.IsApproved) {
+          approved.push(item);
+        } else {
+          unapproved.push(item);
+        }
+
       }
     });
 
-    // Reset reactive array correctly
     loadingplans.length = 0;
-    loadingplans.push(...filteredLoadingPlans.reverse());
+    loadingplans.push(...approved.reverse());
 
-    console.log("Filtered Loading Plans:", loadingplans);
-
-    eventBus.emit("loadingplanArchived", filteredLoadingPlans);
+    unapprovedLoadingplans.length = 0;
+    unapprovedLoadingplans.push(...unapproved.reverse());
 
   } catch (error) {
-    console.error("Failed to fetch, filter, and sort loading plans:", error);
+    console.error(error);
   } finally {
     isLoading.value = false;
   }
 };
-
 
 
 const generateExcel = () => {

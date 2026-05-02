@@ -30,7 +30,7 @@ export default class LogService {
      getAll(id) {
         return axios
             .get(
-                resource + "/all",
+                resource + `/all`+
                 '?filter={}',
                 {
                     headers: {

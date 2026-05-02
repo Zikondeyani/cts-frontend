@@ -627,8 +627,8 @@ import dispatchSummaryLeansTwoTwo from '../../../components/pages/charts/dispatc
 import stockSummaryLean from '../../../components/pages/charts/stocksummarylean.vue'; // Adjust path as needed
 import stockSummaryLeanTwo from '../../../components/pages/charts/stocksummarylean2.vue'; // Adjust path as needed
 
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+ 
+
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
 import DonationsTable from './DonationsTable.vue';
@@ -822,10 +822,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const sessionStore = useSessionStore();
 const userStore = useUserStore();
-const dispatchStore = useInstructedDispatchesStore();
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-const bookings = reactive([]);
+const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -902,12 +899,7 @@ onMounted(async () => {
   getRequisitions();
 });
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
-};
-
+ 
 const instructions = reactive([])
 const newInstructionsCount = ref(0)
 
