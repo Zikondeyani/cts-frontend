@@ -550,7 +550,7 @@ const getReliefItems = async () => {
     const result = await instructedCommodityStore.get();
 
     // Filter the result by instructionId
-    const filteredItems = result.filter(item => item.instructionId == instructionId);
+    const filteredItems =  result?.filter(item => item.instructionId == instructionId);
     instructedCommodityItems.value = filteredItems;
 
     // Push filtered items into the reactive `reliefItems` array

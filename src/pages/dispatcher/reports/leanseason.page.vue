@@ -143,9 +143,6 @@ import {
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
 

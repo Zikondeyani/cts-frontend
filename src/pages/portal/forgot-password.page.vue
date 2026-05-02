@@ -8,7 +8,7 @@
         </div>
         <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center">
           DoDMA Commodity Tracking System
-          <span class="text-sm font-normal">(v3.0)</span>
+          <span class="text-sm font-normal">(v{{ versiondata.version }})</span>
         </h2>
       </div>
     </div>
@@ -79,6 +79,7 @@ import { inject, onMounted, reactive, ref, nextTick } from 'vue';
 import { useUserStore } from '../../stores/user.store';
 import { useRouter, useRoute } from 'vue-router';
 
+import versiondata from "../../../public/version.json"
 const $router = useRouter();
 const Swal = inject('Swal');
 const email = ref('');

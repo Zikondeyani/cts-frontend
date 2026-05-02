@@ -67,7 +67,7 @@ import { inject, ref, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 //COMPONENTS
 
-import { useListingStore } from "../../../stores/catalogue.store";
+ 
 
 import ListingFile from "../../../components/pages/catalogue/file.component.vue"; 
 
@@ -93,9 +93,7 @@ const breadcrumbs = [
   { name: "Catalogue", href: "/admin/catalogue", current: false },
   { name: "Manage", href: "/admin/catalogue/Manage", current: true },
 ];
-
-const catalogueStore = useListingStore();
-const sessionStore = useSessionStore();
+ const sessionStore = useSessionStore();
 
 
 const user = ref(sessionStore.getUser);
@@ -115,7 +113,7 @@ const model = ref({
 onMounted(() => {
   id.value = $route.params.id;
 
-  getcatalogue();
+  
 });
 ///FORM
 
@@ -166,7 +164,7 @@ const updateListing = async (newValues) => {
     })
     .finally(() => {
       isLoading.value = false;
-      getcatalogue();
+      
     });
 };
 

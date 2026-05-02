@@ -11,7 +11,7 @@
       </div>
       <h2 class="mt-6 text-3xl font-extrabold text-white">
         DoDMA Commodity Tracking System
-        <span class="text-sm font-normal">(v3.0)</span>
+        <span class="text-sm font-normal">(v{{ versiondata.version }})  </span>
       </h2>
       <h2 class="mt-6 text-3xl font-extrabold text-white" v-if="system.mode == 'TRAINING'">
         <span class="text-sm font-normal">({{ system.mode }})</span>
@@ -29,7 +29,7 @@
           </div>
           <h2 class="mt-6 text-md font-extrabold text-gray-700 text-center lg:hidden">
             DoDMA Commodity Tracking System
-            <span class="text-sm font-normal">(v3.0)</span>
+            <span class="text-sm font-normal">(v{{ versiondata.version }}) </span>
           </h2>
           <div class="flex justify-center mt-8">
             <img class="img-fluid" style="height: 100px" src="../../assets/cts.png" alt="Image 1" />
@@ -118,6 +118,7 @@ import { useRouter } from "vue-router";
 import * as yup from "yup";
 import { useSessionStore } from "../../stores/session.store";
 
+import versiondata from "../../../public/version.json"
 import { useDisasterstore } from "../../stores/disaster.store";
 
 import { usecommoditiestore } from "../../stores/commodity.store";

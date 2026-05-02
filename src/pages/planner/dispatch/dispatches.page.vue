@@ -76,9 +76,6 @@ import EditDispatchDialog from "../../../components/pages/dispatches/edit-dispat
 
 
 
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import * as XLSX from 'xlsx';
 

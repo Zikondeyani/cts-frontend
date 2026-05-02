@@ -84,7 +84,7 @@ const getLogs = async (id) => {
   logStore
     .get(id)
     .then((result) => {
-      let filtereData = result.filter(item => item.user.id == props.id)
+      let filtereData =  result?.filter(item => item.user.id == props.id)
       logs.push(...filtereData.reverse());
     })
     .catch((error) => {

@@ -141,9 +141,6 @@ import ReceiptLoadingPlanDialog from "../../../components/pages/dispatches/creat
 
 import EditDispatchDialog from "../../../components/pages/dispatches/edit-dispatch.component.vue";
 
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import * as XLSX from "xlsx";
 

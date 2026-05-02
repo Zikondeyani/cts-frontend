@@ -16,7 +16,7 @@ export const useUserStore = defineStore({
         .get()
         .then((result) => {
           if (result) {
-            var response = result.filter((item) => {
+            var response =  result?.filter((item) => {
               return item.id != sessionStore.getUser.id;
             });
             response = response.filter((item) => {

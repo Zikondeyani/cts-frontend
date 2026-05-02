@@ -94,9 +94,6 @@ import EditDispatchDialog from "../../../components/pages/dispatches/edit-dispat
 
 import { usereceiptstore } from "../../../stores/receipt.store";
 
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import eventBus from '../../../services/events/eventbus';
 

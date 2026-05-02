@@ -96,7 +96,7 @@ import { useSessionStore } from "../../../stores/session.store";
 
 import { useMailStore } from "../../../stores/mail.store";
 
-import { usebookingstore } from "../../../stores/booking.store";
+
 //INJENCTIONS
 const $router = useRouter();
 const $route = useRoute();
@@ -117,10 +117,9 @@ const breadcrumbs = [
   { name: "Enquiries", href: "/admin/Bookings", current: false },
   { name: "Manage", href: "/admin/Bookings/Manage", current: true },
 ];
-/* const BookingStore = useBookingStore(); */
+ 
 const sessionStore = useSessionStore();
-const bookingStore = usebookingstore();
-
+ 
 const booking = ref("");
 const mailStore = useMailStore();
 const user = ref(sessionStore.getUser);
@@ -132,35 +131,14 @@ const model = ref({
 //MOUNTED
 onMounted(() => {
   id.value = $route.params.id;
-  getBooking();
+  
 });
 ///FORM
 
 ///FIELDS
 
 //FUNCTIONS
-const getBooking = async () => {
-  isLoading.value = true;
-  bookingStore
-    .getOne(id.value)
-    .then((result) => {
-      model.value = result;
-      booking.value = model.value.listings.name;
-    })
-    .catch((error) => {
-      Swal.fire({
-        title: "Enquiry Retrieval Failed",
-        text: "Failed to retrive enquiry info (Please refresh page to retry)",
-        icon: "error",
-        confirmButtonText: "Ok",
-      });
-    })
-    .finally(() => {
-      refresh.value = Math.random();
-      isLoading.value = false;
-    });
-};
-
+ 
 const updateBooking = async (newValues) => {
   isLoading.value = true;
   bookingStore
@@ -188,7 +166,7 @@ const updateBooking = async (newValues) => {
     })
     .finally(() => {
       isLoading.value = false;
-      getBooking();
+      
     });
 };
 

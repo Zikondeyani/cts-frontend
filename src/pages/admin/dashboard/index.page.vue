@@ -51,7 +51,7 @@
                       <div class="flex items-center justify-between">
                         <span class="text-2xl font-semibold text-gray-800">{{
                           stat.value
-                          }}</span>
+                        }}</span>
                         <component :is="stat.icon" :class="`h-6 w-6 text-${stat.iconColor}`" />
                       </div>
                       <div class="text-sm font-medium text-gray-600 mt-2">
@@ -62,7 +62,7 @@
                       <div class="flex items-center justify-between">
                         <span :class="`text-${stat.textColor}`">{{
                           stat.percentageText
-                          }}</span>
+                        }}</span>
                         <component :is="stat.progress >= 50 ? ArrowUpIcon : ArrowDownIcon
                           " class="h-5 w-5" :class="`text-${stat.textColor}`" />
                       </div>
@@ -111,17 +111,17 @@
                   </div>
 
 
-                   </div>
+                </div>
 
-                     <h3 class="text-md font-semibold text-gray-700 mb-4 mt-2">
-                    Recent Dispatch Analytics
-                  </h3>
+                <h3 class="text-md font-semibold text-gray-700 mb-4 mt-2">
+                  Recent Dispatch Analytics
+                </h3>
 
-                  <ChartComponent :dispatches="dispaches" />
+                <ChartComponent :dispatches="dispaches" />
               </div>
-              
 
-             
+
+
             </div>
           </section>
 
@@ -161,8 +161,7 @@ import { useUserStore } from "../../../stores/user.store";
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
@@ -315,10 +314,6 @@ const userStore = useUserStore();
 
 const dispatchStore = useDispatcherStore();
 
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-
-const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -343,16 +338,12 @@ const dispatchcount = ref(0);
 //MOUNTEDgetCatalogue
 onMounted(() => {
 
-
   updateTime();
   setInterval(updateTime, 1000);
-
-  getCatalogue();
   getWarehouses();
   getOrganisations();
   getTransporters();
   getUsers();
-  getBookings();
   getDispatches();
   getReceipts();
   getDistricts();
@@ -364,11 +355,6 @@ onMounted(() => {
 });
 //WATCH
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
-};
 
 const navigateTo = (href) => {
   $router.push(href);
@@ -404,23 +390,24 @@ const getDistricts = async () => {
   });
 };
 
+
 const getDispatches = async () => {
   isLoading.value = true;
+
   dispatchStore
-    .get()
+    .getLimited()
     .then((result) => {
-      // Assuming `result` is an array of dispatches and each dispatch has a `createdOn` field
-      const sortedDispatches = [...result].sort((a, b) => {
-        // Convert the `createdOn` receipient to a Date object and compare
-        return new Date(b.createdon) - new Date(a.createdon);
-      });
 
-      // Clear the existing dispatches and push the sorted results
       dispaches.length = 0;
-      let reversedData = sortedDispatches.reverse();
-      dispaches.push(...reversedData.filter(item => !item?.loadingPlan?.activity?.IsClosed));
 
-     
+      const sortedDispatches = [...result.data];
+
+      dispaches.push(
+        ...sortedDispatches.filter(
+          item => !item?.loadingPlan?.activity?.IsClosed
+        )
+      );
+
     })
     .finally(() => {
       isLoading.value = false;
@@ -512,16 +499,7 @@ const getUsers = async () => {
     });
 };
 
-const getBookings = async () => {
-  bookingStore.count().then((result) => {
-    bookingCount.value = result.count;
-  });
 
-  bookingStore.getbookingsClean().then((result) => {
-    bookings.length = 0;
-    bookings.push(...result);
-  });
-};
 
 // Dummy data for stats
 const stats = ref([

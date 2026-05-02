@@ -145,9 +145,6 @@ import {
 //COMPONENTS
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-import createListingForm from "../../../components/pages/catalogue/create.component.vue";
-//SCHEMA//AND//STORES
-import { useListingStore } from "../../../stores/catalogue.store";
 
 import createDispatchForm from "../../../components/pages/dispatch/create.component.vue";
 
@@ -388,8 +385,8 @@ const getLoadingplans = async () => {
     const isNationalOrNull = !user.value.district || user.value.district === 'National';
 
     // Separate loading plans that are not closed (isClosed == false) and the rest
-    const openLoadingPlans = result.filter(plan => plan.isClosed === false);
-    const closedLoadingPlans = result.filter(plan => plan.isClosed === true);
+    const openLoadingPlans =  result?.filter(plan => plan.isClosed === false);
+    const closedLoadingPlans =  result?.filter(plan => plan.isClosed === true);
 
     // Combine the open loading plans first, then the closed ones
     const sortedLoadingPlans = [...openLoadingPlans, ...closedLoadingPlans];

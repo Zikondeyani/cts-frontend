@@ -100,8 +100,8 @@ import { useUserStore } from "../../../stores/user.store";
 
 import { useDispatcherStore } from "../../../stores/dispatch.store";
 
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+ 
+
 
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 
@@ -253,10 +253,7 @@ const sessionStore = useSessionStore();
 const userStore = useUserStore();
 
 const dispatchStore = useDispatcherStore();
-
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-
+  
 const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
@@ -281,7 +278,7 @@ const receiptcount = ref(0);
 const dispatchcount = ref(0);
 //MOUNTEDgetCatalogue
 onMounted(() => {
-  getCatalogue();
+  
   getWarehouses();
   getOrganisations();
   getTransporters();
@@ -298,12 +295,7 @@ onMounted(() => {
 });
 //WATCH
 
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
-};
-
+ 
 const navigateTo = (href) => {
   $router.push(href);
 };

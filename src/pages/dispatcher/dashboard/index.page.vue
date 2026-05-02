@@ -196,8 +196,8 @@ import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.brea
 import { useUserStore } from "../../../stores/user.store";
 import { useInstructedDispatchesStore } from "../../../stores/instructedDispatches.store";
 import ChartComponent from "../../../components/pages/charts/dashboardcharts.vue"; // Adjust path as needed
-import { useListingStore } from "../../../stores/catalogue.store";
-import { usebookingstore } from "../../../stores/booking.store";
+ 
+
 import MaizeDistributionTable from "./MaizeDistributionTable.vue";
 import { useloadingplanstore } from "../../../stores/loadingplans.store";
 import html2canvas from "html2canvas";
@@ -321,10 +321,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const sessionStore = useSessionStore();
 const userStore = useUserStore();
-const dispatchStore = useInstructedDispatchesStore();
-const catalogueStore = useListingStore();
-const bookingStore = usebookingstore();
-const bookings = reactive([]);
+const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 const breadcrumbs = [
@@ -344,9 +341,8 @@ const dispatchcount = ref(0);
 onMounted(() => {
   updateTime();
   setInterval(updateTime, 1000);
-  getCatalogue();
+  
   getUsers();
-  getBookings();
   getInstructions();
   getDispatches();
   getReceipts();
@@ -354,19 +350,14 @@ onMounted(() => {
   getLoadingPlans();
   getLoadingPlansPending();
   getloadingplansSummary();
-  getdispatchSummary();
+  //getdispatchSummary();
   getloadingplansSummaryByCommodity();
   getWarehouses();
 });
 //WATCH
-const getCatalogue = async () => {
-  catalogueStore.count().then((result) => {
-    catalogueCount.value = result.count;
-  });
-};
-const getWarehouses = async () => {
+ const getWarehouses = async () => {
   warehouseStore.get().then((result) => {
-    warehouseCount.value = result.filter(
+    warehouseCount.value =  result?.filter(
       (item) => item.district.Name == user.value.district
     ).length;
   });
@@ -387,7 +378,7 @@ const getInstructions = async () => {
   instructionsStore.get().then((result) => {
     instructions.length = 0;
     instructions.push(
-      result.filter((item) => !item.IsArchived && item.IsApproved)
+       result?.filter((item) => !item.IsArchived && item.IsApproved)
     );
     newInstructionsCount.value = instructions[0].length;
   });
@@ -461,7 +452,6 @@ const getLoadingPlansPending = async () => {
   });
 };
 const getdispatchSummary = async () => {
-      console.log("djjdkjd djdjjddj")
   dispatchStore.getdispatchSummary().then((result) => {
 
     totalDispatched.value = result.totalDispatched.toLocaleString() + " MT";
@@ -495,15 +485,7 @@ const getUsers = async () => {
       isLoading.value = false;
     });
 };
-const getBookings = async () => {
-  bookingStore.count().then((result) => {
-    bookingCount.value = result.count;
-  });
-  bookingStore.getbookingsClean().then((result) => {
-    bookings.length = 0;
-    bookings.push(...result);
-  });
-};
+
 const createReport = async (model) => {
   isLoading.value = true;
   model.userId = user.value.id;
