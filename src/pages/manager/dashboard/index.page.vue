@@ -600,7 +600,7 @@
                     </select>
 
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
-                      :screenshotMode="screenshotMode" />
+                      :screenshotMode="screenshotMode"  :selectedActivity="selectedActivity1"/>
                   </div>
 
                   <div v-show="currentTab === 'WFP'">
@@ -1026,7 +1026,9 @@ const instructionsStore = useinstructionstore();
 const requisitionStore = userequisitionstore();
 const recieptStore = usereceiptstore();
 const receipts = reactive([]);
-
+const system = reactive({
+  season: process.env.VUE_APP_LSR_SEASON,
+});
 const $router = useRouter();
 //INJENCTIONS
 const moment = inject("moment");
@@ -1090,8 +1092,8 @@ onMounted(async () => {
     activities1.push(...filteredActivities);
 
     // Force reset after loading
-    if (activities1.find((a) => a.activity === "LSR 2025 - 26")) {
-      selectedActivity1.value = "LSR 2025 - 26";
+    if (activities1.find((a) => a.activity === system.season)) {
+      selectedActivity1.value = system.season;
     }
 
     const dispatchEmergencydata =
@@ -1163,7 +1165,6 @@ const fetchFilteredDataAll = async () => {
 
     commodityDispatchData2.value = data;
 
-    console.log(data, "JJDJD JDJDJ")
   } catch (error) {
     console.error("Error fetching filtered dispatch data:", error);
   }

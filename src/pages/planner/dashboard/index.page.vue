@@ -586,7 +586,7 @@
                     </select>
 
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
-                      :screenshotMode="screenshotMode" />
+                      :screenshotMode="screenshotMode" :selectedActivity="selectedActivity1" />
                   </div>
 
                   <div v-show="currentTab === 'WFP'">
@@ -1030,8 +1030,9 @@ const breadcrumbs = [
   { name: "", href: "#", current: true },
 ];
 
-let catalogueCount = ref(0);
-
+const system = reactive({
+  season: process.env.VUE_APP_LSR_SEASON,
+});
 const users = reactive([]);
 const dispaches = reactive([]);
 
@@ -1077,10 +1078,9 @@ onMounted(async () => {
     activities1.push(...filteredActivities);
 
     // Force reset after loading
-    if (activities1.find((a) => a.activity === "LSR 2025 - 26")) {
-      selectedActivity1.value = "LSR 2025 - 26";
+    if (activities1.find((a) => a.activity === system.season)) {
+      selectedActivity1.value = system.season;
     }
-
     const dispatchEmergencydata =
       await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks =

@@ -12,7 +12,8 @@
       <!-- Right-aligned filters -->
       <div class="flex space-x-4">
         <!-- Activity Selector -->
-        <div>
+
+        <!-- <div>
           <span class="mr-2 font-bold">Activity:</span>
           <select
             v-model="selectedActivity"
@@ -27,7 +28,7 @@
               {{ activity.Name }}
             </option>
           </select>
-        </div>
+        </div> -->
 
         <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
@@ -244,6 +245,11 @@ import { usecommoditiestore } from "../../../stores/commodity.store";
 import { boolean } from "yup";
 import * as XLSX from "xlsx";
 
+
+const system = reactive({
+  season: process.env.VUE_APP_LSR_SEASON,
+});
+
 const districtstore = usedistrictstore();
 const districts = reactive([]);
 
@@ -262,7 +268,7 @@ const currentPage = ref(1);
 const pageSize = ref(5);
 const selectedDistrict = ref("");
 const selectedCommodity = ref("");
-const selectedActivity = ref("LSR 2025 - 26");
+const selectedActivity = ref(system.season);
 
 const selectedHandleBy = ref("");
 

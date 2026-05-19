@@ -253,8 +253,12 @@ watch(() => props.loadingPlan, (newVal) => {
 
 
 
+
 const updateLoadingPlan = async () => {
   try {
+    // prevent double clicks
+    if (isLoading.value) return;
+
     // Ensure update reason is provided
     if (
       !loadingPlan.value.UpdatedReason ||
@@ -270,8 +274,15 @@ const updateLoadingPlan = async () => {
       return;
     }
 
-    loadingPlan.value.UpdatedOn = new Date();
+    isLoading.value = true;
 
+    // Clone to avoid mutating original
+    const raw = { ...loadingPlan.value };
+
+    // Set update timestamp
+    raw.UpdatedOn = new Date();
+
+    // Remove unwanted fields
     const {
       commodity,
       district,
@@ -295,18 +306,19 @@ const updateLoadingPlan = async () => {
       IsApproved,
       vgtSelected,
       ...updatedLoadingPlan
-    } = loadingPlan.value;
+    } = raw;
 
-    // ✅ Ensure empty-string defaults (no undefined / no nulls)
+    // Normalize empty values
     updatedLoadingPlan.LoanTimeline = updatedLoadingPlan.LoanTimeline ?? '';
     updatedLoadingPlan.LoanDescription = updatedLoadingPlan.LoanDescription ?? '';
     updatedLoadingPlan.LoanTo = updatedLoadingPlan.LoanTo ?? '';
     updatedLoadingPlan.LoanStart = updatedLoadingPlan.LoanStart ?? '';
 
+    // Ensure ATCNumber is string
     updatedLoadingPlan.ATCNumber =
       updatedLoadingPlan.ATCNumber?.toString() || '';
 
-    // Calculate the new balance
+    // ✅ Recalculate Balance
     updatedLoadingPlan.Balance =
       (updatedLoadingPlan.Quantity - originalQuantity.value) +
       loadingPlan.value.Balance;
@@ -316,7 +328,14 @@ const updateLoadingPlan = async () => {
       updatedLoadingPlan.Balance = 0;
     }
 
-    // Check for missing information
+    // ✅ NEW LOGIC: Control IsClosed based on Balance
+    if (updatedLoadingPlan.Balance === 0) {
+      updatedLoadingPlan.IsClosed = true;
+    } else {
+      updatedLoadingPlan.IsClosed = false;
+    }
+
+    // Validate required fields
     if (
       updatedLoadingPlan.districtId == null ||
       updatedLoadingPlan.activityId == null
@@ -343,7 +362,7 @@ const updateLoadingPlan = async () => {
 
       emit('update');
 
-      Swal.fire({
+      await Swal.fire({
         title: "Loading Plan Updated (Offline)",
         html: `<p>Your loading plan has been updated locally (offline mode).</p>`,
         icon: "success",
@@ -355,7 +374,7 @@ const updateLoadingPlan = async () => {
 
       emit('update');
 
-      Swal.fire({
+      await Swal.fire({
         title: "Loading Plan Updated",
         html: `<p>Your loading plan has been successfully updated.</p>`,
         icon: "success",
@@ -365,6 +384,7 @@ const updateLoadingPlan = async () => {
     }
 
     emit('close');
+
   } catch (error) {
     console.error('Failed to update loading plan:', error);
 
@@ -375,9 +395,10 @@ const updateLoadingPlan = async () => {
       confirmButtonColor: '#3085d6',
       confirmButtonText: "Ok"
     });
+  } finally {
+    isLoading.value = false;
   }
 };
-
 
 
 
