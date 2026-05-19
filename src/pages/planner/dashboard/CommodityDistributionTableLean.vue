@@ -12,7 +12,7 @@
       <!-- Right-aligned filters -->
       <div class="flex space-x-4">
         <!-- Activity Selector -->
-        <div>
+       <!--  <div>
           <span class="mr-2 font-bold">Activity:</span>
           <select
             v-model="selectedActivity"
@@ -28,7 +28,7 @@
             </option>
           </select>
         </div>
-
+ -->
         <!--    <div>
                     <span class="mr-2 font-bold">Handled By:</span>
                     <select v-model="selectedHandleBy"
@@ -247,6 +247,8 @@ const commodities = reactive([]);
 
 const props = defineProps({
   data: Object,
+  
+  selectedActivity: String,
   screenshotMode: Boolean,
 });
 
@@ -254,7 +256,7 @@ const currentPage = ref(1);
 const pageSize = ref(5);
 const selectedDistrict = ref("");
 const selectedCommodity = ref("");
-const selectedActivity = ref("LSR 2025 - 26");
+const selectedActivity = ref(props.selectedActivity);
 
 const selectedHandleBy = ref("");
 

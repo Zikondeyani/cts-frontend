@@ -12,7 +12,7 @@
       <!-- Right-aligned filters -->
       <div class="flex space-x-4">
         <!-- Activity Selector -->
-        <div>
+        <!-- <div>
           <span class="mr-2 font-bold">Activity:</span>
           <select
             v-model="selectedActivity"
@@ -27,7 +27,7 @@
               {{ activity.Name }}
             </option>
           </select>
-        </div>
+        </div> -->
 
         <!--    <div>
                     <span class="mr-2 font-bold">Handled By:</span>

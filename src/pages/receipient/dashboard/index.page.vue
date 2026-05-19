@@ -433,7 +433,10 @@ const columns = ref([
       row.Dispatcher?.username.replace(/\./g, " ") || "Unknown"
     }</span>
     <br>
-    <span class="by-color">ATC No: ${row.loadingPlan?.ATCNumber}</span>`,
+    <span class="by-color">ATC No: ${row.loadingPlan?.ATCNumber}</span>
+     <br>
+    <span class="by-color">DNote #: ${row.DNote}</span>
+    `,
     sortable: true,
     firstSortType: "asc",
     html: true, // This is important to render HTML

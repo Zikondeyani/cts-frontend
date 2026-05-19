@@ -92,18 +92,7 @@
                         Export to Excel
                       </button>
 
-                   <!--    <button @click="takeScreenshot" v-if="
-                        currentView !== 'dashboard' &&
-                        currentView !== 'Donations' &&
-                        currentView !== 'Loans'
-                        &&
-                        currentView !== 'charts'
-                      " type="button"
-                        class="tab-button font-body inline-flex items-center px-6 py-2.5 font-medium text-xs leading-tight rounded shadow-md transition duration-100 ease-in-out capitalize"
-                        :class="{ 'active-tab': false }">
-                        <CameraIcon class="h-5 w-5 mr-2" />
-                        Take Screenshot
-                      </button> -->
+
                     </div>
                   </div>
                 </div>
@@ -454,7 +443,7 @@
                     </div>
                   </div>
                   <div class="mx-3">
-                    <stock-summary-lean v-if="filteredLeanCommodityDispatchData2.length > 0"
+                    <stock-summary-lean v-if="filteredLeanCommodityDispatchData2?.length > 0"
                       :leanStockSummary="filteredLeanCommodityDispatchData2" :screenshotMode="screenshotMode" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
@@ -462,8 +451,9 @@
                     </div>
                   </div>
                   <div class="mx-3">
-                    <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2.length > 0" :commodityDispatchData="filteredLeanCommodityDispatchData2
-                      " />
+                    <dispatch-summary-leans v-if="filteredLeanCommodityDispatchData2?.length > 0"
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2
+                        " />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
@@ -560,7 +550,7 @@
                 <!-- Commodity distribution table view -->
                 <commodity-distribution-table-lean-two :data="filteredLeanCommodityDispatchData22"
                   :screenshotMode="screenshotMode" />
-                <!-- Other components for stats, etc... -->
+                <!-- Other components for stats, etAndre!!!c... -->
               </div>
               <div class="bg-gray-100 p-5" v-show="currentView === 'leanSeasonDashboard'">
                 <div class="bg-gray-100 p-5">
@@ -619,7 +609,7 @@
                     </select>
 
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
-                      :screenshotMode="screenshotMode" />
+                      :screenshotMode="screenshotMode" :selectedActivity="selectedActivity1" />
                   </div>
 
                   <div v-show="currentTab === 'WFP'">
@@ -828,7 +818,7 @@ import stockSummaryLeanTwo from "../../../components/pages/charts/stocksummaryle
 
 import allocationTrends from "../../../components/pages/charts/allocation_trends.vue"; // Adjust path as needed
 
- 
+
 
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
@@ -1054,7 +1044,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const sessionStore = useSessionStore();
 const userStore = useUserStore();
-const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
+const dispatchStore = useInstructedDispatchesStore(); const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -1063,7 +1053,9 @@ const breadcrumbs = [
   { name: "", href: "#", current: true },
 ];
 
-let catalogueCount = ref(0);
+const system = reactive({
+  season: process.env.VUE_APP_LSR_SEASON,
+});
 
 const users = reactive([]);
 const dispaches = reactive([]);
@@ -1110,8 +1102,8 @@ onMounted(async () => {
     activities1.push(...filteredActivities);
 
     // Force reset after loading
-    if (activities1.find((a) => a.activity === "LSR 2025 - 26")) {
-      selectedActivity1.value = "LSR 2025 - 26";
+    if (activities1.find((a) => a.activity === system.season)) {
+      selectedActivity1.value = system.season;
     }
 
     const dispatchEmergencydata =
@@ -1177,13 +1169,12 @@ const fetchFilteredData = async () => {
 
 const fetchFilteredDataAll = async () => {
   try {
-    const data = await dispatchesStore.getExtendedDispatchSummary(
-      selectedFilter.value || null
-    );
+    const data = await dispatchesStore.getExtendedDispatchSummary(selectedFilter.value || null);
 
     commodityDispatchData2.value = data;
 
-    console.log(data, "JJDJD JDJDJ")
+
+
   } catch (error) {
     console.error("Error fetching filtered dispatch data:", error);
   }
@@ -1615,19 +1606,19 @@ const flattenedData2 = computed(() => {
   return Object.values(dataObj); // Convert the object into an array of values
 });
 
+
 const filteredLeanCommodityDispatchData2 = computed(() => {
-  return commodityDispatchData2.value.filter((item) => {
-    const matchActivity =
-      !selectedActivity1.value || item.activity === selectedActivity1.value;
-    const matchDistrict =
-      !selectedDistrict.value || item.district === selectedDistrict.value;
-    const matchCommodity =
-      !selectedCommodity.value || item.commodity === selectedCommodity.value;
+  return commodityDispatchData2.value.filter(item => {
+    return (
+      (!selectedActivity1.value ||
+        item.activity?.trim().toLowerCase() === selectedActivity1.value?.trim().toLowerCase()) &&
 
+      (!selectedDistrict.value ||
+        item.district?.trim().toLowerCase() === selectedDistrict.value?.trim().toLowerCase()) &&
 
-
-
-    return matchActivity && matchCommodity && matchDistrict;
+      (!selectedCommodity.value ||
+        item.commodity?.trim().toLowerCase() === selectedCommodity.value?.trim().toLowerCase())
+    );
   });
 });
 
@@ -1674,7 +1665,6 @@ const filteredLeanCommodityDispatchDataWFP = computed(() => {
   });
 });
 
-console.log(filteredLeanCommodityDispatchDataWFP, "ABNC MCMCMCCM")
 
 const filteredLeanCommodityDispatchDataDodma = computed(() => {
   return commodityDispatchDataDoDMA.value.filter((item) => {

@@ -87,7 +87,7 @@
                 </router-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <button @click="onSignout" :class="menuItemClasses(active, true)">
+                  <button @click="performLogout" :class="menuItemClasses(active, true)">
                     Sign out
                   </button>
                 </MenuItem>

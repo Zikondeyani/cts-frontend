@@ -19,7 +19,7 @@
 
         <!-- Export Data Button -->
         <button type="button"
-          class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white mr-1 font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
+          class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
           @click="generateExcel()">
           <i class="fas fa-file-export mr-2"></i> <!-- Icon (Font Awesome used as an example) -->
           Export Logs
@@ -52,7 +52,7 @@ import { useLogStore } from "../../../stores/log.store";
 import * as XLSX from 'xlsx';
 
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-const logsAllLoaded = ref(false)
+
 const $router = useRouter();
 const $route = useRoute();
 const moment = inject("moment");
@@ -63,8 +63,6 @@ const props = defineProps({
 //VARIABLES
 const isLoading = ref(false);
 const logs = reactive([]);
-
-const logsAll = reactive([]);
 const { id } = toRefs(props);
 const logStore = useLogStore();
 
@@ -101,22 +99,22 @@ const columns = ref([
   },
   {
     label: "Login IP Address",
-    field: (row) => row.metadata?.ipAddress,
+    field: (row) => row.metadata?.details?.ip,
     sortable: true,
     hidden: false,
     firstSortType: "asc",
   },
-
+  
   {
     label: "Login Location",
-    field: (row) => row.metadata?.location,
+    field: (row) => row.metadata?.details?.location,
     sortable: true,
     hidden: false,
     firstSortType: "asc",
   },
   {
     label: "Device",
-    field: (row) => row.metadata?.deviceType,
+    field: (row) => row.metadata?.details?.device,
     sortable: true,
     hidden: false,
     firstSortType: "asc",
@@ -137,45 +135,15 @@ const columns = ref([
 //MOUNTED
 onMounted(() => {
   getLogs(props.id);
-
-  getLogsAll(props.id);
 });
 //FUNCTIONS
-
-
-const getLogsAll = async (id) => {
-  try {
-
-    isLoading.value = true
-    logsAllLoaded.value = false
-
-    const result = await logStore.getAll(id)
-
-    logsAll.splice(0)
-    logsAll.push(...(result?.data || []))
-
-    logsAllLoaded.value = true
-
-  } catch (error) {
-
-    Swal.fire({
-      title: "Failed",
-      text: "failed to get all logs error (" + error + ")",
-      icon: "error",
-      confirmButtonText: "Ok",
-    });
-
-  } finally {
-    isLoading.value = false
-  }
-}
 const getLogs = async (id) => {
 
   isLoading.value = true;
   logStore
     .get(id)
     .then((result) => {
-      logs.push(...result?.data);
+      logs.push(...result.reverse());
     })
     .catch((error) => {
       Swal.fire({
@@ -191,44 +159,31 @@ const getLogs = async (id) => {
 };
 
 
-const generateExcel = async () => {
-
-  if (!logsAllLoaded.value || logsAll.length === 0) {
-
-    Swal.fire({
-      toast: true,
-      position: "top-end",
-      icon: "info",
-      title: "Logs are still loading...",
-      showConfirmButton: false,
-      timer: 2500
-    });
-
-    return;
-  }
-
+const generateExcel = () => {
   const wb = XLSX.utils.book_new();
-  const wsName = 'All Logs';
+  const wsName = 'Logs';
 
-  const dataToExport = logsAll.map(log => ({
+  // Transform the logs data to include user name and email as one string
+  const dataToExport = logs.map(log => ({
     ...log,
     user: log.user
       ? log.user.name
         ? `${log.user.name} (${log.user.email})`
-        : log.user.email
-      : 'N/A',
+        : log.user.email // Only email if name is undefined
+      : 'N/A', // Fallback if user is null/undefined
     metadata: log?.metadata ? JSON.stringify(log.metadata) : 'N/A'
   }));
 
   const ws = XLSX.utils.json_to_sheet(dataToExport);
-
   XLSX.utils.book_append_sheet(wb, ws, wsName);
 
+  // Export the workbook
   XLSX.writeFile(wb, 'UserLogs.xlsx');
 };
 
 
-const showMetadata = (params) => {
+
+const showMetadata = (params)  => {
   Swal.fire({
     title: "Details",
     text: params.row.metadata,

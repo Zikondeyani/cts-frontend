@@ -14,52 +14,45 @@
         </div>
         <div class="mt-4 flex-shrink-0 flex md:mt-0 md:ml-4"></div>
       </div>
+
       <!-- tabs -->
       <div class="align-middle inline-block min-w-full">
-        <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300" id="tabs-menu"
-          role="tablist">
-          <!-- <li class="nav-item" role="presentation">
-            <a
-              href="#user-profile"
-              class="nav-link block  font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
-              id="tabs-user-profile"
-              data-bs-toggle="pill"
-              data-bs-target="#user-profile"
-              role="tab"
-              aria-controls="user-profile"
-              aria-selected="true"
-              >Profile</a
-            >
-          </li> -->
-          <li class="nav-item mr-1" role="presentation">
-            <a href="#user-settings"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent active"
-              id="tabs-user-settings" data-bs-toggle="pill" data-bs-target="#user-settings" role="tab"
-              aria-controls="user-settings" aria-selected="false">Settings</a>
+        <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap pl-0 mb-4 border-b border-blue-300">
+          <!-- Settings -->
+          <li class="nav-item mr-1">
+            <a href="#" @click.prevent="activeTab = 'settings'" :class="[
+              'nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg transition',
+              activeTab === 'settings'
+                ? 'border-blue-500 bg-blue-100 text-black'
+                : 'border-transparent hover:border-blue-500 hover:bg-blue-100 text-gray-600'
+            ]">
+              Settings
+            </a>
           </li>
-          <li class="nav-item" role="presentation">
-            <a href="#user-logs"
-              class="nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 border-transparent px-6 py-3 my-1hover:border-transparent hover:bg-blue-100 focus:border-transparent"
-              id="tabs-user-logs" data-bs-toggle="pill" data-bs-target="#user-logs" role="tab" aria-controls="user-logs"
-              aria-selected="false">Logs</a>
+
+          <!-- Logs -->
+          <li class="nav-item">
+            <a href="#" @click.prevent="activeTab = 'logs'" :class="[
+              'nav-link block font-bold text-xs leading-tight capitalize border-x-0 border-t-0 border-b-2 px-6 py-3 my-1 rounded-t-lg transition',
+              activeTab === 'logs'
+                ? 'border-blue-500 bg-blue-100 text-black'
+                : 'border-transparent hover:border-blue-500 hover:bg-blue-100 text-gray-600'
+            ]">
+              Logs
+            </a>
           </li>
         </ul>
-        <div class="tab-content" id="tabs-user-options">
-          <!-- <div
-            class="tab-pane fade show active"
-            id="user-profile"
-            role="tabpanel"
-            aria-labelledby="tabs-user-profile"
-          >
-            <user-profile v-bind:model="model" v-on:update="updateUser" :key="model.id+'profile'"/>
-          </div> -->
-          <div class="tab-pane fade show active" id="user-settings" role="tabpanel"
-            aria-labelledby="tabs-user-settings">
-            <user-settings v-bind:model="model" v-on:update="updateUser" :key="model.id + 'settings'" />
+
+        <!-- Tab Content -->
+        <div class="mt-3">
+          <!-- Settings -->
+          <div v-show="activeTab === 'settings'">
+            <user-settings :model="model" @update="updateUser" :key="model.id + 'settings'" />
           </div>
 
-          <div class="tab-pane fade" id="user-logs" role="tabpanel" aria-labelledby="tabs-user-logs">
-            <user-logs v-bind:id="id" :key="model.id + 'logs'" />
+          <!-- Logs -->
+          <div v-show="activeTab === 'logs'">
+            <user-logs :id="id" :key="model.id + 'logs'" />
           </div>
         </div>
       </div>
@@ -93,6 +86,7 @@ const breadcrumbs = [
   { name: "Manage", href: "/admin/users/Manage", current: true },
 ];
 const userStore = useUserStore();
+const activeTab = ref("settings");
 const model = ref({
   firstName: "",
   lastName: "",
@@ -175,7 +169,7 @@ const updateUser = async (newValues) => {
 .nav-tabs .nav-link.active {
   color: #000;
   border-color: #d3d3d3;
-  
+
   background-color: #d3d3d3;
 }
 

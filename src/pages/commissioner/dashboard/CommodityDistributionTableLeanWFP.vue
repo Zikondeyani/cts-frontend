@@ -9,7 +9,7 @@
             <!-- Right-aligned filters -->
             <div class="flex space-x-4">
                 <!-- Activity Selector -->
-                <div>
+                <!-- <div>
                     <span class="mr-2 font-bold">Activity:</span>
                     <select v-model="selectedActivity"
                         class="focus:ring-gray-500 focus:border-blue-300 block shadow-sm sm:text-sm border-gray-400 rounded-md">
@@ -18,7 +18,7 @@
                             {{ activity.Name }}
                         </option>
                     </select>
-                </div>
+                </div> -->
 
                 <!--   <div>
                     <span class="mr-2 font-bold">Handled By:</span>
