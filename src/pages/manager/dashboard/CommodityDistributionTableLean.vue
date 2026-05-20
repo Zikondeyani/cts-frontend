@@ -247,6 +247,8 @@ const commodities = reactive([]);
 
 const props = defineProps({
   data: Object,
+  
+  selectedActivity: String,
   screenshotMode: Boolean,
 });
 
