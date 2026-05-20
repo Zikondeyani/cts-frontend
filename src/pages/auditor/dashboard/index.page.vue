@@ -607,7 +607,7 @@
                     </select>
 
                     <commodity-distribution-table-lean :data="filteredLeanCommodityDispatchData2"
-                      :screenshotMode="screenshotMode" />
+                      :screenshotMode="screenshotMode" :selectedActivity="selectedActivity1" />
                   </div>
 
                   <div v-show="currentTab === 'WFP'">
@@ -1081,7 +1081,9 @@ const userStore = useUserStore();
 const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
-
+const system = reactive({
+  season: process.env.VUE_APP_LSR_SEASON,
+});
 const breadcrumbs = [
   { name: "Home", href: "/admin/dashboard", current: false },
   { name: "", href: "#", current: true },
@@ -1134,9 +1136,10 @@ onMounted(async () => {
     activities1.push(...filteredActivities);
 
     // Force reset after loading
-    if (activities1.find((a) => a.activity === "LSR 2025 - 26")) {
-      selectedActivity1.value = "LSR 2025 - 26";
+  if (activities1.find((a) => a.activity === system.season)) {
+      selectedActivity1.value = system.season;
     }
+
 
     const dispatchEmergencydata =
       await receivedcommoditiesstore.getdispatchDamageSummary();
