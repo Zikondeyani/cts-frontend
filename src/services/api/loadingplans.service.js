@@ -101,6 +101,29 @@ export default class LoadingPlanService {
     }
   }
 
+
+  getSummaries() {
+    return axios
+      .get(resource + "/dispatch-worksheet-summary", {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
+
+
   getWarehouseLoad() {
     return axios
       .get(resource + "/dispatch-sum", {

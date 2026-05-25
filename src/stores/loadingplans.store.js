@@ -23,6 +23,18 @@ export const useloadingplanstore = defineStore({
       });
     },
 
+
+    
+    async getSummaries() {
+      return await loadingplansService.getSummaries().then((result) => {
+        if (result) {
+          var response = result;
+          return response
+        }
+      });
+    },
+
+
     async get() {
       return await loadingplansService.get().then((result) => {
         if (result) {
