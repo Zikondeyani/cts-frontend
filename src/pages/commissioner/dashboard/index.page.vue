@@ -283,7 +283,9 @@
                         </h2>
 
                         <!-- Activity Filter -->
+
                         <div class="flex justify-end items-center space-x-3">
+
                           <!-- Activity Dropdown -->
                           <div class="relative">
                             <select :value="selectedActivity1"
@@ -295,7 +297,6 @@
                               </option>
                             </select>
 
-
                             <!-- Dropdown Icon -->
                             <span class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400"
                               :class="{ hidden: screenshotMode }">
@@ -303,12 +304,19 @@
                             </span>
                           </div>
 
-                          <!-- View More link -->
+                          <!-- Export Button -->
+                          <button @click="exportToExcelAll" :class="{ hidden: screenshotMode }"
+                            class="px-4 py-2 bg-white text-[#0b8ad8] border border-[#0b8ad8] rounded-xl text-sm font-medium hover:bg-[#0b8ad8] hover:text-white transition shadow-sm">
+                            Export All Data to Excel
+                          </button>
+
+                          <!-- View More -->
                           <router-link to="/commissioner/stats/"
                             class="text-[#0b8ad8] text-sm font-medium hover:text-[#096eb4] transition"
                             :class="{ hidden: screenshotMode }">
                             View More →
                           </router-link>
+
                         </div>
                       </div>
 
@@ -1074,6 +1082,9 @@ const receiptcount = ref(0);
 const dispatchcount = ref(0);
 const loadingplansCount = ref(0);
 const LoanloadingPlans = reactive([]);
+
+
+const datasummaryPlans = ref([]);
 //MOUNTEDgetCatalogue
 onMounted(async () => {
   isLoading.value = true;
@@ -1110,6 +1121,11 @@ onMounted(async () => {
       await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks =
       await loadingPlanStore.getloadingplansSummaryByCommodity();
+
+    datasummaryPlans.value.length = 0;
+    const datasummary = await loadingPlanStore.getSummaries()
+    datasummaryPlans.value = datasummary
+
     commodityDispatchData.value.length = 0;
     commodityEmergencyDispatchData.value.length = 0;
     leanStockSummary.value = [...leanstocks];
@@ -1311,6 +1327,38 @@ const getReceipts = async () => {
     receiptcount.value = result.count;
   });
 };
+
+
+const exportToExcelAll = () => {
+  // Replace this with your actual data source
+  const exportData = datasummaryPlans.value
+
+  // Create workbook
+  const workbook = XLSX.utils.book_new()
+
+  // Loop through each object key and create sheet
+  Object.keys(exportData).forEach(sheetName => {
+    const data = exportData[sheetName]
+
+    if (Array.isArray(data) && data.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(data)
+
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        sheetName.substring(0, 31) // Excel sheet name limit
+      )
+    }
+  })
+
+  // Download file
+  XLSX.writeFile(
+    workbook,
+    `Commodity_Tracking_Report_${new Date()
+      .toISOString()
+      .split('T')[0]}.xlsx`
+  )
+}
 
 const exportToExcel = () => {
   const worksheet = XLSX.utils.json_to_sheet(commodityDistributionData.value);

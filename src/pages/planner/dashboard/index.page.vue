@@ -98,7 +98,7 @@
             </section>
 
             <section ref="commodityTable">
-        
+
 
               <div class="bg-gray-100 p-5" v-show="currentView === 'charts'">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -281,6 +281,12 @@
                             </span>
                           </div>
 
+                          <!-- Export Button -->
+                          <button @click="exportToExcelAll" :class="{ hidden: screenshotMode }"
+                            class="px-4 py-2 bg-white text-[#0b8ad8] border border-[#0b8ad8] rounded-xl text-sm font-medium hover:bg-[#0b8ad8] hover:text-white transition shadow-sm">
+                            Export All Data to Excel
+                          </button>
+
                           <!-- View More link -->
                           <router-link to="/planner/stats/"
                             class="text-[#0b8ad8] text-sm font-medium hover:text-[#096eb4] transition"
@@ -414,7 +420,7 @@
                   <!-- Charts Section -->
                   <div class="mx-3">
                     <dispatch-summary-leans-two v-if="filteredLeanCommodityDispatchData2.length > 0"
-                      :commodityDispatchData="filteredLeanCommodityDispatchData2"  :activity="selectedActivity1"/>
+                      :commodityDispatchData="filteredLeanCommodityDispatchData2" :activity="selectedActivity1" />
                     <div v-else
                       class="flex items-center justify-center border border-gray-300 rounded-md h-64 text-gray-500 text-lg">
                       No Data
@@ -523,7 +529,7 @@
                 <!-- Other components for stats, etc... -->
               </div>
 
-              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'" v-if="activeTab !== 'district'"> 
+              <div class="bg-gray-100 p-5" v-show="currentView === 'charts'" v-if="activeTab !== 'district'">
                 <!-- Commodity distribution table view -->
                 <commodity-distribution-table-lean-two :data="filteredLeanCommodityDispatchData22"
                   :screenshotMode="screenshotMode" />
@@ -794,7 +800,7 @@ import stockSummaryLeanTwo from "../../../components/pages/charts/stocksummaryle
 
 import allocationTrends from "../../../components/pages/charts/allocation_trends.vue"; // Adjust path as needed
 
- 
+
 
 import { useReceivedCommoditiesStore } from "../../../stores/receivedCommodities.store";
 
@@ -1021,7 +1027,7 @@ const Swal = inject("Swal");
 //VARIABLES
 const sessionStore = useSessionStore();
 const userStore = useUserStore();
-const dispatchStore = useInstructedDispatchesStore();  const bookings = reactive([]);
+const dispatchStore = useInstructedDispatchesStore(); const bookings = reactive([]);
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 
@@ -1050,6 +1056,8 @@ const receiptcount = ref(0);
 const dispatchcount = ref(0);
 const loadingplansCount = ref(0);
 const LoanloadingPlans = reactive([]);
+
+const datasummaryPlans = ref([]);
 //MOUNTEDgetCatalogue
 onMounted(async () => {
   isLoading.value = true;
@@ -1081,6 +1089,12 @@ onMounted(async () => {
     if (activities1.find((a) => a.activity === system.season)) {
       selectedActivity1.value = system.season;
     }
+
+
+    datasummaryPlans.value.length = 0;
+    const datasummary = await loadingPlanStore.getSummaries()
+    datasummaryPlans.value = datasummary
+
     const dispatchEmergencydata =
       await receivedcommoditiesstore.getdispatchDamageSummary();
     const leanstocks =
@@ -1415,6 +1429,39 @@ const getUsers = async () => {
     });
 };
 
+
+const exportToExcelAll = () => {
+  // Replace this with your actual data source
+  const exportData = datasummaryPlans.value
+
+  // Create workbook
+  const workbook = XLSX.utils.book_new()
+
+  // Loop through each object key and create sheet
+  Object.keys(exportData).forEach(sheetName => {
+    const data = exportData[sheetName]
+
+    if (Array.isArray(data) && data.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(data)
+
+      XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        sheetName.substring(0, 31) // Excel sheet name limit
+      )
+    }
+  })
+
+  // Download file
+  XLSX.writeFile(
+    workbook,
+    `Commodity_Tracking_Report_${new Date()
+      .toISOString()
+      .split('T')[0]}.xlsx`
+  )
+}
+
+
 const stats2 = ref([
   {
     label: "Total Stocks Planned (Lean Season Response)",
@@ -1591,8 +1638,8 @@ const filteredLeanCommodityDispatchData2 = computed(() => {
     const matchCommodity =
       !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
-   
- 
+
+
 
     return matchActivity && matchCommodity && matchDistrict;
   });
@@ -1608,8 +1655,8 @@ const filteredLeanCommodityDispatchData3 = computed(() => {
     const matchCommodity =
       !selectedCommodity.value || item.commodity === selectedCommodity.value;
 
-   
- 
+
+
 
     return matchActivity && matchCommodity && matchDistrict;
   });
