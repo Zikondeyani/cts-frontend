@@ -206,6 +206,15 @@ const columns = ref([
       `;
       }
 
+       // Show District if defined
+      if (row.activity?.Name) {
+        details += `
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-semibold bg-blue-100 text-blue-800">
+          Activity: ${row.activity.Name}
+        </span><br>
+      `;
+      }
+
       // Show District if defined
       if (row.district?.Name) {
         details += `
@@ -578,6 +587,7 @@ const generateExcel = () => {
     "ATC NUMBER": plan.ATCNumber,
     EndDate: plan.EndDate,
     Commodity: plan.commodity?.Name,
+    Activity: plan.activity?.Name,
     From: plan.warehouse?.Name,
     "Transporter Name": plan.transporter?.Name,
     To: plan.district?.Name,
