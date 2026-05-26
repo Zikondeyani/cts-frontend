@@ -11,69 +11,59 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Loading Plans (Closed)
+            Loading Plans (Reopen or Close)
           </h2>
         </div>
 
         <!-- Export Data Button -->
-        <button
-          type="button"
+        <button type="button"
           class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
-          @click="generateExcel()"
-        >
+          @click="generateExcel()">
           <i class="fas fa-file-export mr-2"></i>
-          <!-- Icon (Font Awesome used as an example) -->
           Export Data
         </button>
       </div>
       <!-- table  -->
 
-      <section
-        aria-labelledby="quick-links-title"
-        class="bg-transparent rounded-table"
-      >
-        <div
-          class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table"
-        >
+      <section aria-labelledby="quick-links-title" class="bg-transparent rounded-table">
+        <div class="container mx-auto align-middle inline-block min-w-full mt-5 shadow-xl rounded-table">
           <div class="overflow-x-auto">
-            <vue-good-table
-              :columns="columns"
-              :rows="loadingplans"
-              :search-options="{ enabled: true }"
-              style="font-weight: bold; color: #096eb4"
-              :pagination-options="{ enabled: true }"
-              theme="polar-bear"
-              styleClass="vgt-table striped"
-              compactMode
-            >
+            <vue-good-table :columns="columns" :rows="loadingplans" :search-options="{ enabled: true }"
+              style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
+              styleClass="vgt-table striped" compactMode>
               <template #table-actions> </template>
+
 
               <template #table-row="props">
                 <div v-if="props.column.label === 'Status'">
-                  <span
-                    v-if="props.row.isClosed"
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
-                  >
+                  <span v-if="props.row.isClosed"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
                     Closed
+                  </span>
+
+                  <span v-else
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                    Active
                   </span>
                 </div>
 
-                <div
-                  v-if="props.column.label == 'Options'"
-                  class="flex flex-col sm:flex-row sm:space-x-2"
-                >
-                  <button
-                    @click="reopenLoadingPlan(props.row.id, props.row.isClosed)"
-                    class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0"
-                  >
+                <div v-if="props.column.label == 'Options'" class="flex flex-col sm:flex-row sm:space-x-2">
+                  <!-- Show Close if active -->
+                  <button v-if="!props.row.isClosed" @click="reopenLoadingPlan(props.row.id, true)"
+                    class="text-orange-500 hover:text-orange-700 transition duration-300 mb-2 sm:mb-0">
+                    <PencilIcon class="h-5 w-5 inline-block mr-1" />
+                    Close
+                  </button>
+
+                  <!-- Show Reopen if closed -->
+                  <button v-else @click="reopenLoadingPlan(props.row.id, false)"
+                    class="text-green-500 hover:text-green-700 transition duration-300 mb-2 sm:mb-0">
                     <PencilIcon class="h-5 w-5 inline-block mr-1" />
                     Reopen
                   </button>
 
-                  <button
-                    @click="deleteItem(props.row.id)"
-                    class="text-red-500 hover:text-red-700 transition duration-300"
-                  >
+                  <button @click="deleteItem(props.row.id)"
+                    class="text-red-500 hover:text-red-700 transition duration-300">
                     <TrashIcon class="h-5 w-5 inline-block mr-1" />
                     Delete
                   </button>
@@ -232,8 +222,7 @@ const columns = ref([
       `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-blue-100 text-blue-800">Qty: ${row.Quantity.toFixed(
         2
       )} MT</span><br>` +
-      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${
-        row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"
+      `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-bold bg-green-100 text-green-800">Bal: ${row.Balance !== null ? row.Balance.toFixed(2) + " MT" : "Pending"
       }</span>`,
     sortable: true,
     firstSortType: "asc",
@@ -273,9 +262,7 @@ const openEditDialog = (loadingPlan) => {
 
 //MOUNTED
 onMounted(async () => {
-  /*  startOnlineStatusCheck(); // Start periodic online status check
-   await updateOnlineStatusMessage();
-   */
+
   await getLoadingplans();
 
   await getWarehouses();
@@ -289,11 +276,6 @@ const getActivities = async () => {
     isLoading.value = true;
     let data = [];
 
-    /* if (isOnline.value) {
-      data = await activitiesStore.get();
-    } else {
-      data = await getOfflineLoadingPlans();
-    } */
     data = await activitiesStore.get();
 
     // Clear existing data and push new data
@@ -338,7 +320,7 @@ const getLoadingplans = async () => {
     loadingplans.splice(
       0,
       loadingplans.length,
-      ...data.filter((item) => item.isClosed == true).reverse()
+      ...data
     );
   } catch (error) {
     console.error("Error fetching loading plans:", error);
@@ -452,40 +434,43 @@ const deleteItem = async (id) => {
 };
 
 const reopenLoadingPlan = async (planId, currentStatus) => {
+
+  const state = currentStatus === false ? "active" : "closed";
+  const action = currentStatus === false ? "reopened" : "closed";
+
   try {
     const result = await Swal.fire({
-      title: "Reopen Loading Plan?",
-      text: "This will mark the selected loading plan as active again.",
+      title: `${action.charAt(0).toUpperCase() + action.slice(1)} Loading Plan?`,
+      text: `This will mark the selected loading plan as ${state}.`,
       icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, reopen",
+      confirmButtonText: "Yes",
       cancelButtonText: "Cancel",
     });
 
     if (result.isConfirmed) {
       isLoading.value = true;
 
-      // Only push id and new status
       await loadingPlanStore.update({
         id: planId,
-        isClosed: false,
+        isClosed: currentStatus,
       });
 
       await getLoadingplans();
 
       await Swal.fire({
         icon: "success",
-        title: "Reopened",
-        text: "The loading plan has been successfully reopened.",
+        title: action.charAt(0).toUpperCase() + action.slice(1),
+        text: `The loading plan has been successfully ${action}.`,
       });
     }
   } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Failed to reopen loading plan (" + error.message + ")",
+      text: `Failed to ${action} loading plan (${error.message})`,
     });
   } finally {
     isLoading.value = false;
