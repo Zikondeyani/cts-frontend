@@ -14,72 +14,48 @@
 
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2
-            class="text-lg font-bold leading-7 text-white sm:text-2xl sm:truncate"
-          >
+          <h2 class="text-lg font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Dispatches
           </h2>
         </div>
 
-        <button
-          type="button"
+        <button type="button"
           class="mt-3 w-full md:w-auto px-6 py-2 bg-gray-500 text-white font-medium text-sm rounded shadow-md hover:bg-gray-600 focus:ring focus:ring-gray-400 focus:outline-none transition ease-in-out"
-          @click="generateExcelUser"
-        >
+          @click="generateExcelUser">
           Export Data
         </button>
       </div>
 
       <!-- Table Section -->
-      <div
-        class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mb-2"
-      >
+      <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto mb-2">
         <!-- Filters -->
-        <div
-          class="filters flex flex-wrap gap-4 gap-y-2 items-center mt-2 mb-2"
-        >
-          <select
-            v-model="selectedATC"
-            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300"
-          >
+        <div class="filters flex flex-wrap gap-4 gap-y-2 items-center mt-2 mb-2">
+          <select v-model="selectedATC"
+            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300">
             <option value="all">All ATC Numbers</option>
             <option v-for="atc in atcNumbers" :key="atc" :value="atc">
               {{ atc }}
             </option>
           </select>
 
-          <select
-            v-model="selectedTransporter"
-            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300"
-          >
+          <select v-model="selectedTransporter"
+            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300">
             <option value="all">All Transporters</option>
-            <option
-              v-for="transporter in transporters"
-              :key="transporter"
-              :value="transporter"
-            >
+            <option v-for="transporter in transporters" :key="transporter" :value="transporter">
               {{ transporter }}
             </option>
           </select>
 
-          <select
-            v-model="selectedDistrict"
-            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300"
-          >
+          <select v-model="selectedDistrict"
+            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300">
             <option value="all">All Districts</option>
-            <option
-              v-for="district in districts"
-              :key="district"
-              :value="district"
-            >
+            <option v-for="district in districts" :key="district" :value="district">
               {{ district }}
             </option>
           </select>
 
-          <select
-            v-model="selectedDateFilter"
-            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300"
-          >
+          <select v-model="selectedDateFilter"
+            class="w-full sm:w-40 p-2 text-sm border border-gray-400 rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-300">
             <option value="all">All Dates</option>
             <option value="today">Today</option>
             <option value="yesterday">Yesterday</option>
@@ -90,32 +66,31 @@
 
         <!-- Table -->
         <div class="align-middle inline-block w-full rounded-table mx-0 overflow-x-auto font-semibold">
-          <vue-good-table
-            :columns="columns2"
-            :rows="filteredDispatches"
-            :search-options="{ enabled: true }"
-            :pagination-options="{ enabled: true }"
-            theme="polar-bear"
-            styleClass="vgt-table striped"
-            compactMode
-          />
+
+          <vue-good-table :columns="columns2" :rows="filteredDispatches" :search-options="{ enabled: true }"
+            :pagination-options="{ enabled: true }" theme="polar-bear" styleClass="vgt-table striped" compactMode>
+            <template #table-row="props">
+              <span v-if="props.column.field === 'options'">
+
+                <button @click="deleteDispatch(props.row.id)"
+                  class="text-red-500 hover:text-red-700 transition duration-300">
+                  <TrashIcon class="h-5 w-5 inline-block mr-1" />
+                  Delete
+                </button>
+              </span>
+
+              <span v-else v-html="props.formattedRow[props.column.field]"></span>
+            </template>
+          </vue-good-table>
         </div>
       </div>
 
       <!-- Modals -->
-      <EditDispatchDialog
-        :isOpen="isEditDialogOpen"
-        :Dispatch="selectedDispatch"
-        @close="closeEditDialog"
-        v-on:update="reloadPage"
-      />
+      <EditDispatchDialog :isOpen="isEditDialogOpen" :Dispatch="selectedDispatch" @close="closeEditDialog"
+        v-on:update="reloadPage" />
 
-      <ReceiptLoadingPlanDialog
-        :isOpen="isReceiptDialogOpen"
-        :dispatch="selectedDispatch"
-        @close="closeReceiptDialog"
-        v-on:update="reloadPage"
-      />
+      <ReceiptLoadingPlanDialog :isOpen="isReceiptDialogOpen" :dispatch="selectedDispatch" @close="closeReceiptDialog"
+        v-on:update="reloadPage" />
     </div>
   </main>
 </template>
@@ -235,39 +210,50 @@ const columns2 = ref([
     html: true,
     tdClass: "capitalize",
   },
+
+  {
+    label: "DNote #",
+    field: (row) => row.DNote,
+    sortable: true,
+    html: true,
+    tdClass: "capitalize",
+  },
   {
     label: "Date of Dispatch",
     field: (row) => `
-      <span class="badge badge-primary">${
-        moment(row.dateOfDispatch).format("DD/MM/YYYY") || "N/A"
+      <span class="badge badge-primary">${moment(row.dateOfDispatch).format("DD/MM/YYYY") || "N/A"
       }</span>
     `,
     sortable: true,
     html: true,
     tdClass: "capitalize",
   },
-  {
+/*   {
     label: "Created On",
     field: (row) => `
-      <span class="badge badge-info">${
-        moment(row.createdOn).format("DD/MM/YYYY") || "N/A"
+      <span class="badge badge-info">${moment(row.createdOn).format("DD/MM/YYYY") || "N/A"
       }</span>
     `,
     sortable: true,
     html: true,
     tdClass: "capitalize",
-  },
+  }, */
   {
     label: "Quantity",
     field: (row) => `
-      <span class="badge badge-primary">${
-        row.quantity ? row.quantity + " MT" : "Not Specified"
+      <span class="badge badge-primary">${row.quantity ? row.quantity + " MT" : "Not Specified"
       }</span>
     `,
     sortable: true,
     html: true,
     tdClass: "capitalize",
   },
+  {
+    label: "Options",
+    field: "options",
+    sortable: false,
+    html: true,
+  }
 ]);
 
 const isEditDialogOpen = ref(false);
@@ -283,6 +269,45 @@ const openEditDialog = (dispatch) => {
 // Function to close the edit dialog
 const closeEditDialog = () => {
   isEditDialogOpen.value = false;
+};
+
+
+
+const deleteDispatch = async (dispatchId) => {
+  const result = await Swal.fire({
+    title: "Delete Dispatch?",
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, Delete",
+    cancelButtonText: "Cancel",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    isLoading.value = true;
+
+    await dispatchStore.remove(dispatchId);
+
+    await getUserDispatches();
+
+    Swal.fire({
+      icon: "success",
+      title: "Deleted",
+      text: "Dispatch deleted successfully.",
+    });
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: `Failed to delete dispatch (${error.message})`,
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const isReceiptDialogOpen = ref(false);

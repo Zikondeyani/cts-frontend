@@ -16,42 +16,44 @@
       </div>
 
       <div class="flex flex-wrap justify-center md:justify-start -mx-2 mt-7">
-        <div
-          v-for="option in options"
-          :key="option.label"
-          class="p-2 md:w-1/3 lg:w-1/5 group relative"
-        >
+        <div v-for="option in options" :key="option.label" class="p-2 md:w-1/3 lg:w-1/5 group relative">
           <router-link :to="option.path" class="block relative z-10">
             <div
-              class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2"
-            >
+              class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-blue-400 transition m-2">
               <component :is="option.icon" class="h-6 w-6 mb-2" />
+
+
               <span class="text-center p-2">{{ option.label }}</span>
 
               <!-- Requisition badge (unchanged) -->
-              <div
-                v-if="option.label === 'Requisitions' && requisitionCount > 0"
-                class="absolute bottom-0 right-2 bg-red-600 text-white text-sm font-bold h-5 w-5 flex items-center justify-center rounded-sm"
-              >
+              <div v-if="option.label === 'Requisitions' && requisitionCount > 0"
+                class="absolute bottom-0 right-2 bg-red-600 text-white text-sm font-bold h-5 w-5 flex items-center justify-center rounded-sm">
                 {{ requisitionCount }}
               </div>
             </div>
           </router-link>
 
-          <!-- Floating button below for OutBound Stock -->
-          <router-link
-            v-if="option.label === 'OutBound Stock'"
-            to="/warehouse/stock-transfer-management"
-            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap"
-          >
+
+
+          <button v-if="option.label === 'Blank Sheet'" @click.stop="exportBlankInventorySheet"
+            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap">
+            ➔ Download Blank inventory count sheet
+          </button>
+
+
+          <router-link v-if="option.label === 'Warehouse Requisitions'" to="/planner/stock-transfer-management"
+            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap">
             ➔ View Stock Transfers
           </router-link>
 
-          <router-link
-            v-if="option.label === 'Requisitions'"
-            to="/warehouse/requisition-dispatch-management"
-            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap"
-          >
+          <!-- Floating button below for OutBound Stock -->
+          <router-link v-if="option.label === 'OutBound Stock'" to="/warehouse/stock-transfer-management"
+            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap">
+            ➔ View Stock Transfers
+          </router-link>
+
+          <router-link v-if="option.label === 'Requisitions'" to="/warehouse/requisition-dispatch-management"
+            class="absolute left-1/2 -translate-x-1/2 mt-1 group-hover:opacity-100 opacity-0 transition-opacity duration-300 bg-white text-[#096eb4] text-sm px-3 py-1 rounded shadow z-20 whitespace-nowrap">
             ➔ View Requisition Dispatches
           </router-link>
         </div>
@@ -61,8 +63,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch, computed } from "vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import {
   ClipboardListIcon,
   TruckIcon,
@@ -82,47 +86,93 @@ const breadcrumbs = [
 
 import { useWarehouseRequisitionsStore } from "../../../stores/warehouserequisition.store";
 import { useSessionStore } from "@/stores/session.store";
+import { DocumentDownloadIcon, DownloadIcon } from "@heroicons/vue/solid";
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const warehouseReqStore = useWarehouseRequisitionsStore();
 
 const warehouseReq = reactive([]);
-const options = ref([
-  /* { label: 'Instructions', icon: ClipboardListIcon, path: '/instructions' },
-  { label: 'Instructed Dispatches', icon: TruckIcon, path: '/instructed-dispatches' },
-  { label: 'Instructed Commodities', icon: ArchiveIcon, path: '/instructed-commodities' },
-  { label: 'Instructed Warehouses', icon: WarehouseRefundIcon, path: '/instructed-receipts' },
-  */ {
-    label: "Warehouses",
-    icon: OfficeBuildingIcon,
-    path: "/warehouse/warehouses",
-  },
+const options = computed(() => {
+  const items = [
+    {
+      label: "Stock Register",
+      icon: ArrowCircleDownIcon,
+      path: "/warehouse/stock-management",
+    },
+    {
+      label: "OutBound Stock",
+      icon: TruckIcon,
+      path: "/warehouse/outbound-stock-management",
+    },
 
-  {
-    label: "Requisitions",
-    icon: ClipboardIcon,
-    path: "/warehouse/warehouserequisitions",
-  },
+    {
+      label: "Requisitions",
+      icon: TruckIcon,
+      path: "/warehouse/warehouserequisitions",
+    },
 
-  {
-    label: "InBound Stock",
-    icon: ArrowCircleDownIcon,
-    path: "/warehouse/stock-management",
-  },
+    {
+      label: "Blank Sheet",
+      icon: DocumentDownloadIcon,
+    },
+  ];
 
-  {
-    label: "OutBound Stock",
-    icon: TruckIcon,
-    path: "/warehouse/outbound-stock-management",
-  },
 
-  /*  { label: 'Receipts', icon: ClipboardIcon, path: '/warehouse/receipts' },
-   */
-]);
-
+  return items;
+});
 onMounted(async () => {
   await getcommodityInventory();
 });
+
+
+const isNational = computed(() => {
+  return user.value?.district?.trim().toLowerCase() === "national";
+});
+
+const exportBlankInventorySheet = () => {
+  const worksheet = XLSX.utils.aoa_to_sheet([
+    [
+      "Commodity",
+      "BatchNumber",
+      "Warehouse",
+      "PhysicalCount",
+      "Unit",
+      "State",
+      "Remarks",
+      "CountedBy",
+      "CountDate",
+    ],
+  ]);
+
+  worksheet["!cols"] = [
+    { wch: 30 },
+    { wch: 20 },
+    { wch: 25 },
+    { wch: 15 },
+    { wch: 10 },
+    { wch: 15 },
+    { wch: 40 },
+    { wch: 25 },
+    { wch: 20 },
+  ];
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory Count");
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+
+  saveAs(
+    new Blob([excelBuffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    }),
+    "Inventory_Count_Template.xlsx"
+  );
+};
+
 
 const getcommodityInventory = async () => {
   try {

@@ -9,7 +9,7 @@
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
-            Stock Register
+             Stock Register
           </h2>
         </div>
       </div>
@@ -22,55 +22,65 @@
         <div class="flex flex-wrap justify-between items-center gap-2">
           <!-- Tabs -->
           <div class="flex gap-2 flex-wrap">
-            <button @click="activeTab = 'FoodItems'" :class="{
-              'tab-button text-white': activeTab === 'FoodItems',
-              'bg-white text-gray-800 border border-blue-800':
-                activeTab !== 'FoodItems',
-            }"
-              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <button
+              @click="activeTab = 'FoodItems'"
+              :class="{
+                'tab-button text-white': activeTab === 'FoodItems',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'FoodItems',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
               <i class="fas fa-check-circle mr-2"></i>
               Food Items
-              <span v-if="foodItemsCount > 0"
-                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span
+                v-if="foodItemsCount > 0"
+                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+              >
                 {{ foodItemsCount }}
               </span>
             </button>
 
-            <button @click="activeTab = 'NFIS'" :class="{
-              'tab-button text-white': activeTab === 'NFIS',
-              'bg-white text-gray-800 border border-blue-800':
-                activeTab !== 'NFIS',
-            }"
-              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <button
+              @click="activeTab = 'NFIS'"
+              :class="{
+                'tab-button text-white': activeTab === 'NFIS',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'NFIS',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
               <i class="fas fa-file-alt mr-2"></i>
               Non Food Items
-              <span v-if="nfisCount > 0"
-                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span
+                v-if="nfisCount > 0"
+                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+              >
                 {{ nfisCount }}
               </span>
             </button>
           </div>
 
-
+          <!-- Actions: Export + Create -->
           <div class="flex gap-2 ml-auto">
-            <!--  <button @click="exportBlankInventorySheet"
-              class="font-body inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-blue-700 transition duration-100 ease-in-out capitalize">
-              Export Blank Sheet
-            </button> -->
-
-            <button v-if="activeTab === 'FoodItems'" @click="exportFoodItems"
-              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md">
+            <button
+              v-if="activeTab === 'FoodItems'"
+              @click="exportFoodItems"
+              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
+            >
               Export Food Items Data
             </button>
-
-            <button v-else-if="activeTab === 'NFIS'" @click="exportNFIS"
-              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md">
+            <button
+              v-else-if="activeTab === 'NFIS'"
+              @click="exportNFIS"
+              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
+            >
               Export Non Food Item Data
             </button>
 
+            <!-- New Stock Register -->
             <create-stock-form v-on:create="createStock" />
           </div>
-
         </div>
       </div>
 
@@ -81,34 +91,52 @@
             <!-- Export Button -->
 
             <div class="overflow-x-auto">
-              <vue-good-table :columns="columns" :rows="nfisData" :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
-                styleClass="vgt-table striped" compactMode>
+              <vue-good-table
+                :columns="columns"
+                :rows="nfisData"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
                 <template #table-actions> </template>
 
                 <template #table-row="props">
-                  <span v-if="props.column.label === 'Options'" class="flex gap-2">
+                  <span
+                    v-if="props.column.label === 'Options'"
+                    class="flex gap-2"
+                  >
                     <!-- Edit Button -->
 
                     <span v-if="props.column.label === 'State'">
-                      <span class="px-2 py-1 text-xs font-semibold rounded-full" :class="[
-                        !props.row.state || props.row.state === 'Ready'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800',
-                      ]">
+                      <span
+                        class="px-2 py-1 text-xs font-semibold rounded-full"
+                        :class="[
+                          !props.row.state || props.row.state === 'Ready'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800',
+                        ]"
+                      >
                         {{ props.row.state || "Ready" }}
                       </span>
                     </span>
 
-                    <button @click="editStockState(props.row)"
-                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150">
+                    <button
+                      @click="editStockState(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150"
+                    >
                       <PencilIcon class="h-4 w-4 mr-1 text-green-600" />
                       Edit State
                     </button>
 
                     <!-- View Breakdown Button -->
-                    <button type="button" @click="openGroupedItemsModal(props.row)"
-                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-150">
+                    <button
+                      type="button"
+                      @click="openGroupedItemsModal(props.row)"
+                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition ease-in-out duration-150"
+                    >
                       <EyeIcon class="h-5 w-5 mr-2" />
                       View Stock Breakdown
                     </button>
@@ -126,42 +154,58 @@
             <!-- Export Button -->
 
             <div class="overflow-x-auto">
-              <vue-good-table :columns="columns" :rows="foodItemsData" :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
-                styleClass="vgt-table striped" compactMode>
+              <vue-good-table
+                :columns="columns"
+                :rows="foodItemsData"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
                 <template #table-actions> </template>
 
                 <template #table-row="props">
-
-
-
-
                   <span v-if="props.column.label === 'Warehouse'">
-                    <span class="whitespace-normal break-words text-sm text-gray-800">
+                    <span
+                      class="whitespace-normal break-words text-sm text-gray-800"
+                    >
                       {{ props.row.warehouse?.Name }}
                     </span>
                   </span>
                   <span v-if="props.column.label === 'State'">
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full" :class="[
-                      !props.row.state || props.row.state === 'Ready'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800',
-                    ]">
+                    <span
+                      class="px-2 py-1 text-xs font-semibold rounded-full"
+                      :class="[
+                        !props.row.state || props.row.state === 'Ready'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800',
+                      ]"
+                    >
                       {{ props.row.state || "Ready" }}
                     </span>
                   </span>
 
-                  <span v-if="props.column.label === 'Options'" class="flex gap-2">
+                  <span
+                    v-if="props.column.label === 'Options'"
+                    class="flex gap-2"
+                  >
                     <!-- Edit Stock State Button -->
-                    <button @click="editStockState(props.row)"
-                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150">
+                    <button
+                      @click="editStockState(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-green-600 font-semibold text-xs border border-green-600 rounded-md shadow-sm hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-300 transition ease-in-out duration-150"
+                    >
                       <PencilIcon class="h-4 w-4 mr-1 text-green-600" />
                       Edit State
                     </button>
 
                     <!-- View Stock Breakdown Button -->
-                    <button type="button" @click="openGroupedItemsModal(props.row)"
-                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-150 ease-in-out">
+                    <button
+                      type="button"
+                      @click="openGroupedItemsModal(props.row)"
+                      class="inline-flex items-center px-4 py-2 border border-orange-500 text-orange-500 font-semibold text-xs rounded-md shadow-sm hover:bg-orange-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-150 ease-in-out"
+                    >
                       <EyeIcon class="h-5 w-5 mr-2" />
                       View Stock Breakdown
                     </button>
@@ -176,7 +220,9 @@
       <!-- Modal for Grouped Items -->
       <template v-if="openGroupedItems">
         <div id="content">
-          <div class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50">
+          <div
+            class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
+          >
             <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full p-5">
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Grouped Stock Items</h3>
@@ -186,19 +232,29 @@
                 <table class="min-w-full table-auto border-collapse">
                   <thead>
                     <tr class="bg-blue-100">
-                      <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                      <th
+                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
                         Commodity
                       </th>
-                      <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                      <th
+                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
                         Stock From
                       </th>
-                      <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                      <th
+                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
                         Quantity
                       </th>
-                      <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                      <th
+                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
                         Type
                       </th>
-                      <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                      <th
+                        class="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                      >
                         Created On
                       </th>
                     </tr>
@@ -228,8 +284,11 @@
               </div>
 
               <div class="flex justify-end mt-4">
-                <button type="button" class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                  @click="closeGroupedItems">
+                <button
+                  type="button"
+                  class="no-print px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  @click="closeGroupedItems"
+                >
                   Close
                 </button>
               </div>
@@ -240,7 +299,9 @@
 
       <!-- Edit Stock State Modal -->
       <template v-if="editItem">
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
           <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
             <h3 class="text-lg font-semibold mb-4 text-gray-800">
               Edit Stock State
@@ -260,9 +321,14 @@
               <div><strong>Stock Type:</strong> {{ selectedStock?.type }}</div>
 
               <div class="mt-4">
-                <label for="stockState" class="block font-medium">Update Stock State</label>
-                <select id="stockState" v-model="selectedStock.state"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                <label for="stockState" class="block font-medium"
+                  >Update Stock State</label
+                >
+                <select
+                  id="stockState"
+                  v-model="selectedStock.state"
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+                >
                   <option disabled value="">Select new state</option>
                   <option value="Ready">Ready</option>
                   <option value="Fumigation">Fumigation</option>
@@ -273,10 +339,16 @@
             </div>
 
             <div class="flex justify-end gap-2 mt-6">
-              <button @click="cancelEdit" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+              <button
+                @click="cancelEdit"
+                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
                 Cancel
               </button>
-              <button @click="saveStockState" class="px-4 py-2 bg-[#096eb4] text-white rounded hover:bg-blue-700">
+              <button
+                @click="saveStockState"
+                class="px-4 py-2 bg-[#096eb4] text-white rounded hover:bg-blue-700"
+              >
                 Save
               </button>
             </div>
@@ -290,7 +362,7 @@
 <script setup>
 // import the styles
 import { inject, ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -312,6 +384,7 @@ import { usecommodityinventoriestore } from "../../../stores/commodityinventorie
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
 const $router = useRouter();
+const route = useRoute();
 const moment = inject("moment");
 const Swal = inject("Swal");
 
@@ -388,6 +461,8 @@ const columns = ref([
 
 onMounted(() => {
   getCommodityInventories();
+
+  console.log(route.params.id);
 });
 
 const editStockState = (item) => {
@@ -445,30 +520,21 @@ const getCommodityInventories = async () => {
     foodItemsData.length = 0;
     inventories.push(...result.reverse());
     inventories.sort((a, b) => new Date(b.created) - new Date(a.created));
-    const isNational = user.value.district === "National";
 
     nfisData.push(
-      ...inventories.filter((item) => {
-        const matchesType = item.commodity?.commodityTypeId == 2;
-
-        const matchesScope = isNational
-          ? true
-          : item.warehouse?.district?.Name === user.value.district;
-
-        return matchesType && matchesScope;
-      })
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId === 2 &&
+          item.warehouse?.id === Number(route.params.id)
+      )
     );
 
     foodItemsData.push(
-      ...inventories.filter((item) => {
-        const matchesType = item.commodity?.commodityTypeId == 1;
-
-        const matchesScope = isNational
-          ? true
-          : item.warehouse?.district?.Name === user.value.district;
-
-        return matchesType && matchesScope;
-      })
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId === 1 &&
+          item.warehouse?.id === Number(route.params.id)
+      )
     );
   } catch (error) {
     Swal.fire({
@@ -491,53 +557,6 @@ const closeGroupedItems = () => {
   openGroupedItems.value = false;
   groupedItemsToView.value = [];
 };
-
-
-
-const exportBlankInventorySheet = () => {
-  const worksheet = XLSX.utils.aoa_to_sheet([
-    [
-      "Commodity",
-      "BatchNumber",
-      "Warehouse",
-      "PhysicalCount",
-      "Unit",
-      "State",
-      "Remarks",
-      "CountedBy",
-      "CountDate",
-    ],
-  ]);
-
-  worksheet["!cols"] = [
-    { wch: 30 },
-    { wch: 20 },
-    { wch: 25 },
-    { wch: 15 },
-    { wch: 10 },
-    { wch: 15 },
-    { wch: 40 },
-    { wch: 25 },
-    { wch: 20 },
-  ];
-
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory Count");
-
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "array",
-  });
-
-  saveAs(
-    new Blob([excelBuffer], {
-      type:
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    }),
-    "Inventory_Count_Template.xlsx"
-  );
-};
-
 
 const createStock = async (model) => {
   isLoading.value = true;
@@ -566,56 +585,23 @@ const createStock = async (model) => {
 };
 
 const exportToExcel = (data, fileName) => {
+  // Format and flatten data
+  const formattedData = data.map((item, index) => ({
+    "#": index + 1,
+    Commodity: item.commodity?.Name || "N/A",
+    "Stock From":
+      item.groupedItems && item.groupedItems.length > 1
+        ? "Multiple"
+        : item.StockFrom,
+    Warehouse: item.warehouse?.Name || "N/A",
+    Quantity: `${item.Quantity} ${item.commodity?.Container_type || ""}`,
+    "Created On": moment(item.CreatedOn).format("YYYY-MM-DD HH:mm"),
+  }));
+
+  const worksheet = XLSX.utils.json_to_sheet(formattedData);
   const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-  // 1. Group data by warehouse
-  const groupedByWarehouse = data.reduce((acc, item) => {
-    const warehouseName = item.warehouse?.Name || "Unknown Warehouse";
-
-    if (!acc[warehouseName]) {
-      acc[warehouseName] = [];
-    }
-
-    acc[warehouseName].push(item);
-    return acc;
-  }, {});
-
-  // 2. Create a sheet per warehouse
-  Object.entries(groupedByWarehouse).forEach(([warehouseName, items]) => {
-    const formattedData = items.map((item, index) => ({
-      "#": index + 1,
-      Commodity: item.commodity?.Name || "N/A",
-      "Batch Number": item.BatchNumber || "N/A",
-      Warehouse: item.warehouse?.Name || "N/A",
-      Quantity: `${item.Quantity} ${item.commodity?.Container_type || ""}`,
-      State: item.state || "Ready",
-      "Stock Type": item.commodity?.commodityTypeId == 2 ? "NFI" : "Food",
-      "Created On": moment(item.CreatedOn).format("YYYY-MM-DD HH:mm"),
-    }));
-
-    console.log(items, "fir")
-
-    const worksheet = XLSX.utils.json_to_sheet(formattedData);
-
-    // Optional: improve column widths
-    worksheet["!cols"] = [
-      { wch: 5 },   // #
-      { wch: 25 },  // Commodity
-      { wch: 20 },  // Batch Number
-      { wch: 25 },  // Warehouse
-      { wch: 18 },  // Quantity
-      { wch: 12 },  // State
-      { wch: 15 },  // Stock Type
-      { wch: 22 },  // Created On
-    ];
-
-    // Clean sheet name (Excel limits sheet names)
-    const sheetName = warehouseName.substring(0, 31);
-
-    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-  });
-
-  // 3. Export file
   const excelBuffer = XLSX.write(workbook, {
     bookType: "xlsx",
     type: "array",
@@ -625,7 +611,7 @@ const exportToExcel = (data, fileName) => {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   });
 
-  saveAs(blob, `${fileName}_By_Warehouse.xlsx`);
+  saveAs(blob, `${fileName}.xlsx`);
 };
 
 const exportFoodItems = () => {
@@ -671,7 +657,6 @@ const exportNFIS = () => {
   background-color: #0f6c97;
   color: white;
 }
-
 button.bg-[#096eb4] {
   background-color: #3b82f6;
   color: white;

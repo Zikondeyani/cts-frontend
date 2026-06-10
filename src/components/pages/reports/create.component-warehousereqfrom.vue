@@ -1,153 +1,74 @@
 <template>
   <div>
-    <button
-      type="button"
-      style="background-color: #248cd6"
+    <button type="button" style="background-color: #248cd6"
       class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
-      @click="open = true"
-    >
+      @click="open = true">
       <PlusIcon class="h-5 w-5 mr-2" />
       Create Warehouse Requisition
     </button>
     <TransitionRoot as="template" :show="open">
-      <Dialog
-        as="div"
-        class="fixed z-10 inset-0 overflow-y-auto"
-        @close="open = false"
-        static
-      >
-        <div
-          class="flex min-h-screen text-center md:block md:px-2 lg:px-4"
-          style="font-size: 0"
-        >
-          <TransitionChild
-            class=" "
-            v-if="open"
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
+      <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="open = false" static>
+        <div class="flex min-h-screen text-center md:block md:px-2 lg:px-4" style="font-size: 0">
+          <TransitionChild class=" " v-if="open" as="template" enter="ease-out duration-300" enter-from="opacity-0"
+            enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
             <DialogOverlay
-              class="hidden pointer-events-none fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity md:block"
-            />
+              class="hidden pointer-events-none fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity md:block" />
           </TransitionChild>
 
           <!-- This element is to trick the browser into centering the modal contents. -->
-          <span
-            class="hidden md:inline-block md:align-middle md:h-screen"
-            aria-hidden="true"
-            >&#8203;</span
-          >
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
+          <span class="hidden md:inline-block md:align-middle md:h-screen" aria-hidden="true">&#8203;</span>
+          <TransitionChild as="template" enter="ease-out duration-300"
             enter-from="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-            enter-to="opacity-100 translate-y-0 md:scale-100"
-            leave="ease-in duration-200"
+            enter-to="opacity-100 translate-y-0 md:scale-100" leave="ease-in duration-200"
             leave-from="opacity-100 translate-y-0 md:scale-100"
-            leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-          >
+            leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
             <div
-              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl"
-            >
+              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl">
               <div
-                class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white"
-              >
-                <h5
-                  class="font-body text-md font-bold leading-normal text-blue-400"
-                  id="formModalLabel"
-                >
+                class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
+                <h5 class="font-body text-md font-bold leading-normal text-blue-400" id="formModalLabel">
                   Create Warehouse Requisition
                 </h5>
-                <button
-                  type="button"
+                <button type="button"
                   class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
-                  @click="open = false"
-                ></button>
+                  @click="open = false"></button>
               </div>
 
               <div class="px-4 py-5 bg-white sm:p-6">
                 <div class="grid grid-cols-6 gap-2">
                   <!-- Title -->
                   <div class="col-span-6">
-                    <label
-                      for="title"
-                      class="block text-sm font-bold text-gray-700"
-                      >Title</label
-                    >
-                    <input
-                      type="text"
-                      v-model="reports.subject"
-                      required
-                      id="title"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                    />
+                    <label for="title" class="block text-sm font-bold text-gray-700">Title</label>
+                    <input type="text" v-model="reports.subject" required id="title"
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                   </div>
 
                   <div class="col-span-6">
-                    <label
-                      for="Description"
-                      class="block text-sm font-bold text-gray-700"
-                      >Description</label
-                    >
-                    <textarea
-                      v-model="reports.description"
-                      required
-                      placeholder="Type letter description/justification"
+                    <label for="Description" class="block text-sm font-bold text-gray-700">Description</label>
+                    <textarea v-model="reports.description" required placeholder="Type letter description/justification"
                       id="description"
-                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                    ></textarea>
+                      class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"></textarea>
                   </div>
 
                   <div class="col-span-12 sm:col-span-3 mb-5">
-                    <label
-                      for="warehouse"
-                      class="block text-sm font-bold text-gray-700"
-                      >Action Requestor</label
-                    >
+                    <label for="warehouse" class="block text-sm font-bold text-gray-700">Action Requestor</label>
 
-                    <select
-                      id="requestor"
-                      name="requestor"
-                      v-model="reports.actionrequestorsId"
+                    <select id="requestor" name="requestor" v-model="reports.actionrequestorsId"
                       autocomplete="warehouse-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                    >
-                      <option
-                        v-for="actionrequestor in actionrequestors"
-                        :key="actionrequestor"
-                        :value="actionrequestor"
-                        class="uppercase"
-                      >
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                      <option v-for="actionrequestor in actionrequestors" :key="actionrequestor"
+                        :value="actionrequestor" class="uppercase">
                         {{ actionrequestor?.name }}
                       </option>
                     </select>
                   </div>
 
                   <div class="col-span-12 sm:col-span-3 mb-5">
-                    <label
-                      for="warehouse"
-                      class="block text-sm font-bold text-gray-700"
-                      >Warehouse</label
-                    >
+                    <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse</label>
 
-                    <select
-                      id="warehouse"
-                      name="warehouse"
-                      v-model="reports.warehouseId"
-                      autocomplete="warehouse-name"
-                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"
-                    >
-                      <option
-                        v-for="warehouse in warehouses"
-                        :key="warehouse"
-                        :value="warehouse"
-                        class="uppercase"
-                      >
+                    <select id="warehouse" name="warehouse" v-model="reports.warehouseId" autocomplete="warehouse-name"
+                      class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                      <option v-for="warehouse in warehouses" :key="warehouse" :value="warehouse" class="uppercase">
                         {{ warehouse.Name }}
                       </option>
                     </select>
@@ -160,36 +81,21 @@
                       Requested Items
                     </label>
 
-                    <div
-                      v-for="(item, index) in reports.items"
-                      :key="index"
-                      class="grid grid-cols-12 gap-2 mb-2 items-center"
-                    >
+                    <div v-for="(item, index) in reports.items" :key="index"
+                      class="grid grid-cols-12 gap-2 mb-2 items-center">
                       <div class="col-span-6 sm:col-span-3 relative">
-                        <label
-                          class="block text-xs font-medium text-gray-700 mb-3"
-                        >
+                        <label class="block text-xs font-medium text-gray-700 mb-3">
                           Search commodity
                         </label>
 
-                        <input
-                          type="text"
-                          v-model="commodityInputs[index]"
-                          @input="filterCommodities(index)"
+                        <input type="text" v-model="commodityInputs[index]" @input="filterCommodities(index)"
                           placeholder="Search commodity"
-                          class="focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border border-gray-400 rounded-md px-3 py-2"
-                        />
+                          class="focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border border-gray-400 rounded-md px-3 py-2" />
 
-                        <ul
-                          v-if="filteredCommoditiesList[index]?.length"
-                          class="absolute w-full mt-1 bg-white border border-gray-300 rounded-md shadow z-50 max-h-48 overflow-y-auto"
-                        >
-                          <li
-                            v-for="commodity in filteredCommoditiesList[index]"
-                            :key="commodity.id"
-                            @click="selectCommodity(commodity, index)"
-                            class="cursor-pointer p-2 hover:bg-gray-200"
-                          >
+                        <ul v-if="filteredCommoditiesList[index]?.length"
+                          class="absolute w-full mt-1 bg-white border border-gray-300 rounded-md shadow z-50 max-h-48 overflow-y-auto">
+                          <li v-for="commodity in filteredCommoditiesList[index]" :key="commodity.id"
+                            @click="selectCommodity(commodity, index)" class="cursor-pointer p-2 hover:bg-gray-200">
                             {{ commodity.Name }}
                           </li>
                         </ul>
@@ -197,25 +103,17 @@
 
                       <!-- Quantity -->
                       <div class="col-span-6 sm:col-span-3 relative">
-                        <input
-                          type="number"
-                          v-model.number="item.quantity"
-                          placeholder="Qty"
-                          class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7"
-                        />
-                        <span
-                          v-if="unitOfMeasures[index]"
-                          class="absolute top-1 left-0 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full mt-1 mb-2"
-                        >
+                        <input type="number" v-model.number="item.quantity" placeholder="Qty"
+                          class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7" />
+                        <span v-if="unitOfMeasures[index]"
+                          class="absolute top-1 left-0 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full mt-1 mb-2">
                           {{ unitOfMeasures[index] }}
                         </span>
                       </div>
 
                       <div class="col-span-6 sm:col-span-3">
-                        <select
-                          v-model="item.priority"
-                          class="col-span-4 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7"
-                        >
+                        <select v-model="item.priority"
+                          class="col-span-4 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7">
                           <option disabled value="">Priority</option>
                           <option>High</option>
                           <option>Medium</option>
@@ -223,20 +121,14 @@
                         </select>
                       </div>
                       <!-- Remove item -->
-                      <button
-                        @click="removeItem(index)"
-                        class="text-red-500 hover:text-red-700 text-sm mt-7"
-                      >
+                      <button @click="removeItem(index)" class="text-red-500 hover:text-red-700 text-sm mt-7">
                         ✕
                       </button>
                     </div>
 
                     <!-- Add new item button -->
-                    <button
-                      type="button"
-                      @click="addItem"
-                      class="mt-2 inline-flex items-center px-2 py-1 text-sm font-medium text-blue-600 hover:underline"
-                    >
+                    <button type="button" @click="addItem"
+                      class="mt-2 inline-flex items-center px-2 py-1 text-sm font-medium text-blue-600 hover:underline">
                       + Add Item
                     </button>
                   </div>
@@ -244,10 +136,8 @@
               </div>
 
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <button
-                  @click="onSubmit"
-                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
+                <button @click="onSubmit"
+                  class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                   <CheckIcon class="h-5 w-5 mr-2" />
                   Submit Requisition
                 </button>
@@ -424,7 +314,7 @@ const onSubmit = () => {
   reports.value.warehouseId = reports.value.warehouseId.id;
   reports.value.districtId = reports.value.warehouseId?.district?.id;
   reports.value.actionrequestorsId = reports.value.actionrequestorsId.id;
-
+  reports.value.isApproved = true;
   emit("create", reports.value);
   reports.value = {}; // Reset form
   open.value = false;
@@ -437,8 +327,8 @@ const getLoadingplan = async () => {
       loadingplans.length = 0; //empty array
       loadingplans.push(...result);
     })
-    .catch((error) => {})
-    .finally(() => {});
+    .catch((error) => { })
+    .finally(() => { });
 };
 
 const getActionRequestors = async () => {
@@ -448,8 +338,8 @@ const getActionRequestors = async () => {
       actionrequestors.length = 0; //empty array
       actionrequestors.push(...result);
     })
-    .catch((error) => {})
-    .finally(() => {});
+    .catch((error) => { })
+    .finally(() => { });
 };
 
 const getCommodityInventories = async () => {
@@ -459,8 +349,8 @@ const getCommodityInventories = async () => {
       commodityinventories.length = 0; //empty array
       commodityinventories.push(...result);
     })
-    .catch((error) => {})
-    .finally(() => {});
+    .catch((error) => { })
+    .finally(() => { });
 };
 
 const getWarehouses = async () => {
@@ -474,11 +364,14 @@ const getWarehouses = async () => {
         a.Name.localeCompare(b.Name)
       );
 
+
       warehouses.push(
-        ...result.filter(
-          (item) =>
-            item.organisation?.Name == "DODMA" &&
-            item.district.Name == user.value.district
+        ...result.filter((item) =>
+          item.organisation?.Name === "DODMA" &&
+          (
+            user.value?.district === "National" ||
+            item.district?.Name === user.value.district
+          )
         )
       );
     })
