@@ -141,7 +141,7 @@ const routes = [
         component: () =>
           import("../pages/fdpmanager/loadingplans/index.page.vue"),
       },
-    
+
 
       {
         path: "/fdpmanager/commodity-tracking",
@@ -149,7 +149,7 @@ const routes = [
         component: () =>
           import("../pages/fdpmanager/commodities/index.page.vue"),
       },
- 
+
 
       {
         path: "/fdpmanager/receipt-management",
@@ -182,14 +182,14 @@ const routes = [
         component: () =>
           import("../components/pages/users/change.password.vue"),
       },
-   
+
       {
         path: "/fdpmanager/requisition-management",
         name: "fdpmanager-requisition-management",
         component: () =>
           import("../pages/fdpmanager/requisitions/index.page.vue"),
       },
-   
+
 
       {
         path: "/fdpmanager/system",
@@ -460,14 +460,14 @@ const routes = [
         name: "admin-loadingplans",
         component: () => import("../pages/admin/loadingplans/index.page.vue"),
       },
-   
+
 
       {
         path: "/admin/commodity-tracking",
         name: "admin-commodity-tracking",
         component: () => import("../pages/admin/commodities/index.page.vue"),
       },
-   
+
 
       {
         path: "/admin/receipt-management",
@@ -506,7 +506,7 @@ const routes = [
         name: "admin-requisition-management",
         component: () => import("../pages/admin/requisitions/index.page.vue"),
       },
-    
+
 
       {
         path: "/admin/system",
@@ -702,7 +702,7 @@ const routes = [
         component: () => import("../pages/admin/reports/usage-stats.vue"),
       },
 
-        {
+      {
         path: "/admin/user-activity",
         name: "admin-user-activity",
         component: () => import("../pages/admin/reports/user-activity.vue"),
@@ -761,7 +761,7 @@ const routes = [
         component: () => import("../pages/auditor/damages/damages.page.vue"),
       },
 
-         {
+      {
         path: "/auditor/reminders",
         name: "auditor-reminders",
         component: () => import("../pages/auditor/reminders/reminders.page.vue"),
@@ -812,14 +812,14 @@ const routes = [
         name: "auditor-loadingplans",
         component: () => import("../pages/auditor/loadingplans/index.page.vue"),
       },
-   
+
 
       {
         path: "/auditor/commodity-tracking",
         name: "auditor-commodity-tracking",
         component: () => import("../pages/auditor/commodities/index.page.vue"),
       },
-   
+
 
       {
         path: "/auditor/receipt-management",
@@ -833,14 +833,14 @@ const routes = [
         component: () => import("../pages/auditor/receipts/receipts.page.vue"),
       },
 
- 
+
 
       {
         path: "/auditor/requisition-management",
         name: "auditor-requisition-management",
         component: () => import("../pages/auditor/requisitions/index.page.vue"),
       },
-    
+
 
       {
         path: "/auditor/system",
@@ -971,14 +971,14 @@ const routes = [
         name: "manager-loadingplans",
         component: () => import("../pages/manager/loadingplans/index.page.vue"),
       },
-     
+
 
       {
         path: "/manager/commodity-tracking",
         name: "manager-commodity-tracking",
         component: () => import("../pages/manager/commodities/index.page.vue"),
       },
-  
+
 
       {
         path: "/manager/receipt-management",
@@ -992,14 +992,14 @@ const routes = [
         component: () => import("../pages/manager/receipts/receipts.page.vue"),
       },
 
-   
+
 
       {
         path: "/manager/requisition-management",
         name: "manager-requisition-management",
         component: () => import("../pages/manager/requisitions/index.page.vue"),
       },
-   
+
 
       {
         path: "/manager/system",
@@ -1099,7 +1099,7 @@ const routes = [
         name: "dispatcher-dispatch-management",
         component: () => import("../pages/dispatcher/dispatch/index.page.vue"),
       },
-   
+
 
       {
         path: "/dispatcher/commodity-tracking",
@@ -1107,14 +1107,14 @@ const routes = [
         component: () =>
           import("../pages/dispatcher/commodities/index.page.vue"),
       },
-    
+
 
       {
         path: "/dispatcher/receipt-management",
         name: "dispatcher-receipt-management",
         component: () => import("../pages/dispatcher/receipts/index.page.vue"),
       },
-   
+
 
       {
         path: "/dispatcher/requisition-management",
@@ -1122,7 +1122,7 @@ const routes = [
         component: () =>
           import("../pages/dispatcher/requisitions/index.page.vue"),
       },
-  
+
 
       {
         path: "/dispatcher/donations",
@@ -1238,6 +1238,13 @@ const routes = [
         name: "warehouse-users",
         component: () => import("../pages/warehouse/users/index.page.vue"),
       },
+
+      {
+        path: "/warehouse/stock-management/ByWarehouse/:id",
+        name: "warehouse-stock-management-by-warehouse",
+        component: () => import("../pages/warehouse/stockByWarehouse/index.page.vue"),
+      },
+
       {
         path: "/warehouse/users/manage/:id",
         name: "warehouse-manage-user",
@@ -1283,6 +1290,11 @@ const routes = [
         path: "/warehouse/stock-management",
         name: "warehouse-stock-management",
         component: () => import("../pages/warehouse/stock/index.page.vue"),
+      },
+  {
+        path: "/warehouse/stock-management/expiries",
+        name: "warehouse-stock-management-expiries",
+        component: () => import("../pages/warehouse/stock/index-expiries.page.vue"),
       },
 
       {
@@ -1338,20 +1350,20 @@ const routes = [
         component: () =>
           import("../pages/warehouse/receipts/leanseason.receipts.page.vue"),
       },
-  
+
       {
         path: "/warehouse/warehouse-management/",
         name: "warehouse-manage-management",
         component: () => import("../pages/warehouse/warehouse/index.page.vue"),
       },
-     
+
       {
         path: "/warehouse/requisition-management",
         name: "warehouse-requisition-management",
         component: () =>
           import("../pages/warehouse/requisitions/index.page.vue"),
       },
-    
+
       {
         path: "/warehouse/instruction-management",
         name: "warehouse-instruction-management",
@@ -1548,7 +1560,7 @@ const routes = [
         name: "planner-loadingplans",
         component: () => import("../pages/planner/loadingplans/index.page.vue"),
       },
-  
+
 
       {
         path: "/planner/commodity-tracking",
@@ -1725,14 +1737,14 @@ const routes = [
         component: () =>
           import("../pages/receipient/loadingplans/index.page.vue"),
       },
-    
+
       {
         path: "/receipient/commodity-tracking",
         name: "receipient-commodity-tracking",
         component: () =>
           import("../pages/receipient/commodities/index.page.vue"),
       },
-   
+
 
       {
         path: "/receipient/receipt-management",
@@ -1760,7 +1772,7 @@ const routes = [
           import("../pages/receipient/receipts/leanseason.receipts.page.vue"),
       },
 
-  
+
 
       {
         path: "/receipient/requisition-management",
@@ -1918,7 +1930,7 @@ const routes = [
         name: "district-commodity-tracking",
         component: () => import("../pages/district/commodities/index.page.vue"),
       },
-    
+
 
       {
         path: "/district/receipt-management",
@@ -1946,7 +1958,7 @@ const routes = [
           import("../pages/district/receipts/leanseason.receipts.page.vue"),
       },
 
-   
+
 
       {
         path: "/district/requisition-management",
@@ -2151,7 +2163,7 @@ const routes = [
         component: () =>
           import("../pages/commissioner/loadingplans/index.page.vue"),
       },
-     
+
 
       {
         path: "/commissioner/commodity-tracking",
@@ -2159,7 +2171,7 @@ const routes = [
         component: () =>
           import("../pages/commissioner/commodities/index.page.vue"),
       },
-    
+
       {
         path: "/commissioner/receipt-management",
         name: "commissioner-receipt-management",
@@ -2174,14 +2186,14 @@ const routes = [
           import("../pages/commissioner/receipts/receipts.page.vue"),
       },
 
-   
+
       {
         path: "/commissioner/requisition-management",
         name: "commissioner-requisition-management",
         component: () =>
           import("../pages/commissioner/requisitions/index.page.vue"),
       },
-   
+
 
       {
         path: "/commissioner/system",

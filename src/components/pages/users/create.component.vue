@@ -91,24 +91,42 @@
                       </p>
                     </div>
 
+
                     <div class="col-span-6 sm:col-span-4"
                       v-if="roleId == 'ADMIN8' || roleId == 'ADMIN6' || roleId == 'ADMIN7' || roleId == 'ADMIN5'">
-                      <label for="user-district" class="block text-sm font-medium text-gray-700">Select District</label>
-                      <select id="district" name="district" v-model="district" autocomplete="district-name"
-                        class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
-                        <option v-for="district in districts" :key="district.Name" :value="district.Name"
-                          class="uppercase">
-                          {{ district.Name }}
-                        </option>
-                      </select>
-                      <p class="text-red-500 text-xs italic pt-1">
-                        {{ districtError }}
-                      </p>
+                      <!-- National Option for ADMIN8 -->
+                      <div v-if="roleId == 'ADMIN8'" class="mb-3">
+                        <label class="flex items-center">
+                          <input type="checkbox" v-model="isNational" class="mr-2" />
+                          National Access
+                        </label>
+                      </div>
 
-                      <!-- Message for ADMIN5 role -->
-                      <p v-if="roleId === 'ADMIN5'" class="text-gray-600 text-xs italic pt-1">
-                        For national dispatchers, you can leave the district blank.
-                      </p>
+                       <!-- Show district only when not National -->
+                        <div v-if="!(roleId == 'ADMIN8' && isNational)">
+                          <label for="user-district" class="block text-sm font-medium text-gray-700">
+                            Select District
+                          </label>
+
+                          <select id="district" name="district" v-model="district" autocomplete="district-name"
+                            class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                            <option value="">Select District</option>
+
+                            <option v-for="district in districts" :key="district.Name" :value="district.Name"
+                              class="uppercase">
+                              {{ district.Name }}
+                            </option>
+                          </select>
+
+                          <p class="text-red-500 text-xs italic pt-1">
+                            {{ districtError }}
+                          </p>
+                        </div>
+
+                        <!-- National message -->
+                        <p v-if="roleId == 'ADMIN8' && isNational" class="text-green-600 text-xs italic pt-2">
+                          User will have national access.
+                        </p>
                     </div>
 
 
@@ -195,7 +213,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { XIcon } from "@heroicons/vue/outline";
-import { inject, ref, reactive, onMounted } from "vue";
+import { inject, ref, reactive, onMounted, watch  } from "vue";
 import { useRouter } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 //COMPONENTS
@@ -283,6 +301,17 @@ function addTag() {
   }
 }
 
+
+const isNational = ref(false);
+
+watch(isNational, (value) => {
+  if (value) {
+    district.value = 0;
+  } else {
+    district.value = "";
+  }
+});
+
 function removeTag(index) {
   delegations.value.splice(index, 1);
 }
@@ -313,7 +342,9 @@ const onSubmit = useSubmitForm((values, actions) => {
     password: password.value,
     status: status.value,
     roleId: roleId.value,
-    district: district.value,
+    district: roleId.value === "ADMIN8" && isNational.value
+      ? "National"
+      : district.value,
     privileges: privileges.value.join(),
     isDelegated: isDelegated.value == 'false' ? false : true
   };

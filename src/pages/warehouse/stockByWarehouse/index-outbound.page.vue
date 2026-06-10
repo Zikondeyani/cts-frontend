@@ -18,40 +18,53 @@
         <div class="flex flex-wrap justify-between items-center gap-2">
           <!-- Tabs -->
           <div class="flex gap-2 flex-wrap">
-            <button @click="activeTab = 'FoodItems'" :class="{
-              'tab-button text-white': activeTab === 'FoodItems',
-              'bg-white text-gray-800 border border-blue-800':
-                activeTab !== 'FoodItems',
-            }"
-              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <button
+              @click="activeTab = 'FoodItems'"
+              :class="{
+                'tab-button text-white': activeTab === 'FoodItems',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'FoodItems',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
               <i class="fas fa-check-circle mr-2"></i>
               Food Items
-              <span v-if="foodItemsCount > 0"
-                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span
+                v-if="foodItemsCount > 0"
+                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+              >
                 {{ foodItemsCount }}
               </span>
             </button>
 
-            <button @click="activeTab = 'NFIS'" :class="{
-              'tab-button text-white': activeTab === 'NFIS',
-              'bg-white text-gray-800 border border-blue-800':
-                activeTab !== 'NFIS',
-            }"
-              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <button
+              @click="activeTab = 'NFIS'"
+              :class="{
+                'tab-button text-white': activeTab === 'NFIS',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'NFIS',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
               <i class="fas fa-file-alt mr-2"></i>
               Non-Food Items
-              <span v-if="nfisCount > 0"
-                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span
+                v-if="nfisCount > 0"
+                class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+              >
                 {{ nfisCount }}
               </span>
             </button>
 
-            <button @click="activeTab = 'Transfers'" :class="{
-              'tab-button text-white': activeTab === 'Transfers',
-              'bg-white text-gray-800 border border-blue-800':
-                activeTab !== 'Transfers',
-            }"
-              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out">
+            <button
+              @click="activeTab = 'Transfers'"
+              :class="{
+                'tab-button text-white': activeTab === 'Transfers',
+                'bg-white text-gray-800 border border-blue-800':
+                  activeTab !== 'Transfers',
+              }"
+              class="flex items-center py-2 px-4 rounded-t-lg font-semibold transition-colors duration-300 ease-in-out"
+            >
               <i class="fas fa-file-alt mr-2"></i>
               Stock Transfers
             </button>
@@ -59,12 +72,18 @@
 
           <!-- Actions: Export + Create -->
           <div class="flex gap-2 ml-auto">
-            <button v-if="activeTab === 'FoodItems'" @click="exportFoodItems"
-              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+            <button
+              v-if="activeTab === 'FoodItems'"
+              @click="exportFoodItems"
+              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
+            >
               Export Food Items
             </button>
-            <button v-else-if="activeTab === 'NFIS'" @click="exportNFIS"
-              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize">
+            <button
+              v-else-if="activeTab === 'NFIS'"
+              @click="exportNFIS"
+              class="font-body inline-block px-6 py-2.5 bg-green-600 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-400 active:shadow-lg transition duration-100 ease-in-out capitalize"
+            >
               Export NFIs
             </button>
 
@@ -80,15 +99,25 @@
             <!-- Export Button -->
 
             <div class="overflow-x-auto">
-              <vue-good-table :columns="columns" :rows="nfisData" :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
-                styleClass="vgt-table striped" compactMode>
+              <vue-good-table
+                :columns="columns"
+                :rows="nfisData"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
                 <template #table-actions> </template>
 
                 <template #table-row="props">
                   <span v-if="props.column.label == 'Options'">
-                    <button type="button" @click="openTransferModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150">
+                    <button
+                      type="button"
+                      @click="openTransferModal(props.row)"
+                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150"
+                    >
                       <ArrowCircleRightIcon class="h-5 w-5 mr-2" />
                       Transfer Stock
                     </button>
@@ -106,15 +135,25 @@
             <!-- Export Button -->
 
             <div class="overflow-x-auto">
-              <vue-good-table :columns="columns" :rows="foodItemsData" :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
-                styleClass="vgt-table striped" compactMode>
+              <vue-good-table
+                :columns="columns"
+                :rows="foodItemsData"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
                 <template #table-actions> </template>
 
                 <template #table-row="props">
                   <span v-if="props.column.label == 'Options'">
-                    <button type="button" @click="openTransferModal(props.row)"
-                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150">
+                    <button
+                      type="button"
+                      @click="openTransferModal(props.row)"
+                      class="font-heading inline-flex items-center px-4 py-2 border border-green-600 text-green-600 font-semibold text-xs rounded-md shadow-sm hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50 transition ease-in-out duration-150"
+                    >
                       <ArrowCircleRightIcon class="h-5 w-5 mr-2" />
                       Transfer Stock
                     </button>
@@ -132,19 +171,30 @@
             <!-- Export Button -->
 
             <div class="overflow-x-auto">
-              <vue-good-table :columns="columns1" :rows="transfers" :search-options="{ enabled: true }"
-                style="font-weight: bold; color: #096eb4" :pagination-options="{ enabled: true }" theme="polar-bear"
-                styleClass="vgt-table striped" compactMode>
+              <vue-good-table
+                :columns="columns1"
+                :rows="transfers"
+                :search-options="{ enabled: true }"
+                style="font-weight: bold; color: #096eb4"
+                :pagination-options="{ enabled: true }"
+                theme="polar-bear"
+                styleClass="vgt-table striped"
+                compactMode
+              >
                 <template #table-actions> </template>
 
                 <template #table-row="props">
                   <span v-if="props.column.label == 'Status'">
-                    <span v-if="!props.row.IsReceived"
-                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <span
+                      v-if="!props.row.IsReceived"
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                    >
                       <XCircleIcon class="h-4 w-4 mr-1" /> Not Received
                     </span>
-                    <span v-else
-                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <span
+                      v-else
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                    >
                       <CheckCircleIcon class="h-4 w-4 mr-1" /> Received
                     </span>
                   </span>
@@ -157,7 +207,9 @@
 
       <!-- Modal for Grouped Items -->
       <template v-if="showTransferModal">
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        >
           <div class="bg-white rounded-lg p-6 shadow-lg w-full max-w-md">
             <h3 class="text-lg font-semibold mb-4">Transfer Stock</h3>
 
@@ -165,20 +217,39 @@
               <!-- Commodity Info -->
               <div>
                 <label class="block text-sm font-medium">Commodity</label>
-                <input type="text" :value="selectedInventory?.commodity?.Name" readonly
-                  class="w-full border rounded px-3 py-2 bg-gray-100" />
+                <input
+                  type="text"
+                  :value="selectedInventory?.commodity?.Name"
+                  readonly
+                  class="w-full border rounded px-3 py-2 bg-gray-100"
+                />
 
-                <label class="block text-sm font-medium mt-2">Batch Number</label>
-                <input type="text" :value="selectedInventory?.BatchNumber" readonly
-                  class="w-full border rounded px-3 py-2 bg-gray-100" />
+                <label class="block text-sm font-medium mt-2"
+                  >Batch Number</label
+                >
+                <input
+                  type="text"
+                  :value="selectedInventory?.BatchNumber"
+                  readonly
+                  class="w-full border rounded px-3 py-2 bg-gray-100"
+                />
               </div>
 
 
-              <div>
-                <label class="block text-sm font-medium">Action Requestor</label>
-                <select v-model="transferForm.actionrequestorsId" class="w-full border rounded px-3 py-2">
+                 <div>
+                <label class="block text-sm font-medium"
+                  >Action Requestor</label
+                >
+                <select
+                  v-model="transferForm.actionrequestorsId"
+                  class="w-full border rounded px-3 py-2"
+                >
                   <option disabled value="">Select Action Requestor</option>
-                  <option v-for="wh in actionrequestor" :key="wh.id" :value="wh.id">
+                  <option
+                    v-for="wh in actionrequestor"
+                    :key="wh.id"
+                    :value="wh.id"
+                  >
                     {{ wh.name }}
                   </option>
                 </select>
@@ -188,35 +259,63 @@
               <div>
                 <label class="block text-sm font-medium mb-1">
                   Quantity to Transfer
-                  <span v-if="selectedInventory?.commodity?.Container_type" class="text-gray-500">
+                  <span
+                    v-if="selectedInventory?.commodity?.Container_type"
+                    class="text-gray-500"
+                  >
                     ({{ selectedInventory?.commodity?.Container_type }})
                   </span>
                 </label>
-                <input type="number" v-model="transferForm.quantity" class="w-full border rounded px-3 py-2" />
+                <input
+                  type="number"
+                  v-model="transferForm.quantity"
+                  class="w-full border rounded px-3 py-2"
+                />
               </div>
 
               <!-- Reason for Transfer -->
               <div>
-                <label class="block text-sm font-medium mb-1">Reason for Transfer</label>
-                <textarea v-model="transferForm.reason" class="w-full border rounded px-3 py-2" rows="3"
-                  placeholder="Enter reason for transfer"></textarea>
+                <label class="block text-sm font-medium mb-1"
+                  >Reason for Transfer</label
+                >
+                <textarea
+                  v-model="transferForm.reason"
+                  class="w-full border rounded px-3 py-2"
+                  rows="3"
+                  placeholder="Enter reason for transfer"
+                ></textarea>
               </div>
 
               <!-- Delivery Note -->
               <div>
-                <label class="block text-sm font-medium mb-1">Delivery Note</label>
-                <input type="text" v-model="transferForm.deliveryNote" class="w-full border rounded px-3 py-2"
-                  placeholder="Enter delivery note (e.g. Transporter, vehicle details)" />
+                <label class="block text-sm font-medium mb-1"
+                  >Delivery Note</label
+                >
+                <input
+                  type="text"
+                  v-model="transferForm.deliveryNote"
+                  class="w-full border rounded px-3 py-2"
+                  placeholder="Enter delivery note (e.g. Transporter, vehicle details)"
+                />
               </div>
 
               <!-- Destination Warehouse -->
               <div>
-                <label class="block text-sm font-medium">Transfer To Warehouse</label>
-                <select v-model="transferForm.toWarehouseId" class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium"
+                  >Transfer To Warehouse</label
+                >
+                <select
+                  v-model="transferForm.toWarehouseId"
+                  class="w-full border rounded px-3 py-2"
+                >
                   <option disabled value="">Select Warehouse</option>
-                  <option v-for="wh in warehouses.filter(
-                    (wh) => wh.id !== selectedInventory?.warehouse?.id
-                  )" :key="wh.id" :value="wh.id">
+                  <option
+                    v-for="wh in warehouses.filter(
+                      (wh) => wh.id !== selectedInventory?.warehouse?.id
+                    )"
+                    :key="wh.id"
+                    :value="wh.id"
+                  >
                     {{ wh.Name }}
                   </option>
                 </select>
@@ -225,12 +324,18 @@
 
             <!-- Buttons -->
             <div class="flex justify-end mt-6 space-x-2">
-              <button @click="closeTransferModal" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+              <button
+                @click="closeTransferModal"
+                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              >
                 Cancel
               </button>
 
-              <button @click="transferStock" style="background-color: #096eb4"
-                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
+              <button
+                @click="transferStock"
+                style="background-color: #096eb4"
+                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+              >
                 Transfer
               </button>
             </div>
@@ -408,31 +513,19 @@ const getCommodityInventories = async () => {
     inventories.push(...result.reverse());
     inventories.sort((a, b) => new Date(b.created) - new Date(a.created));
 
-
-    const isNational = user.value.district === "National";
-
     nfisData.push(
-      ...inventories.filter((item) => {
-        const matchesType = item.commodity?.commodityTypeId == 2;
-
-        const matchesScope = isNational
-          ? true
-          : item.warehouse?.district?.Name === user.value.district;
-
-        return matchesType && matchesScope;
-      })
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId == 2 &&
+          item.warehouse?.district?.Name == user.value.district
+      )
     );
-
     foodItemsData.push(
-      ...inventories.filter((item) => {
-        const matchesType = item.commodity?.commodityTypeId == 1;
-
-        const matchesScope = isNational
-          ? true
-          : item.warehouse?.district?.Name === user.value.district;
-
-        return matchesType && matchesScope;
-      })
+      ...inventories.filter(
+        (item) =>
+          item.commodity?.commodityTypeId == 1 &&
+          item.warehouse?.district?.Name == user.value.district
+      )
     );
   } catch (error) {
     Swal.fire({
@@ -528,7 +621,7 @@ const transferForm = reactive({
   actionrequestorsId: null,
   reason: "",
   deliveryNote: "",
-  IsApproved: false,
+  IsApproved: false,  
   IsReceived: false,
 });
 
@@ -578,29 +671,25 @@ const getActionRequestors = async () => {
         ...result
       );
     })
-    .catch((error) => { })
-    .finally(() => { });
+    .catch((error) => {})
+    .finally(() => {});
 };
 
 
 const getCommodityTransfers = async () => {
-  const isNational = user.value.district === "National";
+  commodityTransferStore
+    .get()
+    .then((result) => {
+      transfers.length = 0; //empty array
 
-  try {
-    const result = await commodityTransferStore.get();
-
-    transfers.length = 0;
-
-    transfers.push(
-      ...result.filter((item) => {
-        return isNational
-          ? true
-          : item.fromwarehouse?.district?.Name === user.value.district;
-      })
-    );
-  } catch (error) {
-    console.error("Error fetching commodity transfers:", error);
-  }
+      transfers.push(
+        ...result.filter(
+          (item) => item.fromwarehouse?.district?.Name == user.value.district
+        )
+      );
+    })
+    .catch((error) => {})
+    .finally(() => {});
 };
 
 const getWarehouses = async () => {
@@ -613,8 +702,8 @@ const getWarehouses = async () => {
         ...result.filter((item) => item.organisation.Name == "DODMA")
       );
     })
-    .catch((error) => { })
-    .finally(() => { });
+    .catch((error) => {})
+    .finally(() => {});
 };
 
 const getCommodities = async () => {
@@ -624,8 +713,8 @@ const getCommodities = async () => {
       commodities.length = 0; //empty array
       commodities.push(...result);
     })
-    .catch((error) => { })
-    .finally(() => { });
+    .catch((error) => {})
+    .finally(() => {});
 };
 </script>
 
@@ -663,7 +752,6 @@ const getCommodities = async () => {
   background-color: #0f6c97;
   color: white;
 }
-
 button.bg-[#096eb4] {
   background-color: #3b82f6;
   color: white;

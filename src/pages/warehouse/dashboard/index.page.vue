@@ -5,10 +5,8 @@
 
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex-1 min-w-0">
-          <h2
-            class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate"
-          >
-            Inventory Dashboard
+          <h2 class="font-bold leading-7 text-white sm:text-2xl py-3 sm:truncate">
+            Dashboard
           </h2>
         </div>
       </div>
@@ -43,176 +41,211 @@
               </div>
 
               <div class="bg-gray-100 p-5">
-                <div
-                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
-                >
-                  <div
-                    v-for="stat in stats"
-                    :key="stat.label"
-                    class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col justify-between"
-                    :class="{
-                      'cursor-pointer hover:bg-gray-100': stat.clickable,
-                    }"
-                    @click="stat.clickable ? stat.onClick() : null"
-                  >
-                    <div>
+
+                <!-- National Warehouse Directory -->
+                <div v-if="user.district === 'National'">
+                  <div class="mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">
+                      National Warehouse Directory
+                    </h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                      Access and monitor all registered warehouses under the national
+                      warehouse network.
+                    </p>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    <div v-for="warehouse in nationalWarehouses" :key="warehouse.id"
+                      @click="goToWarehouse(warehouse.id)"
+                      class="bg-white border border-gray-200 rounded-lg shadow-sm p-5 cursor-pointer hover:bg-gray-50 hover:shadow-md transition">
                       <div class="flex items-center justify-between">
-                        <span class="text-2xl font-semibold text-gray-800">{{
-                          stat.value
-                        }}</span>
-                        <component
-                          :is="stat.icon"
-                          class="h-6 w-6"
-                          :class="`text-${stat.iconColor}`"
-                        />
+                        <OfficeBuildingIcon class="h-8 w-8 text-gray-600" />
                       </div>
-                      <div class="text-sm font-medium text-gray-600 mt-2">
-                        {{ stat.label }}
+
+                      <h4 class="mt-3 text-lg font-semibold text-gray-900">
+                        {{ warehouse.name }}
+                      </h4>
+
+                      <p class="text-sm text-gray-500 mt-1">
+                        {{ warehouse.district?.Name }}
+                      </p>
+
+                      <div class="mt-3 text-gray-600 text-sm font-medium" @click="goToWarehouse(warehouse.id)">
+                        View Warehouse →
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div
-                  v-if="showExpiryDialog"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                >
-                  <div
-                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
-                  >
-                    <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">
-                        Commodities Nearing Expiry
-                      </h3>
-                      <button
-                        class="text-gray-600 hover:text-gray-900"
-                        @click="closeExpiryDialog"
-                        aria-label="Close dialog"
-                      >
-                        &times;
-                      </button>
+                <!-- District Dashboard -->
+
+                <!-- District Dashboard ONLY -->
+                <div v-else>
+
+                  <!-- ===================== -->
+                  <!-- KPI TILES (DISTRICT ONLY) -->
+                  <!-- ===================== -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+
+                    <div class="bg-white p-4 shadow rounded border">
+                      <p class="text-sm text-gray-500">Total Stock (District)</p>
+
+                      <div class="mt-2 space-y-1">
+                        <div v-for="(qty, type) in stockByCommodityType" :key="type"
+                          class="flex justify-between text-sm">
+                          <span class="text-gray-700">{{ type }}</span>
+                          <span class="font-bold text-gray-900">{{ qty }} units</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <vue-good-table
-                      :columns="expiryColumns"
-                      :rows="expiryRows"
-                      :pagination-options="{ enabled: true, perPage: 5 }"
-                      :search-options="{ enabled: true }"
-                      styleClass="vgt-table striped"
-                      compactMode
-                    />
+                    <!-- Low Stock Alerts -->
+                    <div class="bg-white p-4 shadow rounded border" @click="openLowStockDialog">
+                      <p class="text-sm text-gray-500">Low Stock Alerts</p>
+                      <p class="text-2xl font-bold text-yellow-600">
+                        {{
+                          classificationData?.warehouseStock?.reduce(
+                            (sum, w) => sum + (w.lowStockCount || 0),
+                            0
+                          ) || 0
+                        }}
+                      </p>
+                    </div>
+
+                    <!-- Expiring Commodities -->
+                    <div class="bg-white p-4 shadow rounded border" @click="openExpiryDialog">
+                      <p class="text-sm text-gray-500">Expiring Commodities</p>
+                      <p class="text-2xl font-bold text-red-500">
+                        {{ classificationData?.nearingExpiryCount || 0 }}
+                      </p>
+                    </div>
+
+                  </div>
+
+
+                  <div class="bg-white p-4 rounded shadow border">
+                    <h3 class="text-lg font-semibold mb-3">
+                      Commodities in District Warehouses
+                    </h3>
+
+                    <div class="space-y-2">
+                      <div v-for="c in commoditiesByWarehouseDistrict" :key="c.commodityName + c.commodityType"
+                        class="flex justify-between border-b py-2">
+
+                        <div>
+                          <div class="font-medium text-gray-800">
+                            {{ c.commodityName }}
+                          </div>
+                          <div class="text-xs text-gray-500">
+                            {{ c.commodityType }}
+                          </div>
+                        </div>
+
+                        <div class="font-bold text-gray-900">
+                          {{ c.total }} units
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                </div>
+
+
+                <div v-if="showLowStockDialog"
+                  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div class="bg-white w-3/4 p-6 rounded shadow-lg">
+
+                    <div class="flex justify-between mb-4">
+                      <h2 class="text-lg font-bold">Low Stock Commodities</h2>
+                      <button @click="closeLowStockDialog">✕</button>
+                    </div>
+
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th class="text-left">Commodity</th>
+                          <th>Type</th>
+                          <th>Quantity</th>
+                          <th>Warehouse</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr v-for="item in classificationData.lowStockCommodities"
+                          :key="item.commodityName + item.warehouseId" class="border-b">
+                          <td>{{ item.commodityName }}</td>
+                          <td>{{ item.commodityTypeName }}</td>
+                          <td class="text-red-600 font-bold">{{ item.quantity }}</td>
+                          <td>{{ item.warehouseName }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+
+                  <div v-if="showExpiryDialog"
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div class="bg-white w-3/4 p-6 rounded shadow-lg">
+
+                      <div class="flex justify-between mb-4">
+                        <h2 class="text-lg font-bold">Expiring Commodities</h2>
+                        <button @click="closeExpiryDialog">✕</button>
+                      </div>
+
+                      <table class="w-full text-sm">
+                        <thead>
+                          <tr class="border-b">
+                            <th>Commodity</th>
+                            <th>Type</th>
+                            <th>Expiry Date</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr v-for="item in classificationData.nearingExpiryCommodities"
+                            :key="item.commodityName + item.expiryDate" class="border-b">
+                            <td>{{ item.commodityName }}</td>
+                            <td>{{ item.commodityTypeName }}</td>
+                            <td class="text-red-600 font-bold">{{ item.expiryDate }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
                   </div>
                 </div>
 
-                <!-- No Movement Modal Dialog -->
-                <div
-                  v-if="showNoMovementDialog"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                >
-                  <div
-                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
-                  >
-                    <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">
-                        No Movement Commodities
-                      </h3>
-                      <button
-                        class="text-gray-600 hover:text-gray-900"
-                        @click="closeNoMovementDialog"
-                        aria-label="Close dialog"
-                      >
-                        &times;
-                      </button>
+                <div v-if="showExpiryDialog"
+                  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div class="bg-white w-3/4 p-6 rounded shadow-lg">
+
+                    <div class="flex justify-between mb-4">
+                      <h2 class="text-lg font-bold">Expiring Commodities</h2>
+                      <button @click="closeExpiryDialog">✕</button>
                     </div>
 
-                    <vue-good-table
-                      :columns="movementColumns"
-                      :rows="noMovementRows"
-                      :pagination-options="{ enabled: true, perPage: 5 }"
-                      :search-options="{ enabled: true }"
-                      styleClass="vgt-table striped"
-                      compactMode
-                    />
-                  </div>
-                </div>
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="border-b">
+                          <th>Commodity</th>
+                          <th>Type</th>
+                          <th>Expiry Date</th>
+                        </tr>
+                      </thead>
 
-                <!-- Fast Moving Modal Dialog -->
-                <div
-                  v-if="showFastMovingDialog"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                >
-                  <div
-                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
-                  >
-                    <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">
-                        Fast Moving Commodities
-                      </h3>
-                      <button
-                        class="text-gray-600 hover:text-gray-900"
-                        @click="closeFastMovingDialog"
-                        aria-label="Close dialog"
-                      >
-                        &times;
-                      </button>
-                    </div>
+                      <tbody>
+                        <tr v-for="item in classificationData.nearingExpiryCommodities"
+                          :key="item.commodityName + item.expiryDate" class="border-b">
+                          <td>{{ item.commodityName }}</td>
+                          <td>{{ item.commodityTypeName }}</td>
+                          <td class="text-red-600 font-bold">{{ item.expiryDate }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
 
-                    <vue-good-table
-                      :columns="movementColumns"
-                      :rows="fastMovingRows"
-                      :pagination-options="{ enabled: true, perPage: 5 }"
-                      :search-options="{ enabled: true }"
-                      styleClass="vgt-table striped"
-                      compactMode
-                    />
-                  </div>
-                </div>
-
-                <!-- Slow Moving Modal Dialog -->
-                <div
-                  v-if="showSlowMovingDialog"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                >
-                  <div
-                    class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-6"
-                  >
-                    <div class="flex justify-between items-center mb-4">
-                      <h3 class="text-xl font-semibold">
-                        Slow Moving Commodities
-                      </h3>
-                      <button
-                        class="text-gray-600 hover:text-gray-900"
-                        @click="closeSlowMovingDialog"
-                        aria-label="Close dialog"
-                      >
-                        &times;
-                      </button>
-                    </div>
-
-                    <vue-good-table
-                      :columns="movementColumns"
-                      :rows="slowMovingRows"
-                      :pagination-options="{ enabled: true, perPage: 5 }"
-                      :search-options="{ enabled: true }"
-                      styleClass="vgt-table striped"
-                      compactMode
-                    />
-                  </div>
-                </div>
-
-                <!-- Chart Section -->
-                <div class="mt-6">
-                  <h3 class="text-lg font-semibold text-gray-800 mb-2">
-                    Inventory Movement Dashboard
-                  </h3>
-                  <div class="bg-white rounded-lg shadow-md p-4 h-120">
-                    <MovementChart
-                      :summary="classificationData.summary || {}"
-                      :classification="classificationData"
-                      :classificationCommodities="
-                        classificationData.classificationCommodities
-                      "
-                    />
                   </div>
                 </div>
               </div>
@@ -264,7 +297,7 @@ const prepositionedStock = ref([]);
 const warehouseCount = ref(0);
 const pendingRequisitions = ref([]);
 const classificationData = ref({});
-
+const selectedWarehouse = ref(null);
 const showExpiryDialog = ref(false);
 
 const showNoMovementDialog = ref(false);
@@ -297,41 +330,15 @@ const expiryColumns = [
   },
 ];
 
-const expiryRows = computed(() => {
-  return (classificationData.value?.nearingExpiryCommodities || []).map(
-    (item) => ({
-      commodityName: item.commodityName,
-      expiryDate: item.expiryDate,
-    })
-  );
-});
 
-const noMovementRows = computed(() => {
-  return (
-    classificationData.value?.classificationCommodities?.["no movement"] || []
-  ).map((item) => ({
-    commodityName: item.commodityName,
-    status: "No Movement",
-  }));
-});
+const nationalWarehouses = ref([]);
 
-const fastMovingRows = computed(() => {
-  return (classificationData.value?.classificationCommodities?.fast || []).map(
-    (item) => ({
-      commodityName: item.commodityName,
-      status: "Fast Moving",
-    })
-  );
-});
 
-const slowMovingRows = computed(() => {
-  return (classificationData.value?.classificationCommodities?.slow || []).map(
-    (item) => ({
-      commodityName: item.commodityName,
-      status: "Slow Moving",
-    })
-  );
-});
+function goToWarehouse(warehouseId) {
+  router.push(`/warehouse/stock-management/ByWarehouse/${warehouseId}`);
+}
+
+
 
 function openNoMovementDialog() {
   showNoMovementDialog.value = true;
@@ -363,10 +370,91 @@ function closeExpiryDialog() {
   showExpiryDialog.value = false;
 }
 
+const showLowStockDialog = ref(false);
+
+function openLowStockDialog() {
+  showLowStockDialog.value = true;
+}
+
+function closeLowStockDialog() {
+  showLowStockDialog.value = false;
+}
+
+
+const filteredWarehouseStock = computed(() => {
+  if (!selectedWarehouse.value) {
+    return classificationData.value?.warehouseStock || [];
+  }
+
+  return (classificationData.value?.warehouseStock || []).filter(
+    w => w.warehouseId === selectedWarehouse.value
+  );
+});
+
+
+const commoditiesByWarehouseDistrict = computed(() => {
+  const inventories = classificationData.value?.inventories || [];
+
+  const grouped = {};
+
+  inventories.forEach((item) => {
+    const inv = item.inventory;
+    const warehouseId = item.warehouseId || inv?.warehouseId;
+    const warehouseName = item.warehouseName || "Unknown Warehouse";
+
+    const key = `${warehouseId}-${inv?.commodityName}`;
+
+    if (!grouped[key]) {
+      grouped[key] = {
+        commodityName: inv?.commodityName,
+        commodityType: inv?.commodityTypeName,
+        total: 0,
+      };
+    }
+
+    grouped[key].total += inv?.Quantity || 0;
+  });
+
+  return Object.values(grouped);
+});
+
+const stockByCommodityType = computed(() => {
+  const inventories = classificationData.value?.inventories || [];
+
+  return inventories.reduce(
+    (acc, item) => {
+      const type = item.inventory?.commodityTypeName || "Unknown";
+      const qty = item.inventory?.Quantity || 0;
+
+      if (!acc[type]) {
+        acc[type] = 0;
+      }
+
+      acc[type] += qty;
+
+      return acc;
+    },
+    {}
+  );
+});
+
 onMounted(async () => {
   updateTime();
   setInterval(updateTime, 1000);
+
+  classificationData.value = await inventoryStore.getClassification();
+
   const allWarehouses = await warehouseStore.get();
+
+  // National user
+  if (user.value.district === "National") {
+    nationalWarehouses.value = allWarehouses.filter(
+      (w) => w.organisationId === 2
+    );
+    return;
+  }
+
+  // District users
   warehouseCount.value = allWarehouses.filter(
     (w) => w.district.Name === user.value.district
   ).length;
@@ -379,7 +467,8 @@ onMounted(async () => {
   const data = await requisitionStore.get();
   pendingRequisitions.value = data.filter(
     (item) =>
-      item.warehouse?.district?.Name == user.value.district && !item.isClosed
+      item.warehouse?.district?.Name == user.value.district &&
+      !item.isClosed
   );
 
   classificationData.value = await inventoryStore.getClassification();

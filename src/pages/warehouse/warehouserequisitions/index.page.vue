@@ -77,7 +77,7 @@
                     <div id="letterContent">
                       <DialogTitle class="text-xl font-bold text-center text-gray-900 mb-6">
                         <img src="../../../assets/images/images.png" alt="DODMA Logo" class="h-20 mx-auto mb-4" />
-                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS 
+                        DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
                       </DialogTitle>
 
                       <div class="text-left text-gray-800 leading-relaxed text-[15px] font-[Times New Roman]">
@@ -147,7 +147,7 @@
                       <DialogTitle class="text-xl font-bold text-center text-gray-900 mb-6">
                         <img src="../../../assets/images/images.png" alt="DODMA Logo" class="h-20 mx-auto mb-4" />
                         DEPARTMENT OF DISASTER MANAGEMENT AFFAIRS
-                    
+
                       </DialogTitle>
 
                       <div class="text-left text-gray-800 leading-relaxed text-[15px] font-[Times New Roman]">
@@ -280,7 +280,7 @@
                                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                   placeholder="Phone Number" />
                               </div>
-                         <!--      <div class="w-1/2">
+                              <!--      <div class="w-1/2">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">District</label>
                                 <select id="district" name="district" v-model="dispatchForm.districtId"
                                   autocomplete="district-name"
@@ -311,69 +311,48 @@
 
 
                             <!-- Commodity List -->
-  <div class="mt-4">
-  <h3 class="text-lg font-semibold mb-2 text-blue-400">
-    Items to Dispatch
-  </h3>
-  <div v-for="(item, index) in dispatchForm.items" :key="index" class="mb-4">
-    <!-- Main row -->
-    <div class="flex gap-2 items-center">
-      <select
-        v-model="item.commodityId"
-        class="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option disabled value="">Select Commodity</option>
-        <option
-          v-for="reqItem in selectedRequisition.items"
-          :key="reqItem.commodity.id"
-          :value="reqItem.commodity.id"
-          :disabled="
-            selectedCommodityIds.includes(reqItem.commodity.id) &&
-            item.commodityId !== reqItem.commodity.id
-          "
-        >
-          {{ reqItem.commodity?.Name }}
-        </option>
-      </select>
+                            <div class="mt-4">
+                              <h3 class="text-lg font-semibold mb-2 text-blue-400">
+                                Items to Dispatch
+                              </h3>
+                              <div v-for="(item, index) in dispatchForm.items" :key="index" class="mb-4">
+                                <!-- Main row -->
+                                <div class="flex gap-2 items-center">
+                                  <select v-model="item.commodityId"
+                                    class="w-1/2 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option disabled value="">Select Commodity</option>
+                                    <option v-for="reqItem in selectedRequisition.items" :key="reqItem.commodity.id"
+                                      :value="reqItem.commodity.id" :disabled="selectedCommodityIds.includes(reqItem.commodity.id) &&
+                                        item.commodityId !== reqItem.commodity.id
+                                        ">
+                                      {{ reqItem.commodity?.Name }}
+                                    </option>
+                                  </select>
 
-      <input
-        v-model.number="item.quantity"
-        type="number"
-        min="0"
-        :max="getRemainingBalance(item.commodityId)"
-        class="w-1/3 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Qty"
-      />
-      <span v-if="item.commodityId" class="text-xs text-gray-500 ml-1">
-        (Max: {{ getRemainingBalance(item.commodityId) }})
-      </span>
+                                  <input v-model.number="item.quantity" type="number" min="0"
+                                    :max="getRemainingBalance(item.commodityId)"
+                                    class="w-1/3 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Qty" />
+                                  <span v-if="item.commodityId" class="text-xs text-gray-500 ml-1">
+                                    (Max: {{ getRemainingBalance(item.commodityId) }})
+                                  </span>
 
-      <button
-        @click.prevent="removeItem(index)"
-        class="text-red-500 hover:underline"
-      >
-        Remove
-      </button>
-    </div>
+                                  <button @click.prevent="removeItem(index)" class="text-red-500 hover:underline">
+                                    Remove
+                                  </button>
+                                </div>
 
-    <!-- New row for optional configuration -->
-    <div class="mt-2">
-      <input
-        v-model="item.configuration"
-        type="text"
-        placeholder="Configuration (optional)"
-        class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  </div>
+                                <!-- New row for optional configuration -->
+                                <div class="mt-2">
+                                  <input v-model="item.configuration" type="text" placeholder="Configuration (optional)"
+                                    class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                </div>
+                              </div>
 
-  <button
-    @click.prevent="addItem"
-    class="mt-2 text-sm font-semibold mb-2 text-blue-400"
-  >
-    + Add Commodity
-  </button>
-</div>
+                              <button @click.prevent="addItem" class="mt-2 text-sm font-semibold mb-2 text-blue-400">
+                                + Add Commodity
+                              </button>
+                            </div>
 
                             <!-- Submit Buttons -->
                             <div class="flex gap-2 mt-4">
@@ -587,22 +566,24 @@ const getDistricts = async () => {
   }
 };
 
+
 const getrequisitions = async () => {
   isLoading.value = true;
   try {
     const data = await WarehouseRequisitionStore.get();
 
-    console.log("Requisitions Data:", data);
+    const isNational = user.value?.district === "National";
+
     loadingplans.splice(
       0,
       loadingplans.length,
       ...data
-        .filter(
-          ({ warehouse, isClosed }) =>
-            warehouse?.district?.Name === user.value.district && !isClosed
+        .filter(({ warehouse, isClosed }) =>
+          !isClosed &&
+          (isNational || warehouse?.district?.Name === user.value.district)
         )
         .slice()
-        .reverse() // to prevent mutating the original array
+        .reverse()
     );
   } catch (e) {
     console.error(e);
@@ -610,7 +591,6 @@ const getrequisitions = async () => {
     isLoading.value = false;
   }
 };
-
 
 const isOverDispatched = computed(() => {
   return dispatchForm.items.some((item) => {
@@ -643,7 +623,7 @@ const createReport = async (reportData) => {
       isApproved: false,
     };
 
-   await WarehouseRequisitionStore.create(payload);
+    await WarehouseRequisitionStore.create(payload);
     await getrequisitions();
 
     await Swal.fire({
@@ -795,7 +775,7 @@ const submitDispatch = async () => {
     return;
   }
 
-  
+
 
   // Required base dispatch fields
   const requiredFields = [

@@ -622,23 +622,19 @@ const transferStock = async () => {
 };
 
 const getCommodityTransfers = async () => {
-  const isNational = user.value.district === "National";
+  commodityTransferStore
+    .get()
+    .then((result) => {
+      transfers.length = 0; //empty array
 
-  try {
-    const result = await commodityTransferStore.get();
-
-    transfers.length = 0;
-
-    transfers.push(
-      ...result.filter((item) => {
-        return isNational
-          ? true
-          : item.fromwarehouse?.district?.Name === user.value.district;
-      })
-    );
-  } catch (error) {
-    console.error("Error fetching commodity transfers:", error);
-  }
+      transfers.push(
+        ...result.filter(
+          (item) => item.towarehouse?.district?.Name == user.value.district
+        )
+      );
+    })
+    .catch((error) => {})
+    .finally(() => {});
 };
 
 const getWarehouses = async () => {
