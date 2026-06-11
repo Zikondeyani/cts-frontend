@@ -1,16 +1,25 @@
 <template>
     <main class="min-h-screen">
-        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto px-2 sm:px-6 lg:max-w-5xl lg:px-2">
+            <breadcrumb-widget :breadcrumbs="breadcrumbs" />
 
-            <div>
-                <breadcrumb-widget v-bind:breadcrumbs="breadcrumbs" />
+            <div class="md:flex md:items-center md:justify-between mt-4">
+                <div class="flex-1 min-w-0">
+                    <h2 class="font-bold text-white text-2xl mb-1">
+                        Expiring Commodities
+                    </h2>
+                </div>
+
+                <div class="mt-5 flex ml-4 sm:mt-0 mb-1">
+                    <button type="button"
+                        class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
+                        @click="exportToExcel()">
+                        <i class="fas fa-file-export mr-2"></i>
+                        <!-- Icon (Font Awesome used as an example) -->
+                        Export Data
+                    </button>
+                </div>
             </div>
-
-
-            <!-- Header -->
-            <h2 class="text-lg font-bold text-white mb-4">
-                Expiring Commodities
-            </h2>
 
             <!-- Vue Good Table -->
 
@@ -46,7 +55,8 @@
 import { ref, computed, onMounted } from "vue";
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
-
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 /* ======================
    STORE
 ====================== */
@@ -131,9 +141,48 @@ const processedRows = computed(() => {
     }));
 });
 
-/* ======================
-   LOAD DATA
-====================== */
+const exportToExcel = () => {
+
+    const exportData = processedRows.value.map((item, index) => ({
+        "#": index + 1,
+        Commodity: item.commodityName,
+        Warehouse: item.warehouseName,
+        "Expiry Date": item.expiryDate,
+        Status: getStatus(item.rawExpiry)
+    }));
+
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        worksheet,
+        "Expiring Commodities"
+    );
+
+
+    const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array"
+    });
+
+
+    const blob = new Blob(
+        [excelBuffer],
+        {
+            type:
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+    );
+
+
+    saveAs(
+        blob,
+        `Expiring_Commodities_${new Date().toISOString().slice(0, 10)}.xlsx`
+    );
+};
 const load = async () => {
     const data = await store.get();
 
