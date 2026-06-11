@@ -12,12 +12,10 @@
             Stock Register
           </h2>
         </div>
+
+        
       </div>
 
-      <!-- Tabs Section -->
-
-      <!-- Tabs Section -->
-      <!-- Tabs + Actions Section -->
       <div class="my-4 border-b border-gray-400">
         <div class="flex flex-wrap justify-between items-center gap-2">
           <!-- Tabs -->
