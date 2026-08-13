@@ -6,13 +6,14 @@
       <PlusIcon class="h-5 w-5 mr-2" />
       Create Warehouse Requisition
     </button>
+    <Teleport to="body">
     <TransitionRoot as="template" :show="open">
       <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="open = false" static>
-        <div class="flex min-h-screen text-center md:block md:px-2 lg:px-4" style="font-size: 0">
+        <div class="flex min-h-screen items-start justify-center px-2 pt-4 pb-4 text-center md:block md:px-2 lg:px-4" style="font-size: 0">
           <TransitionChild class=" " v-if="open" as="template" enter="ease-out duration-300" enter-from="opacity-0"
             enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
             <DialogOverlay
-              class="hidden pointer-events-none fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity md:block" />
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
           </TransitionChild>
 
           <!-- This element is to trick the browser into centering the modal contents. -->
@@ -23,7 +24,7 @@
             leave-from="opacity-100 translate-y-0 md:scale-100"
             leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
             <div
-              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl">
+              class="font-body block text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl mobile-form-shell mx-auto">
               <div
                 class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
                 <h5 class="font-body text-md font-bold leading-normal text-blue-400" id="formModalLabel">
@@ -34,7 +35,7 @@
                   @click="open = false"></button>
               </div>
 
-              <div class="px-4 py-5 bg-white sm:p-6">
+              <div class="px-4 py-5 bg-white sm:p-6 mobile-form-body">
                 <div class="grid grid-cols-6 gap-2">
                   <!-- Title -->
                   <div class="col-span-6">
@@ -50,7 +51,7 @@
                       class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md"></textarea>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-3 mb-5">
+                  <div class="col-span-6 lg:col-span-3 mb-5">
                     <label for="warehouse" class="block text-sm font-bold text-gray-700">Warehouse
                     </label>
 
@@ -62,7 +63,7 @@
                     </select>
                   </div>
 
-                  <div class="col-span-12 sm:col-span-3 mb-5">
+                  <div class="col-span-6 lg:col-span-3 mb-5">
                     <label for="warehouse" class="block text-sm font-bold text-gray-700">Destination District</label>
 
                     <select id="district" name="district" v-model="reports.districtId" autocomplete="warehouse-name"
@@ -81,8 +82,8 @@
                     </label>
 
                     <div v-for="(item, index) in reports.items" :key="index"
-                      class="grid grid-cols-12 gap-2 mb-2 items-center">
-                      <div class="col-span-6 sm:col-span-3 relative">
+                      class="grid grid-cols-12 gap-2 mb-3 items-start">
+                      <div class="col-span-12 lg:col-span-4 relative">
                         <label class="block text-xs font-medium text-gray-700 mb-3">
                           Search commodity
                         </label>
@@ -102,7 +103,7 @@
 
                       <!-- Quantity -->
 
-                      <div class="col-span-6 sm:col-span-3 relative mt-5">
+                      <div class="col-span-6 lg:col-span-3 relative mt-2 lg:mt-5">
                         <input type="number" v-model.number="item.quantity" placeholder="Qty"
                           class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7" />
                         <span v-if="unitOfMeasures[index]"
@@ -119,7 +120,7 @@
                         </p>
                       </div>
 
-                      <div class="col-span-6 sm:col-span-3">
+                      <div class="col-span-6 lg:col-span-3">
                         <select v-model="item.priority"
                           class="col-span-4 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7">
                           <option disabled value="">Priority</option>
@@ -129,7 +130,7 @@
                         </select>
                       </div>
                       <!-- Remove item -->
-                      <button @click="removeItem(index)" class="text-red-500 hover:text-red-700 text-sm mt-7">
+                      <button @click="removeItem(index)" class="col-span-12 lg:col-span-2 text-left lg:text-right text-red-500 hover:text-red-700 text-sm mt-2 lg:mt-7">
                         ✕
                       </button>
                     </div>
@@ -145,9 +146,9 @@
                 </div>
               </div>
 
-              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 mobile-form-footer">
                 <button @click="onSubmit" style="background-color: #096eb4;"
-                  class="`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
+                  class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400">
                   Save
                 </button>
               </div>
@@ -156,6 +157,7 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    </Teleport>
   </div>
 </template>
 
@@ -572,3 +574,4 @@ function getAvailableStock(commodityId) {
   return inventory ? inventory.quantity : 0;
 }
 </script>
+

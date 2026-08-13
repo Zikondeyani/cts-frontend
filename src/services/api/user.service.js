@@ -158,6 +158,12 @@ export default class UserService {
         if (error.response) {
           throw error.response.data.error;
         }
+
+        throw {
+          statusCode: 0,
+          code: error.code || "ERR_NETWORK",
+          message: error.message || "Network error during sign in",
+        };
       });
   }
 

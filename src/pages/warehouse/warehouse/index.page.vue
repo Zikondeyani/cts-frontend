@@ -112,6 +112,12 @@ const options = computed(() => {
     },
 
     {
+      label: "Inventory Count",
+      icon: ClipboardListIcon,
+      path: "/warehouse/inventory-counts",
+    },
+
+    {
       label: "Blank Sheet",
       icon: DocumentDownloadIcon,
     },

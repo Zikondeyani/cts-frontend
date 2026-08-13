@@ -96,4 +96,34 @@ export const getDataOfflineWithKeys = async (collection) => {
   }
 };
 
+export const replaceCollectionOffline = async (collection, documents = []) => {
+  try {
+    await db.collection(collection).delete();
+
+    for (const item of documents) {
+      const document = { ...(item || {}) };
+      if (!document.id) {
+        document.id = nextId++;
+      }
+
+      await db.collection(collection).add(document, document.id);
+    }
+
+    return true;
+  } catch (err) {
+    console.error('Error replacing Localbase collection', err);
+    return false;
+  }
+};
+
+export const getDataOfflineById = async (collection, id) => {
+  try {
+    const docs = await db.collection(collection).get();
+    return docs.find((doc) => String(doc.id) === String(id)) || null;
+  } catch (err) {
+    console.error('Error getting Localbase document by id', err);
+    return null;
+  }
+};
+
 

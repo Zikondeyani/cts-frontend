@@ -108,18 +108,34 @@
                     v-if="props.column.label === 'Options'"
                     class="flex gap-2"
                   >
+                    <button
+                      @click="openManageStock(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-blue-600 font-semibold text-xs border border-blue-600 rounded-md shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition ease-in-out duration-150"
+                    >
+                      <PencilIcon class="h-4 w-4 mr-1 text-blue-600" />
+                      Edit Stock
+                    </button>
+
+                    <button
+                      @click="deleteStock(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-red-600 font-semibold text-xs border border-red-600 rounded-md shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 transition ease-in-out duration-150"
+                    >
+                      <TrashIcon class="h-4 w-4 mr-1 text-red-600" />
+                      Delete Stock
+                    </button>
+
                     <!-- Edit Button -->
 
                     <span v-if="props.column.label === 'State'">
                       <span
                         class="px-2 py-1 text-xs font-semibold rounded-full"
                         :class="[
-                          !props.row.state || props.row.state === 'Ready'
+                          getResolvedStockState(props.row) === 'Ready'
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800',
                         ]"
                       >
-                        {{ props.row.state || "Ready" }}
+                        {{ getResolvedStockState(props.row) }}
                       </span>
                     </span>
 
@@ -178,12 +194,12 @@
                     <span
                       class="px-2 py-1 text-xs font-semibold rounded-full"
                       :class="[
-                        !props.row.state || props.row.state === 'Ready'
+                        getResolvedStockState(props.row) === 'Ready'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800',
                       ]"
                     >
-                      {{ props.row.state || "Ready" }}
+                      {{ getResolvedStockState(props.row) }}
                     </span>
                   </span>
 
@@ -191,6 +207,22 @@
                     v-if="props.column.label === 'Options'"
                     class="flex gap-2"
                   >
+                    <button
+                      @click="openManageStock(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-blue-600 font-semibold text-xs border border-blue-600 rounded-md shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition ease-in-out duration-150"
+                    >
+                      <PencilIcon class="h-4 w-4 mr-1 text-blue-600" />
+                      Edit Stock
+                    </button>
+
+                    <button
+                      @click="deleteStock(props.row)"
+                      class="inline-flex items-center px-3 py-1 bg-white text-red-600 font-semibold text-xs border border-red-600 rounded-md shadow-sm hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-300 transition ease-in-out duration-150"
+                    >
+                      <TrashIcon class="h-4 w-4 mr-1 text-red-600" />
+                      Delete Stock
+                    </button>
+
                     <!-- Edit Stock State Button -->
                     <button
                       @click="editStockState(props.row)"
@@ -330,10 +362,13 @@
                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
                 >
                   <option disabled value="">Select new state</option>
-                  <option value="Ready">Ready</option>
-                  <option value="Fumigation">Fumigation</option>
-                  <option value="Rebagging">Rebagging</option>
-                  <option value="Repacking">Repacking</option>
+                  <option
+                    v-for="state in STOCK_STATES"
+                    :key="state"
+                    :value="state"
+                  >
+                    {{ state }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -372,6 +407,7 @@ import {
   ChevronRightIcon,
   ArrowsRightLeftIcon,
   PencilIcon,
+  TrashIcon,
   EyeIcon,
 } from "@heroicons/vue/solid";
 //COMPONENTS
@@ -382,6 +418,7 @@ import createStockForm from "../../../components/pages/stocks/create.component.v
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
 
 import { useSessionStore } from "../../../stores/session.store";
+import { STOCK_STATES, getResolvedStockState, isStockExpired } from "@/constants/stockStates";
 //INJENCTIONS
 const $router = useRouter();
 const route = useRoute();
@@ -431,7 +468,7 @@ const columns = ref([
 
   {
     label: "State",
-    field: (row) => row.state || "Ready",
+    field: (row) => getResolvedStockState(row),
     sortable: true,
     firstSortType: "asc",
   },
@@ -510,15 +547,85 @@ const saveStockState = async () => {
   }
 };
 
+const openManageStock = (row) => {
+  $router.push(`/admin/stock-management/manage/${row.id}`);
+};
+
+const removeFromList = (list, id) => {
+  const index = list.findIndex((item) => item.id === id);
+  if (index !== -1) {
+    list.splice(index, 1);
+  }
+};
+
+const deleteStock = async (row) => {
+  const result = await Swal.fire({
+    title: "Delete Stock?",
+    text: `This will permanently remove ${row.commodity?.Name || "this stock entry"}.`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#dc2626",
+  });
+
+  if (!result.isConfirmed) {
+    return;
+  }
+
+  isLoading.value = true;
+  try {
+    await commodityInventorieStore.remove(row.id);
+    removeFromList(inventories, row.id);
+    removeFromList(foodItemsData, row.id);
+    removeFromList(nfisData, row.id);
+
+    Swal.fire({
+      title: "Deleted",
+      text: "Stock entry deleted successfully",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
+  } catch (error) {
+    Swal.fire({
+      title: "Delete Failed",
+      text: "Failed to delete stock entry",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 // Fetching data for NFIS and Food Items
 const getCommodityInventories = async () => {
   isLoading.value = true;
   try {
     const result = await commodityInventorieStore.get();
+    const expiredInventories = result.filter(
+      (item) => isStockExpired(item) && item.state !== "Expired"
+    );
+
+    await Promise.all(
+      expiredInventories.map((item) =>
+        commodityInventorieStore.update({
+          id: item.id,
+          state: "Expired",
+        })
+      )
+    );
+
     inventories.length = 0; // Clear inventories
     nfisData.length = 0;
     foodItemsData.length = 0;
-    inventories.push(...result.reverse());
+    inventories.push(
+      ...result.map((item) =>
+        expiredInventories.some((expired) => expired.id === item.id)
+          ? { ...item, state: "Expired" }
+          : item
+      ).reverse()
+    );
     inventories.sort((a, b) => new Date(b.created) - new Date(a.created));
 
     nfisData.push(

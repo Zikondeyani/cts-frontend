@@ -1,3 +1,13 @@
+if (!Array.prototype.toSorted) {
+  Object.defineProperty(Array.prototype, 'toSorted', {
+    value(compareFn) {
+      return [...this].sort(compareFn);
+    },
+    writable: true,
+    configurable: true
+  });
+}
+
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const fs = require('fs');
 const path = require('path');

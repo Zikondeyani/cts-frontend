@@ -51,7 +51,7 @@
             leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
           >
             <div
-              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl"
+              class="font-body block text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl"
             >
               <div
                 class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white"
@@ -346,3 +346,4 @@ const closeDialog = () => {
   RejectionComment.value = "";
 };
 </script>
+

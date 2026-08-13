@@ -10,6 +10,7 @@
       Create a loading plan
     </button>
 
+    <Teleport to="body">
     <TransitionRoot as="template" :show="open">
       <Dialog
         as="div"
@@ -18,7 +19,7 @@
         static
       >
         <div
-          class="flex min-h-screen text-center md:block md:px-2 lg:px-4"
+          class="flex min-h-screen items-start justify-center px-2 pt-4 pb-4 text-center lg:block lg:px-4"
           style="font-size: 0"
         >
           <!-- Overlay -->
@@ -33,13 +34,13 @@
             leave-to="opacity-0"
           >
             <DialogOverlay
-              class="hidden pointer-events-none fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity md:block"
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
             />
           </TransitionChild>
 
           <!-- Center Trick -->
           <span
-            class="hidden md:inline-block md:align-middle md:h-screen"
+            class="hidden lg:inline-block lg:align-middle lg:h-screen"
             aria-hidden="true"
             >&#8203;</span
           >
@@ -48,14 +49,14 @@
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
-            enter-from="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-            enter-to="opacity-100 translate-y-0 md:scale-100"
+            enter-from="opacity-0 translate-y-4 lg:translate-y-0 lg:scale-95"
+            enter-to="opacity-100 translate-y-0 lg:scale-100"
             leave="ease-in duration-200"
-            leave-from="opacity-100 translate-y-0 md:scale-100"
-            leave-to="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+            leave-from="opacity-100 translate-y-0 lg:scale-100"
+            leave-to="opacity-0 translate-y-4 lg:translate-y-0 lg:scale-95"
           >
             <div
-              class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl"
+              class="font-body block text-base text-left transform transition w-full lg:inline-block lg:max-w-2xl lg:px-4 lg:my-8 lg:align-middle xl:max-w-2xl mobile-form-shell mx-auto"
             >
               <!-- Header -->
               <div
@@ -74,10 +75,10 @@
               </div>
 
               <!-- Form Body -->
-              <div class="px-4 py-5 bg-white sm:p-6 space-y-6">
+              <div class="px-4 py-5 bg-white sm:p-6 space-y-6 mobile-form-body">
              
                 <!-- Section 1: Activity, Transporter or Loan Fields -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   <!-- Activity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700"
@@ -180,7 +181,7 @@
                 </div>
 
                 <!-- Section 2: Commodity, Handled By -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   <!-- Commodity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700"
@@ -221,7 +222,7 @@
                 </div>
 
                 <!-- Section 3: Quantity & Warehouse -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   <!-- Quantity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700">
@@ -279,7 +280,7 @@
                   >
                     Stock Prepositioning
                   </h3>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-bold text-gray-700"
                         >Move From Warehouse</label
@@ -318,7 +319,7 @@
                 </div>
 
                 <!-- Section 5: Destination, ATC Number -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                   <div v-if="selectedActivityName !=='Partner Commodity Loan'">
                     <label class="block text-sm font-bold text-gray-700"
                       >Destination District</label
@@ -350,7 +351,7 @@
 
                 <!-- Section 6: Dates -->
                 <div
-                  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                  class="grid grid-cols-1 xl:grid-cols-2 gap-4"
                   v-if="selectedActivityName !=='Partner Commodity Loan'"
                 >
                   <div>
@@ -382,11 +383,11 @@
               </div>
 
               <!-- Footer -->
-              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 mobile-form-footer">
                 <button
                   @click="onSubmit"           
                     style="background-color: #096eb4;"
-                    class="`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
           
                 >
 
@@ -399,6 +400,7 @@
         </div>
       </Dialog>
     </TransitionRoot>
+    </Teleport>
   </div>
 </template>
 
@@ -725,3 +727,4 @@ watch(
   }
 );
 </script>
+

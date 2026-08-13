@@ -262,10 +262,9 @@
                 <select id="stockState" v-model="selectedStock.state"
                   class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
                   <option disabled value="">Select new state</option>
-                  <option value="Ready">Ready</option>
-                  <option value="Fumigation">Fumigation</option>
-                  <option value="Rebagging">Rebagging</option>
-                  <option value="Repacking">Repacking</option>
+                  <option v-for="state in STOCK_STATES" :key="state" :value="state">
+                    {{ state }}
+                  </option>
                 </select>
               </div>
             </div>
@@ -308,6 +307,7 @@ import createStockForm from "../../../components/pages/stocks/create.component.v
 import { usecommodityinventoriestore } from "../../../stores/commodityinventories.store";
 
 import { useSessionStore } from "../../../stores/session.store";
+import { STOCK_STATES } from "@/constants/stockStates";
 //INJENCTIONS
 const $router = useRouter();
 const moment = inject("moment");

@@ -1,7 +1,8 @@
 <template>
+  <Teleport to="body">
   <TransitionRoot as="template" :show="isOpen">
     <Dialog as="div" class="fixed inset-0 z-10 overflow-y-auto" @close="closeDialog" static>
-      <div class="flex items-start justify-center min-h-screen px-4 pt-20 pb-4 text-center sm:block sm:p-0">
+      <div class="flex items-start justify-center min-h-screen px-2 pt-4 pb-4 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
           leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
@@ -17,7 +18,7 @@
           leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
 
           <div
-            class="font-body flex text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl">
+            class="font-body block text-base text-left transform transition w-full md:inline-block md:max-w-2xl md:px-4 md:my-8 md:align-middle lg:max-w-2xl mobile-form-shell mx-auto">
             <div
               class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-white">
               <h5 class="font-body text-md font-bold leading-normal text-blue-400" id="formModalLabel">
@@ -28,7 +29,7 @@
                 @click="open = false"></button> -->
             </div>
 
-            <div class="px-4 py-5 bg-white sm:p-6">
+            <div class="px-4 py-5 bg-white sm:p-6 mobile-form-body">
               <div class="grid grid-cols-6 gap-2">
 
 
@@ -118,7 +119,7 @@
               </div>
 
               <div class="grid grid-cols-6 gap-2 mt-3">
-                <div class="col-span-3 sm:col-span-3">
+                <div class="col-span-6 lg:col-span-3">
                   <label for="ATCNumber" class="block text-sm font-bold text-gray-700 mb-2">
                     ATC NUMBER
                   </label>
@@ -127,7 +128,7 @@
                     class="mt-2 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md" />
                 </div>
 
-                <div class="col-span-3 sm:col-span-3">
+                <div class="col-span-6 lg:col-span-3">
                   <label for="project" class="block text-sm font-bold text-gray-700">Start Date</label>
 
 
@@ -137,7 +138,7 @@
 
                 </div>
 
-                <div class="col-span-3 sm:col-span-3">
+                <div class="col-span-6 lg:col-span-3">
                   <label for="End Date" class="block text-sm font-bold text-gray-700">End Date</label>
 
                   <input type="date" name="End Date" v-model="formattedEndDate" id="End Date" autocomplete="End Date"
@@ -156,7 +157,7 @@
                 </div>
               </div>
             </div>
-            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 mobile-form-footer">
               <button @click="updateLoadingPlan" style="background-color: #329ce7;"
                 class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                 Save
@@ -170,6 +171,7 @@
       </div>
     </Dialog>
   </TransitionRoot>
+  </Teleport>
 </template>
 
 <script setup>
@@ -477,3 +479,4 @@ onMounted(() => {
   // ... other fetch calls ...
 });
 </script>
+
