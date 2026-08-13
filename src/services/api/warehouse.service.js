@@ -47,6 +47,26 @@ export default class WarehouseService {
     }
   }
 
+  getInventory(id) {
+    return axios
+      .get(resource + `/` + id + `/commodity-inventories?filter={"include":["commodity"]}`, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-type": "Application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("JWT")}`,
+        },
+      })
+      .then((response) => {
+        var result = response.data;
+        return result;
+      })
+      .catch((error) => {
+        if (error.response) {
+          throw error.response.data.error;
+        }
+      });
+  }
+
 
   create(data) {
     return axios

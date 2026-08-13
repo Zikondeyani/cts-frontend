@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Commodity Tracking System</string>
+    <string name="title_activity_main">Commodity Tracking System</string>
+    <string name="package_name">org.mw.dodma.cts</string>
+    <string name="custom_url_scheme">org.mw.dodma.cts</string>
+</resources>

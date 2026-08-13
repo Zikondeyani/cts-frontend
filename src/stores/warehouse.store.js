@@ -59,6 +59,21 @@ export const usewarehousestore = defineStore({
           }
         });
     },
+    async getInventory(id) {
+      return await warehouseService
+        .getInventory(id)
+        .then((result) => {
+          if (result) {
+            return result;
+          }
+        })
+        .catch((error) => {
+          switch (error.statusCode) {
+            default:
+              throw error.message;
+          }
+        });
+    },
     async create(data) {
       return await warehouseService
         .create(data)

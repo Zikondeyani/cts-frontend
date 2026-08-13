@@ -50,7 +50,7 @@
           </div> -->
           <div class="tab-pane fade show active" id="user-settings" role="tabpanel"
             aria-labelledby="tabs-user-settings">
-            <user-settings v-bind:model="model" v-on:update="updateInventory" :key="model.id + 'settings'" />
+            <admin-stock-edit v-bind:model="model" v-on:update="updateInventory" :key="model.id + 'settings'" />
           </div>
 
          
@@ -68,7 +68,7 @@ import spinnerWidget from "../../../components/widgets/spinners/default.spinner.
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import UserProfile from "../../../components/pages/users/profile.component.vue";
 import UserLogs from "../../../components/pages/users/logs.component.vue";
-import UserSettings from "../../../components/pages/stocks/settings.component.vue";
+import AdminStockEdit from "../../../components/pages/stocks/edit.component-admin.vue";
 //SCHEMA//AND//STORES
 import { UpdateUserSchema } from "../../../services/schema/user.schema";
 import { usecommoditytypestore } from "../../../stores/commodity-type.store";

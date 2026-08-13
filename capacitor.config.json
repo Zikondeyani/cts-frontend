@@ -1,0 +1,8 @@
+{
+  "appId": "org.mw.dodma.cts",
+  "appName": "Commodity Tracking System",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true
+  }
+}

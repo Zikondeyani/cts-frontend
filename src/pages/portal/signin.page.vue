@@ -179,118 +179,88 @@ const { meta } = useForm({
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: password, errorMessage: passwordError } = useField("password");
 import { checkOnlineStatus } from "@/services/utils/network";
+import { runFullOfflineSync } from "@/services/offline/offline-sync.service";
 
 const storedRole = sessionStorage.getItem("RLE");
+const seedOfflineReferenceData = async () => {
+  const offlineTransporters = await getDataOffline("transporters");
+  const offlineDistricts = await getDataOffline("districts");
+  const offlineCommodities = await getDataOffline("commodities");
+  const offlineCommodityTypes = await getDataOffline("commoditytypes");
+  const offlineOrganisations = await getDataOffline("organisations");
+  const offlineProjects = await getDataOffline("projects");
+  const offlineWarehouses = await getDataOffline("warehouses");
+  const offlineDisasters = await getDataOffline("disasters");
+
+  if (offlineTransporters.length === 0) {
+    const transporters = await transporterStore.get();
+    for (const transporter of transporters) {
+      await saveDataOffline("transporters", transporter);
+    }
+  }
+
+  if (offlineDistricts.length === 0) {
+    const districts = await districtStore.get();
+    for (const district of districts) {
+      await saveDataOffline("districts", district);
+    }
+  }
+
+  if (offlineCommodities.length === 0) {
+    const commodities = await commodityStore.get();
+    for (const commodity of commodities) {
+      await saveDataOffline("commodities", commodity);
+    }
+  }
+
+  if (offlineCommodityTypes.length === 0) {
+    const commodityTypes = await commoditytypeStore.get();
+    for (const commodityType of commodityTypes) {
+      await saveDataOffline("commoditytypes", commodityType);
+    }
+  }
+
+  if (offlineOrganisations.length === 0) {
+    const organisations = await organisationStore.get();
+    for (const organisation of organisations) {
+      await saveDataOffline("organisations", organisation);
+    }
+  }
+
+  if (offlineProjects.length === 0) {
+    const projects = await projectStore.get();
+    for (const project of projects) {
+      await saveDataOffline("projects", project);
+    }
+  }
+
+  if (offlineWarehouses.length === 0) {
+    const warehouses = await warehouseStore.get();
+    for (const warehouse of warehouses) {
+      await saveDataOffline("warehouses", warehouse);
+    }
+  }
+
+  if (offlineDisasters.length === 0) {
+    const disasters = await disasterStore.get();
+    for (const disaster of disasters) {
+      await saveDataOffline("disasters", disaster);
+    }
+  }
+};
 //MOUNTED
 //Mounted
 onMounted(async () => {
   await nextTick();
   checkSession();
+
   try {
     const isOnline = await checkOnlineStatus();
-    if (isOnline) {
-      // Fetch offline data to check
-      const offlineTransporters = await getDataOffline("transporters");
-      const offlineDistricts = await getDataOffline("districts");
-      const offlineCommodities = await getDataOffline("commodity");
-      const offlineCommodityTypes = await getDataOffline("commoditytypes");
-      const offlineOrganisations = await getDataOffline("organisations");
-      const offlineProjects = await getDataOffline("projects");
-      const offlineWarehouses = await getDataOffline("warehouses");
-      const offlineDisasters = await getDataOffline("disasters");
-
-      // Fetch and save transporters if not already saved
-      if (offlineTransporters.length === 0) {
-        const transporters = await transporterStore.get();
-        for (const transporter of transporters) {
-          await saveDataOffline("transporters", transporter);
-        }
-        console.log("Transporters saved offline successfully");
-      } else {
-        console.log("Transporters already exist in the local database");
-      }
-
-      // Fetch and save districts if not already saved
-      if (offlineDistricts.length === 0) {
-        const districts = await districtStore.get();
-        for (const district of districts) {
-          await saveDataOffline("districts", district);
-        }
-        console.log("Districts saved offline successfully");
-      } else {
-        console.log("Districts already exist in the local database");
-      }
-
-      // Fetch and save commodities if not already saved
-      if (offlineCommodities.length === 0) {
-        const commodities = await commodityStore.get();
-        for (const commodity of commodities) {
-          await saveDataOffline("commodities", commodity);
-        }
-        console.log("Commodities saved offline successfully");
-      } else {
-        console.log("Commodities already exist in the local database");
-      }
-
-      // Fetch and save commodity types if not already saved
-      if (offlineCommodityTypes.length === 0) {
-        const commodityTypes = await commoditytypeStore.get();
-        for (const commodityType of commodityTypes) {
-          await saveDataOffline("commoditytypes", commodityType);
-        }
-        console.log("Commodity Types saved offline successfully");
-      } else {
-        console.log("Commodity Types already exist in the local database");
-      }
-
-      // Fetch and save organisations if not already saved
-      if (offlineOrganisations.length === 0) {
-        const organisations = await organisationStore.get();
-        for (const organisation of organisations) {
-          await saveDataOffline("organisations", organisation);
-        }
-        console.log("Organisations saved offline successfully");
-      } else {
-        console.log("Organisations already exist in the local database");
-      }
-
-      // Fetch and save projects if not already saved
-      if (offlineProjects.length === 0) {
-        const projects = await projectStore.get();
-        for (const project of projects) {
-          await saveDataOffline("projects", project);
-        }
-        console.log("Projects saved offline successfully");
-      } else {
-        console.log("Projects already exist in the local database");
-      }
-
-      // Fetch and save warehouses if not already saved
-      if (offlineWarehouses.length === 0) {
-        const warehouses = await warehouseStore.get();
-        for (const warehouse of warehouses) {
-          await saveDataOffline("warehouses", warehouse);
-        }
-        console.log("Warehouses saved offline successfully");
-      } else {
-        console.log("Warehouses already exist in the local database");
-      }
-
-      // Fetch and save disasters if not already saved
-      if (offlineDisasters.length === 0) {
-        const disasters = await disasterStore.get();
-        for (const disaster of disasters) {
-          await saveDataOffline("disasters", disaster);
-        }
-        console.log("Disasters saved offline successfully");
-      } else {
-        console.log("Disasters already exist in the local database");
-      }
-    } else {
-      console.log("Application is offline, cannot fetch and save data");
+    if (isOnline && sessionStorage.getItem("JWT")) {
+      await seedOfflineReferenceData();
     }
   } catch (error) {
-    console.error("Error during onMounted execution", error);
+    console.error("Error while seeding offline data", error);
   }
 });
 //FUNCTIONS
@@ -306,10 +276,26 @@ const onSubmit = useSubmitForm((values, actions) => {
   sessionStore
     .signIn(model)
     .then(async (result) => {
+      if (!result?.offline) {
+        try {
+          const isOnline = await checkOnlineStatus();
+          if (isOnline) {
+            await seedOfflineReferenceData();
+            runFullOfflineSync("post-login").catch((syncError) => {
+              console.error("Full offline sync failed", syncError);
+            });
+          }
+        } catch (seedError) {
+          console.error("Offline bootstrap failed after login", seedError);
+        }
+      }
+
       // Display success toast
       Swal.fire({
-        text: "Successfully signed in",
-        icon: "success",
+        text: result?.offline
+          ? "Signed in using offline cache"
+          : "Successfully signed in",
+        icon: result?.offline ? "info" : "success",
         toast: true,
         position: "top-right",
         showConfirmButton: false,
@@ -371,7 +357,7 @@ const onSubmit = useSubmitForm((values, actions) => {
       } else {
         // General error handling
         Swal.fire({
-          text: "Failed to login (Check network connection! If the problem persists, contact admin).",
+          text: errorMessage,
           icon: "error",
           toast: true,
           position: "top-right",

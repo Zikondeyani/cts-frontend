@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "512306078944",
+    "project_id": "commodity-traking-system",
+    "storage_bucket": "commodity-traking-system.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:512306078944:android:ac3e2cfd8dd59503a21c85",
+        "android_client_info": {
+          "package_name": "org.mw.dodma.cts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDhlbsM1KQ1hGOSx83OCfX4tU3Jjm7ovQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

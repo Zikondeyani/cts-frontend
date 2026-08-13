@@ -13,6 +13,13 @@ import 'vue-good-table-next/dist/vue-good-table-next.css'
 import "leaflet/dist/leaflet.css";
 import 'tw-elements';
 import VuePdf from 'vue3-pdfjs'
+import { initializeOfflineSync } from './services/offline/offline-sync.service';
+import {
+  initializePushNotifications,
+  syncRememberedPushToken,
+} from './services/mobile/push-notification.service';
+
+initializeOfflineSync();
 
 const app = createApp(App);
 
@@ -32,6 +39,12 @@ app.use(VueGoodTablePlugin);
 
 app.use(router);
 app.mount('#app');
+
+initializePushNotifications(router).catch((error) => {
+  console.warn('Push initialization failed', error?.message || error);
+});
+
+syncRememberedPushToken().catch(() => {});
 
 
 

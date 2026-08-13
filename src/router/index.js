@@ -1291,6 +1291,21 @@ const routes = [
         name: "warehouse-stock-management",
         component: () => import("../pages/warehouse/stock/index.page.vue"),
       },
+      {
+        path: "/warehouse/inventory-counts",
+        name: "warehouse-inventory-counts",
+        component: () => import("../pages/warehouse/inventory/index.page.vue"),
+      },
+      {
+        path: "/warehouse/inventory-counts/create",
+        name: "warehouse-inventory-count-create",
+        component: () => import("../pages/warehouse/inventory/manage.page.vue"),
+      },
+      {
+        path: "/warehouse/inventory-counts/:id",
+        name: "warehouse-inventory-count-view",
+        component: () => import("../pages/warehouse/inventory/manage.page.vue"),
+      },
   {
         path: "/warehouse/stock-management/expiries",
         name: "warehouse-stock-management-expiries",
