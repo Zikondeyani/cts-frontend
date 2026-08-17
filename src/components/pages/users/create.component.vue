@@ -123,6 +123,23 @@
                           </p>
                         </div>
 
+                        <!-- Warehouse assignment: only for Warehouse Officers with a specific district (non-national) -->
+                        <div v-if="roleId == 'ADMIN8'" class="mt-3">
+                          <label for="user-warehouse" class="block text-sm font-medium text-gray-700">
+                            Select Warehouse
+                          </label>
+                          <select id="user-warehouse" name="warehouse" v-model="warehouseId" autocomplete="off"
+                            class="mt-1 focus:ring-gray-500 focus:border-blue-300 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                            <option value="">Select Warehouse</option>
+                            <option v-for="w in filteredWarehouses" :key="w.id" :value="w.id">
+                              {{ w.Name }}
+                            </option>
+                          </select>
+                          <p class="text-red-500 text-xs italic pt-1">
+                            {{ warehouseIdError }}
+                          </p>
+                        </div>
+
                         <!-- National message -->
                         <p v-if="roleId == 'ADMIN8' && isNational" class="text-green-600 text-xs italic pt-2">
                           User will have national access.
@@ -213,7 +230,7 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { XIcon } from "@heroicons/vue/outline";
-import { inject, ref, reactive, onMounted, watch  } from "vue";
+import { inject, ref, reactive, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useForm, useField, useSubmitForm, useIsFormValid } from "vee-validate";
 //COMPONENTS
@@ -223,6 +240,7 @@ import { CreateUserSchema } from "../../../services/schema/user.schema";
 import { useRoleStore } from "../../../stores/role.store";
 import { useUserStore } from "../../../stores/user.store";
 import { usedistrictstore } from "../../../stores/districts.store";
+import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "../../../stores/session.store";
 //INJENCTIONS
 const $router = useRouter();
@@ -238,6 +256,10 @@ const userStore = useUserStore();
 const roles = reactive([]);
 const districtstore = usedistrictstore();
 const districts = reactive([]);
+const warehouseStore = usewarehousestore();
+const warehouses = reactive([]);
+const warehouseId = ref("");
+const warehouseIdError = ref("");
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const privileges = ref([]);
@@ -276,6 +298,7 @@ const { value: district, errorMessage: districtError } = useField("district");
 onMounted(() => {
   getRoles();
   getDistricts();
+  getWarehouses();
 });
 //FUNCTIONS
 
@@ -331,7 +354,40 @@ const getDistricts = async () => {
     });
 };
 
+const getWarehouses = async () => {
+  warehouseStore
+    .get()
+    .then((result) => {
+      warehouses.length = 0;
+      warehouses.push(...(result || []));
+    })
+    .catch((error) => {
+      // Handle error
+    });
+};
+
+// Warehouses that belong to the currently selected district.
+const filteredWarehouses = computed(() => {
+  if (!district.value) return warehouses;
+  return warehouses.filter((w) => w?.district?.Name === district.value);
+});
+
+// Changing the district invalidates a previously chosen warehouse.
+watch(district, () => {
+  warehouseId.value = "";
+});
+
 const onSubmit = useSubmitForm((values, actions) => {
+  const isWarehouseRole = roleId.value === "ADMIN8";
+  const isWarehouseNational = isWarehouseRole && isNational.value;
+
+  // A warehouse officer (non-national) must be attached to a specific warehouse.
+  if (isWarehouseRole && !isWarehouseNational && !warehouseId.value) {
+    warehouseIdError.value = "Please select the warehouse this officer manages.";
+    return;
+  }
+  warehouseIdError.value = "";
+
   let model = {
     firstname: firstname.value,
     lastname: lastname.value,
@@ -342,14 +398,16 @@ const onSubmit = useSubmitForm((values, actions) => {
     password: password.value,
     status: status.value,
     roleId: roleId.value,
-    district: roleId.value === "ADMIN8" && isNational.value
+    district: isWarehouseNational
       ? "National"
       : district.value,
+    warehouseId: isWarehouseRole && !isWarehouseNational ? warehouseId.value : null,
     privileges: privileges.value.join(),
     isDelegated: isDelegated.value == 'false' ? false : true
   };
   emit("create", model);
   open.value = false;
+  warehouseId.value = "";
   actions.resetForm();
 });
 

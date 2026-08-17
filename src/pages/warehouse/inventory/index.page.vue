@@ -64,8 +64,12 @@ const load = async () => {
     counts.length = 0;
 
     if (result && Array.isArray(result)) {
+      // A warehouse officer is attached to one warehouse (Warehouse.userId),
+      // so they should only ever see that single warehouse's data.
+      const assignedWarehouse = (warehouses || []).find((w) => String(w.userId) === String(user?.id));
       const allowedWarehouseIds = (warehouses || [])
         .filter((w) => {
+          if (assignedWarehouse) return Number(w.id) === Number(assignedWarehouse.id);
           if (!user?.district) return true;
           return w?.district?.Name == user.district;
         })
@@ -100,7 +104,9 @@ const createNewCount = async () => {
     }
 
     const wh = await warehouseStore.get();
+    const assignedWarehouse = (wh || []).find((w) => String(w.userId) === String(user?.id));
     const availableWarehouses = (wh || []).filter((w) => {
+      if (assignedWarehouse) return Number(w.id) === Number(assignedWarehouse.id);
       if (!user?.district) return true;
       return w?.district?.Name == user.district;
     });

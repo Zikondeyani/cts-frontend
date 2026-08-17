@@ -298,11 +298,21 @@ onMounted(async () => {
   try {
     // load warehouses but restrict to user's district
     const wh = await whStore.get();
+
+    // A warehouse officer is attached to one warehouse (Warehouse.userId),
+    // so they should only ever see that single warehouse.
+    const assignedWarehouse = (wh || []).find((w) => String(w.userId) === String(user?.id));
     warehouses.length = 0;
     warehouses.push(...((wh || []).filter((w) => {
+      if (assignedWarehouse) return Number(w.id) === Number(assignedWarehouse.id);
       if (!user?.district) return true;
       return w?.district?.Name == user.district;
     })));
+
+    // For a warehouse officer creating a new count, pre-select their warehouse.
+    if (!recordId.value && assignedWarehouse) {
+      selectedWarehouseId.value = String(assignedWarehouse.id);
+    }
 
     if (recordId.value) {
       // load existing record
