@@ -20,7 +20,7 @@
           <div class="flex gap-2">
             <button class="px-3 py-1 bg-blue-100 text-blue-800 rounded">Activate</button>
             <button class="px-3 py-1 bg-blue-600 text-white rounded">Deactivate</button>
-            <button class="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
+            <button @click="deleteCount" class="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
           </div>
         </div>
 
@@ -72,7 +72,7 @@
         </div>
 
         <div class="mt-4 flex justify-end">
-          <button @click="submit" class="btn">Recap</button>
+          <button v-if="countState !== 'Saved'" @click="openRecapModal" class="btn">Recap</button>
         </div>
       </div>
     </div>
@@ -138,6 +138,58 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="isRecapModalOpen"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4"
+      @click.self="closeRecapModal"
+    >
+      <div class="w-full max-w-md rounded bg-white shadow-xl">
+        <div class="border-b px-5 py-4">
+          <h3 class="text-lg font-semibold text-gray-900">Recap Inventory Count</h3>
+          <p class="mt-1 text-sm text-gray-500">Finalize and save this inventory count. Provide a remark for each commodity with a difference.</p>
+        </div>
+
+        <div class="space-y-4 px-5 py-4" style="max-height: 60vh; overflow-y: auto;">
+          <div class="rounded bg-gray-50 p-3 text-sm">
+            <div class="text-sm text-gray-500">Counted items to save</div>
+            <div class="mt-1 font-semibold text-gray-900">{{ countedItems.length }} / {{ items.length }}</div>
+          </div>
+
+          <div>
+            <div class="text-sm font-medium text-gray-700 mb-2">
+              Remarks for commodities with a difference
+            </div>
+            <div
+              v-for="it in countedItems"
+              :key="it.id || it.commodityInventoryId"
+              class="rounded border border-gray-200 p-3 mb-3"
+            >
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold text-gray-900">{{ it.commodity?.Name || it.commodityName || 'Unknown commodity' }}</div>
+                <div class="text-xs" :class="variance(it) == 0 ? 'text-green-600' : 'text-red-600'">Diff: {{ variance(it) }} {{ it.commodity?.Container_type || '' }}</div>
+              </div>
+              <div class="text-xs text-gray-500 mt-0.5">Expected: {{ formatQuantity(it.Quantity) }} · Counted: {{ formatQuantity(it.physicalCount) }}</div>
+
+              <div v-if="variance(it) != 0" class="mt-2">
+                <textarea
+                  v-model="it.remark"
+                  rows="2"
+                  :placeholder="'Reason for the difference on ' + (it.commodity?.Name || it.commodityName || 'this commodity')"
+                  class="mt-1 w-full rounded border border-gray-300 p-2 focus:outline-none"
+                ></textarea>
+              </div>
+              <div v-else class="mt-2 text-xs text-green-700">No remark needed – no difference.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 border-t px-5 py-4">
+          <button type="button" class="px-3 py-2 text-sm text-gray-700" @click="closeRecapModal">Cancel</button>
+          <button type="button" class="btn" :disabled="isLoading" @click="finalizeRecap">Save & Finalize</button>
+        </div>
+      </div>
+    </div>
+
   </main>
 </template>
 
@@ -169,6 +221,7 @@ const recordId = ref(route.params.id || null);
 const isCountModalOpen = ref(false);
 const selectedItem = ref(null);
 const countedQuantityInput = ref("");
+const isRecapModalOpen = ref(false);
 
 const mapInventoryItem = (i) => ({
   id: i.id,
@@ -182,6 +235,7 @@ const mapInventoryItem = (i) => ({
   Quantity: i.Quantity || i.quantity || 0,
   physicalCount: 0,
   counted: false,
+  remark: "",
   commodityInventoryId: i.id,
 });
 
@@ -197,7 +251,12 @@ const formatDate = (d) => (d ? moment(d).format("YYYY-MM-DD") : "");
 const formatQuantity = (value) => Number(value || 0).toFixed(3);
 
 const selectedItemName = computed(() => {
-  return selectedItem.value?.commodity?.Name || selectedItem.value?.commodityName || "Unknown commodity";
+  return (
+    selectedItem.value?.commodity?.Name ||
+    selectedItem.value?.commodityInventory?.commodity?.Name ||
+    selectedItem.value?.commodityName ||
+    "Unknown commodity"
+  );
 });
 
 const selectedItemUnit = computed(() => {
@@ -259,17 +318,38 @@ onMounted(async () => {
         if (savedItems.length > 0) {
           items.length = 0;
           savedItems.forEach((si) => {
+            const commodityEnt = si.commodity || si.commodityInventory?.commodity || null;
             items.push({
               id: si.id || si.commodityInventoryId,
-              commodity: si.commodity || si.commodityName || null,
-              commodityName: si.commodityName || si.commodity?.Name || "",
+              commodity: commodityEnt,
+              commodityName: si.commodityName || commodityEnt?.Name || "",
               BatchNumber: si.BatchNumber || si.batchNumber || "",
-              Quantity: si.expectedQuantity || si.expectedQuantity || si.Quantity || 0,
+              Quantity: si.expectedQuantity || si.Quantity || 0,
               physicalCount: typeof si.physicalCount !== 'undefined' ? si.physicalCount : 0,
               counted: true,
-              commodityInventoryId: si.commodityInventoryId || si.commodityInventoryId,
+              remark: "",
+              commodityInventoryId: si.commodityInventoryId,
             });
           });
+
+          // The saved items only store the commodityInventoryId foreign key, so
+          // resolve the commodity name from that warehouse's commodity-inventory
+          // records (using the working /warehouses/{id}/commodity-inventories
+          // endpoint with commodity included).
+          if (selectedWarehouseId.value) {
+            const stock = await whStore.getInventory(selectedWarehouseId.value);
+            const stockMap = (stock || []).reduce((map, inv) => {
+              map[String(inv.id)] = inv;
+              return map;
+            }, {});
+            items.forEach((it) => {
+              const inv = stockMap[String(it.commodityInventoryId)];
+              if (inv) {
+                it.commodity = inv.commodity || it.commodity;
+                it.commodityName = inv.commodity?.Name || it.commodityName;
+              }
+            });
+          }
         } else {
           await loadWarehouseStock();
         }
@@ -299,7 +379,59 @@ const variance = (it) => {
   return (Number(it.physicalCount || 0) - Number(it.Quantity || 0)).toFixed(2);
 };
 
-const submit = async () => {
+const countedItems = computed(() => items.filter((it) => it.counted));
+
+const openRecapModal = () => {
+  if (countState.value === 'Saved') return;
+  isRecapModalOpen.value = true;
+};
+
+const closeRecapModal = () => {
+  isRecapModalOpen.value = false;
+};
+
+const deleteCount = async () => {
+  if (!recordId.value) return;
+  if (!confirm('Are you sure you want to delete this inventory count?')) return;
+  try {
+    isLoading.value = true;
+    await invStore.remove(recordId.value);
+    router.push({ path: '/warehouse/inventory-counts' });
+  } catch (err) {
+    isLoading.value = false;
+    console.error(err);
+    alert('Error deleting count');
+  }
+};
+
+const finalizeRecap = async () => {
+  const counted = countedItems.value;
+  if (counted.length === 0) {
+    alert("No items have been counted yet. Please count at least one item before finalizing.");
+    return;
+  }
+
+  // A remark is required for every counted commodity that has a difference.
+  const missing = counted.filter((it) => variance(it) != 0 && !(it.remark || "").trim());
+  if (missing.length > 0) {
+    alert("Please provide a remark (reason for difference) for every commodity that has a difference before finalizing.");
+    return;
+  }
+
+  closeRecapModal();
+  try {
+    // Combine each difference remark into the count's remarks field.
+    const remarks = counted
+      .filter((it) => variance(it) != 0 && (it.remark || "").trim())
+      .map((it) => `${it.commodity?.Name || it.commodityName}: ${it.remark.trim()}`)
+      .join("\n");
+    await submit(remarks);
+  } catch (err) {
+    // errors are surfaced by submit()
+  }
+};
+
+const submit = async (remarks) => {
   // ensure record exists: if recordId not set, create base record first
   try {
     isLoading.value = true;
@@ -324,22 +456,30 @@ const submit = async () => {
     }
 
     // prepare items payload: include only items marked counted
-    const payloadItems = items.filter((it) => it.counted).map((it) => ({ commodityInventoryId: it.commodityInventoryId, expectedQuantity: it.Quantity, physicalCount: it.physicalCount, BatchNumber: it.BatchNumber }));
+    const payloadItems = items.filter((it) => it.counted).map((it) => ({ commodityInventoryId: it.commodityInventoryId, expectedQuantity: Number(it.Quantity || 0), physicalCount: Number(it.physicalCount || 0), BatchNumber: it.BatchNumber }));
+
+    // save each counted item against the inventory count
+    if (payloadItems.length > 0) {
+      await Promise.all(
+        payloadItems.map((item) =>
+          invStore.createItem(recordId.value, item)
+        )
+      );
+    }
 
     const payload = {
-      id: recordId.value,
+      id: Number(recordId.value),
       Notes: countNumber.value,
-      warehouseId: Number(selectedWarehouseId.value),
+      remarks: (remarks || "").trim(),
       UpdatedOn: new Date().toISOString(),
-      countedById: user?.id ? String(user.id) : null,
-      state: "Draft",
+      state: "Saved",
     };
-
-    await Promise.all(
-      payloadItems.map((item) =>
-        invStore.createItem(recordId.value, item)
-      )
-    );
+    if (selectedWarehouseId.value) {
+      payload.warehouseId = Number(selectedWarehouseId.value);
+    }
+    if (user?.id) {
+      payload.countedById = String(user.id);
+    }
 
     await invStore.update(payload);
     isLoading.value = false;
