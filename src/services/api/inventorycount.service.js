@@ -1,6 +1,6 @@
 import axios from "axios";
 const resource = process.env.VUE_APP_ROOT_API + "/inventorycounts";
-const includeFilter = `?filter={"include":["warehouse","countedBy"]}`;
+const includeFilter = `?filter={"include":["warehouse","countedBy","items"]}`;
 
 export default class InventoryCountService {
   get(id) {
