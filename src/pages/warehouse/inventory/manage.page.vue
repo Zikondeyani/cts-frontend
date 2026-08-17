@@ -25,7 +25,7 @@
         </div>
 
         <div class="mt-4">
-          <input placeholder="Search" class="w-full p-2 border rounded" />
+          <input v-model="searchQuery" placeholder="Search by commodity name or batch no…" class="w-full p-2 border rounded" />
         </div>
 
         <div class="mt-4">
@@ -52,7 +52,7 @@
             </thead>
             <tbody>
               <tr
-                v-for="it in items"
+                v-for="it in filteredItems"
                 :key="it.id"
                 class="border-t cursor-pointer hover:bg-blue-50"
                 @click="openCountModal(it)"
@@ -66,6 +66,12 @@
                 <td class="py-4 text-sm">{{ it.BBD || '' }}</td>
                 <td class="py-4 text-sm">{{ it.counted ? variance(it) : '-' }}</td>
                 <td class="py-4 text-right" :class="it.counted ? 'text-green-600' : 'text-orange-600'">{{ formatQuantity(it.physicalCount) }} {{ it.commodity?.Container_type || '' }}</td>
+              </tr>
+              <tr v-if="filteredItems.length === 0 && items.length > 0" class="border-t">
+                <td colspan="6" class="py-6 text-center text-sm text-gray-500">No commodities match your search.</td>
+              </tr>
+              <tr v-if="items.length === 0" class="border-t">
+                <td colspan="6" class="py-6 text-center text-sm text-gray-500">No commodities in this count yet.</td>
               </tr>
             </tbody>
           </table>
@@ -143,18 +149,13 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4"
       @click.self="closeRecapModal"
     >
-      <div class="w-full max-w-md rounded bg-white shadow-xl">
+      <div class="w-full max-w-3xl lg:max-w-4xl rounded bg-white shadow-xl">
         <div class="border-b px-5 py-4">
           <h3 class="text-lg font-semibold text-gray-900">Recap Inventory Count</h3>
           <p class="mt-1 text-sm text-gray-500">Finalize and save this inventory count. Provide a remark for each commodity with a difference.</p>
         </div>
 
-        <div class="space-y-4 px-5 py-4" style="max-height: 60vh; overflow-y: auto;">
-          <div class="rounded bg-gray-50 p-3 text-sm">
-            <div class="text-sm text-gray-500">Counted items to save</div>
-            <div class="mt-1 font-semibold text-gray-900">{{ countedItems.length }} / {{ items.length }}</div>
-          </div>
-
+        <div class="space-y-4 px-5 py-4" style="max-height: 70vh; overflow-y: auto;">
           <div>
             <div class="text-sm font-medium text-gray-700 mb-2">
               Remarks for commodities with a difference
@@ -221,6 +222,7 @@ const recordId = ref(route.params.id || null);
 const isCountModalOpen = ref(false);
 const selectedItem = ref(null);
 const countedQuantityInput = ref("");
+const searchQuery = ref("");
 const isRecapModalOpen = ref(false);
 
 const mapInventoryItem = (i) => ({
@@ -390,6 +392,17 @@ const variance = (it) => {
 };
 
 const countedItems = computed(() => items.filter((it) => it.counted));
+
+const filteredItems = computed(() => {
+  const q = (searchQuery.value || "").trim().toLowerCase();
+  if (!q) return items;
+  return items.filter((it) => {
+    const name = (it.commodity?.Name || it.commodityName || "").toLowerCase();
+    const batch = String(it.BatchNumber || "").toLowerCase();
+    const container = String(it.commodity?.Container_type || "").toLowerCase();
+    return name.includes(q) || batch.includes(q) || container.includes(q);
+  });
+});
 
 const openRecapModal = () => {
   if (countState.value === 'Saved') return;

@@ -10,7 +10,7 @@
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">Inventory Counts</h2>
         </div>
         <div>
-          <button @click="createNewCount" class="btn">+ Create New Count</button>
+          <button @click="createNewCount" class="inline-flex items-center px-4 py-2 text-white rounded shadow hover:opacity-90" style="background-color:#096eb4">+ Create New Count</button>
         </div>
       </div>
 
