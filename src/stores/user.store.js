@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import UserService from "../services/api/user.service";
 import { useSessionStore } from "./session.store";
+import { usewarehousestore } from "./warehouse.store";
 const userService = new UserService();
 
 const sessionStore = useSessionStore();
@@ -63,24 +64,39 @@ export const useUserStore = defineStore({
         });
     },
     async create(data) {
-      return await userService
-        .create(data)
-        .then((result) => {
-          if (result) {
-            return result;
-          }
-        })
-        .catch((error) => {
-          switch (error.statusCode) {
-            case 409:
-              throw new Error(
-                "this email is already in use , please enter another one "
-              );
-              break;
-            default:
-              throw error.message;
-          }
-        });
+      // The warehouse a warehouse-officer manages is attached via the
+      // existing Warehouse.userId relation, so strip warehouseId from the
+      // user payload (the User model has no warehouseId column) and PATCH
+      // the warehouse with the newly created user's id afterwards.
+      const { warehouseId, ...userData } = data || {};
+      let result;
+      try {
+        result = await userService.create(userData);
+      } catch (error) {
+        switch (error.statusCode) {
+          case 409:
+            throw new Error(
+              "this email is already in use , please enter another one "
+            );
+            break;
+          default:
+            throw error.message;
+        }
+      }
+
+      if (result && warehouseId) {
+        const warehouseStore = usewarehousestore();
+        try {
+          await warehouseStore.update({
+            id: Number(warehouseId),
+            userId: result.id,
+          });
+        } catch (error) {
+          console.error("Failed to attach warehouse manager:", error);
+        }
+      }
+
+      return result;
     },
     async update(data) {
       return await userService
