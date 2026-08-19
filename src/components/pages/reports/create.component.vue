@@ -192,7 +192,7 @@
                       class="mt-1 block w-full border-gray-400 rounded-md"
                     >
                       <option
-                        v-for="commodity in commodities.filter(c => c.commodityType.Name === 'Food')"
+                        v-for="commodity in commodities.filter(c => c.commodityType && c.commodityType.Name === 'Food')"
                         :key="commodity.id"
                         :value="commodity.id"
                       >

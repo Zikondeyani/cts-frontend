@@ -115,7 +115,7 @@
                         <p class="text-xs text-gray-600 mt-1">
                           Available:
                           {{
-                            getAvailableStock(filteredCommoditiesList[index])
+                            getAvailableStock(item)
                           }}
                         </p>
                       </div>
@@ -562,16 +562,17 @@ function selectCommodity(commodity, index) {
   filteredCommoditiesList.value[index] = [];
 }
 
-function getAvailableStock(commodityId) {
-  const warehouseId = this.reports.warehouseId;
-  const commodity = this.commodities.find((c) => c.id === commodityId);
-  if (!commodity || !commodity.commodityInventories) return null;
+function getAvailableStock(item) {
+  const commodityId = item?.commodity?.id;
+  const warehouseId = reports.value?.warehouseId?.id;
+  const commodity = commodities.find((c) => c.id === commodityId);
+  if (!commodity || !commodity.commodityInventories) return 0;
 
   const inventory = commodity.commodityInventories.find(
-    (inv) => inv.warehouseId === warehouseId
+    (inv) => Number(inv.warehouseId) === Number(warehouseId)
   );
 
-  return inventory ? inventory.quantity : 0;
+  return inventory && inventory.Quantity !== undefined ? inventory.Quantity : 0;
 }
 </script>
 

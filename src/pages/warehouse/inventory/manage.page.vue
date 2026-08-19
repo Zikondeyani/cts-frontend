@@ -195,7 +195,7 @@
 </template>
 
 <script setup>
-import { computed, ref, reactive, onMounted } from "vue";
+import { computed, ref, reactive, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
@@ -210,6 +210,7 @@ const breadcrumbs = [{ name: "Home", href: "/warehouse/dashboard", current: fals
 const invStore = useinventorycountstore();
 const whStore = usewarehousestore();
 const session = useSessionStore();
+const Swal = inject("Swal");
 const user = session.getUser;
 
 const warehouses = reactive([]);
@@ -286,7 +287,15 @@ const confirmCount = () => {
 
   const value = Number(countedQuantityInput.value);
   if (Number.isNaN(value) || value < 0) {
-    alert("Please enter a valid counted quantity.");
+    Swal.fire({
+      text: "Please enter a valid counted quantity.",
+      icon: "warning",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
     return;
   }
 
@@ -415,7 +424,17 @@ const closeRecapModal = () => {
 
 const deleteCount = async () => {
   if (!recordId.value) return;
-  if (!confirm('Are you sure you want to delete this inventory count?')) return;
+  const result = await Swal.fire({
+    title: "Delete inventory count?",
+    text: "Are you sure you want to delete this inventory count?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#f44336",
+    reverseButtons: true,
+  });
+  if (!result.isConfirmed) return;
   try {
     isLoading.value = true;
     await invStore.remove(recordId.value);
@@ -423,21 +442,45 @@ const deleteCount = async () => {
   } catch (err) {
     isLoading.value = false;
     console.error(err);
-    alert('Error deleting count');
+    Swal.fire({
+      text: "Error deleting count",
+      icon: "error",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
   }
 };
 
 const finalizeRecap = async () => {
   const counted = countedItems.value;
   if (counted.length === 0) {
-    alert("No items have been counted yet. Please count at least one item before finalizing.");
+    Swal.fire({
+      text: "No items have been counted yet. Please count at least one item before finalizing.",
+      icon: "warning",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
     return;
   }
 
   // A remark is required for every counted commodity that has a difference.
   const missing = counted.filter((it) => variance(it) != 0 && !(it.remark || "").trim());
   if (missing.length > 0) {
-    alert("Please provide a remark (reason for difference) for every commodity that has a difference before finalizing.");
+    Swal.fire({
+      text: "Please provide a remark (reason for difference) for every commodity that has a difference before finalizing.",
+      icon: "warning",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
     return;
   }
 
@@ -510,7 +553,15 @@ const submit = async (remarks) => {
   } catch (err) {
     isLoading.value = false;
     console.error(err);
-    alert("Error saving count");
+    Swal.fire({
+      text: "Error saving count",
+      icon: "error",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
   }
 };
 </script>

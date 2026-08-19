@@ -9,8 +9,17 @@
         <div>
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">Inventory Counts</h2>
         </div>
-        <div>
-          <button @click="createNewCount" class="inline-flex items-center px-4 py-2 text-white rounded shadow hover:opacity-90" style="background-color:#096eb4">+ Create New Count</button>
+        <div class="flex items-center gap-2">
+          <router-link
+            :to="'/warehouse/inventory-counts/differences'"
+            style="background-color: #248cd6"
+            class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
+          >Differences</router-link>
+          <button
+            @click="createNewCount"
+            style="background-color: #248cd6"
+            class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
+          >+ Create New Count</button>
         </div>
       </div>
 
@@ -38,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, inject } from "vue";
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "@/stores/session.store";
@@ -48,6 +57,7 @@ const isLoading = ref(false);
 const breadcrumbs = [{ name: "Home", href: "/warehouse/dashboard", current: false }, { name: "Inventory Counts", href: "#", current: true }];
 
 const session = useSessionStore();
+const Swal = inject("Swal");
 const user = session.getUser;
 const warehouseStore = usewarehousestore();
 
@@ -98,7 +108,15 @@ const createNewCount = async () => {
   isLoading.value = true;
   try {
     if (!user?.id) {
-      alert("Your session is not active. Please sign in again.");
+      Swal.fire({
+        text: "Your session is not active. Please sign in again.",
+        icon: "error",
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
       isLoading.value = false;
       return;
     }
@@ -112,7 +130,15 @@ const createNewCount = async () => {
     });
 
     if (!availableWarehouses.length) {
-      alert("Please create a warehouse before creating an inventory count.");
+      Swal.fire({
+        text: "Please create a warehouse before creating an inventory count.",
+        icon: "warning",
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+      });
       isLoading.value = false;
       return;
     }
@@ -134,7 +160,15 @@ const createNewCount = async () => {
     }
   } catch (err) {
     console.error(err);
-    alert("Error creating count");
+    Swal.fire({
+      text: "Error creating count",
+      icon: "error",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
   }
   isLoading.value = false;
 };
