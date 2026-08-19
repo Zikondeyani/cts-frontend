@@ -78,7 +78,7 @@
               <div class="px-4 py-5 bg-white sm:p-6 space-y-6 mobile-form-body">
              
                 <!-- Section 1: Activity, Transporter or Loan Fields -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <!-- Activity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700"
@@ -181,7 +181,7 @@
                 </div>
 
                 <!-- Section 2: Commodity, Handled By -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <!-- Commodity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700"
@@ -222,7 +222,7 @@
                 </div>
 
                 <!-- Section 3: Quantity & Warehouse -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <!-- Quantity -->
                   <div>
                     <label class="block text-sm font-bold text-gray-700">
@@ -280,7 +280,7 @@
                   >
                     Stock Prepositioning
                   </h3>
-                  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label class="block text-sm font-bold text-gray-700"
                         >Move From Warehouse</label
@@ -319,7 +319,7 @@
                 </div>
 
                 <!-- Section 5: Destination, ATC Number -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div v-if="selectedActivityName !=='Partner Commodity Loan'">
                     <label class="block text-sm font-bold text-gray-700"
                       >Destination District</label
@@ -351,7 +351,7 @@
 
                 <!-- Section 6: Dates -->
                 <div
-                  class="grid grid-cols-1 xl:grid-cols-2 gap-4"
+                  class="grid grid-cols-1 md:grid-cols-2 gap-4"
                   v-if="selectedActivityName !=='Partner Commodity Loan'"
                 >
                   <div>

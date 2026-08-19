@@ -317,6 +317,7 @@ import { useWarehouseDispatchesStore } from "@/stores/warehousedispatches.store"
 import { usedistrictstore } from "@/stores/districts.store";
 
 const Swal = inject("Swal");
+const moment = inject("moment");
 import { useSessionStore } from "@/stores/session.store";
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -564,13 +565,18 @@ const submitDispatch = async () => {
   const baseDispatchDetails = {
     DeliveryNote: dispatchForm.DeliveryNote,
     FinalDestinationPoint: dispatchForm.FinalDestinationPoint,
-    Date: dispatchForm.Date,
+    Date: moment(dispatchForm.Date).toISOString(),
     DriverName: dispatchForm.DriverName,
     DriverLicense: dispatchForm.DriverLicense,
     PhoneNumber: dispatchForm.PhoneNumber,
     TruckNumber: dispatchForm.TruckNumber,
-    districtId: dispatchForm.districtId,
-    warehouserequisitionsId: selectedRequisition.value.id,
+    districtId: Number(
+      dispatchForm.districtId?.id ||
+      dispatchForm.districtId ||
+      selectedRequisition.value?.districtId ||
+      selectedRequisition.value?.warehouse?.district?.id
+    ),
+    warehouserequisitionsId: Number(selectedRequisition.value?.id),
   };
 
   try {
@@ -578,8 +584,8 @@ const submitDispatch = async () => {
       // UPDATE LOGIC
       const payload = {
         ...baseDispatchDetails,
-        commodityId: dispatchForm.items[0].commodityId,
-        Quantity: dispatchForm.items[0].quantity,
+        commodityId: Number(dispatchForm.items[0].commodityId),
+        Quantity: Number(dispatchForm.items[0].quantity),
         id: dispatchForm.id,
       };
 
@@ -595,8 +601,8 @@ const submitDispatch = async () => {
       const dispatchPromises = dispatchForm.items.map((item) => {
         const payload = {
           ...baseDispatchDetails,
-          commodityId: item.commodityId,
-          Quantity: item.quantity,
+          commodityId: Number(item.commodityId),
+          Quantity: Number(item.quantity),
         };
         return WarehouseDispathcesStore.create(payload);
       });

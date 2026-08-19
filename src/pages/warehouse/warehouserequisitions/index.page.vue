@@ -479,6 +479,7 @@ import { useWarehouseDispatchesStore } from "@/stores/warehousedispatches.store"
 import { usedistrictstore } from "@/stores/districts.store";
 
 const Swal = inject("Swal");
+const moment = inject("moment");
 import { useSessionStore } from "@/stores/session.store";
 const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
@@ -831,13 +832,17 @@ const submitDispatch = async () => {
   const baseDispatchDetails = {
     DeliveryNote: dispatchForm.DeliveryNote,
     FinalDestinationPoint: dispatchForm.FinalDestinationPoint,
-    Date: dispatchForm.Date,
+    Date: moment(dispatchForm.Date).toISOString(),
     DriverName: dispatchForm.DriverName,
     DriverLicense: dispatchForm.DriverLicense,
     PhoneNumber: dispatchForm.PhoneNumber,
     TruckNumber: dispatchForm.TruckNumber,
-    districtId: selectedRequisition.value.districtId,
-    warehouserequisitionsId: selectedRequisition.value.id,
+    districtId: Number(
+      selectedRequisition.value?.districtId ||
+      selectedRequisition.value?.district?.id ||
+      selectedRequisition.value?.warehouse?.district?.id
+    ),
+    warehouserequisitionsId: Number(selectedRequisition.value?.id),
   };
 
 
@@ -847,8 +852,8 @@ const submitDispatch = async () => {
     const dispatchPromises = dispatchForm.items.map((item) => {
       const payload = {
         ...baseDispatchDetails,
-        commodityId: item.commodityId,
-        Quantity: item.quantity,
+        commodityId: Number(item.commodityId),
+        Quantity: Number(item.quantity),
       };
       return WarehouseDispathcesStore.create(payload);
     });

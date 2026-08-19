@@ -309,12 +309,16 @@ const onSubmit = () => {
   }
 
   // Proceed with submission
+  // Capture the selected warehouse object BEFORE converting it to an id,
+  // otherwise warehouseId becomes a number and districtId/toName resolve to 0.
+  const selectedWarehouse = reports.value.warehouseId;
+  const selectedDistrict = selectedWarehouse?.district;
   reports.value.referenceNumber = `REF/DODMA/CTS/Req/${Date.now()}`;
   reports.value.date = moment().format("YYYY-MM-DD");
-  reports.value.toName = reports.value.warehouseId?.district?.Name;
+  reports.value.toName = selectedDistrict?.Name;
   reports.value.signedBy = user.value.firstname + " " + user.value.lastname;
-  reports.value.warehouseId = reports.value.warehouseId.id;
-  reports.value.districtId = reports.value.warehouseId?.district?.id;
+  reports.value.warehouseId = selectedWarehouse.id;
+  reports.value.districtId = selectedDistrict?.id;
   reports.value.actionrequestorsId = reports.value.actionrequestorsId.id;
   reports.value.isApproved = true;
   emit("create", reports.value);
