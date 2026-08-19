@@ -102,28 +102,23 @@
                       </div>
 
                       <!-- Quantity -->
-
-                      <div class="col-span-6 lg:col-span-3 relative mt-2 lg:mt-5">
-                        <input type="number" v-model.number="item.quantity" placeholder="Qty"
-                          class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7" />
-                        <span v-if="unitOfMeasures[index]"
-                          class="absolute top-1 left-0 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full mt-1 mb-2">
-                          {{ unitOfMeasures[index] }}
-                        </span>
-
-                        <!-- Show stock available -->
-                        <p class="text-xs text-gray-600 mt-1">
-                          Available:
-                          {{
-                            getAvailableStock(item)
-                          }}
-                        </p>
+                      <div class="col-span-6 lg:col-span-3 relative">
+                        <label class="block text-xs font-medium text-gray-700 mb-3">Qty</label>
+                        <div class="relative">
+                          <input type="number" v-model.number="item.quantity" placeholder="0"
+                            class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md pr-16" />
+                          <span v-if="unitOfMeasures[index]"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+                            {{ unitOfMeasures[index] }}
+                          </span>
+                        </div>
                       </div>
 
                       <div class="col-span-6 lg:col-span-3">
+                        <label class="block text-xs font-medium text-gray-700 mb-3">Priority</label>
                         <select v-model="item.priority"
-                          class="col-span-4 block w-full shadow-sm sm:text-sm border-gray-400 rounded-md mt-7">
-                          <option disabled value="">Priority</option>
+                          class="block w-full shadow-sm sm:text-sm border-gray-400 rounded-md">
+                          <option disabled value="">Select Priority</option>
                           <option>High</option>
                           <option>Medium</option>
                           <option>Low</option>
