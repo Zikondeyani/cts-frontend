@@ -146,7 +146,7 @@ const load = async () => {
         return map;
       }, {});
 
-      const countNumber = c.Notes || c.countNumber || ("Inventory " + (c.id || ""));
+      const countNumber = c.countNumber || c.Notes || ("Inventory " + (c.id || ""));
       const countDate = moment(c.CreatedOn || c.createdOn).format("YYYY-MM-DD");
 
       items.forEach((it) => {

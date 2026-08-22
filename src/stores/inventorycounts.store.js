@@ -22,10 +22,14 @@ export const useinventorycountstore = defineStore({
 
     async create(data) {
       // Determine the next COUNT number by looking at existing counts
+      // for the SAME warehouse (each warehouse has its own sequence).
+      const warehouseId = Number(data.warehouseId || 0);
       const existing = await inventoryCountService.get().then((result) => {
         if (result && Array.isArray(result)) {
-          // Extract numbers from existing countNumbers like "COUNT 1", "CNT-123"
-          const numbers = result
+          // Keep only counts belonging to this warehouse, then extract numbers
+          // from existing countNumbers like "COUNT 1", "CNT-123".
+          const sameWarehouse = result.filter((r) => Number(r.warehouseId || 0) === warehouseId);
+          const numbers = sameWarehouse
             .map((r) => r.countNumber || r.Notes)
             .filter((n) => n)
             .map((n) => {

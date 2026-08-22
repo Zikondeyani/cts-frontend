@@ -329,7 +329,7 @@ onMounted(async () => {
       // load existing record
       const rec = await invStore.getOne(recordId.value);
       if (rec) {
-        countNumber.value = rec.Notes || rec.countNumber || `CNT-${Date.now()}`;
+        countNumber.value = rec.countNumber || rec.Notes || `CNT-${Date.now()}`;
         countCreatedOn.value = rec.CreatedOn || rec.createdOn || new Date().toISOString();
         countState.value = rec.state || rec.status || "Draft";
         selectedWarehouseId.value = rec.warehouseId || rec.warehouse?.id || "";
@@ -519,6 +519,9 @@ const submit = async (remarks) => {
       };
       rec = await invStore.create(base);
       recordId.value = rec.id;
+      // Use the authoritative count number returned by the store/backend so the
+      // displayed number always matches what was persisted.
+      countNumber.value = rec.countNumber || rec.Notes || countNumber.value;
     }
 
     // prepare items payload: include only items marked counted
@@ -535,6 +538,7 @@ const submit = async (remarks) => {
 
     const payload = {
       id: Number(recordId.value),
+      countNumber: countNumber.value,
       Notes: countNumber.value,
       remarks: (remarks || "").trim(),
       UpdatedOn: new Date().toISOString(),

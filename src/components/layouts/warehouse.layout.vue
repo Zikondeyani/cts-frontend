@@ -530,6 +530,12 @@ function navigation() {
     /*   { name: "Reports", href: "/warehouse/report-management", icon: DocumentTextIcon, current: false },
      { name: "Receipts", href: "/warehouse/receipt-management", icon: DocumentDuplicateIcon, current: false },
   */
+    {
+      name: "Dispatches",
+      href: "/warehouse/dispatches",
+      icon: DocumentDuplicateIcon,
+      current: false,
+    },
   ];
 
   const currentRouteBase = $router.currentRoute.value.fullPath
@@ -547,6 +553,9 @@ function navigation() {
         (currentRouteBase.startsWith("/warehouse/loadingplans") ||
           currentRouteBase.startsWith("/warehouse/dispatches") ||
           currentRouteBase.startsWith("/warehouse/receipts"))) ||
+      (navItem.name === "Dispatches" &&
+        (currentRouteBase.startsWith("/warehouse/dispatches") ||
+          currentRouteBase.startsWith("/warehouse/dispatch-management"))) ||
       (navItem.name === "Receipts" &&
         currentRouteBase.startsWith("/warehouse/receipts"));
     navItem.current = isMatched;

@@ -112,10 +112,12 @@ const breadcrumbs = [
 
 
 import { useDispatcherStore } from "../../../stores/dispatch.store";
+import { useWarehouseDispatchesStore } from "../../../stores/warehousedispatches.store";
 
 
 
 const dispatchStore = useDispatcherStore();
+const warehouseDispatchStore = useWarehouseDispatchesStore();
 const dispaches = reactive([]);
 const recieptStore = usereceiptstore();
 
@@ -155,7 +157,11 @@ const columns = ref([
     hidden: false,
     field: row => `<span >D.N: ${row.DeliveryNote}</span><br>`
       +
-      `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`,
+      `<span>To: ${row.FinalDestinationPoint !== null ? row.FinalDestinationPoint : "N/A"}</span><br>`
+      +
+      (row.isWarehouseRequisition
+        ? `<span class="by-color">Ref: ${row.warehouserequisitions?.referenceNumber || "Warehouse Requisition"}</span><br>`
+        : ""),
     sortable: true,
     firstSortType: "asc",
     html: true, // Important for rendering HTML
@@ -273,18 +279,61 @@ onMounted(() => {
 
 const getDispatches = async () => {
 
+  // Load both loading-plan dispatches (expected-by-district) AND warehouse
+  // requisition dispatches so recipients at the destination district are
+  // notified of warehouse requisition dispatches too and can create receipts.
+  const [planResult, warehouseResult] = await Promise.allSettled([
+    dispatchStore.expected(user.value.district),
+    warehouseDispatchStore.get(),
+  ]);
 
-  dispatchStore
-    .expected(user.value.district)
-    .then((result) => {
-      dispaches.length = 0; //empty array
-      let sorteddata = result.reverse();
-      dispaches.push(...sorteddata);
-    })
-    .catch((error) => {
+  dispaches.length = 0; //empty array
 
-    })
+  const merged = [];
 
+  if (planResult.status === "fulfilled" && Array.isArray(planResult.value)) {
+    let sorteddata = planResult.value.reverse();
+    merged.push(...sorteddata);
+  } else {
+    console.error("Failed to load expected dispatches", planResult.reason);
+  }
+
+  if (warehouseResult.status === "fulfilled" && Array.isArray(warehouseResult.value)) {
+    const userDistrict = user.value?.district;
+    const whDispatches = warehouseResult.value
+      .filter((d) => !d.IsArchived && d.district?.Name === userDistrict)
+      .map((d) => {
+        // Normalize the warehouse requisition dispatch into the same shape
+        // the receipt dialog expects from a loading-plan based dispatch.
+        const commodity = {
+          ...(d.commodity || {}),
+          PackSize: d.commodity?.PackSize ?? 50,
+        };
+        return {
+          ...d,
+          isWarehouseRequisition: true,
+          NoBags:
+            d.NoBags ??
+            (commodity.PackSize
+              ? Math.round(((d.Quantity || 0) * 1000) / commodity.PackSize)
+              : d.Quantity),
+          Dispatcher: d.Dispatcher || { username: "Warehouse Officer" },
+          loadingPlan: {
+            ...(d.loadingPlan || {}),
+            commodity,
+            district: d.district,
+          },
+        };
+      });
+    merged.push(...whDispatches);
+  } else {
+    console.error(
+      "Failed to load warehouse requisition dispatches",
+      warehouseResult.reason
+    );
+  }
+
+  dispaches.push(...merged.reverse());
 }
 
 
