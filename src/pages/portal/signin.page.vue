@@ -179,7 +179,8 @@ const { meta } = useForm({
 const { value: email, errorMessage: emailError } = useField("email");
 const { value: password, errorMessage: passwordError } = useField("password");
 import { checkOnlineStatus } from "@/services/utils/network";
-import { runFullOfflineSync } from "@/services/offline/offline-sync.service";
+// OFFLINE PERSISTENCE DEACTIVATED
+// import { runFullOfflineSync } from "@/services/offline/offline-sync.service";
 
 const storedRole = sessionStorage.getItem("RLE");
 const seedOfflineReferenceData = async () => {
@@ -255,10 +256,11 @@ onMounted(async () => {
   checkSession();
 
   try {
-    const isOnline = await checkOnlineStatus();
-    if (isOnline && sessionStorage.getItem("JWT")) {
-      await seedOfflineReferenceData();
-    }
+    // OFFLINE PERSISTENCE DEACTIVATED
+    // const isOnline = await checkOnlineStatus();
+    // if (isOnline && sessionStorage.getItem("JWT")) {
+    //   await seedOfflineReferenceData();
+    // }
   } catch (error) {
     console.error("Error while seeding offline data", error);
   }
@@ -278,13 +280,14 @@ const onSubmit = useSubmitForm((values, actions) => {
     .then(async (result) => {
       if (!result?.offline) {
         try {
-          const isOnline = await checkOnlineStatus();
-          if (isOnline) {
-            await seedOfflineReferenceData();
-            runFullOfflineSync("post-login").catch((syncError) => {
-              console.error("Full offline sync failed", syncError);
-            });
-          }
+          // OFFLINE PERSISTENCE DEACTIVATED
+          // const isOnline = await checkOnlineStatus();
+          // if (isOnline) {
+          //   await seedOfflineReferenceData();
+          //   runFullOfflineSync("post-login").catch((syncError) => {
+          //     console.error("Full offline sync failed", syncError);
+          //   });
+          // }
         } catch (seedError) {
           console.error("Offline bootstrap failed after login", seedError);
         }

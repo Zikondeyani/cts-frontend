@@ -6,53 +6,78 @@
       <breadcrumb-widget :breadcrumbs="breadcrumbs" />
 
       <div class="mt-4">
-        <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">Inventory Differences &amp; Remarks</h2>
+        <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">Inventory Differences</h2>
+        <p class="text-sm text-gray-400 mt-1">Select a count to view its differences.</p>
       </div>
 
-      <div class="mt-6 bg-white rounded shadow overflow-x-auto">
-        <table class="min-w-full">
-          <thead class="bg-gray-100 text-left text-xs text-gray-600 uppercase">
-            <tr>
-              <th class="px-4 py-3">Count</th>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Commodity</th>
-              <th class="px-4 py-3">Batch</th>
-              <th class="px-4 py-3 text-right">Expected</th>
-              <th class="px-4 py-3 text-right">Counted</th>
-              <th class="px-4 py-3 text-right">Difference</th>
-              <th class="px-4 py-3">Remark</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(d, i) in differences" :key="i" class="border-t">
-              <td class="px-4 py-3 font-semibold text-gray-900">{{ d.countNumber }}</td>
-              <td class="px-4 py-3 text-sm text-gray-600">{{ d.countDate }}</td>
-              <td class="px-4 py-3">
-                <div class="font-semibold text-gray-900">{{ d.commodity }}</div>
-                <div class="text-xs text-gray-500" v-if="d.container">{{ d.container }}</div>
-              </td>
-              <td class="px-4 py-3 text-sm text-gray-600">{{ d.BatchNumber || '-' }}</td>
-              <td class="px-4 py-3 text-right text-sm">{{ d.expected }}</td>
-              <td class="px-4 py-3 text-right text-sm">{{ d.counted }}</td>
-              <td class="px-4 py-3 text-right font-semibold" :class="d.difference < 0 ? 'text-red-600' : 'text-green-600'">
-                {{ d.difference }}
-              </td>
-              <td class="px-4 py-3 text-sm text-gray-700">{{ d.remark || '-' }}</td>
-            </tr>
-            <tr v-if="differences.length === 0">
-              <td colspan="8" class="px-4 py-6 text-center text-sm text-gray-500">
-                No differences found for your counts yet.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="mt-4" v-if="countSummaries.length > 0">
+        <input
+          v-model="searchQuery"
+          placeholder="Search by count number…"
+          class="w-full p-2 border rounded bg-white"
+        />
+      </div>
+
+      <div class="mt-6">
+        <div class="space-y-4" v-if="filteredSummaries.length > 0">
+          <div
+            v-for="d in filteredSummaries"
+            :key="d.id"
+            class="inventory-card bg-white p-4 rounded shadow flex items-center justify-between"
+          >
+            <div>
+              <div class="text-lg font-semibold text-gray-900">
+                {{ d.countNumber }}
+              </div>
+
+              <div class="text-sm text-gray-500">
+                Date: {{ d.countDate }}
+              </div>
+
+              <div class="text-sm text-gray-500" v-if="d.warehouseName">
+                {{ d.warehouseName }}
+              </div>
+            </div>
+
+            <div class="text-right">
+              <div class="text-sm mt-2">
+                Differences:
+                <span
+                  :class="d.differenceCount > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold'"
+                >
+                  {{ d.differenceCount }}
+                </span>
+              </div>
+
+              <div class="mt-3">
+                <router-link
+                  :to="`/warehouse/inventory-counts/differences/${d.id}`"
+                  class="inline-block text-sm text-blue-600 hover:underline"
+                >
+                  View details →
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-if="filteredSummaries.length === 0"
+          class="bg-white p-6 rounded shadow text-center text-gray-600"
+        >
+          {{
+            countSummaries.length === 0
+              ? 'No finalized counts with inventory items yet.'
+              : 'No counts match your search.'
+          }}
+        </div>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, inject } from "vue";
+import { ref, reactive, computed, onMounted, inject } from "vue";
 import moment from "moment";
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
@@ -73,48 +98,29 @@ const session = useSessionStore();
 const Swal = inject("Swal");
 const user = session.getUser;
 
-const differences = reactive([]);
+const countSummaries = reactive([]);
+const searchQuery = ref("");
 
-// Cache of commodity-inventories per warehouse (used to resolve commodity names).
-const inventoryCache = {};
-
-const getWarehouseInventories = async (warehouseId) => {
-  const key = String(warehouseId || "");
-  if (!key) return [];
-  if (!inventoryCache[key]) {
-    inventoryCache[key] = (await whStore.getInventory(warehouseId)) || [];
-  }
-  return inventoryCache[key];
-};
-
-// The recap feature stores one line per difference: "CommodityName: remark".
-const parseRemarks = (remarks) => {
-  const map = {};
-  String(remarks || "")
-    .split("\n")
-    .forEach((line) => {
-      const idx = line.indexOf(":");
-      if (idx > -1) {
-        const name = line.slice(0, idx).trim();
-        const text = line.slice(idx + 1).trim();
-        if (name) map[name] = text;
-      }
-    });
-  return map;
-};
+const filteredSummaries = computed(() => {
+  const q = (searchQuery.value || "").trim().toLowerCase();
+  if (!q) return countSummaries;
+  return countSummaries.filter((c) =>
+    String(c.countNumber).toLowerCase().includes(q)
+  );
+});
 
 const load = async () => {
   isLoading.value = true;
-  differences.length = 0;
+  countSummaries.length = 0;
   try {
     const [counts, warehouses] = await Promise.all([
       invStore.get(),
       whStore.get(),
     ]);
 
-    // A warehouse officer is attached to one warehouse (Warehouse.userId);
-    // everyone else falls back to district-level scoping.
-    const assignedWarehouse = (warehouses || []).find((w) => String(w.userId) === String(user?.id));
+    const assignedWarehouse = (warehouses || []).find(
+      (w) => String(w.userId) === String(user?.id)
+    );
     const allowedWarehouseIds = (warehouses || [])
       .filter((w) => {
         if (assignedWarehouse) return Number(w.id) === Number(assignedWarehouse.id);
@@ -123,14 +129,19 @@ const load = async () => {
       })
       .map((w) => Number(w.id));
 
-    const rows = [];
+    const warehouseById = (warehouses || []).reduce((map, w) => {
+      map[Number(w.id)] = w;
+      return map;
+    }, {});
+
     const countsList = Array.isArray(counts) ? counts : [];
+    const summaries = [];
 
     for (const c of countsList) {
       const cWhId = Number(c.warehouseId || c.warehouse?.id);
       if (!allowedWarehouseIds.includes(cWhId)) continue;
 
-      // Only finalized counts have captured difference remarks.
+      // Only finalized counts carry persisted counted items.
       const finalized =
         String(c.state || "").toLowerCase() === "saved" ||
         String(c.remarks || "").trim().length > 0;
@@ -139,44 +150,30 @@ const load = async () => {
       const items = c.items || [];
       if (!items.length) continue;
 
-      const remarkMap = parseRemarks(c.remarks);
-      const inventories = await getWarehouseInventories(cWhId);
-      const inventoryById = (inventories || []).reduce((map, inv) => {
-        map[String(inv.id)] = inv;
-        return map;
-      }, {});
-
-      const countNumber = c.countNumber || c.Notes || ("Inventory " + (c.id || ""));
-      const countDate = moment(c.CreatedOn || c.createdOn).format("YYYY-MM-DD");
-
-      items.forEach((it) => {
-        const expected = Number(it.expectedQuantity || 0);
+      const diffCount = items.filter((it) => {
+        // Match the Count manage page's expected-quantity fallback (the backend
+        // stores the reference under "Quantity"), so the badge matches what the
+        // manage page displays.
+        const expected = Number(it.expectedQuantity || it.Quantity || it.quantity || 0);
         const counted = Number(it.physicalCount || 0);
-        const difference = Number((counted - expected).toFixed(3));
-        if (difference === 0) return;
+        return counted - expected !== 0;
+      }).length;
 
-        const inventory = inventoryById[String(it.commodityInventoryId)];
-        const commodity = inventory?.commodity || null;
-        const name = commodity?.Name || it.commodityName || "Unknown commodity";
-
-        rows.push({
-          countNumber,
-          countDate,
-          commodity: name,
-          container: commodity?.Container_type || "",
-          BatchNumber: it.BatchNumber || "",
-          expected,
-          counted,
-          difference,
-          remark: remarkMap[name] || "",
-        });
+      summaries.push({
+        id: c.id,
+        countNumber: c.countNumber || c.Notes || ("Inventory " + (c.id || "")),
+        countDate: moment(c.CreatedOn || c.createdOn).format("YYYY-MM-DD"),
+        createdOn: c.CreatedOn || c.createdOn,
+        warehouseName: warehouseById[cWhId]?.Name || "",
+        differenceCount: diffCount,
       });
     }
 
-    rows.sort((a, b) =>
-      a.countDate < b.countDate ? 1 : a.countDate > b.countDate ? -1 : 0
+    // Sort newest first, matching the Inventory Counts list behaviour.
+    summaries.sort((a, b) =>
+      new Date(b.createdOn || 0) - new Date(a.createdOn || 0)
     );
-    differences.push(...rows);
+    countSummaries.push(...summaries);
   } catch (err) {
     console.error(err);
     Swal.fire({

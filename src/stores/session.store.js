@@ -145,21 +145,22 @@ export const useSessionStore = defineStore({
         sessionStorage.setItem("USR", JSON.stringify(this.user));
         sessionStorage.setItem("FILE", JSON.stringify(this.file));
 
-        const passwordHash = await hashCredential(
-          credentials.email,
-          credentials.password
-        );
-        const snapshot = {
-          email: normalizeEmail(credentials.email),
-          passwordHash,
-          token: this.token,
-          role: this.role,
-          user: this.user,
-          cachedAt: new Date().toISOString(),
-        };
+        // OFFLINE PERSISTENCE DEACTIVATED
+        // const passwordHash = await hashCredential(
+        //   credentials.email,
+        //   credentials.password
+        // );
+        // const snapshot = {
+        //   email: normalizeEmail(credentials.email),
+        //   passwordHash,
+        //   token: this.token,
+        //   role: this.role,
+        //   user: this.user,
+        //   cachedAt: new Date().toISOString(),
+        // };
 
-        localStorage.setItem(OFFLINE_AUTH_KEY, JSON.stringify(snapshot));
-        upsertOfflineAuthUser(snapshot);
+        // localStorage.setItem(OFFLINE_AUTH_KEY, JSON.stringify(snapshot));
+        // upsertOfflineAuthUser(snapshot);
 
         syncRememberedPushToken().catch(() => {});
 
@@ -169,45 +170,46 @@ export const useSessionStore = defineStore({
           throw new Error("you entered an invalid password or email");
         }
 
-        if (isLikelyNetworkError(error)) {
-          const offlineAuth =
-            findOfflineAuthUser(credentials.email) || getOfflineAuthSnapshot();
-          if (!offlineAuth) {
-            throw new Error(
-              "No cached offline credentials. Sign in once while online first."
-            );
-          }
-
-          if (offlineAuth.email !== normalizeEmail(credentials.email)) {
-            throw new Error(
-              "Offline sign in failed for this email. Use the last online account."
-            );
-          }
-
-          const inputHash = await hashCredential(
-            credentials.email,
-            credentials.password
-          );
-
-          if (inputHash !== offlineAuth.passwordHash) {
-            throw new Error("you entered an invalid password or email");
-          }
-
-          this.token = offlineAuth.token || `offline-${Date.now()}`;
-          this.role = offlineAuth.role || null;
-          this.user = offlineAuth.user || null;
-
-          sessionStorage.setItem("JWT", this.token);
-          sessionStorage.setItem("RLE", JSON.stringify(this.role));
-          sessionStorage.setItem("USR", JSON.stringify(this.user));
-          sessionStorage.setItem("FILE", JSON.stringify(this.file));
-
-          return {
-            session: sessionStorage,
-            role: this.role?.name,
-            offline: true,
-          };
-        }
+        // OFFLINE PERSISTENCE DEACTIVATED
+        // if (isLikelyNetworkError(error)) {
+        //   const offlineAuth =
+        //     findOfflineAuthUser(credentials.email) || getOfflineAuthSnapshot();
+        //   if (!offlineAuth) {
+        //     throw new Error(
+        //       "No cached offline credentials. Sign in once while online first."
+        //     );
+        //   }
+        //
+        //   if (offlineAuth.email !== normalizeEmail(credentials.email)) {
+        //     throw new Error(
+        //       "Offline sign in failed for this email. Use the last online account."
+        //     );
+        //   }
+        //
+        //   const inputHash = await hashCredential(
+        //     credentials.email,
+        //     credentials.password
+        //   );
+        //
+        //   if (inputHash !== offlineAuth.passwordHash) {
+        //     throw new Error("you entered an invalid password or email");
+        //   }
+        //
+        //   this.token = offlineAuth.token || `offline-${Date.now()}`;
+        //   this.role = offlineAuth.role || null;
+        //   this.user = offlineAuth.user || null;
+        //
+        //   sessionStorage.setItem("JWT", this.token);
+        //   sessionStorage.setItem("RLE", JSON.stringify(this.role));
+        //   sessionStorage.setItem("USR", JSON.stringify(this.user));
+        //   sessionStorage.setItem("FILE", JSON.stringify(this.file));
+        //
+        //   return {
+        //     session: sessionStorage,
+        //     role: this.role?.name,
+        //     offline: true,
+        //   };
+        // }
 
         throw error?.message || "Sign in failed";
       }

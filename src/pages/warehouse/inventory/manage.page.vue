@@ -15,6 +15,9 @@
               <span class="mr-4">Status: <span class="text-orange-600">{{ countState }}</span></span>
               <span>Date: {{ formatDate(countCreatedOn) }}</span>
             </div>
+            <div class="mt-2 text-sm" v-if="baselineLabel">
+              Comparing against: <span class="text-blue-700 font-medium">{{ baselineLabel }}</span>
+            </div>
           </div>
 
           <div class="flex gap-2">
@@ -99,6 +102,7 @@
             <div>
               <div class="text-gray-500">Expected quantity</div>
               <div class="font-semibold text-gray-900">{{ formatQuantity(selectedItem?.Quantity) }} {{ selectedItemUnit }}</div>
+              <div class="text-xs text-gray-400 mt-0.5">{{ baselineLabel }}</div>
             </div>
             <div>
               <div class="text-gray-500">Best before</div>
@@ -225,6 +229,10 @@ const selectedItem = ref(null);
 const countedQuantityInput = ref("");
 const searchQuery = ref("");
 const isRecapModalOpen = ref(false);
+// Human-readable description of what this count is being compared against.
+// COUNT 1 -> initial warehouse stock (COUNT 0).
+// COUNT X -> previous count's physically counted quantity (COUNT X-1).
+const baselineLabel = ref("");
 
 const mapInventoryItem = (i) => ({
   id: i.id,
@@ -245,9 +253,66 @@ const mapInventoryItem = (i) => ({
 const loadWarehouseStock = async () => {
   if (!selectedWarehouseId.value) return;
 
-  const stock = await whStore.getInventory(selectedWarehouseId.value);
+  const [stock, refMap] = await Promise.all([
+    whStore.getInventory(selectedWarehouseId.value),
+    getReferenceQuantityMap(selectedWarehouseId.value, countNumber.value),
+  ]);
+
+  const num = parseCountNumber(countNumber.value);
+  baselineLabel.value =
+    num > 1
+      ? `Previous count physical quantity (COUNT ${num - 1})`
+      : "Initial warehouse stock (COUNT 0)";
+
   items.length = 0;
-  items.push(...((stock || []).map(mapInventoryItem)));
+  items.push(
+    ...((stock || []).map((i) => {
+      const it = mapInventoryItem(i);
+      // Only override the expected/reference quantity when the previous count
+      // actually recorded a physical count for this commodity. COUNT 0 (the
+      // warehouse's initial stock) is never edited.
+      if (refMap[String(it.commodityInventoryId)] !== undefined) {
+        it.Quantity = refMap[String(it.commodityInventoryId)];
+      }
+      return it;
+    }))
+  );
+};
+
+// Parses the numeric part out of a count label, e.g. "COUNT 2" -> 2.
+const parseCountNumber = (str) => {
+  const m = String(str || "").match(/(\d+)/);
+  return m ? parseInt(m[1], 10) : 1;
+};
+
+// Builds a map of commodityInventoryId -> physical count taken from the
+// previous finalized count of the SAME warehouse. COUNT 1 returns an empty map
+// because its reference is the warehouse's initial stock (COUNT 0).
+const getReferenceQuantityMap = async (warehouseId, currentCountNumber) => {
+  const map = {};
+  const prevNumber = parseCountNumber(currentCountNumber) - 1;
+  if (prevNumber < 1) return map;
+
+  const counts = await invStore.get();
+  const sameWarehouse = (Array.isArray(counts) ? counts : []).filter(
+    (c) => Number(c.warehouseId || c.warehouse?.id) === Number(warehouseId)
+  );
+
+  const prev = sameWarehouse.find((c) => {
+    const cn = parseCountNumber(c.countNumber || c.Notes);
+    // Only a finalized (saved) count is a valid chain reference. A Draft count may
+    // carry stale/orphaned item rows (e.g. from a recreated count after a delete),
+    // so we must not treat merely having items as "finalized".
+    const finalized = String(c.state || "").toLowerCase() === "saved";
+    return finalized && cn === prevNumber;
+  });
+
+  (prev?.items || []).forEach((it) => {
+    if (it.commodityInventoryId) {
+      map[String(it.commodityInventoryId)] = Number(it.physicalCount || 0);
+    }
+  });
+  return map;
 };
 
 const formatDate = (d) => (d ? moment(d).format("YYYY-MM-DD") : "");
@@ -333,10 +398,21 @@ onMounted(async () => {
         countCreatedOn.value = rec.CreatedOn || rec.createdOn || new Date().toISOString();
         countState.value = rec.state || rec.status || "Draft";
         selectedWarehouseId.value = rec.warehouseId || rec.warehouse?.id || "";
+        const bNum = parseCountNumber(countNumber.value);
+        baselineLabel.value =
+          bNum > 1
+            ? `Previous count physical quantity (COUNT ${bNum - 1})`
+            : "Initial warehouse stock (COUNT 0)";
 
-        // if record has saved items, map them
+        // A count's items are only persisted once it is finalized (state "Saved").
+        // A Draft / freshly created count legitimately has no persisted items, so we
+        // must NOT inherit any (possibly stale/orphaned) rows the API returns for a
+        // recreated count — otherwise a deleted count's data reappears as already-coun­ted.
+        // Only a finalized count may restore its saved counted rows.
+        const isFinalized =
+          String(countState.value || "Draft").toLowerCase() === "saved";
         const savedItems = rec.items || [];
-        if (savedItems.length > 0) {
+        if (isFinalized && savedItems.length > 0) {
           items.length = 0;
           savedItems.forEach((si) => {
             const commodityEnt = si.commodity || si.commodityInventory?.commodity || null;

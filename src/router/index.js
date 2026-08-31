@@ -1302,6 +1302,11 @@ const routes = [
         component: () => import("../pages/warehouse/inventory/differences.page.vue"),
       },
       {
+        path: "/warehouse/inventory-counts/differences/:id",
+        name: "warehouse-inventory-count-differences-view",
+        component: () => import("../pages/warehouse/inventory/differences-detail.page.vue"),
+      },
+      {
         path: "/warehouse/inventory-counts/create",
         name: "warehouse-inventory-count-create",
         component: () => import("../pages/warehouse/inventory/manage.page.vue"),
