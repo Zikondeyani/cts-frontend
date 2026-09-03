@@ -10,6 +10,9 @@
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">
             Inventory Counts
           </h2>
+          <p class="text-sm text-gray-400 mt-1" v-if="scopedWarehouseName">
+            Viewing warehouse: <span class="font-semibold text-white">{{ scopedWarehouseName }}</span>
+          </p>
         </div>
 
         <div class="flex items-center gap-2">
@@ -131,6 +134,9 @@ const store = useinventorycountstore();
 
 const counts = reactive([]);
 const unremarkedDifferences = ref(0);
+// Warehouse name shown in the header when the page is scoped via ?warehouseId
+// (admin Warehouse Management view).
+const scopedWarehouseName = ref("");
 
 const load = async () => {
   isLoading.value = true;
@@ -140,6 +146,11 @@ const load = async () => {
       store.get(),
       warehouseStore.get(),
     ]);
+
+    if (scopedWarehouseId) {
+      const scoped = (warehouses || []).find((w) => Number(w.id) === scopedWarehouseId);
+      scopedWarehouseName.value = scoped?.Name || "";
+    }
 
     counts.length = 0;
 

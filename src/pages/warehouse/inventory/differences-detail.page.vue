@@ -8,6 +8,9 @@
       <div class="mt-4 md:flex md:items-center md:justify-between">
         <div>
           <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">{{ countNumber || 'Count' }} — Differences</h2>
+          <p class="text-sm text-white mt-1" v-if="warehouseName">
+            Warehouse: <span class="font-semibold">{{ warehouseName }}</span>
+          </p>
           <p class="text-sm text-white mt-1">
             Expected quantities are compared against {{ baselineText }}.
             Showing {{ differences.length }} of {{ totalItems }} counted item(s).
@@ -86,17 +89,11 @@
                       v-if="d.editRequest"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-1"
                     >
-                      <span>edit requested<template v-if="d.editRequest.by"> by {{ d.editRequest.by }}</template></span>
+                      <span>edit requested</span>
                     </span>
 
                     <!-- Admin: always shows the three buttons (View Request / Approve / Edit). -->
                     <template v-if="isAdmin">
-                      <span
-                        v-if="d.editRequest"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-1"
-                      >
-                        <span>edit requested<template v-if="d.editRequest.by"> by {{ d.editRequest.by }}</template></span>
-                      </span>
                       <button
                         type="button"
                         @click="viewRequest(d)"
@@ -245,6 +242,8 @@ const whStore = usewarehousestore();
 const session = useSessionStore();
 const Swal = inject("Swal");
 const user = session.getUser;
+// Warehouse name shown in the header (admin Warehouse Management view).
+const warehouseName = ref("");
 
 const countNumber = ref("");
 const baselineText = ref("");
@@ -267,8 +266,16 @@ const isAdmin = computed(
     String(user?.value?.roleId || "") === "ADMIN1"
 );
 
-const displayName =
-  user?.value?.Name || user?.value?.name || user?.value?.userName || "a warehouse officer";
+// Same name shown on the dashboard: the username with dots turned into spaces.
+// NOTE: `user` here is the plain session object (not a ref), matching how the
+// rest of this page and the warehouse dashboard read it.
+const displayName = (
+  user?.username ||
+  user?.userName ||
+  user?.name ||
+  user?.Name ||
+  "a warehouse officer"
+).replace(/\./g, " ");
 
 const filteredDifferences = computed(() => {
   const q = (searchQuery.value || "").trim().toLowerCase();
@@ -528,11 +535,21 @@ const load = async () => {
         ? `previous count physical quantities (COUNT ${bNum - 1})`
         : "initial warehouse stock (COUNT 0)";
 
+    const cWhId = Number(rec.warehouseId || rec.warehouse?.id);
+    // Warehouse name for the header (visible to the admin in the
+    // Warehouse Management view).
+    try {
+      const warehouses = (await whStore.get()) || [];
+      warehouseName.value =
+        warehouses.find((w) => Number(w.id) === cWhId)?.Name || "";
+    } catch (e) {
+      warehouseName.value = "";
+    }
+
     const items = dedupeCountItems(rec.items || []);
     totalItems.value = items.length;
     if (!items.length) return;
 
-    const cWhId = Number(rec.warehouseId || rec.warehouse?.id);
     const inventories = await getWarehouseInventories(cWhId);
     const inventoryById = (inventories || []).reduce((map, inv) => {
       map[String(inv.id)] = inv;

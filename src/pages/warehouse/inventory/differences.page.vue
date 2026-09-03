@@ -7,7 +7,10 @@
 
       <div class="mt-4">
         <h2 class="font-bold leading-7 text-white sm:text-2xl sm:truncate">Inventory Differences</h2>
-        <p class="text-sm text-gray-400 mt-1">Select a count to view its differences.</p>
+        <p class="text-sm text-gray-400 mt-1" v-if="scopedWarehouseName">
+          Viewing warehouse: <span class="font-semibold text-white">{{ scopedWarehouseName }}</span>
+        </p>
+        <p class="text-sm text-gray-400 mt-1" v-else>Select a count to view its differences.</p>
       </div>
 
       <div class="mt-4" v-if="countSummaries.length > 0">
@@ -115,6 +118,8 @@ const user = session.getUser;
 
 const countSummaries = reactive([]);
 const searchQuery = ref("");
+// Warehouse name shown in the header when scoped via ?warehouseId.
+const scopedWarehouseName = ref("");
 
 const filteredSummaries = computed(() => {
   const q = (searchQuery.value || "").trim().toLowerCase();
@@ -132,6 +137,13 @@ const load = async () => {
       invStore.get(),
       whStore.get(),
     ]);
+
+    // Warehouse name shown in the header when scoped via ?warehouseId
+    // (admin Warehouse Management view).
+    if (scopedWarehouseId) {
+      const scoped = (warehouses || []).find((w) => Number(w.id) === scopedWarehouseId);
+      scopedWarehouseName.value = scoped?.Name || "";
+    }
 
     const assignedWarehouse = (warehouses || []).find(
       (w) => String(w.userId) === String(user?.id)
