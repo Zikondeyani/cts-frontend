@@ -75,6 +75,7 @@
           <div
             v-if="remainingItems.length > 0"
             class="relative block lg:inline-block mt-2 lg:mt-0"
+            ref="moreDropdownRef"
           >
             <button
                @click="isDropdownOpen = !isDropdownOpen"
@@ -354,6 +355,14 @@ const role = ref(sessionStore.getRole);
 const signOutTimeout = ref(null);
 
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
+
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
+
 import {
   saveDataOffline,
   getDataOffline,
@@ -448,6 +457,9 @@ onMounted(async () => {
   startSignOutTimer();
 
   addEventListeners();
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
 
   await getReceipts();
 
@@ -626,6 +638,9 @@ const removeEventListeners = () => {
 };
 
 onBeforeUnmount(() => {
+  // Remove click-outside listener
+  document.removeEventListener("click", handleDropdownClickOutside);
+  
   eventBus.off("reversalTriggered");
   clearSignOutTimer();
   removeEventListeners();

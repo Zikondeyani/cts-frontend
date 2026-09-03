@@ -90,6 +90,7 @@
           <div
             class="relative"
             v-if="user.district == null || user?.district == 'National'"
+            ref="moreDropdownRef"
           >
             <button
               @click="isDropdownOpen = !isDropdownOpen"
@@ -122,7 +123,7 @@
           </div>
         </div>
         <!-- Notification Button -->
-        <div class="relative lg:block">
+        <div class="relative lg:block" ref="notificationDropdownRef">
           <button
             @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md"
@@ -415,6 +416,14 @@ const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
+
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
+
 const instructionsStore = useinstructionstore();
 const instructions = reactive([]);
 
@@ -474,6 +483,12 @@ onMounted(() => {
   startSignOutTimer();
 
   addEventListeners();
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
+  // Add click-outside listener for notification dropdown
+  document.addEventListener("click", handleClickOutside);
+  
   getInstructions();
   getLoadingPlans();
   eventBus.on("instructionArchived", (instructionId) => {
@@ -490,6 +505,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  // Remove click-outside listener
+  document.removeEventListener("click", handleDropdownClickOutside);
+  document.removeEventListener("click", handleClickOutside);
+  
   eventBus.off("instructionArchived");
   eventBus.off("loadingplanArchived");
   clearSignOutTimer();
@@ -497,6 +516,14 @@ onBeforeUnmount(() => {
 });
 
 const notifications = ref([]);
+const notificationDropdownRef = ref(null);
+
+const handleClickOutside = (event) => {
+  if (notificationDropdownRef.value && !notificationDropdownRef.value.contains(event.target)) {
+    isNotificationsOpen.value = false;
+  }
+};
+
 const updateNotifications = () => {
   notifications.value = [];
 

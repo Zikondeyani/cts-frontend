@@ -84,6 +84,7 @@
           <div
             v-if="remainingItems.length > 0"
             class="relative block lg:inline-block mt-2 lg:mt-0"
+            ref="moreDropdownRef"
           >
             <button
               @click="isDropdownOpen = !isDropdownOpen"
@@ -107,7 +108,7 @@
           </div>
         </div>
         <!-- Notification Button (same pattern as the warehouse header) -->
-        <div class="relative lg:block">
+        <div class="relative lg:block" ref="notificationDropdownRef">
           <button @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
             <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
@@ -376,7 +377,14 @@ import {
 
 const isNotificationsOpen = ref(false);
 const notifications = ref([]);
+const notificationDropdownRef = ref(null);
 const notificationsCount = computed(() => notifications.value.length);
+
+const handleClickOutside = (event) => {
+  if (notificationDropdownRef.value && !notificationDropdownRef.value.contains(event.target)) {
+    isNotificationsOpen.value = false;
+  }
+};
 
 const toggleNotifications = () => {
   isNotificationsOpen.value = !isNotificationsOpen.value;
@@ -419,6 +427,14 @@ const role = ref(sessionStore.getRole);
 const signOutTimeout = ref(null);
 
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
+
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
+
 import {
   saveDataOffline,
   getDataOffline,
@@ -514,6 +530,12 @@ onMounted(async () => {
 
   addEventListeners();
 
+  // Add click-outside listener for notification dropdown
+  document.addEventListener("click", handleClickOutside);
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
+
   await getReceipts();
 
   await getInstructedReceipts();
@@ -535,6 +557,10 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  // Remove click-outside listeners
+  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleDropdownClickOutside);
+  
   eventBus.off("inventoryDifferencesUpdated", updateNotifications);
 });
 //WAT

@@ -76,6 +76,7 @@
           <div
             v-if="remainingItems.length > 0"
             class="relative block lg:inline-block mt-2 lg:mt-0"
+            ref="moreDropdownRef"
            >
             <button
               @click="isDropdownOpen = !isDropdownOpen"
@@ -101,7 +102,7 @@
           </div>
         </div>
         <!-- Notification Button -->
-        <div class="relative hidden lg:block">
+        <div class="relative hidden lg:block" ref="notificationDropdownRef">
           <button
             @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md"
@@ -424,8 +425,15 @@ const sessionStore = useSessionStore();
 const user = ref(sessionStore.getUser);
 const role = ref(sessionStore.getRole);
 const notifications = ref([]);
+const notificationDropdownRef = ref(null);
 const notificationsCount = computed(() => notifications.value.length);
 const isNotificationsOpen = ref(false);
+
+const handleClickOutside = (event) => {
+  if (notificationDropdownRef.value && !notificationDropdownRef.value.contains(event.target)) {
+    isNotificationsOpen.value = false;
+  }
+};
 
 const toggleNotifications = () => {
   isNotificationsOpen.value = !isNotificationsOpen.value;
@@ -454,6 +462,13 @@ const onAbout = async () => {
 };
 
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
+
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
 
 const openDropdown = () => {
   isDropdownOpen.value = true;
@@ -476,6 +491,13 @@ const isLoading = ref(false);
 
 onMounted(() => {
   startSignOutTimer();
+  
+  // Add click-outside listener for notification dropdown
+  document.addEventListener("click", handleClickOutside);
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
+  
   getWarehouseRequisitions();
   getCommodityTransfers();
   getRequisitions();
@@ -823,6 +845,10 @@ const removeEventListeners = () => {
 };
 
 onBeforeUnmount(() => {
+  // Remove click-outside listeners
+  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleDropdownClickOutside);
+  
   eventBus.off("requisitionArchived");
   clearSignOutTimer();
   removeEventListeners();

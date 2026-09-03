@@ -76,7 +76,7 @@
           <div
             v-if="remainingItems.length > 0"
             class="relative block lg:inline-block mt-2 lg:mt-0"
-          
+            ref="moreDropdownRef"
           >
             <button
              @click="isDropdownOpen = !isDropdownOpen"
@@ -103,7 +103,7 @@
         </div>
 
         <!-- Notification Button -->
-        <div class="relative lg:block">
+        <div class="relative lg:block" ref="notificationDropdownRef">
           <button
             @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md"
@@ -441,6 +441,13 @@ const sessionStore = useSessionStore();
 const role = ref(sessionStore.getRole);
 
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
+
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
 
 const openDropdown = () => {
   isDropdownOpen.value = true;
@@ -524,6 +531,13 @@ const toggleNotifications = () => {
 };
 
 const notifications = ref([]);
+const notificationDropdownRef = ref(null);
+
+const handleClickOutside = (event) => {
+  if (notificationDropdownRef.value && !notificationDropdownRef.value.contains(event.target)) {
+    isNotificationsOpen.value = false;
+  }
+};
 
 const createUser = async (model) => {
   isLoading.value = true;
@@ -680,6 +694,13 @@ const getExpectedDispatches = async () => {
 onMounted(async () => {
   startSignOutTimer();
   addEventListeners();
+  
+  // Add click-outside listener for notification dropdown
+  document.addEventListener("click", handleClickOutside);
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
+  
   await fetchUser();
   await getExpectedDispatches();
   await getExpectedLeanDispatches();
@@ -700,6 +721,10 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
+  // Remove click-outside listeners
+  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener("click", handleDropdownClickOutside);
+  
   eventBus.off("leaseasonDispatchesArchived");
 
   eventBus.off("emergencyDispatchesArchived");

@@ -27,6 +27,7 @@
             v-for="d in filteredSummaries"
             :key="d.id"
             class="inventory-card bg-white p-4 rounded shadow flex items-center justify-between"
+            :class="d.editRequestCount > 0 ? 'border-l-4 border-amber-500' : ''"
           >
             <div>
               <div class="text-lg font-semibold text-gray-900">
@@ -51,6 +52,23 @@
                   {{ d.differenceCount }}
                 </span>
               </div>
+
+              <!-- Distinctly coloured so admins can spot counts with pending edit requests at a glance. -->
+              <div class="text-sm mt-1">
+                Edit Requests:
+                <span
+                  :class="d.editRequestCount > 0 ? 'text-amber-600 font-semibold' : 'text-gray-400'"
+                >
+                  {{ d.editRequestCount }}
+                </span>
+              </div>
+
+              <span
+                v-if="d.editRequestCount > 0"
+                class="inline-block mt-2 px-2 py-0.5 text-xs font-bold text-white bg-amber-500 rounded-full"
+              >
+                Pending edit request{{ d.editRequestCount > 1 ? 's' : '' }}
+              </span>
 
               <div class="mt-3">
                 <router-link
@@ -88,7 +106,7 @@ import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.brea
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "@/stores/session.store";
-import { dedupeCountItems } from "../../../utils/inventoryDifferences";
+import { dedupeCountItems, countPendingEditRequests } from "../../../utils/inventoryDifferences";
 
 const isLoading = ref(false);
 
@@ -204,6 +222,8 @@ const load = async () => {
         createdOn: c.CreatedOn || c.createdOn,
         warehouseName: warehouseById[cWhId]?.Name || "",
         differenceCount: diffCount,
+        // Officer remark-edit requests awaiting approval on this count.
+        editRequestCount: countPendingEditRequests([c]),
       });
     }
 

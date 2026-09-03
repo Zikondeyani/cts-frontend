@@ -44,7 +44,7 @@
             </a>
           </router-link>
           <!-- Dropdown for the rest of the items -->
-          <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0">
+          <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0" ref="moreDropdownRef">
             <button   @click="isDropdownOpen = !isDropdownOpen"
    
               class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
@@ -311,7 +311,13 @@ const sessionStore = useSessionStore();
 const role = ref(sessionStore.getRole);
 
 const isDropdownOpen = ref(false);
+const moreDropdownRef = ref(null);
 
+const handleDropdownClickOutside = (event) => {
+  if (moreDropdownRef.value && !moreDropdownRef.value.contains(event.target)) {
+    isDropdownOpen.value = false;
+  }
+};
 
 const newLeanSeasonCount = ref(0);
 
@@ -486,6 +492,10 @@ const getExpectedDispatches = async () => {
 onMounted(async () => {
   startSignOutTimer();
   addEventListeners();
+  
+  // Add click-outside listener for More dropdown
+  document.addEventListener("click", handleDropdownClickOutside);
+  
   await fetchUser();
   await getExpectedDispatches();
   await getExpectedLeanDispatches();
@@ -508,6 +518,8 @@ onMounted(async () => {
 
 
 onBeforeUnmount(() => {
+  // Remove click-outside listener
+  document.removeEventListener("click", handleDropdownClickOutside);
 
   eventBus.off('leaseasonDispatchesArchived');
 

@@ -53,7 +53,7 @@
 
         </div>
         <!-- Notification Button -->
-        <div class="relative lg:block">
+        <div class="relative lg:block" ref="notificationDropdownRef">
           <button @click="toggleNotifications"
             class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
             <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
@@ -442,6 +442,10 @@ onMounted(() => {
   getInstructions();
   getLoadingPlans();
   getInventoryDifferences();
+  
+  // Add click-outside listener for notification dropdown
+  document.addEventListener("click", handleClickOutside);
+  
   eventBus.on("instructionArchived", (instructionId) => {
     // Update the notification count
     getInstructions();
@@ -472,6 +476,9 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  // Remove click-outside listener
+  document.removeEventListener("click", handleClickOutside);
+  
   eventBus.off("instructionArchived");
   eventBus.off("loadingplanArchived");
   eventBus.off("warehouseReqArchived");
@@ -480,6 +487,14 @@ onBeforeUnmount(() => {
 });
 
 const notifications = ref([]);
+const notificationDropdownRef = ref(null);
+
+const handleClickOutside = (event) => {
+  if (notificationDropdownRef.value && !notificationDropdownRef.value.contains(event.target)) {
+    isNotificationsOpen.value = false;
+  }
+};
+
 const updateNotifications = () => {
   notifications.value = [];
 

@@ -84,9 +84,10 @@
                   </button>
 
                   <template v-else>
-                    <!-- Pending officer edit request: badge shown to everyone. -->
+                    <!-- Pending officer edit request: badge shown to officers only.
+                         Admins see the View Request / Approve buttons instead. -->
                     <span
-                      v-if="d.editRequest"
+                      v-if="d.editRequest && !isAdmin"
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-1"
                     >
                       <span>edit requested</span>

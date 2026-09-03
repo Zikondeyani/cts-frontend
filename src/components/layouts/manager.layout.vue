@@ -43,7 +43,7 @@
             </a>
           </router-link>
           <!-- Dropdown for the rest of the items -->
-          <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0">
+          <div v-if="remainingItems.length > 0" class="relative block lg:inline-block mt-2 lg:mt-0" ref="moreDropdownRef">
             <button   @click="isDropdownOpen = !isDropdownOpen"
     class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-xs font-medium rounded-md">
               More...
