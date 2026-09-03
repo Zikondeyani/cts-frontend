@@ -107,11 +107,23 @@ export function countUnremarkedDifferences(counts, inventoryByWarehouse = {}) {
  * the Inventory Counts list badge so both stay consistent with the differences
  * detail page.
  */
-export async function fetchUnremarkedDifferencesCount(userValue) {
+export async function fetchUnremarkedDifferencesCount(userValue, scopedWarehouseId = null) {
   try {
     const u = userValue || null;
     const countsList = await useinventorycountstore().get();
     const warehouses = await usewarehousestore().get();
+
+    // When scoped to a specific warehouse (admin Warehouse Management view),
+    // only that warehouse's differences are counted.
+    if (scopedWarehouseId) {
+      const scopedCounts = (Array.isArray(countsList) ? countsList : []).filter(
+        (r) => Number(r.warehouseId || r.warehouse?.id) === Number(scopedWarehouseId)
+      );
+      const inventoryByWarehouse = {};
+      inventoryByWarehouse[Number(scopedWarehouseId)] =
+        await usewarehousestore().getInventory(Number(scopedWarehouseId));
+      return countUnremarkedDifferences(scopedCounts, inventoryByWarehouse);
+    }
 
     const assignedWarehouse = (warehouses || []).find(
       (w) => String(w.userId) === String(u?.id)

@@ -707,6 +707,42 @@ const routes = [
         name: "admin-user-activity",
         component: () => import("../pages/admin/reports/user-activity.vue"),
       },
+      /*
+       * Warehouse Management — reuses the warehouse officers' Inventory Count
+       * module so admins can see Counts and Differences exactly like a
+       * warehouse officer (read through the same components). The admin lands
+       * on a warehouse selection page, then scopes the module to that warehouse.
+       */
+      {
+        path: "/admin/warehouse-management",
+        name: "admin-warehouse-management",
+        component: () => import("../pages/admin/warehouseManagement/index.page.vue"),
+      },
+      {
+        path: "/admin/warehouse-management/inventory-counts",
+        name: "admin-warehouse-inventory-counts",
+        component: () => import("../pages/warehouse/inventory/index.page.vue"),
+      },
+      {
+        path: "/admin/warehouse-management/inventory-counts/differences",
+        name: "admin-warehouse-inventory-count-differences",
+        component: () => import("../pages/warehouse/inventory/differences.page.vue"),
+      },
+      {
+        path: "/admin/warehouse-management/inventory-counts/differences/:id",
+        name: "admin-warehouse-inventory-count-differences-view",
+        component: () => import("../pages/warehouse/inventory/differences-detail.page.vue"),
+      },
+      {
+        path: "/admin/warehouse-management/inventory-counts/create",
+        name: "admin-warehouse-inventory-count-create",
+        component: () => import("../pages/warehouse/inventory/manage.page.vue"),
+      },
+      {
+        path: "/admin/warehouse-management/inventory-counts/:id",
+        name: "admin-warehouse-inventory-count-view",
+        component: () => import("../pages/warehouse/inventory/manage.page.vue"),
+      },
     ],
     beforeEnter: (to, from, next) => {
       let role = JSON.parse(sessionStorage.getItem("RLE"));

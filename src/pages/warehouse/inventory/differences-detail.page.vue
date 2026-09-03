@@ -24,7 +24,7 @@
 
       <div class="mt-4 flex justify-start">
         <router-link
-          to="/warehouse/inventory-counts/differences"
+          :to="moduleBase + '/differences' + warehouseQuery"
           class="inline-flex items-center text-sm font-medium text-white hover:text-blue-700"
         >
           <ChevronLeftIcon
@@ -70,7 +70,7 @@
               <td class="px-4 py-3 text-sm text-gray-700">
                   <div v-if="d.remark" class="mb-1">{{ d.remark }}</div>
 
-                  <!-- No remark yet: the officer can add one directly. -->
+                  <!-- No remark yet: it can be added directly. -->
                   <button
                     v-if="!d.remark"
                     type="button"
@@ -80,23 +80,62 @@
                     + Add Remarks
                   </button>
 
-                  <!-- Remark exists: officers cannot edit; they can only request an edit. -->
-                  <button
-                    v-else-if="!d.editRequested"
-                    type="button"
-                    @click="requestEdit(d)"
-                    class="text-orange-500 hover:text-orange-700 transition duration-300"
-                  >
-                    <PencilIcon class="h-5 w-5 inline-block" />
-                    Request Edit
-                  </button>
+                  <template v-else>
+                    <!-- Pending officer edit request: badge shown to everyone. -->
+                    <span
+                      v-if="d.editRequest"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-1"
+                    >
+                      <span>edit requested<template v-if="d.editRequest.by"> by {{ d.editRequest.by }}</template></span>
+                    </span>
 
-                  <span
-                    v-else
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800"
-                  >
-                    <span>edit requested</span>
-                  </span>
+                    <!-- Admin: always shows the three buttons (View Request / Approve / Edit). -->
+                    <template v-if="isAdmin">
+                      <span
+                        v-if="d.editRequest"
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 mb-1"
+                      >
+                        <span>edit requested<template v-if="d.editRequest.by"> by {{ d.editRequest.by }}</template></span>
+                      </span>
+                      <button
+                        type="button"
+                        @click="viewRequest(d)"
+                        class="text-blue-500 hover:text-blue-400 transition duration-300 mr-3"
+                      >
+                        <EyeIcon class="h-5 w-5 inline-block mr-1" />
+                        View Request
+                      </button>
+                      <button
+                        type="button"
+                        @click="approveRequest(d)"
+                        :disabled="!d.editRequest"
+                        :class="d.editRequest ? 'text-green-600 hover:text-green-700' : 'text-gray-400 cursor-not-allowed'"
+                        class="transition duration-300 mr-3"
+                      >
+                        <CheckIcon class="h-5 w-5 inline-block mr-1" />
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        @click="openEditModal(d)"
+                        class="text-orange-500 hover:text-orange-700 transition duration-300"
+                      >
+                        <PencilIcon class="h-5 w-5 inline-block" />
+                        Edit
+                      </button>
+                    </template>
+
+                    <!-- Officer with no pending request: request an edit. -->
+                    <button
+                      v-else-if="!d.editRequest"
+                      type="button"
+                      @click="requestEdit(d)"
+                      class="text-orange-500 hover:text-orange-700 transition duration-300"
+                    >
+                      <PencilIcon class="h-5 w-5 inline-block" />
+                      Request Edit
+                    </button>
+                  </template>
                 </td>
             </tr>
             <tr v-if="filteredDifferences.length === 0">
@@ -120,28 +159,40 @@
     >
       <div class="w-full max-w-2xl rounded bg-white shadow-xl">
         <div class="border-b px-5 py-4">
-          <h3 class="text-lg font-semibold text-gray-900">{{ selectedRow?.remark ? 'Edit Remark' : 'Add Remark' }}</h3>
+          <h3 class="text-lg font-semibold text-gray-900">
+            {{ isRequestMode ? 'Request Edit' : (selectedRow?.remark ? 'Edit Remark' : 'Add Remark') }}
+          </h3>
           <p class="mt-1 text-sm text-gray-500">{{ selectedRow?.commodity }}</p>
+          <p class="mt-1 text-xs text-gray-500" v-if="isRequestMode && selectedRow?.remark">
+            Current remark: {{ selectedRow.remark }}
+          </p>
         </div>
 
         <div class="space-y-4 px-5 py-4">
           <div>
             <label for="remark" class="block text-sm font-medium text-gray-700">
-              Reason for the difference
+              {{ isRequestMode ? 'Proposed new remark' : 'Reason for the difference' }}
             </label>
             <textarea
               id="remark"
               v-model="remarkInput"
               rows="3"
-              :placeholder="'Reason for the difference on ' + (selectedRow?.commodity || 'this commodity')"
+              :placeholder="isRequestMode
+                ? 'Enter the new remark you are requesting...'
+                : 'Reason for the difference on ' + (selectedRow?.commodity || 'this commodity')"
               class="mt-1 w-full rounded border border-gray-300 p-2 focus:outline-none"
             ></textarea>
+            <p class="mt-1 text-xs text-gray-500" v-if="isRequestMode">
+              Your request will be reviewed by an administrator before the remark is updated.
+            </p>
           </div>
         </div>
 
         <div class="flex justify-end gap-2 border-t px-5 py-4">
           <button type="button" class="px-3 py-2 text-sm text-gray-700" @click="closeRemarkModal">Cancel</button>
-          <button type="button" class="btn" :disabled="isLoading" @click="saveRemark">Save</button>
+          <button type="button" class="btn" :disabled="isLoading" @click="saveRemark">
+            {{ isRequestMode ? 'Submit Request' : 'Save' }}
+          </button>
         </div>
       </div>
     </div>
@@ -150,7 +201,12 @@
 <script setup>
 import { ref, reactive, computed, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
-import { ChevronLeftIcon, PencilIcon } from "@heroicons/vue/solid";
+import {
+  ChevronLeftIcon,
+  PencilIcon,
+  EyeIcon,
+  CheckIcon,
+} from "@heroicons/vue/solid";
 import moment from "moment";
 import * as XLSX from "xlsx";
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
@@ -163,10 +219,24 @@ import { dedupeCountItems } from "../../../utils/inventoryDifferences";
 
 const route = useRoute();
 const isLoading = ref(false);
+
+// Admins view this module under /admin/warehouse-management/..., warehouse
+// officers under /warehouse/inventory-counts/... — derive the base from the
+// current path so all internal links stay within the active role's area.
+const moduleBase = route.path.startsWith("/admin")
+  ? "/admin/warehouse-management/inventory-counts"
+  : "/warehouse/inventory-counts";
+
+// Preserve the ?warehouseId= scope (admin Warehouse Management view) when
+// navigating back to the differences list.
+const warehouseQuery = route.query.warehouseId
+  ? `?warehouseId=${route.query.warehouseId}`
+  : "";
+
 const breadcrumbs = [
-  { name: "Home", href: "/warehouse/dashboard", current: false },
-  { name: "Inventory Counts", href: "/warehouse/inventory-counts", current: false },
-  { name: "Differences", href: "/warehouse/inventory-counts/differences", current: false },
+  { name: "Home", href: route.path.startsWith("/admin") ? "/admin/dashboard" : "/warehouse/dashboard", current: false },
+  { name: "Inventory Counts", href: moduleBase, current: false },
+  { name: "Differences", href: moduleBase + "/differences", current: false },
   { name: "Details", href: "#", current: true },
 ];
 
@@ -185,6 +255,20 @@ const recordId = ref(route.params.id || "");
 const isRemarkModalOpen = ref(false);
 const selectedRow = ref(null);
 const remarkInput = ref("");
+// When true, the open modal is an officer's edit REQUEST (proposed remark that
+// needs admin approval) rather than a direct remark edit.
+const isRequestMode = ref(false);
+
+// Admins can view/approve edit requests and edit remarks directly; warehouse
+// officers can only add remarks and request edits.
+const isAdmin = computed(
+  () =>
+    route.path.startsWith("/admin") ||
+    String(user?.value?.roleId || "") === "ADMIN1"
+);
+
+const displayName =
+  user?.value?.Name || user?.value?.name || user?.value?.userName || "a warehouse officer";
 
 const filteredDifferences = computed(() => {
   const q = (searchQuery.value || "").trim().toLowerCase();
@@ -203,7 +287,25 @@ const parseCountNumber = (str) => {
 
 const openRemarkModal = (d) => {
   selectedRow.value = d;
-  remarkInput.value = d.remark || "";
+  isRequestMode.value = false;
+  remarkInput.value = "";
+  isRemarkModalOpen.value = true;
+};
+
+// Officer requests an edit of an existing remark: they propose a new remark
+// which an administrator must approve before it takes effect.
+const openRequestModal = (d) => {
+  selectedRow.value = d;
+  isRequestMode.value = true;
+  remarkInput.value = "";
+  isRemarkModalOpen.value = true;
+};
+
+// Admin edits the remark directly (ignoring any pending request).
+const openEditModal = (d) => {
+  selectedRow.value = d;
+  isRequestMode.value = false;
+  remarkInput.value = "";
   isRemarkModalOpen.value = true;
 };
 
@@ -211,34 +313,83 @@ const closeRemarkModal = () => {
   isRemarkModalOpen.value = false;
   selectedRow.value = null;
   remarkInput.value = "";
+  isRequestMode.value = false;
 };
 
 // Officers cannot edit an existing remark directly. Following the same
-// pattern as "Request Reversal" on receipts, they can only flag the remark
-// for an administrator to review and edit it.
-const requestEdit = async (d) => {
+// pattern as "Request Reversal" on receipts, they submit an edit request with
+// their proposed remark, which an administrator reviews and approves.
+const requestEdit = (d) => openRequestModal(d);
+
+// Admin reviews the pending edit request (current remark vs proposed remark).
+const viewRequest = (d) => {
+  if (!d.editRequest) {
+    Swal.fire({
+      text: "There is no pending edit request for this remark.",
+      icon: "info",
+      confirmButtonText: "Close",
+      confirmButtonColor: "#096eb4",
+    });
+    return;
+  }
+  Swal.fire({
+    title: "Edit Request",
+    html:
+      `<div style="text-align:left">` +
+      `<p><strong>Commodity:</strong> ${d.commodity}</p>` +
+      `<p><strong>Requested by:</strong> ${d.editRequest?.by || "Unknown"}</p>` +
+      `<p><strong>Current remark:</strong></p>` +
+      `<p style="background:#f9fafb;padding:8px;border-radius:6px;">${d.remark || "—"}</p>` +
+      `<p><strong>Proposed remark:</strong></p>` +
+      `<p style="background:#fff7ed;padding:8px;border-radius:6px;">${d.editRequest?.proposed || "—"}</p>` +
+      `</div>`,
+    icon: "info",
+    confirmButtonText: "Close",
+    confirmButtonColor: "#096eb4",
+  });
+};
+
+// Admin approves the request: the proposed remark becomes the remark and the
+// pending request is cleared. The officer sees the new remark with no request.
+const approveRequest = async (d) => {
   const result = await Swal.fire({
-    title: "Request Edit",
-    text: `Submit a request to edit the remark for ${d.commodity}? An administrator will review it.`,
+    title: "Approve edit request?",
+    text: `The remark for ${d.commodity} will be updated to the proposed remark.`,
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Send Request",
+    confirmButtonText: "Approve",
     confirmButtonColor: "#096eb4",
     cancelButtonText: "Cancel",
   });
   if (!result.isConfirmed) return;
 
-  d.editRequested = true;
-
-  Swal.fire({
-    text: "Edit request submitted. An administrator will review the remark.",
-    icon: "success",
-    toast: true,
-    position: "top-right",
-    showConfirmButton: false,
-    timer: 2500,
-    timerProgressBar: true,
-  });
+  isLoading.value = true;
+  try {
+    d.remark = (d.editRequest?.proposed || "").trim();
+    d.editRequest = null;
+    await persistRemarks();
+    Swal.fire({
+      text: "Edit request approved. The remark has been updated.",
+      icon: "success",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  } catch (err) {
+    console.error(err);
+    Swal.fire({
+      text: "Error approving edit request",
+      icon: "error",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+  }
+  isLoading.value = false;
 };
 
 const saveRemark = async () => {
@@ -247,7 +398,9 @@ const saveRemark = async () => {
   if (!row) return;
   if (!remark) {
     Swal.fire({
-      text: "Please provide a remark before saving.",
+      text: isRequestMode.value
+        ? "Please provide the proposed remark before submitting the request."
+        : "Please provide a remark before saving.",
       icon: "warning",
       toast: true,
       position: "top-right",
@@ -260,29 +413,23 @@ const saveRemark = async () => {
 
   isLoading.value = true;
   try {
-    row.remark = remark;
+    if (isRequestMode.value) {
+      // Officer's edit request: keep the current remark but record the
+      // proposed one for the administrator to approve.
+      row.editRequest = { by: displayName, proposed: remark };
+    } else {
+      // Direct save (new remark by anyone, or admin editing an existing one).
+      row.remark = remark;
+      row.editRequest = null;
+    }
 
-    // Persist remarks on the count record using the existing endpoint. The
-    // combined remarks string is keyed by commodity name, so changing any
-    // difference's remark rebuilds it from all the rows currently shown.
-    const remarks = differences
-      .filter((d) => (d.remark || "").trim())
-      .map((d) => `${d.commodity}: ${d.remark.trim()}`)
-      .join("\n");
-
-    await invStore.update({
-      id: Number(recordId.value),
-      remarks,
-      UpdatedOn: new Date().toISOString(),
-      state: "Saved",
-    });
-
-    // Notify the layout so the header notification badge and the index page
-    // Differences counter re-compute (this remark no longer counts as pending).
+    await persistRemarks();
     eventBus.emit("inventoryDifferencesUpdated");
     closeRemarkModal();
     Swal.fire({
-      text: "Remark saved successfully.",
+      text: isRequestMode.value
+        ? "Edit request submitted. An administrator will review the remark."
+        : "Remark saved successfully.",
       icon: "success",
       toast: true,
       position: "top-right",
@@ -305,6 +452,31 @@ const saveRemark = async () => {
   isLoading.value = false;
 };
 
+// Persists the remarks of all difference rows on this count via the existing
+// PATCH /inventorycounts/{id} endpoint (no dedicated endpoint needed). A row
+// with a pending edit request is stored as:
+//   "Commodity: current remark | [EDIT_REQUEST by John] proposed remark"
+const buildRemarksString = () =>
+  differences
+    .filter((d) => (d.remark || "").trim() || d.editRequest)
+    .map((d) => {
+      const base = (d.remark || "").trim();
+      if (d.editRequest) {
+        return `${d.commodity}: ${base} | [EDIT_REQUEST by ${d.editRequest.by || ""}] ${d.editRequest.proposed}`;
+      }
+      return `${d.commodity}: ${base}`;
+    })
+    .join("\n");
+
+const persistRemarks = async () => {
+  await invStore.update({
+    id: Number(recordId.value),
+    remarks: buildRemarksString(),
+    UpdatedOn: new Date().toISOString(),
+    state: "Saved",
+  });
+};
+
 // Cache of commodity-inventories per warehouse (used to resolve commodity names).
 const inventoryCache = {};
 
@@ -317,18 +489,27 @@ const getWarehouseInventories = async (warehouseId) => {
   return inventoryCache[key];
 };
 
-// The recap feature stores one line per difference: "CommodityName: remark".
+// The remark store keeps one line per difference: "CommodityName: remark".
+// A pending officer edit request is stored on the same line as:
+//   "CommodityName: remark | [EDIT_REQUEST by John] proposed remark"
 const parseRemarks = (remarks) => {
   const map = {};
   String(remarks || "")
     .split("\n")
     .forEach((line) => {
       const idx = line.indexOf(":");
-      if (idx > -1) {
-        const name = line.slice(0, idx).trim();
-        const text = line.slice(idx + 1).trim();
-        if (name) map[name] = text;
+      if (idx < 1) return;
+      const name = line.slice(0, idx).trim();
+      let rest = line.slice(idx + 1).trim();
+      let request = null;
+      const m = rest.match(
+        /^(.*?)\s*\|\s*\[EDIT_REQUEST(?:\s+by\s+([^\]]+))?\]\s*([\s\S]*)$/
+      );
+      if (m) {
+        rest = m[1].trim();
+        request = { by: (m[2] || "").trim(), proposed: m[3].trim() };
       }
+      if (name) map[name] = { remark: rest, request };
     });
   return map;
 };
@@ -376,6 +557,7 @@ const load = async () => {
       const commodity = inventory?.commodity || null;
       const name = commodity?.Name || it.commodityName || "Unknown commodity";
 
+      const stored = remarkMap[name];
       rows.push({
         itemId: it.id || null,
         countNumber: countNumber.value,
@@ -388,7 +570,9 @@ const load = async () => {
         difference,
         // Per-item remark is the source of truth; fall back to the legacy
         // combined remarks string for counts created before item remarks existed.
-        remark: String(it.remark || "").trim() || remarkMap[name] || "",
+        remark: String(it.remark || "").trim() || stored?.remark || "",
+        // Pending officer edit request parsed from the remarks string.
+        editRequest: stored?.request || null,
       });
     });
 

@@ -14,7 +14,7 @@
 
         <div class="flex items-center gap-2">
           <router-link
-            :to="'/warehouse/inventory-counts/differences'"
+            :to="moduleBase + '/differences' + warehouseQuery"
             style="background-color: #248cd6"
             class="font-body relative inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
           >
@@ -64,7 +64,7 @@
 
               <div class="mt-3">
                 <router-link
-                  :to="`/warehouse/inventory-counts/${c.id}`"
+                  :to="`${moduleBase}/${c.id}`"
                   class="inline-block text-sm text-blue-600 hover:underline"
                 >
                   View details →
@@ -87,6 +87,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, inject } from "vue";
+import { useRoute } from "vue-router";
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "@/stores/session.store";
@@ -95,10 +96,23 @@ import { fetchUnremarkedDifferencesCount } from "../../../utils/inventoryDiffere
 
 const isLoading = ref(false);
 
+// Admins view this module under /admin/warehouse-management/..., warehouse
+// officers under /warehouse/inventory-counts/... — derive the base from the
+// current path so all internal links stay within the active role's area.
+const route = useRoute();
+const moduleBase = route.path.startsWith("/admin")
+  ? "/admin/warehouse-management/inventory-counts"
+  : "/warehouse/inventory-counts";
+
+// When an admin opens the module for a specific warehouse, the warehouse is
+// passed as ?warehouseId= — scope everything to that warehouse.
+const scopedWarehouseId = route.query.warehouseId ? Number(route.query.warehouseId) : null;
+const warehouseQuery = scopedWarehouseId ? `?warehouseId=${scopedWarehouseId}` : "";
+
 const breadcrumbs = [
   {
     name: "Home",
-    href: "/warehouse/dashboard",
+    href: route.path.startsWith("/admin") ? "/admin/dashboard" : "/warehouse/dashboard",
     current: false,
   },
   {
@@ -156,6 +170,11 @@ const load = async () => {
         .map((w) => Number(w.id));
 
       const filteredCounts = result.filter((r) => {
+        // Admin opening the module for one specific warehouse (via the
+        // Warehouse Management landing page) sees only that warehouse.
+        if (scopedWarehouseId) {
+          return Number(r.warehouseId || r.warehouse?.id) === scopedWarehouseId;
+        }
         if (!user?.district) {
           return true;
         }
@@ -174,7 +193,7 @@ const load = async () => {
         })
       );
 
-      unremarkedDifferences.value = await fetchUnremarkedDifferencesCount(user);
+      unremarkedDifferences.value = await fetchUnremarkedDifferencesCount(user, scopedWarehouseId);
     }
   } catch (err) {
     console.error(err);
@@ -255,7 +274,8 @@ const createNewCount = async () => {
       CreatedOn: new Date().toISOString(),
       UpdatedOn: new Date().toISOString(),
       countedById: String(user.id),
-      warehouseId: Number(availableWarehouses[0].id),
+      // Admin scoped to a specific warehouse creates the count for it.
+      warehouseId: Number(scopedWarehouseId || availableWarehouses[0].id),
       state: "Draft",
     };
 

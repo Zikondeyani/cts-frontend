@@ -33,9 +33,9 @@
             <!-- Normal tile without dropdown -->
             <router-link v-if="option.label !== 'Stock Register'" :to="option.path" class="block">
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300">
-                <component :is="option.icon" class="h-6 w-6 mb-2" />
-                <span class="text-center text-sm sm:text-base">
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 h-24 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300">
+                <component :is="option.icon" class="h-6 w-6 mb-2 flex-shrink-0" />
+                <span class="text-center text-sm sm:text-base leading-tight">
                   {{ option.label }}
                 </span>
               </div>
@@ -44,9 +44,9 @@
             <!-- Stock Register tile with dropdown -->
             <div v-else class="relative">
               <div
-                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300">
-                <component :is="option.icon" class="h-6 w-6 mb-2" />
-                <span class="text-center text-sm sm:text-base">
+                class="flex flex-col items-center justify-center bg-[#096eb4] rounded-lg p-4 h-24 text-white shadow-xl cursor-pointer hover:bg-[#096eb4] transition-all duration-300">
+                <component :is="option.icon" class="h-6 w-6 mb-2 flex-shrink-0" />
+                <span class="text-center text-sm sm:text-base leading-tight">
                   {{ option.label }}
                 </span>
               </div>
@@ -168,6 +168,11 @@ const optionGroups = ref([
         path: "/admin/commodity-types",
       },
       { label: "Receipts", icon: DocumentTextIcon, path: "/admin/receipts" },
+      {
+        label: "Warehouse Management",
+        icon: ArchiveIcon,
+        path: "/admin/warehouse-management",
+      },
     ],
   },
   {

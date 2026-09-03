@@ -202,7 +202,13 @@ import * as XLSX from "xlsx";
 const route = useRoute();
 const router = useRouter();
 const isLoading = ref(false);
-const breadcrumbs = [{ name: "Home", href: "/warehouse/dashboard", current: false }, { name: "Inventory Counts", href: "/warehouse/inventory-counts", current: false }, { name: 'Manage', href: '#', current: true }];
+// Admins view this module under /admin/warehouse-management/..., warehouse
+// officers under /warehouse/inventory-counts/... — derive the base from the
+// current path so all navigation stays within the active role's area.
+const moduleBase = route.path.startsWith("/admin")
+  ? "/admin/warehouse-management/inventory-counts"
+  : "/warehouse/inventory-counts";
+const breadcrumbs = [{ name: "Home", href: route.path.startsWith("/admin") ? "/admin/dashboard" : "/warehouse/dashboard", current: false }, { name: "Inventory Counts", href: moduleBase, current: false }, { name: 'Manage', href: '#', current: true }];
 
 const invStore = useinventorycountstore();
 const whStore = usewarehousestore();
@@ -382,8 +388,14 @@ onMounted(async () => {
     })));
 
     // For a warehouse officer creating a new count, pre-select their warehouse.
-    if (!recordId.value && assignedWarehouse) {
-      selectedWarehouseId.value = String(assignedWarehouse.id);
+    // An admin scoped via ?warehouseId= (Warehouse Management view) is
+    // pre-selected to that warehouse instead.
+    if (!recordId.value) {
+      if (route.query.warehouseId) {
+        selectedWarehouseId.value = String(route.query.warehouseId);
+      } else if (assignedWarehouse) {
+        selectedWarehouseId.value = String(assignedWarehouse.id);
+      }
     }
 
     if (recordId.value) {
@@ -600,7 +612,7 @@ const handleSubmit = async () => {
       reverseButtons: true,
     });
     if (diffResult.isConfirmed && recordId.value) {
-      router.push({ path: `/warehouse/inventory-counts/differences/${recordId.value}` });
+      router.push({ path: `${moduleBase}/differences/${recordId.value}` });
     }
   }
 };
@@ -621,7 +633,7 @@ const deleteCount = async () => {
   try {
     isLoading.value = true;
     await invStore.remove(recordId.value);
-    router.push({ path: '/warehouse/inventory-counts' });
+    router.push({ path: moduleBase });
   } catch (err) {
     isLoading.value = false;
     console.error(err);
@@ -742,7 +754,7 @@ const submit = async (remarks) => {
 
     await invStore.update(payload);
     isLoading.value = false;
-    router.push({ path: "/warehouse/inventory-counts" });
+    router.push({ path: moduleBase });
   } catch (err) {
     isLoading.value = false;
     console.error(err);

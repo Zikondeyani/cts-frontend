@@ -51,7 +51,7 @@
 
               <div class="mt-3">
                 <router-link
-                  :to="`/warehouse/inventory-counts/differences/${d.id}`"
+                  :to="`${moduleBase}/differences/${d.id}${warehouseQuery}`"
                   class="inline-block text-sm text-blue-600 hover:underline"
                 >
                   View details →
@@ -78,6 +78,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, inject } from "vue";
+import { useRoute } from "vue-router";
 import moment from "moment";
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
@@ -87,9 +88,22 @@ import { useSessionStore } from "@/stores/session.store";
 import { dedupeCountItems } from "../../../utils/inventoryDifferences";
 
 const isLoading = ref(false);
+
+// Admins view this module under /admin/warehouse-management/..., warehouse
+// officers under /warehouse/inventory-counts/... — derive the base from the
+// current path so all internal links stay within the active role's area.
+const route = useRoute();
+const moduleBase = route.path.startsWith("/admin")
+  ? "/admin/warehouse-management/inventory-counts"
+  : "/warehouse/inventory-counts";
+
+// Admin scoped to one warehouse via ?warehouseId= (Warehouse Management view).
+const scopedWarehouseId = route.query.warehouseId ? Number(route.query.warehouseId) : null;
+const warehouseQuery = scopedWarehouseId ? `?warehouseId=${scopedWarehouseId}` : "";
+
 const breadcrumbs = [
-  { name: "Home", href: "/warehouse/dashboard", current: false },
-  { name: "Inventory Counts", href: "/warehouse/inventory-counts", current: false },
+  { name: "Home", href: route.path.startsWith("/admin") ? "/admin/dashboard" : "/warehouse/dashboard", current: false },
+  { name: "Inventory Counts", href: moduleBase, current: false },
   { name: "Differences", href: "#", current: true },
 ];
 
@@ -140,7 +154,15 @@ const load = async () => {
 
     for (const c of countsList) {
       const cWhId = Number(c.warehouseId || c.warehouse?.id);
-      if (!allowedWarehouseIds.includes(cWhId)) continue;
+      // Admin scoped to one warehouse sees only that warehouse's counts. The
+      // scope bypasses the officer-permission filter — an admin has no
+      // Warehouse.userId and their district check doesn't apply here, so
+      // relying on allowedWarehouseIds would wrongly skip every count.
+      if (scopedWarehouseId) {
+        if (cWhId !== scopedWarehouseId) continue;
+      } else if (!allowedWarehouseIds.includes(cWhId)) {
+        continue;
+      }
 
       // Only finalized counts carry persisted counted items.
       const finalized =
