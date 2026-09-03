@@ -92,26 +92,27 @@
                       <span>edit requested</span>
                     </span>
 
-                    <!-- Admin: always shows the three buttons (View Request / Approve / Edit). -->
+                    <!-- Admin: Edit always; View Request / Approve appear only
+                         when an officer has submitted an edit request. -->
                     <template v-if="isAdmin">
-                      <button
-                        type="button"
-                        @click="viewRequest(d)"
-                        class="text-blue-500 hover:text-blue-400 transition duration-300 mr-3"
-                      >
-                        <EyeIcon class="h-5 w-5 inline-block mr-1" />
-                        View Request
-                      </button>
-                      <button
-                        type="button"
-                        @click="approveRequest(d)"
-                        :disabled="!d.editRequest"
-                        :class="d.editRequest ? 'text-green-600 hover:text-green-700' : 'text-gray-400 cursor-not-allowed'"
-                        class="transition duration-300 mr-3"
-                      >
-                        <CheckIcon class="h-5 w-5 inline-block mr-1" />
-                        Approve
-                      </button>
+                      <template v-if="d.editRequest">
+                        <button
+                          type="button"
+                          @click="viewRequest(d)"
+                          class="text-blue-500 hover:text-blue-400 transition duration-300 mr-3"
+                        >
+                          <EyeIcon class="h-5 w-5 inline-block mr-1" />
+                          View Request
+                        </button>
+                        <button
+                          type="button"
+                          @click="approveRequest(d)"
+                          class="text-green-600 hover:text-green-700 transition duration-300 mr-3"
+                        >
+                          <CheckIcon class="h-5 w-5 inline-block mr-1" />
+                          Approve
+                        </button>
+                      </template>
                       <button
                         type="button"
                         @click="openEditModal(d)"

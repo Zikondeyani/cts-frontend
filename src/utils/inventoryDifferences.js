@@ -28,6 +28,86 @@ const parseRemarks = (remarks) => {
 };
 
 /**
+ * Counts pending remark EDIT REQUESTS across the given inventory counts.
+ * An officer's edit request is persisted on the count's `remarks` string as:
+ *   "Commodity: current remark | [EDIT_REQUEST by John] proposed remark"
+ * Each line containing the [EDIT_REQUEST marker is one pending request.
+ */
+export function countPendingEditRequests(counts) {
+  let total = 0;
+  (Array.isArray(counts) ? counts : []).forEach((c) => {
+    String(c?.remarks || "")
+      .split("\n")
+      .forEach((line) => {
+        if (line.includes("[EDIT_REQUEST")) total += 1;
+      });
+  });
+  return total;
+}
+
+/**
+ * Async loader for the admin's "pending edit requests" badge/notification:
+ * fetches ALL inventory counts (admins are not warehouse-scoped) and returns
+ * the total number of officer edit requests awaiting approval.
+ */
+export async function fetchPendingEditRequestsCount() {
+  try {
+    const countsList = await useinventorycountstore().get();
+    return countPendingEditRequests(countsList);
+  } catch (err) {
+    console.error("Error counting pending edit requests:", err);
+    return 0;
+  }
+}
+
+/**
+ * Per-warehouse breakdown of pending remark EDIT REQUESTS for the admin's
+ * header notifications: fetches ALL inventory counts plus the warehouse list,
+ * then groups the pending requests by warehouse so each notification can
+ * deep-link to that warehouse's differences page (?warehouseId=...).
+ * Returns [{ warehouseId, warehouseName, count }, ...] (count > 0 only),
+ * sorted by warehouse name.
+ */
+export async function fetchPendingEditRequestsByWarehouse() {
+  try {
+    const [countsList, warehouses] = await Promise.all([
+      useinventorycountstore().get(),
+      usewarehousestore().get(),
+    ]);
+    const nameById = (Array.isArray(warehouses) ? warehouses : []).reduce(
+      (map, w) => {
+        map[Number(w.id)] = w.Name || `Warehouse #${w.id}`;
+        return map;
+      },
+      {}
+    );
+    const totals = new Map();
+    (Array.isArray(countsList) ? countsList : []).forEach((c) => {
+      const whId = Number(c?.warehouseId || c?.warehouse?.id);
+      if (!Number.isFinite(whId)) return;
+      String(c?.remarks || "")
+        .split("\n")
+        .forEach((line) => {
+          if (line.includes("[EDIT_REQUEST")) {
+            totals.set(whId, (totals.get(whId) || 0) + 1);
+          }
+        });
+    });
+    return Array.from(totals.entries())
+      .map(([warehouseId, count]) => ({
+        warehouseId,
+        warehouseName: nameById[warehouseId] || `Warehouse #${warehouseId}`,
+        count,
+      }))
+      .sort((a, b) => a.warehouseName.localeCompare(b.warehouseName));
+  } catch (err) {
+    console.error("Error grouping pending edit requests by warehouse:", err);
+    return [];
+  }
+}
+
+
+/**
  * De-duplicates a count's persisted item rows by commodityInventoryId, keeping
  * the LATEST persisted row (highest item id) for each commodity. Older duplicated
  * rows (e.g. stale rows created by a re-submission bug) must be ignored, so every

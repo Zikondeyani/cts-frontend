@@ -106,6 +106,29 @@
             </div>
           </div>
         </div>
+        <!-- Notification Button (same pattern as the warehouse header) -->
+        <div class="relative lg:block">
+          <button @click="toggleNotifications"
+            class="text-gray-50 hover:text-gray-50 hover:bg-blue-400 px-2 py-2 text-sm font-medium rounded-md">
+            <BellIcon class="h-6 w-6 text-white" aria-hidden="true" />
+            <span v-if="notificationsCount > 0"
+              class="absolute top-0 right-0 flex items-center justify-center h-4 w-4 text-xs font-bold text-white bg-red-600 rounded-full">
+              {{ notificationsCount }}
+            </span>
+          </button>
+          <div v-if="isNotificationsOpen" class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10">
+            <div class="py-2 px-4 text-xs text-gray-700">
+              <p v-if="notifications.length === 0">No new notifications</p>
+              <ul v-else>
+                <li v-for="(notification, index) in notifications" :key="index" class="py-1 border-b border-gray-200">
+                  <router-link :to="notification.href" class="text-blue-500 hover:underline">
+                    {{ notification.message }}
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <!-- User Menu for Desktop -->
         <div class="relative ml-5 hidden lg:block">
           <Menu as="div" class="flex-shrink-0 relative">
@@ -334,6 +357,7 @@ import {
   CollectionIcon,
   IdentificationIcon,
   OfficeBuildingIcon,
+  BellIcon,
 } from "@heroicons/vue/outline";
 import {
   ChevronRightIcon,
@@ -343,6 +367,39 @@ import {
 } from "@heroicons/vue/solid";
 
 const newReversalCount = ref(0);
+
+// Header notifications (same mechanism as the warehouse layout). Includes the
+// count of remark edit requests submitted by warehouse officers.
+import {
+  fetchPendingEditRequestsByWarehouse,
+} from "../../utils/inventoryDifferences";
+
+const isNotificationsOpen = ref(false);
+const notifications = ref([]);
+const notificationsCount = computed(() => notifications.value.length);
+
+const toggleNotifications = () => {
+  isNotificationsOpen.value = !isNotificationsOpen.value;
+};
+
+const updateNotifications = async () => {
+  notifications.value = [];
+  // One notification per warehouse that has pending officer edit requests,
+  // deep-linking to that warehouse's differences page.
+  const requestsByWarehouse = await fetchPendingEditRequestsByWarehouse();
+  requestsByWarehouse.forEach(({ warehouseId, warehouseName, count }) => {
+    notifications.value.push({
+      message: `Edit requests from ${warehouseName} (${count})`,
+      href: `/admin/warehouse-management/inventory-counts/differences?warehouseId=${warehouseId}`,
+    });
+  });
+  if (newReversalCount.value > 0) {
+    notifications.value.push({
+      message: `Pending receipts and reversals (${newReversalCount.value})`,
+      href: "/admin/reversals",
+    });
+  }
+};
 
 //DECLARATIONS
 const system = reactive({
@@ -461,14 +518,24 @@ onMounted(async () => {
 
   await getInstructedReceipts();
 
+  await updateNotifications();
+
+  // Refresh the header notifications when officers submit/clear edit requests.
+  eventBus.on("inventoryDifferencesUpdated", updateNotifications);
+
   eventBus.on("reversalTriggered", async (reversalId) => {
     // Update the notification count
 
     await getInstructedReceipts();
     await getReceipts();
     updateCounts();
+    await updateNotifications();
     addEventListeners();
   });
+});
+
+onBeforeUnmount(() => {
+  eventBus.off("inventoryDifferencesUpdated", updateNotifications);
 });
 //WAT
 function navigation() {
