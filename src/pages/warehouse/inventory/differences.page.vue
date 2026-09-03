@@ -84,6 +84,7 @@ import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.brea
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "@/stores/session.store";
+import { dedupeCountItems } from "../../../utils/inventoryDifferences";
 
 const isLoading = ref(false);
 const breadcrumbs = [
@@ -150,7 +151,10 @@ const load = async () => {
       const items = c.items || [];
       if (!items.length) continue;
 
-      const diffCount = items.filter((it) => {
+      // One authoritative row per commodity-inventory (latest persisted row),
+      // exactly matching what the differences detail page shows — so the
+      // "Differences: X" total always equals the number of rows on the detail page.
+      const diffCount = dedupeCountItems(items).filter((it) => {
         // Match the Count manage page's expected-quantity fallback (the backend
         // stores the reference under "Quantity"), so the badge matches what the
         // manage page displays.

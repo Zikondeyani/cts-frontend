@@ -250,6 +250,7 @@ import { useWarehouseRequisitionsStore } from "../../stores/warehouserequisition
 import { usecommodityinventoriestore } from "../../stores/commodityinventories.store";
 
 import { usecommoditytransfersservice } from "../../stores/commoditytransfters.store";
+import { fetchUnremarkedDifferencesCount } from "../../utils/inventoryDifferences";
 import {
   saveDataOffline,
   getDataOffline,
@@ -298,6 +299,7 @@ const newExpiryCount = ref(0);
 
 const newTransfersCount = ref(0);
 const transfers = reactive([]);
+const newDifferencesCount = ref(0);
 const menuItemClasses = (active, isButton = false) => [
   active ? "bg-gray-100 text-gray-900" : "text-gray-700",
   "block px-4 py-2 text-sm",
@@ -366,6 +368,12 @@ const getExpiringInventories = () => {
 
   updateNotifications();
 };
+
+const getInventoryDifferences = async () => {
+  newDifferencesCount.value = await fetchUnremarkedDifferencesCount(user.value);
+  updateNotifications();
+};
+
 const getCommodityTransfers = async () => {
   try {
     const result = await commodityTransferStore.get();
@@ -433,6 +441,7 @@ onMounted(() => {
   getCommodityInventories();
   getInstructions();
   getLoadingPlans();
+  getInventoryDifferences();
   eventBus.on("instructionArchived", (instructionId) => {
     // Update the notification count
     getInstructions();
@@ -456,6 +465,10 @@ onMounted(() => {
     getCommodityTransfers();
     updateNotifications();
   });
+
+  eventBus.on("inventoryDifferencesUpdated", () => {
+    getInventoryDifferences();
+  });
 });
 
 onBeforeUnmount(() => {
@@ -463,6 +476,7 @@ onBeforeUnmount(() => {
   eventBus.off("loadingplanArchived");
   eventBus.off("warehouseReqArchived");
   eventBus.off("TransfersArchived");
+  eventBus.off("inventoryDifferencesUpdated");
 });
 
 const notifications = ref([]);
@@ -503,6 +517,13 @@ const updateNotifications = () => {
     notifications.value.push({
       message: `Unconfirmed Stock Transfers (${newTransfersCount.value})`,
       href: "/warehouse/stock-transfer-management",
+    });
+  }
+
+  if (newDifferencesCount.value > 0) {
+    notifications.value.push({
+      message: `Inventory Differences to Remark (${newDifferencesCount.value})`,
+      href: "/warehouse/inventory-counts/differences",
     });
   }
 };

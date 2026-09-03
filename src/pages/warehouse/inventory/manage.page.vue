@@ -51,7 +51,7 @@
         <div class="mt-4">
           <table class="min-w-full">
             <thead>
-              <tr class="text-left text-sm text-gray-600"><th>Commodity</th><th>Status</th><th>Activity</th><th>BBD</th><th>Difference</th><th class="text-right">Counted Q.ty</th></tr>
+              <tr class="text-left text-sm text-gray-600"><th>Commodity</th><th>Status</th><th>Stock From</th><th>BBD</th><th class="text-right">Counted Q.ty</th></tr>
             </thead>
             <tbody>
               <tr
@@ -65,23 +65,22 @@
                   <div class="text-xs text-gray-500">Batch: {{ it.BatchNumber }}</div>
                 </td>
                 <td class="py-4 text-sm" :class="it.counted ? 'text-green-600' : 'text-orange-600'">{{ it.counted ? 'Counted' : 'Not counted' }}</td>
-                <td class="py-4 text-sm">{{ it.activity?.Name || it.activityId || '' }}</td>
+                <td class="py-4 text-sm">{{ it.StockFrom || '-' }}</td>
                 <td class="py-4 text-sm">{{ it.BBD || '' }}</td>
-                <td class="py-4 text-sm">{{ it.counted ? variance(it) : '-' }}</td>
                 <td class="py-4 text-right" :class="it.counted ? 'text-green-600' : 'text-orange-600'">{{ formatQuantity(it.physicalCount) }} {{ it.commodity?.Container_type || '' }}</td>
               </tr>
               <tr v-if="filteredItems.length === 0 && items.length > 0" class="border-t">
-                <td colspan="6" class="py-6 text-center text-sm text-gray-500">No commodities match your search.</td>
+                <td colspan="5" class="py-6 text-center text-sm text-gray-500">No commodities match your search.</td>
               </tr>
               <tr v-if="items.length === 0" class="border-t">
-                <td colspan="6" class="py-6 text-center text-sm text-gray-500">No commodities in this count yet.</td>
+                <td colspan="5" class="py-6 text-center text-sm text-gray-500">No commodities in this count yet.</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="mt-4 flex justify-end">
-          <button v-if="countState !== 'Saved'" @click="openRecapModal" class="btn">Recap</button>
+          <button v-if="countState !== 'Saved'" @click="handleSubmit" class="btn">Submit</button>
         </div>
       </div>
     </div>
@@ -100,17 +99,12 @@
         <div class="space-y-4 px-5 py-4">
           <div class="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <div class="text-gray-500">Expected quantity</div>
-              <div class="font-semibold text-gray-900">{{ formatQuantity(selectedItem?.Quantity) }} {{ selectedItemUnit }}</div>
-              <div class="text-xs text-gray-400 mt-0.5">{{ baselineLabel }}</div>
-            </div>
-            <div>
               <div class="text-gray-500">Best before</div>
               <div class="font-semibold text-gray-900">{{ selectedItem?.BBD || 'N/A' }}</div>
             </div>
             <div>
-              <div class="text-gray-500">Activity</div>
-              <div class="font-semibold text-gray-900">{{ selectedItem?.activity?.Name || selectedItem?.activityId || 'N/A' }}</div>
+              <div class="text-gray-500">Stock From</div>
+              <div class="font-semibold text-gray-900">{{ selectedItem?.StockFrom || 'N/A' }}</div>
             </div>
             <div>
               <div class="text-gray-500">Stock state</div>
@@ -131,13 +125,6 @@
                 @keyup.enter="confirmCount"
               />
               <span class="border-l bg-gray-50 px-3 py-2 text-sm text-gray-600">{{ selectedItemUnit }}</span>
-            </div>
-          </div>
-
-          <div class="rounded bg-gray-50 p-3">
-            <div class="text-sm text-gray-500">Difference preview</div>
-            <div class="mt-1 text-xl font-semibold" :class="countDifference >= 0 ? 'text-green-700' : 'text-red-700'">
-              {{ countDifference.toFixed(3) }} {{ selectedItemUnit }}
             </div>
           </div>
         </div>
@@ -203,6 +190,7 @@ import { computed, ref, reactive, onMounted, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
+import { dedupeCountItems } from "../../../utils/inventoryDifferences";
 import { useSessionStore } from "@/stores/session.store";
 import moment from "moment";
 
@@ -240,6 +228,7 @@ const mapInventoryItem = (i) => ({
   commodityName: i.commodity?.Name || "",
   activity: i.activity || null,
   activityId: i.activityId || "",
+  StockFrom: i.StockFrom || i.stockFrom || "",
   BatchNumber: i.BatchNumber || "",
   BBD: i.BBD || i.ExpiryDate || "",
   state: i.state || "",
@@ -307,7 +296,9 @@ const getReferenceQuantityMap = async (warehouseId, currentCountNumber) => {
     return finalized && cn === prevNumber;
   });
 
-  (prev?.items || []).forEach((it) => {
+  // One authoritative row per commodity-inventory (latest persisted row), so a
+  // superseded row never feeds a stale physical count into the chain baseline.
+  dedupeCountItems(prev?.items || []).forEach((it) => {
     if (it.commodityInventoryId) {
       map[String(it.commodityInventoryId)] = Number(it.physicalCount || 0);
     }
@@ -411,7 +402,9 @@ onMounted(async () => {
         // Only a finalized count may restore its saved counted rows.
         const isFinalized =
           String(countState.value || "Draft").toLowerCase() === "saved";
-        const savedItems = rec.items || [];
+        // One authoritative row per commodity-inventory (latest persisted row),
+        // so stale duplicated rows never surface in the manage page table.
+        const savedItems = dedupeCountItems(rec.items || []);
         if (isFinalized && savedItems.length > 0) {
           items.length = 0;
           savedItems.forEach((si) => {
@@ -420,6 +413,7 @@ onMounted(async () => {
               id: si.id || si.commodityInventoryId,
               commodity: commodityEnt,
               commodityName: si.commodityName || commodityEnt?.Name || "",
+              StockFrom: si.StockFrom || si.stockFrom || "",
               BatchNumber: si.BatchNumber || si.batchNumber || "",
               Quantity: si.expectedQuantity || si.Quantity || 0,
               physicalCount: typeof si.physicalCount !== 'undefined' ? si.physicalCount : 0,
@@ -444,6 +438,7 @@ onMounted(async () => {
               if (inv) {
                 it.commodity = inv.commodity || it.commodity;
                 it.commodityName = inv.commodity?.Name || it.commodityName;
+                it.StockFrom = inv.StockFrom || inv.stockFrom || it.StockFrom;
               }
             });
           }
@@ -496,6 +491,58 @@ const openRecapModal = () => {
 
 const closeRecapModal = () => {
   isRecapModalOpen.value = false;
+};
+
+const handleSubmit = async () => {
+  const counted = countedItems.value;
+  if (counted.length === 0) {
+    Swal.fire({
+      text: "Please count at least one commodity before submitting.",
+      icon: "warning",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "Submit inventory count?",
+    text: "Are you sure you want to submit this inventory count?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "Yes, submit",
+    cancelButtonText: "Cancel",
+    confirmButtonColor: "#096eb4",
+    reverseButtons: true,
+  });
+  if (!result.isConfirmed) return;
+
+  // Warehouse officers are no longer required to provide remarks on submission.
+  const diffCount = counted.filter((it) => variance(it) != 0).length;
+
+  await submit("");
+
+  // Ensure transparency: if any commodity stock has a difference, alert the user
+  // and offer a direct link to that count's Differences page where remarks can be
+  // added (remarks are managed there, not here).
+  if (diffCount > 0) {
+    const diffResult = await Swal.fire({
+      title: "Differences found",
+      html: `Some commodity stock in this count have <strong>${diffCount}</strong> difference(s).<br/>You can add remarks for each difference from the Differences page.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "View Differences",
+      cancelButtonText: "Close",
+      confirmButtonColor: "#096eb4",
+      reverseButtons: true,
+    });
+    if (diffResult.isConfirmed && recordId.value) {
+      router.push({ path: `/warehouse/inventory-counts/differences/${recordId.value}` });
+    }
+  }
 };
 
 const deleteCount = async () => {
@@ -600,8 +647,14 @@ const submit = async (remarks) => {
       countNumber.value = rec.countNumber || rec.Notes || countNumber.value;
     }
 
-    // prepare items payload: include only items marked counted
-    const payloadItems = items.filter((it) => it.counted).map((it) => ({ commodityInventoryId: it.commodityInventoryId, expectedQuantity: Number(it.Quantity || 0), physicalCount: Number(it.physicalCount || 0), BatchNumber: it.BatchNumber }));
+    // prepare items payload: every counted item is persisted as a fresh row so
+    // the officer's most recent physical counts always win. Older rows for the
+    // same commodityInventoryId are superseded (highest item id wins) by the
+    // shared dedupeCountItems() helper used by every page that reads items —
+    // so the Differences page and badges always match what was submitted last.
+    const payloadItems = items
+      .filter((it) => it.counted)
+      .map((it) => ({ commodityInventoryId: it.commodityInventoryId, expectedQuantity: Number(it.Quantity || 0), physicalCount: Number(it.physicalCount || 0), BatchNumber: it.BatchNumber }));
 
     // save each counted item against the inventory count
     if (payloadItems.length > 0) {

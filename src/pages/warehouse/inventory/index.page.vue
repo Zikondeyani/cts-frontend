@@ -16,9 +16,15 @@
           <router-link
             :to="'/warehouse/inventory-counts/differences'"
             style="background-color: #248cd6"
-            class="font-body inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
+            class="font-body relative inline-flex items-center px-6 py-2.5 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-[#096eb4] active:shadow-lg transition duration-100 ease-in-out capitalize"
           >
             Differences
+            <span
+              v-if="unremarkedDifferences > 0"
+              class="absolute -top-2 -right-2 flex items-center justify-center px-1.5 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full"
+            >
+              {{ unremarkedDifferences }}
+            </span>
           </router-link>
 
           <button
@@ -85,6 +91,7 @@ import { useinventorycountstore } from "../../../stores/inventorycounts.store";
 import { usewarehousestore } from "../../../stores/warehouse.store";
 import { useSessionStore } from "@/stores/session.store";
 import moment from "moment";
+import { fetchUnremarkedDifferencesCount } from "../../../utils/inventoryDifferences";
 
 const isLoading = ref(false);
 
@@ -109,6 +116,7 @@ const warehouseStore = usewarehousestore();
 const store = useinventorycountstore();
 
 const counts = reactive([]);
+const unremarkedDifferences = ref(0);
 
 const load = async () => {
   isLoading.value = true;
@@ -165,6 +173,8 @@ const load = async () => {
           );
         })
       );
+
+      unremarkedDifferences.value = await fetchUnremarkedDifferencesCount(user);
     }
   } catch (err) {
     console.error(err);
