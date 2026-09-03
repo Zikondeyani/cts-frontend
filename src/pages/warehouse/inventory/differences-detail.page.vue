@@ -13,6 +13,13 @@
             Showing {{ differences.length }} of {{ totalItems }} counted item(s).
           </p>
         </div>
+
+        <button v-if="differences.length > 0" type="button"
+          class="font-body mt-3 md:mt-0 inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
+          @click="exportDifferences()">
+          <i class="fas fa-file-export mr-2"></i>
+          Export
+        </button>
       </div>
 
       <div class="mt-4 flex justify-start">
@@ -145,6 +152,7 @@ import { ref, reactive, computed, onMounted, inject } from "vue";
 import { useRoute } from "vue-router";
 import { ChevronLeftIcon, PencilIcon } from "@heroicons/vue/solid";
 import moment from "moment";
+import * as XLSX from "xlsx";
 import spinnerWidget from "../../../components/widgets/spinners/default.spinner.vue";
 import breadcrumbWidget from "../../../components/widgets/breadcrumbs/admin.breadcrumb.vue";
 import eventBus from "../../../services/events/eventbus";
@@ -401,6 +409,39 @@ const load = async () => {
 };
 
 onMounted(load);
+
+// Exports the differences of THIS count to an Excel file, following the same
+// XLSX pattern used by the other export buttons in the app.
+const exportDifferences = () => {
+  if (differences.length === 0) {
+    Swal.fire({
+      text: "There are no differences to export for this count.",
+      icon: "info",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  const data = (filteredDifferences.value || differences).map((d) => ({
+    "Count Number": d.countNumber,
+    Date: d.countDate,
+    Commodity: d.commodity,
+    Container: d.container || "",
+    "Batch Number": d.BatchNumber || "",
+    "Expected Quantity": Number(d.expected || 0).toFixed(3),
+    "Counted Quantity": Number(d.counted || 0).toFixed(3),
+    Difference: Number(d.difference || 0).toFixed(3),
+    Remark: d.remark || "",
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, "Count Differences");
+  XLSX.writeFile(wb, `${countNumber.value || "Count"}_Differences.xlsx`);
+};
 </script>
 
 <style scoped>

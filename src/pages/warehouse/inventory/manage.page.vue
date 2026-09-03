@@ -21,8 +21,12 @@
           </div>
 
           <div class="flex gap-2">
-            <button class="px-3 py-1 bg-blue-100 text-blue-800 rounded">Activate</button>
-            <button class="px-3 py-1 bg-blue-600 text-white rounded">Deactivate</button>
+            <button type="button"
+              class="font-body inline-flex items-center px-6 py-2.5 bg-gray-500 text-white font-medium text-xs leading-tight rounded shadow-md hover:bg-gray-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 active:bg-gray-700 transition duration-150 ease-in-out capitalize"
+              @click="exportCount()">
+              <i class="fas fa-file-export mr-2"></i>
+              Export
+            </button>
             <button @click="deleteCount" class="px-3 py-1 bg-red-600 text-white rounded">Delete</button>
           </div>
         </div>
@@ -193,6 +197,7 @@ import { usewarehousestore } from "../../../stores/warehouse.store";
 import { dedupeCountItems } from "../../../utils/inventoryDifferences";
 import { useSessionStore } from "@/stores/session.store";
 import moment from "moment";
+import * as XLSX from "xlsx";
 
 const route = useRoute();
 const router = useRouter();
@@ -487,6 +492,61 @@ const filteredItems = computed(() => {
 const openRecapModal = () => {
   if (countState.value === 'Saved') return;
   isRecapModalOpen.value = true;
+};
+
+// Exports the count details and its differences to an Excel workbook with two
+// sheets, following the same XLSX pattern used by the other export buttons.
+const exportCount = () => {
+  const counted = countedItems.value;
+  if (counted.length === 0) {
+    Swal.fire({
+      text: "There is no count data to export yet.",
+      icon: "info",
+      toast: true,
+      position: "top-right",
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true,
+    });
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+
+  // Sheet 1: Count details (every counted commodity row)
+  const detailsData = counted.map((it) => ({
+    "Count Number": countNumber.value,
+    Date: formatDate(countCreatedOn.value),
+    Warehouse: warehouses.find((w) => w.id === selectedWarehouseId.value)?.Name || "",
+    Status: countState.value,
+    Commodity: it.commodity?.Name || it.commodityName || "",
+    "Stock From": it.StockFrom || "",
+    "Batch Number": it.BatchNumber || "",
+    "Best Before": it.BBD ? formatDate(it.BBD) : "",
+    "Expected Quantity": Number(it.Quantity || 0).toFixed(3),
+    "Physical Count": Number(it.physicalCount || 0).toFixed(3),
+  }));
+  const wsDetails = XLSX.utils.json_to_sheet(detailsData);
+  XLSX.utils.book_append_sheet(wb, wsDetails, "Count Details");
+
+  // Sheet 2: Differences only (variance != 0)
+  const differences = counted.filter((it) => variance(it) != 0);
+  if (differences.length > 0) {
+    const diffData = differences.map((it) => ({
+      "Count Number": countNumber.value,
+      Date: formatDate(countCreatedOn.value),
+      Commodity: it.commodity?.Name || it.commodityName || "",
+      "Stock From": it.StockFrom || "",
+      "Batch Number": it.BatchNumber || "",
+      "Expected Quantity": Number(it.Quantity || 0).toFixed(3),
+      "Counted Quantity": Number(it.physicalCount || 0).toFixed(3),
+      Difference: variance(it),
+    }));
+    const wsDiff = XLSX.utils.json_to_sheet(diffData);
+    XLSX.utils.book_append_sheet(wb, wsDiff, "Count Differences");
+  }
+
+  XLSX.writeFile(wb, `${countNumber.value || "InventoryCount"}.xlsx`);
 };
 
 const closeRecapModal = () => {
